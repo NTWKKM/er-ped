@@ -337,8 +337,8 @@ function setupKeyboardShortcuts(){
     }
     if (e.key === 'Escape') {
       closeAllComboboxes();
-      const panel = document.getElementById('broselowPanel');
-      if (panel && !panel.classList.contains('hidden')) panel.classList.add('hidden');
+      const backdrop = document.getElementById('broselowBackdrop') || document.getElementById('broselowPanel');
+      if (backdrop && !backdrop.classList.contains('hidden')) backdrop.classList.add('hidden');
     }
   });
 
@@ -376,13 +376,19 @@ function refreshBroselowChip(){
 }
 
 function toggleBroselowPanel(){
-  const panel = document.getElementById('broselowPanel');
-  if (!panel) return;
-  if (panel.classList.contains('hidden')){
+  const target = document.getElementById('broselowBackdrop') || document.getElementById('broselowPanel');
+  if (!target) return;
+  if (target.classList.contains('hidden')){
     fillBroselowContent();
-    panel.classList.remove('hidden');
+    target.classList.remove('hidden');
   } else {
-    panel.classList.add('hidden');
+    target.classList.add('hidden');
+  }
+}
+
+function handleBroselowBackdropClick(e){
+  if (e.target && (e.target.id === 'broselowBackdrop' || e.target.classList.contains('drawer-backdrop'))){
+    toggleBroselowPanel();
   }
 }
 
