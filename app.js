@@ -73,7 +73,19 @@ function showTab(id, btn) {
     const el = document.getElementById(x);
     if (el) el.style.display = (x === id) ? 'block' : 'none';
   });
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  
+  if (id === 'pals') {
+    calcPALS();
+    const palsEl = document.getElementById('pals');
+    if (palsEl) palsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const w = getWeight();
+    if (!w) {
+      const wInput = document.getElementById('weight');
+      if (wInput) wInput.focus();
+    }
+  } else {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 }
 
 function getWeight(){
@@ -1190,7 +1202,19 @@ function calcPALS(){
   const w   = parseFloat(document.getElementById('pW').value) || getWeight() || gIBW;
   const age = parseFloat(document.getElementById('pAge').value) || parseFloat(document.getElementById('age').value);
   const P   = DS.pals || {};
-  if (!w){ if(out) out.textContent='กรุณากรอกน้ำหนัก'; return; }
+  if (!w){ 
+    if(out) out.innerHTML = `
+<div class="hero-metric" style="border-left-color: #DC2626; background: #2A1010;">
+  <div>
+    <div class="hero-label" style="color: #FCA5A5;">⚡️ PALS ARREST RESUSCITATION (AHA GUIDELINE)</div>
+    <div style="font-size: 14px; color: #FFFFFF; margin-top: 4px; font-weight: 600;">
+      กรุณากรอกน้ำหนักตัว (kg) ในแถบ ABW ด้านบนเพื่อคำนวณโดส Epinephrine, Defib Joules, Amiodarone และขนาดท่อ ETT ทันที
+    </div>
+  </div>
+</div>
+    `; 
+    return; 
+  }
 
   const epiMg = (P.epiArrest?.dose_mgPerKg ?? 0.01) * w;
   const epiMl = epiMg / (P.epiArrest?.conc_mgPerMl ?? 0.1);
