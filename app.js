@@ -124,19 +124,13 @@ function estimateWeightFromLength(lengthVal) {
 
 function calculateIBW() {
   const lenInput = document.getElementById('length');
-  const ageInput = document.getElementById('age');
+  const useIBWBox = document.getElementById('useIBW');
+  const isIBWChecked = useIBWBox?.checked || false;
   const lenVal = lenInput ? parseFloat(lenInput.value) : NaN;
-  const ageVal = ageInput ? parseFloat(ageInput.value) : NaN;
 
-  if (isFinite(lenVal) && lenVal > 0) {
+  if (isIBWChecked && isFinite(lenVal) && lenVal > 0) {
     gIBW = estimateWeightFromLength(lenVal);
     gIBWSource = 'length';
-  } else if (isFinite(ageVal) && ageVal > 0) {
-    gIBW = estimateWeightFromAge(ageVal, gAgeUnit);
-    gIBWSource = 'age';
-  } else if (gUserABW && gUserABW > 0) {
-    gIBW = gUserABW;
-    gIBWSource = 'bw';
   } else {
     gIBW = null;
     gIBWSource = null;
@@ -148,7 +142,10 @@ function calculateIBW() {
 function updateIBWChipUI() {
   const el = document.getElementById('ibwVal');
   const src = document.getElementById('ibwSource');
-  if (!gIBW) {
+  const useIBWBox = document.getElementById('useIBW');
+  const isIBWChecked = useIBWBox?.checked || false;
+
+  if (!isIBWChecked || !gIBW) {
     if (el) el.textContent = '—';
     if (src) src.textContent = '';
     return;
@@ -156,8 +153,6 @@ function updateIBWChipUI() {
   if (el) el.textContent = `${Number(gIBW).toFixed(1)} kg`;
   if (src) {
     if (gIBWSource === 'length') src.textContent = '(Wt-for-Ht)';
-    else if (gIBWSource === 'age') src.textContent = '(Weech est)';
-    else if (gIBWSource === 'bw') src.textContent = '(=BW)';
     else src.textContent = '';
   }
 }
@@ -185,12 +180,11 @@ function calcMaintenanceMlPerHr(weightKg) {
 function getWeight() {
   const isIBWChecked = document.getElementById('useIBW')?.checked || false;
 
-  if (isIBWChecked) {
-    if (gIBW && gIBW > 0) return gIBW;
-    if (gUserABW && gUserABW > 0) return gUserABW;
-  } else {
-    if (gUserABW && gUserABW > 0) return gUserABW;
-    if (gIBW && gIBW > 0) return gIBW;
+  if (isIBWChecked && gIBW && gIBW > 0) {
+    return gIBW;
+  }
+  if (gUserABW && gUserABW > 0) {
+    return gUserABW;
   }
 
   return null;
@@ -208,6 +202,7 @@ function updateBiometricUIState() {
       lenInput.classList.add('highlight-input');
     } else {
       lenInput.disabled = true;
+      lenInput.value = '';
       lenInput.classList.remove('highlight-input');
       lenInput.classList.add('disabled-input');
     }
@@ -224,7 +219,7 @@ function updateBiometricUIState() {
   const w = getWeight();
   let wTxt = '— kg';
   if (w) {
-    wTxt = isIBWChecked ? `${w.toFixed(1)} kg (IBW)` : `${w.toFixed(1)} kg`;
+    wTxt = (isIBWChecked && gIBW) ? `${w.toFixed(1)} kg (IBW)` : `${w.toFixed(1)} kg`;
   }
 
   ['doseWBadge', 'atbWBadge', 'fWBadge', 'pWBadge'].forEach(id => {
@@ -239,11 +234,15 @@ function updateBiometricUIState() {
 function onWeightChange() {
   const weightInput = document.getElementById('weight');
   const useIBWBox = document.getElementById('useIBW');
+  const lenInput = document.getElementById('length');
   const val = weightInput ? parseFloat(weightInput.value) : NaN;
 
   // Auto OFF IBW if user types in Weight field
   if (useIBWBox && useIBWBox.checked) {
     useIBWBox.checked = false;
+  }
+  if (lenInput) {
+    lenInput.value = '';
   }
 
   gUserABW = (isFinite(val) && val > 0) ? val : null;
@@ -251,15 +250,46 @@ function onWeightChange() {
   updateBiometricUIState();
 }
 
-function estimateFromAge() {
+function estimateFromAge(fromPAge = false) {
+  const ageInput = document.getElementById('age');
+  const pAgeInput = document.getElementById('pAge');
   const useIBWBox = document.getElementById('useIBW');
+  const lenInput = document.getElementById('length');
+
+  if (fromPAge && pAgeInput && ageInput) {
+    ageInput.value = pAgeInput.value;
+  } else if (!fromPAge && ageInput && pAgeInput) {
+    pAgeInput.value = ageInput.value;
+  }
+
   // Auto OFF IBW if user types in Age field
   if (useIBWBox && useIBWBox.checked) {
     useIBWBox.checked = false;
   }
+  if (lenInput) {
+    lenInput.value = '';
+  }
+
+  const ageVal = ageInput ? parseFloat(ageInput.value) : NaN;
+  if (isFinite(ageVal) && ageVal > 0) {
+    const estW = estimateWeightFromAge(ageVal, gAgeUnit);
+    gUserABW = estW;
+  } else {
+    const weightInput = document.getElementById('weight');
+    const wVal = weightInput ? parseFloat(weightInput.value) : NaN;
+    if (isFinite(wVal) && wVal > 0) {
+      gUserABW = wVal;
+    } else {
+      gUserABW = null;
+    }
+  }
 
   calculateIBW();
   updateBiometricUIState();
+}
+
+function onPALSAgeChange() {
+  estimateFromAge(true);
 }
 
 function updateIBW() {
@@ -280,14 +310,18 @@ function updateIBW() {
 
 function applyIBWToBW() {
   const useIBWBox = document.getElementById('useIBW');
+  const lenInput = document.getElementById('length');
   const isChecked = useIBWBox?.checked || false;
+
+  if (!isChecked && lenInput) {
+    lenInput.value = '';
+  }
 
   calculateIBW();
   updateBiometricUIState();
 
-  if (isChecked) {
-    const lenInput = document.getElementById('length');
-    if (lenInput) lenInput.focus();
+  if (isChecked && lenInput) {
+    lenInput.focus();
   }
 }
 
