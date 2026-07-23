@@ -1,13 +1,12 @@
 
-const CACHE = 'tsh-peds-v1.25.09.31';
+const CACHE = 'er-ped-v1.26.07.23';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.webmanifest',
-  '/app.js',
-  '/dataset.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png'
+  './',
+  './index.html',
+  './manifest.webmanifest',
+  './app.js',
+  './dataset.js',
+  './dataset.json'
 ];
 
 self.addEventListener('install', (e) => {
@@ -31,6 +30,6 @@ self.addEventListener('fetch', (e) => {
   if (url.origin === location.origin) {
     e.respondWith(caches.match(e.request).then(res => res || fetch(e.request)));
   } else {
-    e.respondWith(fetch(e.request).catch(()=>caches.match('/index.html')));
+    e.respondWith(fetch(e.request).catch(()=>caches.match('./index.html')));
   }
 });

@@ -1,7 +1,7 @@
 // --- PWA: register service worker & A2HS prompt ---
-if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator && (location.protocol === 'http:' || location.protocol === 'https:')) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js');
+    navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW reg skipped/failed:', err));
   });
 }
 
@@ -29,15 +29,29 @@ let gFluidType = 'NS';
 let gAgeUnit = 'yr'; // 'yr' or 'mo'
 let activeTab = 'dose';
 
-// --- Dataset Loading ---
-fetch('dataset.json')
-  .then(r => r.json())
-  .then(j => { DS = j; initUI(); })
-  .catch(err => {
-    console.error('Failed to load dataset.json', err);
-    const app = document.getElementById('app');
-    if (app) app.innerHTML = '<div class="card">Cannot load dataset.json</div>';
-  });
+// --- Dataset Loading (Robust dual-mode for web server & offline file:// execution) ---
+function loadDataset() {
+  if (window.ER_PED_DATASET) {
+    DS = window.ER_PED_DATASET;
+    initUI();
+  } else {
+    fetch('dataset.json')
+      .then(r => r.json())
+      .then(j => { DS = j; initUI(); })
+      .catch(err => {
+        console.error('Failed to load dataset.json via fetch:', err);
+        if (window.ER_PED_DATASET) {
+          DS = window.ER_PED_DATASET;
+          initUI();
+        } else {
+          const app = document.getElementById('app');
+          if (app) app.innerHTML = '<div class="card">Cannot load dataset.json</div>';
+        }
+      });
+  }
+}
+
+window.addEventListener('DOMContentLoaded', loadDataset);
 
 function initUI(){
   populateDrugs();
