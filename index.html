@@ -444,14 +444,35 @@
       font-size: 13px;
     }
 
+    .combobox-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .combobox-search {
+      flex: 1;
+      min-width: 140px;
+    }
+    .combobox-select {
+      flex: 2;
+      min-width: 180px;
+    }
+
     /* Responsive Mobile Tweaks */
     @media (max-width: 768px) {
-      .container { margin-top: 170px; padding: 12px; }
+      .container { margin-top: 95px; padding: 10px; }
       .grid { grid-template-columns: repeat(6, 1fr); gap: 10px; }
       .col-12, .col-9, .col-8, .col-6, .col-4 { grid-column: span 6; }
       .col-3 { grid-column: span 3; }
       .segmented-control { flex-wrap: wrap; }
-      .tab-btn { min-width: 30%; font-size: 13px; padding: 8px 10px; }
+      .tab-btn { min-width: 30%; font-size: 12px; padding: 6px 8px; }
+      .combobox-group { flex-direction: column; align-items: stretch; gap: 6px; }
+      .topbar-inner { padding: 6px 10px; gap: 6px; justify-content: space-between; }
+      .chip { padding: 4px 8px; gap: 4px; }
+      .chip label.chip-label { font-size: 10px; }
+      .chip input[type="number"] { width: 56px; padding: 4px 6px; font-size: 13px; }
+      .brand-badge { padding: 4px 8px; font-size: 11px; }
+      .broselow-chip { padding: 4px 8px; font-size: 11px; }
     }
   </style>
 </head>
@@ -509,17 +530,16 @@
     <!-- Pediatric Dose Calculator -->
     <section id="dose" class="card">
       <div class="grid">
-        <div class="col-9">
-          <label>Drug Selection</label>
-          <select id="doseDrug" onchange="calcDose()"></select>
-        </div>
-        <div class="col-3">
-          <label>Search Filter</label>
-          <input id="doseSearch" type="text" placeholder="ค้นหาชื่อยา..." oninput="filterDoseList()"/>
+        <div class="col-12">
+          <label>Drug Selection & Search</label>
+          <div class="combobox-group">
+            <input id="doseSearch" type="text" class="combobox-search" placeholder="🔍 ค้นหาชื่อยา (พิมพ์เพื่อกรอง)..." oninput="filterDoseList()"/>
+            <select id="doseDrug" class="combobox-select" onchange="calcDose()"></select>
+          </div>
         </div>
         <div class="col-6">
           <label>Body Weight (kg)</label>
-          <input type="number" id="doseW" min="0" step="0.1" placeholder="ซิงค์จาก Topbar ABW" oninput="calcDose()">
+          <input type="number" id="doseW" min="0" step="0.1" placeholder="ซิงค์จาก Topbar ABW" oninput="onTabWeightChange(this.value)">
         </div>
         <div class="col-6">
           <label>Form Strength Override (mg/mL, mg/tab)</label>
@@ -535,17 +555,16 @@
     <!-- Pediatric ATB Calculator -->
     <section id="atb" class="card" style="display:none;">
       <div class="grid">
-        <div class="col-9">
-          <label>Antibiotic Selection</label>
-          <select id="atbDrug" onchange="calcATB()"></select>
-        </div>
-        <div class="col-3">
-          <label>Search Filter</label>
-          <input id="atbSearch" type="text" placeholder="ค้นหายากลุ่ม ATB..." oninput="filterATBList()"/>
+        <div class="col-12">
+          <label>Antibiotic Selection & Search</label>
+          <div class="combobox-group">
+            <input id="atbSearch" type="text" class="combobox-search" placeholder="🔍 ค้นหายากลุ่ม ATB (พิมพ์เพื่อกรอง)..." oninput="filterATBList()"/>
+            <select id="atbDrug" class="combobox-select" onchange="calcATB()"></select>
+          </div>
         </div>
         <div class="col-6">
           <label>Body Weight (kg)</label>
-          <input type="number" id="atbW" min="0" step="0.1" placeholder="ซิงค์จาก Topbar ABW" oninput="calcATB()">
+          <input type="number" id="atbW" min="0" step="0.1" placeholder="ซิงค์จาก Topbar ABW" oninput="onTabWeightChange(this.value)">
         </div>
         <div class="col-6">
           <label>Form Strength Override (mg/mL, mg/tab)</label>
@@ -563,7 +582,7 @@
       <div class="grid">
         <div class="col-4">
           <label>Body Weight (kg)</label>
-          <input type="number" id="fW" min="0" step="0.1" placeholder="ซิงค์จาก Topbar ABW" oninput="calcFluids()">
+          <input type="number" id="fW" min="0" step="0.1" placeholder="ซิงค์จาก Topbar ABW" oninput="onTabWeightChange(this.value)">
         </div>
         <div class="col-4">
           <label>Dehydration Degree</label>
@@ -604,7 +623,7 @@
       <div class="grid">
         <div class="col-6">
           <label>Body Weight (kg)</label>
-          <input type="number" id="pW" min="0" step="0.1" placeholder="ซิงค์จาก Topbar ABW" oninput="calcPALS()">
+          <input type="number" id="pW" min="0" step="0.1" placeholder="ซิงค์จาก Topbar ABW" oninput="onTabWeightChange(this.value)">
         </div>
         <div class="col-6">
           <label>Patient Age (yr) (Optional for ETT)</label>
@@ -622,7 +641,7 @@
       <div class="grid">
         <div class="col-6">
           <label>Birth Weight (kg)</label>
-          <input type="number" id="nW" min="0" step="0.01" placeholder="น้ำหนักแรกเกิด kg" oninput="calcNCPR()">
+          <input type="number" id="nW" min="0" step="0.01" placeholder="น้ำหนักแรกเกิด kg" oninput="onTabWeightChange(this.value)">
         </div>
         <div class="col-6">
           <label>Gestational Age (wk)</label>
@@ -642,7 +661,6 @@
     <!-- Standalone Footer -->
     <footer class="app-footer">
       <div><strong>ER-PED Calculator</strong> — Standalone Clinical Tool</div>
-      <div style="font-size:12px; margin-top:4px;">พัฒนาโดย Plan · EM, รพ.มหาราชนครราชสีมา</div>
     </footer>
 
   </div><!-- /container -->

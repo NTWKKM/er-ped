@@ -135,6 +135,12 @@ function onWeightChange(){
   calcAll();
 }
 
+function onTabWeightChange(val){
+  const mainW = document.getElementById('weight');
+  if (mainW) mainW.value = val;
+  onWeightChange();
+}
+
 function updateIBWChip(source){
   const el = document.getElementById('ibwVal');
   const src = document.getElementById('ibwSource');
