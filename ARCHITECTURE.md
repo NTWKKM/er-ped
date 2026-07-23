@@ -5,7 +5,7 @@
    - `ABW` (Actual Body Weight in kg): Central single source of truth for patient weight across all calculator modules.
    - `Age` & `Unit Switch` (Years/Months toggle with Weech formula: `<1 yr`: `(mo + 9) / 2`, `1–6 yr`: `2 × age + 8`, `>6 yr`: `(7 × age - 5) / 2`).
    - `Length` (Length in cm).
-   - `IBW` (Ideal Body Weight chip & auto-switch toggle).
+   - `IBW` (Ideal Body Weight chip, Weight-for-Height Broselow tape bands, and auto-switch toggle with input greying/highlighting).
    - `Broselow` (Color band estimator & quick reference drawer).
 
 2. **Core Calculators & Search Interfaces**:

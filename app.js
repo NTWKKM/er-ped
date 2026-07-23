@@ -25,6 +25,8 @@ async function triggerA2HS(){
 // --- Global State ---
 let DS = null;
 let gIBW = null;
+let gUserABW = null;
+let gIBWSource = null; // 'length', 'age', 'bw', or null
 let gFluidType = 'NS';
 let gAgeUnit = 'yr'; // 'yr' or 'mo'
 let activeTab = 'dose';
@@ -57,13 +59,11 @@ function initUI(){
   populateDrugs();
   initComboboxes();
   setupKeyboardShortcuts();
-  updateIBW();
-  refreshBroselowChip();
-  onWeightChange();
-  calcAll();
+  calculateIBW();
+  updateBiometricUIState();
 }
 
-// --------- IBW / Age Weight Engine (Weech Formula) ---------
+// --------- IBW / Age & Length Weight Engine ---------
 
 function toggleAgeUnit(){
   gAgeUnit = (gAgeUnit === 'yr') ? 'mo' : 'yr';
@@ -74,7 +74,7 @@ function toggleAgeUnit(){
   estimateFromAge();
 }
 
-// Weech weight estimation formula
+// Weech weight estimation formula (Age-based)
 function estimateWeightFromAge(ageVal, unit) {
   ageVal = Number(ageVal);
   if (!isFinite(ageVal) || ageVal <= 0) return null;
@@ -101,6 +101,67 @@ function estimateWeightFromAge(ageVal, unit) {
   return Math.round((7 * ageYr - 5) / 2);
 }
 
+// Length-based weight estimation (Broselow length bands & McLaren formula)
+function estimateWeightFromLength(lengthVal) {
+  const len = Number(lengthVal);
+  if (!isFinite(len) || len <= 0) return null;
+
+  if (len < 46) {
+    return Math.round((len * len * 1.65 / 1000) * 10) / 10;
+  }
+  if (len <= 59.5) return 4.5;
+  if (len <= 67.5) return 6.5;
+  if (len <= 77.5) return 8.5;
+  if (len <= 87.5) return 10.5;
+  if (len <= 97.5) return 13.0;
+  if (len <= 109.5) return 16.5;
+  if (len <= 121.5) return 21.0;
+  if (len <= 136.5) return 26.5;
+  if (len <= 145) return 33.0;
+
+  return Math.round(((len - 100) * 0.9) * 10) / 10;
+}
+
+function calculateIBW() {
+  const lenInput = document.getElementById('length');
+  const ageInput = document.getElementById('age');
+  const lenVal = lenInput ? parseFloat(lenInput.value) : NaN;
+  const ageVal = ageInput ? parseFloat(ageInput.value) : NaN;
+
+  if (isFinite(lenVal) && lenVal > 0) {
+    gIBW = estimateWeightFromLength(lenVal);
+    gIBWSource = 'length';
+  } else if (isFinite(ageVal) && ageVal > 0) {
+    gIBW = estimateWeightFromAge(ageVal, gAgeUnit);
+    gIBWSource = 'age';
+  } else if (gUserABW && gUserABW > 0) {
+    gIBW = gUserABW;
+    gIBWSource = 'bw';
+  } else {
+    gIBW = null;
+    gIBWSource = null;
+  }
+
+  updateIBWChipUI();
+}
+
+function updateIBWChipUI() {
+  const el = document.getElementById('ibwVal');
+  const src = document.getElementById('ibwSource');
+  if (!gIBW) {
+    if (el) el.textContent = '—';
+    if (src) src.textContent = '';
+    return;
+  }
+  if (el) el.textContent = `${Number(gIBW).toFixed(1)} kg`;
+  if (src) {
+    if (gIBWSource === 'length') src.textContent = '(Wt-for-Ht)';
+    else if (gIBWSource === 'age') src.textContent = '(Weech est)';
+    else if (gIBWSource === 'bw') src.textContent = '(=BW)';
+    else src.textContent = '';
+  }
+}
+
 function getAgeInYears(){
   const input = document.getElementById('age');
   const val = input ? parseFloat(input.value) : NaN;
@@ -121,44 +182,51 @@ function calcMaintenanceMlPerHr(weightKg) {
 
 // --------- Single Source of Truth Weight Engine ---------
 
-function getWeight(){
-  const el = document.getElementById('weight');
-  const w = el ? parseFloat(el.value) : NaN;
-  return (w > 0) ? w : (gIBW || null);
-}
+function getWeight() {
+  const isIBWChecked = document.getElementById('useIBW')?.checked || false;
 
-function estimateFromAge(){
-  const ageVal = parseFloat(document.getElementById('age').value);
-  if (!ageVal && ageVal !== 0){ updateIBW(); return; }
-  gIBW = estimateWeightFromAge(ageVal, gAgeUnit) || null;
-  updateIBWChip('age');
-  if (document.getElementById('useIBW').checked) applyIBWToBW();
-  refreshBroselowChip();
-  onWeightChange();
-}
-
-function updateIBW(){
-  const ageYr = getAgeInYears();
-  const bw = getWeight();
-  if (ageYr && ageYr > 0){ estimateFromAge(); return; }
-  gIBW = bw || null;
-  updateIBWChip(bw ? 'bw' : null);
-  if (document.getElementById('useIBW').checked) applyIBWToBW();
-  refreshBroselowChip();
-}
-
-function applyIBWToBW(){
-  const box = document.getElementById('useIBW');
-  if (box && box.checked && gIBW){
-    document.getElementById('weight').value = gIBW;
-    onWeightChange();
+  if (isIBWChecked) {
+    if (gIBW && gIBW > 0) return gIBW;
+    if (gUserABW && gUserABW > 0) return gUserABW;
+  } else {
+    if (gUserABW && gUserABW > 0) return gUserABW;
+    if (gIBW && gIBW > 0) return gIBW;
   }
+
+  return null;
 }
 
-function onWeightChange(){
+function updateBiometricUIState() {
+  const isIBWChecked = document.getElementById('useIBW')?.checked || false;
+  const lenInput = document.getElementById('length');
+  const weightInput = document.getElementById('weight');
+
+  if (lenInput) {
+    if (isIBWChecked) {
+      lenInput.disabled = false;
+      lenInput.classList.remove('disabled-input');
+      lenInput.classList.add('highlight-input');
+    } else {
+      lenInput.disabled = true;
+      lenInput.classList.remove('highlight-input');
+      lenInput.classList.add('disabled-input');
+    }
+  }
+
+  if (weightInput) {
+    if (isIBWChecked && gIBW) {
+      weightInput.value = Number(gIBW).toFixed(1);
+    } else {
+      weightInput.value = gUserABW !== null ? gUserABW.toString() : '';
+    }
+  }
+
   const w = getWeight();
-  const wTxt = w ? `${w.toFixed(1)} kg` : '— kg';
-  
+  let wTxt = '— kg';
+  if (w) {
+    wTxt = isIBWChecked ? `${w.toFixed(1)} kg (IBW)` : `${w.toFixed(1)} kg`;
+  }
+
   ['doseWBadge', 'atbWBadge', 'fWBadge', 'pWBadge'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.textContent = wTxt;
@@ -166,6 +234,61 @@ function onWeightChange(){
 
   refreshBroselowChip();
   calcAll();
+}
+
+function onWeightChange() {
+  const weightInput = document.getElementById('weight');
+  const useIBWBox = document.getElementById('useIBW');
+  const val = weightInput ? parseFloat(weightInput.value) : NaN;
+
+  // Auto OFF IBW if user types in Weight field
+  if (useIBWBox && useIBWBox.checked) {
+    useIBWBox.checked = false;
+  }
+
+  gUserABW = (isFinite(val) && val > 0) ? val : null;
+  calculateIBW();
+  updateBiometricUIState();
+}
+
+function estimateFromAge() {
+  const useIBWBox = document.getElementById('useIBW');
+  // Auto OFF IBW if user types in Age field
+  if (useIBWBox && useIBWBox.checked) {
+    useIBWBox.checked = false;
+  }
+
+  calculateIBW();
+  updateBiometricUIState();
+}
+
+function updateIBW() {
+  const lenInput = document.getElementById('length');
+  const useIBWBox = document.getElementById('useIBW');
+  const lenVal = lenInput ? parseFloat(lenInput.value) : NaN;
+
+  // Auto ON IBW if user types in Length field
+  if (isFinite(lenVal) && lenVal > 0) {
+    if (useIBWBox && !useIBWBox.checked) {
+      useIBWBox.checked = true;
+    }
+  }
+
+  calculateIBW();
+  updateBiometricUIState();
+}
+
+function applyIBWToBW() {
+  const useIBWBox = document.getElementById('useIBW');
+  const isChecked = useIBWBox?.checked || false;
+
+  calculateIBW();
+  updateBiometricUIState();
+
+  if (isChecked) {
+    const lenInput = document.getElementById('length');
+    if (lenInput) lenInput.focus();
+  }
 }
 
 function syncNCPRWithABW(){
@@ -178,14 +301,6 @@ function syncNCPRWithABW(){
   } else {
     showToast('Please enter ABW in topbar first');
   }
-}
-
-function updateIBWChip(source){
-  const el = document.getElementById('ibwVal');
-  const src = document.getElementById('ibwSource');
-  if (!gIBW){ if(el) el.textContent='—'; if(src) src.textContent=''; return; }
-  if (el)  el.textContent  = `${Number(gIBW).toFixed(1)} kg`;
-  if (src) src.textContent = source==='age' ? '(Weech est)' : source==='bw' ? '(=BW)' : '';
 }
 
 // --------- Navigation & Shortcuts ---------

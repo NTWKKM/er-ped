@@ -128,6 +128,21 @@
       box-shadow: 0 0 0 2px var(--ring);
     }
 
+    .chip input[type="number"]:disabled,
+    .chip input[type="number"].disabled-input {
+      background: #E5E4DF;
+      color: #8E8C87;
+      border-color: #C5C3BE;
+      cursor: not-allowed;
+      opacity: 0.65;
+    }
+
+    .chip input[type="number"].highlight-input {
+      border-color: var(--accent);
+      background: #FFF7ED;
+      box-shadow: 0 0 0 2px var(--ring);
+    }
+
     .unit-toggle-btn {
       padding: 4px 8px;
       font-size: 11px;
