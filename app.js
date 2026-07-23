@@ -27,6 +27,7 @@ let DS = null;
 let gIBW = null;
 let gUserABW = null;
 let gIBWSource = null; // 'length', 'age', 'bw', or null
+let gWeightSource = null; // 'manual' (real measured/reported ABW) or 'estimated' (Weech age-based)
 let gFluidType = 'NS';
 let gAgeUnit = 'yr'; // 'yr' or 'mo'
 let activeTab = 'dose';
@@ -219,7 +220,13 @@ function updateBiometricUIState() {
   const w = getWeight();
   let wTxt = '— kg';
   if (w) {
-    wTxt = (isIBWChecked && gIBW) ? `${w.toFixed(1)} kg (IBW)` : `${w.toFixed(1)} kg`;
+    if (isIBWChecked && gIBW) {
+      wTxt = `${w.toFixed(1)} kg (IBW)`;
+    } else if (gWeightSource === 'estimated') {
+      wTxt = `${w.toFixed(1)} kg (est.)`;
+    } else {
+      wTxt = `${w.toFixed(1)} kg`;
+    }
   }
 
   ['doseWBadge', 'atbWBadge', 'fWBadge', 'pWBadge'].forEach(id => {
@@ -246,6 +253,7 @@ function onWeightChange() {
   }
 
   gUserABW = (isFinite(val) && val > 0) ? val : null;
+  gWeightSource = gUserABW ? 'manual' : null;
   calculateIBW();
   updateBiometricUIState();
 }
@@ -272,8 +280,15 @@ function estimateFromAge(fromPAge = false) {
 
   const ageVal = ageInput ? parseFloat(ageInput.value) : NaN;
   if (isFinite(ageVal) && ageVal > 0) {
-    const estW = estimateWeightFromAge(ageVal, gAgeUnit);
-    gUserABW = estW;
+    if (gWeightSource === 'manual') {
+      // A real measured/reported weight is on record — never let an age-based
+      // estimate silently clobber it. Age still syncs (for ETT/PALS refs above);
+      // just leave gUserABW untouched and tell the user why weight didn't change.
+      showToast('ใช้น้ำหนักที่กรอกจริง (ไม่ auto-estimate ทับ) — ลบช่องน้ำหนักก่อนถ้าต้องการ estimate จากอายุ');
+    } else {
+      gUserABW = estimateWeightFromAge(ageVal, gAgeUnit);
+      gWeightSource = 'estimated';
+    }
   } else {
     const weightInput = document.getElementById('weight');
     const wVal = weightInput ? parseFloat(weightInput.value) : NaN;
@@ -281,6 +296,7 @@ function estimateFromAge(fromPAge = false) {
       gUserABW = wVal;
     } else {
       gUserABW = null;
+      gWeightSource = null;
     }
   }
 
