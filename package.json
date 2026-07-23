@@ -1,0 +1,20 @@
+{
+  "name": "er-ped",
+  "version": "1.0.0",
+  "description": "👶🏻 ER Pediatric Clinical Calculator PWA",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve ."
+  },
+  "keywords": [
+    "pediatric",
+    "er-ped",
+    "calculator",
+    "emergency-medicine",
+    "pwa",
+    "broselow"
+  ],
+  "author": "",
+  "license": "MIT"
+}

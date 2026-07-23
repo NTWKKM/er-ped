@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>👶🏻 ER-TSH PED Calc</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#89b6ff" />
+
+  <!-- Sarabun font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --accent: #89b6ff;   /* pastel blue */
+      --accent2: #ffb3c1;  /* pastel pink */
+      --accent3: #b2f0e6;  /* pastel mint */
+      --accent4: #ffe7a1;  /* pastel yellow */
+      --ring: rgba(137,182,255,.45);
+      --good: #0ea5e9;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin:0; padding:0; font-family: 'Sarabun', system-ui, sans-serif; color: var(--ink); background: var(--bg); }
+    h1, h2, h3 { margin: 0 0 8px; }
+    .container { max-width: 960px; margin: 150px auto 80px; padding: 16px; }
+
+    /* Fixed IBW/Broselow bar */
+    .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 60; backdrop-filter: saturate(1.2) blur(6px); background: rgba(255,255,255,0.88); border-bottom: 1px solid #e5e7eb; }
+    .topbar-inner { max-width: 960px; margin: 0 auto; display:flex; align-items:center; gap:10px; padding: 8px 12px; flex-wrap: wrap; }
+    .chip { background: var(--card); border:1px solid #e5e7eb; border-radius: 999px; padding: 8px 12px; display:flex; align-items:center; gap:8px; box-shadow: 0 2px 6px rgba(0,0,0,.04); }
+    .chip input { width: 90px; padding:6px 8px; border:1px solid #e5e7eb; border-radius: 8px; outline: none; }
+    .chip select { padding:6px 8px; border:1px solid #e5e7eb; border-radius: 8px; }
+    .chip .switch { appearance: none; width: 38px; height: 22px; border-radius: 999px; background:#e5e7eb; position:relative; outline: none; cursor:pointer; border:none; }
+    .chip .switch:checked { background:#a7f3d0; }
+    .chip .switch:before { content:''; position:absolute; top:3px; left:3px; width:16px; height:16px; border-radius:50%; background:#fff; transition:.2s; box-shadow:0 1px 3px rgba(0,0,0,.2); }
+    .chip .switch:checked:before { transform: translateX(16px); }
+
+    .broselow { padding:6px 10px; border-radius: 999px; font-weight: 800; border:1px solid #e5e7eb; cursor:pointer; user-select:none; }
+
+    /* Tabs */
+    .tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom: 16px; }
+    .tab-btn { padding:10px 12px; border-radius: 12px; border:1px solid #e5e7eb; background: var(--card); cursor:pointer; }
+    .tab-btn.active { background: var(--accent3); border-color: var(--ring); }
+
+    /* Cards */
+    .card { background: var(--card); border:1px solid #e5e7eb; border-radius: 16px; padding: 16px; box-shadow: 0 6px 18px rgba(0,0,0,.04); }
+    .grid { display:grid; grid-template-columns: repeat(12, 1fr); gap:12px; }
+    .col-3 { grid-column: span 3; }
+    .col-4 { grid-column: span 4; }
+    .col-6 { grid-column: span 6; }
+    .col-8 { grid-column: span 8; }
+    .col-9 { grid-column: span 9; }
+    .col-12 { grid-column: span 12; }
+
+    label { font-size: 14px; color: var(--muted); }
+    input, select { width: 100%; padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 12px; outline: none; background: #fafafa; }
+    .btn { padding: 10px 14px; border-radius: 12px; border:1px solid #d1d5db; background: var(--accent3); cursor:pointer; }
+
+    .summary { background: #f9fafb; border:1px dashed #d1d5db; padding: 12px; border-radius: 12px; white-space: pre-wrap; line-height: 1.5; }
+    .muted { color: var(--muted); font-size: 13px; }
+    .note { font-size: 12px; color: var(--muted); }
+
+    .pill { display:inline-block; padding: 4px 10px; border-radius:999px; border:1px solid #e5e7eb; background:#fff; font-size: 12px; margin-right: 6px; }
+
+    /* FAB */
+    .fab { position: fixed; right: 16px; bottom: 16px; display:flex; flex-direction: column; gap:10px; z-index: 90; }
+    .fab button{ border:none; border-radius: 999px; padding: 12px 16px; box-shadow: 0 8px 18px rgba(0,0,0,.15); background:#111827; color:#fff; cursor:pointer; }
+    .fab .secondary { background:#374151; }
+
+    /* Broselow drawer */
+    .drawer { position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 70; background:#fff; border:1px solid #e5e7eb; border-radius: 14px; box-shadow: 0 20px 40px rgba(0,0,0,.18); padding: 14px; }
+    .drawer-header { display:flex; align-items:center; justify-content: space-between; margin-bottom: 8px; }
+    .hidden { display:none; }
+
+    /* Mobile tweaks */
+    @media (max-width: 720px){
+      .container{ margin-top: 190px; padding: 12px; }
+      .grid{ grid-template-columns: repeat(6, 1fr); gap:8px; }
+      .col-12{ grid-column: span 6; }
+      .col-9{ grid-column: span 6; }
+      .col-8{ grid-column: span 6; }
+      .col-6{ grid-column: span 6; }
+      .col-4{ grid-column: span 6; }
+      .col-3{ grid-column: span 3; }
+      .chip input{ width:72px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Fixed top bar: IBW + Broselow -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="chip" style="gap:10px;">
+        <strong>ABW</strong>
+        <input type="number" id="weight" min="0" step="0.1" placeholder="กิโลกรัม" oninput="onWeightChange()"/>
+        <span class="muted"><strong>AGE</strong> ** if &lt; 1 yr : (mo + 9) / 2</span>
+        <input type="number" id="age" min="0" step="0.1" placeholder="อายุ ปี" oninput="estimateFromAge()"/>
+        <span class="muted"><strong>Length</strong></span>
+        <input type="number" id="length" min="0" step="0.1" placeholder="เซนติเมตร" oninput="updateIBW()"/>
+        <label class="muted" style="display:flex; align-items:center; gap:6px;">
+          <input type="checkbox" id="useIBW" class="switch" onchange="applyIBWToBW()"/> ใช้ IBW แทนน้ำหนักจริง
+        </label>
+      </div>
+      <div class="chip" id="ibwChip">
+        <span><strong>IBW :</strong></span>
+        <strong id="ibwVal">—</strong>
+        <span id="ibwSource" class="muted"></span>
+      </div>
+      <div class="chip" onclick="toggleBroselowPanel()" title="กดเพื่อโชว์/ซ่อน">
+        <span><strong>Broselow :</strong></span>
+        <span id="broselow" class="broselow">—</span><span class="muted">👈🏻 กดเพื่อดู - กดซ้ำเพื่อปิด</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN APP -->
+  <div class="container" id="app">
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn txt-bold active" data-tab="dose" onclick="showTab('dose', this)"><strong>💊 Pediatric Dose</strong></button>
+      <button class="tab-btn" data-tab="atb" onclick="showTab('atb', this)"><strong>🦠 Pediatric ATB</strong></button>
+      <button class="tab-btn" data-tab="fluids" onclick="showTab('fluids', this)"><strong>💧 IV Fluids</strong></button>
+      <button class="tab-btn" data-tab="pals" onclick="showTab('pals', this)"><strong>🧒🏻 PALS</strong></button>
+      <button class="tab-btn" data-tab="ncpr" onclick="showTab('ncpr', this)"><strong>👶🏻 NCPR</strong></button>
+    </div>
+
+    <!-- Pediatric Dose Calculator -->
+    <section id="dose" class="card">
+      <div class="grid">
+        <div class="col-9">
+          <label><strong>Drug</strong></label>
+          <select id="doseDrug" onchange="calcDose()"></select>
+        </div>
+        <div class="col-3">
+          <label class="muted"><strong>Search</strong></label>
+          <input id="doseSearch" type="text" placeholder="ค้นหาชื่อยา/ชื่อการค้า" oninput="filterDoseList()"/>
+        </div>
+        <div class="col-6">
+          <label><strong>BW</strong> (kg)</label>
+          <input type="number" id="doseW" min="0" step="0.1" placeholder="กรอกเอง หรือกด 'auto' จาก top bar" oninput="calcDose()">
+        </div>
+        <div class="col-6">
+          <label><strong>Form strength</strong> (mg/mL, mg/tab)</label>
+          <input type="number" id="doseConc" min="0" step="0.01" placeholder="กรอกขนาดยา mg ต่อ mL/tab" oninput="calcDose()">
+        </div>
+        <div class="col-12">
+          <div id="doseOut" class="summary"></div>
+        </div>
+      </div>
+      <div class="note">** WebApp นี้ไม่ใช่ standard ref ตรวจสอบขนาดยาซ้ำก่อนสั่งทุกครั้ง</div>
+    </section>
+
+    <!-- Pediatric ATB Calculator -->
+    <section id="atb" class="card" style="display:none;">
+      <div class="grid">
+        <div class="col-9">
+          <label><strong>Antibiotic</strong></label>
+          <select id="atbDrug" onchange="calcATB()"></select>
+        </div>
+        <div class="col-3">
+          <label class="muted"><strong>Search</strong></label>
+          <input id="atbSearch" type="text" placeholder="ค้นหาชื่อยา/ชื่อการค้า" oninput="filterATBList()"/>
+        </div>
+        <div class="col-6">
+          <label><strong>BW</strong> (kg)</label>
+          <input type="number" id="atbW" min="0" step="0.1" placeholder="กรอกเอง หรือกด 'auto' จาก top bar" oninput="calcATB()">
+        </div>
+        <div class="col-6">
+          <label><strong>Form strength</strong> (mg/mL, mg/tab)</label>
+          <input type="number" id="atbForm" min="0" step="0.01" placeholder="กรอกขนาดยา mg ต่อ mL/tab" oninput="calcATB()">
+        </div>
+        <div class="col-12">
+          <div id="atbOut" class="summary"></div>
+        </div>
+      </div>
+      <div class="note">** WebApp นี้ไม่ใช่ standard ref ตรวจสอบขนาดยาซ้ำก่อนสั่งทุกครั้ง</div>
+    </section>
+
+    <!-- IV Fluids -->
+    <section id="fluids" class="card" style="display:none;">
+      <div class="grid">
+        <div class="col-4">
+          <label><strong>BW</strong> (kg)</label>
+          <input type="number" id="fW" min="0" step="0.1" placeholder="กรอกเอง หรือกด 'auto' จาก top bar" oninput="calcFluids()">
+        </div>
+        <div class="col-4">
+          <label><strong>Degree</strong></label>
+          <select id="fDegree" onchange="calcFluids()">
+            <option>Mild (3–5%) ปากแห้ง ปัสสาวะลดลง</option>
+            <option>Moderate (6–9%) ชีพจรเร็ว ตาโหล ซึม</option>
+            <option>Severe (≥10%) / Shock ความดันตก</option>
+          </select>
+        </div>
+        <div class="col-4">
+          <label><strong>Correction Plan</strong></label>
+          <select id="fPlan" onchange="calcFluids()">
+            <option>24 h</option>
+            <option>48 h</option>
+          </select>
+        </div>
+
+        <div class="col-12">
+          <div class="row" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+            <span class="muted"><strong>ชนิดสารน้ำ :</strong></span>
+            <button class="pill" onclick="setFluidType('ORS')" id="fluid-ORS">ORS</button>
+            <button class="pill" onclick="setFluidType('NS')" id="fluid-NS">NS</button>
+            <button class="pill" onclick="setFluidType('RL')" id="fluid-RL">RL</button>
+            <button class="pill" onclick="setFluidType('D5-1/2NS')" id="fluid-D5-1/2NS">D5½NS</button>
+            <button class="pill" onclick="setFluidType('D5-NS')" id="fluid-D5-NS">D5NS</button>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div id="fOut" class="summary"></div>
+        </div>
+      </div>
+      <div class="note">** Holliday–Segar สำหรับ maintenance; deficit = %×BW×10 mL; shock bolus 20 mL/kg ปรับสารน้ำตามดุลยพินิจ</div>
+    </section>
+
+    <!-- PALS -->
+    <section id="pals" class="card" style="display:none;">
+      <div class="grid">
+        <div class="col-6">
+          <label><strong>BW</strong> (kg)</label>
+          <input type="number" id="pW" min="0" step="0.1" placeholder="กรอกเอง หรือกด 'auto' จาก top bar" oninput="calcPALS()">
+        </div>
+        <div class="col-6">
+          <label><strong>Age</strong> (yr)</label>
+          <input type="number" id="pAge" min="0" step="0.1" placeholder="กรอกเพื่อคำนวณขนาด ETT (optional)" oninput="calcPALS()">
+        </div>
+        <div class="col-12">
+          <div id="pOut" class="summary"></div>
+        </div>
+      </div>
+      <div class="note">** WebApp นี้ไม่ใช่ standard ref ตรวจสอบขนาดยาซ้ำก่อนสั่งทุกครั้ง</div>
+    </section>
+
+    <!-- NCPR -->
+    <section id="ncpr" class="card" style="display:none;">
+      <div class="grid">
+        <div class="col-6">
+          <label><strong>BW</strong> (kg)</label>
+          <input type="number" id="nW" min="0" step="0.01" placeholder="กรอกน้ำหนักแรกเกิด" oninput="calcNCPR()">
+        </div>
+        <div class="col-6">
+          <label><strong>Gestational Age</strong> (wk) (optional)</label>
+          <input type="number" id="nGA" min="20" max="44" step="1" placeholder="optional" oninput="calcNCPR()">
+        </div>
+        <div class="col-6">
+          <label><strong>Blood Glucose</strong> (mg/dL) (optional)</label>
+          <input type="number" id="nBG" step="1" placeholder="optional" oninput="calcNCPR()">
+        </div>
+        <div class="col-12">
+          <div id="nOut" class="summary"></div>
+        </div>
+      </div>
+      <div class="note">** WebApp นี้ไม่ใช่ standard ref ตรวจสอบขนาดยาซ้ำก่อนสั่งทุกครั้ง</div>
+    </section>
+  </div><!-- /container -->
+
+  <!-- Broselow quick panel -->
+  <div id="broselowPanel" class="drawer hidden">
+    <div class="drawer-header">
+      <strong>📏 Broselow Quick Panel</strong>
+      <button class="tab-btn" onclick="toggleBroselowPanel()">Close</button>
+    </div>
+    <div class="muted" style="margin-bottom:8px;">** คำนวณตาม ABW / IBW ปัจจุบัน <em>(การคำนวณตามความยาวกำลังพัฒนา)</em></div>
+    <div id="broselowContent" class="summary" style="border-style: solid; white-space: pre-wrap;"></div>
+  </div>
+
+  <!-- FAB: Add to Home Screen + Refresh (optional if app.js รองรับ) -->
+  <div class="fab">
+    <button id="a2hsBtn" class="secondary" style="display:none;" onclick="triggerA2HS()">➕ Add to Home</button>
+    <button onclick="hardReload()">🔄 Refresh</button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
