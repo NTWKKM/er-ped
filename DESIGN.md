@@ -1,25 +1,32 @@
-# Design System & UI Specifications — ER-TSH Pediatric Calculator
+# Design System & UI Specifications — MNRH ER-PED Calculator (Braun Aesthetic)
 
 ## Design Tokens
 
-### Color Palette
-- `--bg`: `#f6f7fb` (Soft clinical slate backdrop)
-- `--card`: `#ffffff` (Clean white card container)
-- `--ink`: `#1f2937` (High-contrast dark charcoal text)
-- `--muted`: `#6b7280` (Muted grey secondary labels)
-- `--accent`: `#89b6ff` (Pastel medical blue)
-- `--accent2`: `#ffb3c1` (Pastel warm pink)
-- `--accent3`: `#b2f0e6` (Pastel mint green for active states)
-- `--accent4`: `#ffe7a1` (Pastel alert yellow)
-- `--good`: `#0ea5e9` (Info blue)
-- `--danger`: `#ef4444` (Clinical warning red)
+### Braun Color Palette
+- `--bg`: `#F5F4F0` (Warm vintage off-white matte plastic chassis)
+- `--card`: `#FFFFFF` (Crisp white surface container)
+- `--panel`: `#EBEAE5` (Tactile inset surface container)
+- `--ink`: `#1E1E1E` (High-contrast graphite charcoal text)
+- `--muted`: `#666563` (Industrial neutral grey secondary labels)
+- `--border`: `#D5D3CE` (Precision 1px tactile border)
+- `--accent`: `#D9480F` (Braun Signal Orange for primary actions & active states)
+- `--accent-hover`: `#C23E0A` (Darkened signal orange)
+- `--accent-subtle`: `#FDF2E9` (Subtle tint for highlights)
+- `--dark-btn`: `#2A2927` (Dark charcoal tactile action button)
+- `--good`: `#16A34A` (Clinical safe green)
+- `--warning`: `#D97706` (Amber warning / Broselow indicator)
+- `--danger`: `#DC2626` (Emergency PALS critical red)
+- `--blue`: `#2563EB` (Dosing directive blue)
 
 ### Typography
-- **Primary Font**: `'Sarabun'`, system-ui, sans-serif (Google Fonts Sarabun for optimal Thai/English legibility in clinical settings).
-- **Weights**: Light (300), Regular (400), Semi-bold (600), Bold (700).
+- **Primary Font**: `'Sarabun'`, system-ui, sans-serif (Google Fonts Sarabun for optimal Thai/English legibility).
+- **Monospace / Tabular Nums**: `'JetBrains Mono'`, monospace for digital readouts and dosage metrics.
+- **Weights**: Regular (400), Medium (500), Semi-bold (600), Bold (700).
 
 ## UI States & Components
-1. **Fixed Topbar**: Sticky header with `backdrop-filter: blur(6px)` to maintain quick access to ABW, Age, Length, and Broselow tape indicators regardless of page scroll.
-2. **Tabs & Active Indicators**: Visual highlight with `--accent3` pastel mint background and soft borders.
-3. **Broselow Drawer Panel**: Fixed bottom drawer sliding in smoothly over main content for emergency quick access.
-4. **Summary & Output Cards**: Dashed light grey borders with clear HTML typography hierarchy (`<strong>`, `• bullets`) for fast glanceability under high-stress ER situations.
+1. **Top Biometric Instrument Bar**: Sticky top bar formatted as an industrial control panel with inset fields for ABW, Age, Length, and dynamic IBW/Broselow badges.
+2. **Braun Segmented Control Tabs**: Vintage radio-style depressed button toggles with active indicator in Braun Signal Orange (`#D9480F`).
+3. **Hero Dosage Metrics**: Prominent digital readout blocks (`.hero-metric`) displaying key numbers (e.g., Epinephrine dose, Joule/kg, Fluid rate) in bold tabular font for zero-latency scanning.
+4. **Emergency PALS Floating Button**: Instant-access emergency action button (`🚨 PALS`) anchored at bottom-right in dark graphite & Braun signal accents.
+5. **Broselow Drawer Panel**: Precision bottom drawer with color-coded band headings sliding over content for quick reference.
+

@@ -46,9 +46,9 @@ function initUI(){
 function estimateWeightFromAge(ageYr) {
   ageYr = Number(ageYr);
   if (!isFinite(ageYr) || ageYr <= 0) return null;
-  if (ageYr < 1)  return 9;                      // ทารก ~9 kg (ดีฟอลต์)
-  if (ageYr <= 6) return Math.round(ageYr * 2 + 8); // 1–6 yr: 2×age + 8
-  return Math.round((7 * ageYr - 5) / 2);        // >6 yr: (7×age - 5)/2
+  if (ageYr < 1)  return Math.round(((ageYr * 12) + 9) / 2 * 10) / 10; // Weech formula <1 yr: (mo + 9) / 2
+  if (ageYr <= 6) return Math.round(ageYr * 2 + 8);                     // 1–6 yr: 2×age + 8
+  return Math.round((7 * ageYr - 5) / 2);                               // >6 yr: (7×age - 5)/2
 }
 
 // Holliday–Segar: mL/day → mL/h
@@ -66,12 +66,14 @@ function calcMaintenanceMlPerHr(weightKg) {
 
 // ── UI: tabs
 function showTab(id, btn) {
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  ['dose','atb','fluids','pals','ncpr'].forEach(x=>{
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const targetBtn = btn || document.querySelector(`.tab-btn[data-tab="${id}"]`);
+  if (targetBtn) targetBtn.classList.add('active');
+  ['dose','atb','fluids','pals','ncpr'].forEach(x => {
     const el = document.getElementById(x);
-    if (el) el.style.display = (x===id)?'block':'none';
+    if (el) el.style.display = (x === id) ? 'block' : 'none';
   });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function getWeight(){
@@ -113,11 +115,10 @@ function applyIBWToBW(){
 
 function onWeightChange(){
   const w = getWeight();
-  if (!document.getElementById('doseW').value) document.getElementById('doseW').value = w||'';
-  if (!document.getElementById('atbW').value)  document.getElementById('atbW').value  = w||'';
-  if (!document.getElementById('fW').value)    document.getElementById('fW').value    = w||'';
-  if (!document.getElementById('pW').value)    document.getElementById('pW').value    = w||'';
-  if (!document.getElementById('nW').value)    document.getElementById('nW').value    = w||'';
+  ['doseW','atbW','fW','pW','nW'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = w || '';
+  });
   refreshBroselowChip();
   calcAll();
 }
@@ -1233,6 +1234,18 @@ function calcPALS(){
   // --- build pretty HTML output (หัวข้อหนา + เว้นบรรทัด) ---
   const blocks = [];
   const S = ()=> blocks.push('&nbsp;'); // spacer line that actually renders
+
+  // Hero Digital Metrics
+  blocks.push(`
+<div class="hero-metric">
+  <div class="hero-label">🚨 EPINEPHRINE ARREST (1:10,000)</div>
+  <div class="hero-val">${epiMg.toFixed(2)}<span class="unit">mg</span> (${epiMl.toFixed(1)}<span class="unit">mL IV/IO</span>)</div>
+</div>
+<div class="hero-metric" style="border-left-color: #2563EB;">
+  <div class="hero-label">⚡️ DEFIBRILLATION DOSE</div>
+  <div class="hero-val">${j1.toFixed(0)}<span class="unit">J</span> → ${j2.toFixed(0)}<span class="unit">J</span></div>
+</div>
+  `);
 
   // Cardiac Arrest
   blocks.push(`<strong>${secArrestTitle}</strong>`);

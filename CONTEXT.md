@@ -1,4 +1,4 @@
-# Clinical Domain Context & Glossary — ER-TSH Pediatric Calculator
+# Clinical Domain Context & Glossary — MNRH ER-PED Calculator
 
 ## Glossary
 - **ABW (Actual Body Weight)**: Patient's current measured or reported weight in kilograms.
