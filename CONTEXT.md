@@ -4,7 +4,7 @@
 - **ABW (Actual Body Weight)**: Patient's current measured or reported weight in kilograms.
 - **IBW (Ideal Body Weight)**: Calculated target weight for dosing to avoid toxicity in overweight or malnourished pediatric patients.
 - **Weech Formula**: Age-based weight estimation algorithm:
-  - `< 1 year`: 9 kg default
+  - `< 1 year`: `(months + 9) / 2` kg
   - `1–6 years`: `2 × age + 8` kg
   - `> 6 years`: `(7 × age - 5) / 2` kg
 - **Holliday–Segar Method**: Standard maintenance fluid calculation:
@@ -18,3 +18,6 @@
 ## Architectural Decision Records (ADR)
 1. **ADR-001: Client-Side Data Rendering**: All drug calculations occur synchronously in the client browser using pre-compiled JSON rules (`dataset.json`) to eliminate network dependencies in hospital environments with poor connectivity.
 2. **ADR-002: Dynamic Strength & Preparation Parsing**: RegEx-based strength parser evaluates text formats such as `120 mg / 5 mL`, `250 mg / 5 mL`, `325 mg / tab` to automatically provide fluid mL and tablet counts alongside absolute mg dosages.
+3. **ADR-003: Single Source of Truth Biometric Engine**: Topbar ABW/IBW serves as the sole source of weight truth across all modules, rendering read-only weight badges in calculator cards to prevent intra-module weight drift.
+4. **ADR-004: Standardized Medical English Order Strings**: EHR order copies format orders in standardized medical English (e.g., `Paracetamol 250 mg (10 mL) PO q 6 hr PRN [BW: 16.5 kg]`) for seamless clinical documentation.
+5. **ADR-005: Enforced Safety Ceilings**: Calculated doses exceeding `maxPerDoseMg` or `maxPerDayMg` in `dataset.json` automatically clamp to safety maximums and display high-contrast warning badges.

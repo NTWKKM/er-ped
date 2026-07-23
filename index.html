@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ER-PED — Pediatric Calculator</title>
+  <title>ER-PED — Pediatric Calculator Workstation</title>
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.webmanifest" />
@@ -56,11 +56,11 @@
       z-index: 60; 
       background: #E8E7E2; 
       border-bottom: 2px solid var(--border-dark); 
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
     }
     
     .topbar-inner { 
-      max-width: 980px; 
+      max-width: 1040px; 
       margin: 0 auto; 
       display: flex; 
       align-items: center; 
@@ -95,10 +95,10 @@
       background: var(--card); 
       border: 1px solid var(--border); 
       border-radius: 8px; 
-      padding: 6px 12px; 
+      padding: 6px 10px; 
       display: flex; 
       align-items: center; 
-      gap: 8px; 
+      gap: 6px; 
       box-shadow: inset 0 1px 2px rgba(0,0,0,0.03); 
     }
 
@@ -111,7 +111,7 @@
     }
 
     .chip input[type="number"] { 
-      width: 80px; 
+      width: 72px; 
       padding: 6px 8px; 
       border: 1px solid var(--border); 
       border-radius: 6px; 
@@ -128,11 +128,29 @@
       box-shadow: 0 0 0 2px var(--ring);
     }
 
+    .unit-toggle-btn {
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 800;
+      border-radius: 4px;
+      border: 1px solid var(--border-dark);
+      background: var(--panel);
+      color: var(--ink);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s;
+    }
+
+    .unit-toggle-btn:hover {
+      background: var(--dark-btn);
+      color: #FFFFFF;
+    }
+
     /* Braun Tactile Toggle Switch */
     .chip .switch { 
       appearance: none; 
-      width: 36px; 
-      height: 20px; 
+      width: 34px; 
+      height: 18px; 
       border-radius: 10px; 
       background: #D5D3CE; 
       position: relative; 
@@ -149,8 +167,8 @@
     .chip .switch:before { 
       content: ''; 
       position: absolute; 
-      top: 2px; 
-      left: 2px; 
+      top: 1px; 
+      left: 1px; 
       width: 14px; 
       height: 14px; 
       border-radius: 50%; 
@@ -183,8 +201,8 @@
 
     /* Container */
     .container { 
-      max-width: 980px; 
-      margin: 110px auto 90px; 
+      max-width: 1040px; 
+      margin: 105px auto 90px; 
       padding: 16px; 
     }
 
@@ -285,6 +303,26 @@
 
     .btn:hover { background: #DFDED9; }
 
+    .btn-copy {
+      background: var(--dark-btn);
+      color: #FFFFFF;
+      border: 1px solid #111;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .btn-copy:hover {
+      background: var(--accent);
+      transform: translateY(-1px);
+    }
+
     .pill { 
       display: inline-block; 
       padding: 6px 12px; 
@@ -314,49 +352,173 @@
     .summary { 
       background: #F9F8F6; 
       border: 1px solid var(--border); 
-      padding: 16px; 
+      padding: 18px; 
       border-radius: 8px; 
       white-space: pre-wrap; 
       line-height: 1.6; 
       font-size: 14px;
     }
 
-    .hero-metric {
-      background: #232220;
-      color: #FFFFFF;
-      border: 1px solid #101010;
-      border-left: 4px solid var(--accent);
-      border-radius: 8px;
-      padding: 14px 18px;
-      margin-bottom: 12px;
-      font-family: 'JetBrains Mono', monospace;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
+    .hero-metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
     }
 
+    .hero-metric {
+      background: #1F1E1C;
+      color: #FFFFFF;
+      border: 1px solid #000;
+      border-left: 5px solid var(--accent);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 4px;
+      box-shadow: inset 0 1px 3px rgba(255,255,255,0.05), 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .hero-metric.good { border-left-color: var(--good); }
+    .hero-metric.warning { border-left-color: var(--warning); }
+    .hero-metric.danger { border-left-color: var(--danger); }
+    .hero-metric.blue { border-left-color: var(--blue); }
+
     .hero-metric .hero-label {
-      font-size: 12px;
+      font-size: 11px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: #A3A19C;
       font-family: 'Sarabun', sans-serif;
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .hero-metric .hero-val {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 800;
       color: #FFFFFF;
+      line-height: 1.2;
     }
 
     .hero-metric .hero-val span.unit {
-      font-size: 14px;
+      font-size: 13px;
       color: #FF8A65;
-      font-weight: 600;
+      font-weight: 700;
       margin-left: 4px;
+    }
+
+    .hero-metric .hero-sub {
+      font-size: 12px;
+      color: #D5D3CE;
+      font-family: 'Sarabun', sans-serif;
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    .badge-cap {
+      display: inline-block;
+      padding: 4px 10px;
+      background: #FEF3C7;
+      color: #92400E;
+      border: 1px solid #F59E0B;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-top: 6px;
+    }
+
+    .weight-lock-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      width: 100%;
+    }
+
+    .weight-lock-chip strong {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+      font-size: 16px;
+    }
+
+    /* Braun Integrated Combobox */
+    .combobox-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .combobox-input {
+      width: 100%;
+      padding: 10px 36px 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      outline: none;
+      background: #FAFAFA;
+      font-size: 14px;
+      font-family: inherit;
+      font-weight: 600;
+    }
+
+    .combobox-input:focus {
+      border-color: var(--accent);
+      background: #FFFFFF;
+      box-shadow: 0 0 0 2px var(--ring);
+    }
+
+    .combobox-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: #FFFFFF;
+      border: 1px solid var(--border-dark);
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      max-height: 280px;
+      overflow-y: auto;
+      display: none;
+    }
+
+    .combobox-dropdown.open {
+      display: block;
+    }
+
+    .combobox-item {
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 13px;
+      border-bottom: 1px solid #F3F4F6;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .combobox-item:last-child {
+      border-bottom: none;
+    }
+
+    .combobox-item:hover, .combobox-item.selected {
+      background: var(--accent-subtle);
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .combobox-item .item-tag {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--panel);
+      color: var(--muted);
+      font-weight: 600;
     }
 
     .note { 
@@ -415,14 +577,14 @@
       left: 16px; 
       right: 16px; 
       bottom: 16px; 
-      max-width: 940px;
+      max-width: 960px;
       margin: 0 auto;
       z-index: 70; 
       background: #FFFFFF; 
       border: 2px solid var(--border-dark); 
       border-radius: 10px; 
       box-shadow: 0 20px 40px rgba(0,0,0,0.2); 
-      padding: 16px; 
+      padding: 18px; 
     }
 
     .drawer-header { 
@@ -434,6 +596,38 @@
 
     .hidden { display: none !important; }
 
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--dark-btn);
+      color: #FFFFFF;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 13px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--accent);
+    }
+
+    .toast.show {
+      display: flex;
+      animation: fadeInOut 2.2s forwards;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translate(-50%, 10px); }
+      15% { opacity: 1; transform: translate(-50%, 0); }
+      85% { opacity: 1; transform: translate(-50%, 0); }
+      100% { opacity: 0; transform: translate(-50%, -10px); }
+    }
+
     /* Footer */
     footer.app-footer {
       text-align: center;
@@ -444,35 +638,21 @@
       font-size: 13px;
     }
 
-    .combobox-group {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-    .combobox-search {
-      flex: 1;
-      min-width: 140px;
-    }
-    .combobox-select {
-      flex: 2;
-      min-width: 180px;
-    }
-
     /* Responsive Mobile Tweaks */
     @media (max-width: 768px) {
-      .container { margin-top: 95px; padding: 10px; }
+      .container { margin-top: 110px; padding: 10px; }
       .grid { grid-template-columns: repeat(6, 1fr); gap: 10px; }
       .col-12, .col-9, .col-8, .col-6, .col-4 { grid-column: span 6; }
       .col-3 { grid-column: span 3; }
       .segmented-control { flex-wrap: wrap; }
       .tab-btn { min-width: 30%; font-size: 12px; padding: 6px 8px; }
-      .combobox-group { flex-direction: column; align-items: stretch; gap: 6px; }
       .topbar-inner { padding: 6px 10px; gap: 6px; justify-content: space-between; }
-      .chip { padding: 4px 8px; gap: 4px; }
+      .chip { padding: 4px 6px; gap: 4px; }
       .chip label.chip-label { font-size: 10px; }
       .chip input[type="number"] { width: 56px; padding: 4px 6px; font-size: 13px; }
       .brand-badge { padding: 4px 8px; font-size: 11px; }
       .broselow-chip { padding: 4px 8px; font-size: 11px; }
+      .hero-metric .hero-val { font-size: 20px; }
     }
   </style>
 </head>
@@ -489,15 +669,16 @@
         <label class="chip-label">ABW</label>
         <input type="number" id="weight" min="0" step="0.1" placeholder="kg" oninput="onWeightChange()"/>
         
-        <label class="chip-label" style="margin-left:6px;">Age</label>
-        <input type="number" id="age" min="0" step="0.1" placeholder="yr" oninput="estimateFromAge()"/>
+        <label class="chip-label" style="margin-left:4px;">Age</label>
+        <input type="number" id="age" min="0" step="0.1" placeholder="0" oninput="estimateFromAge()"/>
+        <button id="ageUnitBtn" class="unit-toggle-btn" onclick="toggleAgeUnit()" title="คลิกเพื่อสลับหน่วยปี/เดือน">Yr</button>
         
-        <label class="chip-label" style="margin-left:6px;">Len</label>
+        <label class="chip-label" style="margin-left:4px;">Len</label>
         <input type="number" id="length" min="0" step="0.1" placeholder="cm" oninput="updateIBW()"/>
 
-        <label style="display:flex; align-items:center; gap:6px; margin:0; cursor:pointer;" title="ใช้ IBW ตามสูตร Weech แทนน้ำหนักจริง">
+        <label style="display:flex; align-items:center; gap:4px; margin:0; cursor:pointer;" title="ใช้ IBW ตามสูตร Weech แทนน้ำหนักจริง">
           <input type="checkbox" id="useIBW" class="switch" onchange="applyIBWToBW()"/>
-          <span style="font-size:12px; font-weight:600; color:var(--muted);">IBW</span>
+          <span style="font-size:11px; font-weight:700; color:var(--muted);">IBW</span>
         </label>
       </div>
 
@@ -520,26 +701,31 @@
     
     <!-- Braun Radio-Style Segmented Navigation Tabs -->
     <div class="segmented-control" role="tablist">
-      <button class="tab-btn active" data-tab="dose" onclick="showTab('dose', this)">💊 Dose</button>
-      <button class="tab-btn" data-tab="atb" onclick="showTab('atb', this)">🦠 ATB</button>
-      <button class="tab-btn" data-tab="fluids" onclick="showTab('fluids', this)">💧 IV Fluids</button>
-      <button class="tab-btn" data-tab="pals" onclick="showTab('pals', this)">🧒🏻 PALS</button>
-      <button class="tab-btn" data-tab="ncpr" onclick="showTab('ncpr', this)">👶🏻 NCPR</button>
+      <button class="tab-btn active" data-tab="dose" onclick="showTab('dose', this)">💊 Dose <span style="font-size:10px; opacity:0.7;">[Alt+1]</span></button>
+      <button class="tab-btn" data-tab="atb" onclick="showTab('atb', this)">🦠 ATB <span style="font-size:10px; opacity:0.7;">[Alt+2]</span></button>
+      <button class="tab-btn" data-tab="fluids" onclick="showTab('fluids', this)">💧 IV Fluids <span style="font-size:10px; opacity:0.7;">[Alt+3]</span></button>
+      <button class="tab-btn" data-tab="pals" onclick="showTab('pals', this)">🧒🏻 PALS <span style="font-size:10px; opacity:0.7;">[Alt+4]</span></button>
+      <button class="tab-btn" data-tab="ncpr" onclick="showTab('ncpr', this)">👶🏻 NCPR <span style="font-size:10px; opacity:0.7;">[Alt+5]</span></button>
     </div>
 
     <!-- Pediatric Dose Calculator -->
     <section id="dose" class="card">
       <div class="grid">
         <div class="col-12">
-          <label>Drug Selection & Search</label>
-          <div class="combobox-group">
-            <input id="doseSearch" type="text" class="combobox-search" placeholder="🔍 ค้นหาชื่อยา (พิมพ์เพื่อกรอง)..." oninput="filterDoseList()"/>
-            <select id="doseDrug" class="combobox-select" onchange="calcDose()"></select>
+          <label>Drug Selection & Search (Combobox)</label>
+          <div class="combobox-wrapper">
+            <input type="text" id="doseSearch" class="combobox-input" placeholder="🔍 พิมพ์ชื่อยาเพื่อค้นหา (e.g. Paracetamol, Ibuprofen, Diazepam)..." oninput="onDoseSearchInput()" onfocus="openDoseCombobox()" />
+            <div id="doseComboboxDropdown" class="combobox-dropdown"></div>
           </div>
+          <select id="doseDrug" style="display:none;" onchange="calcDose()"></select>
         </div>
         <div class="col-6">
-          <label>Body Weight (kg)</label>
-          <input type="number" id="doseW" min="0" step="0.1" placeholder="ซิงค์จาก Topbar ABW" oninput="onTabWeightChange(this.value)">
+          <label>Active Weight (Single Source of Truth)</label>
+          <div class="weight-lock-chip">
+            <span>ABW/IBW:</span>
+            <strong id="doseWBadge">— kg</strong>
+            <span style="font-size:11px; color:var(--muted); margin-left:auto;">🔒 Topbar Sync</span>
+          </div>
         </div>
         <div class="col-6">
           <label>Form Strength Override (mg/mL, mg/tab)</label>
@@ -556,15 +742,20 @@
     <section id="atb" class="card" style="display:none;">
       <div class="grid">
         <div class="col-12">
-          <label>Antibiotic Selection & Search</label>
-          <div class="combobox-group">
-            <input id="atbSearch" type="text" class="combobox-search" placeholder="🔍 ค้นหายากลุ่ม ATB (พิมพ์เพื่อกรอง)..." oninput="filterATBList()"/>
-            <select id="atbDrug" class="combobox-select" onchange="calcATB()"></select>
+          <label>Antibiotic Selection & Search (Combobox)</label>
+          <div class="combobox-wrapper">
+            <input type="text" id="atbSearch" class="combobox-input" placeholder="🔍 พิมพ์ชื่อยาปฏิชีวนะเพื่อค้นหา (e.g. Amoxicillin, Augmentin, Ceftriaxone)..." oninput="onATBSearchInput()" onfocus="openATBCombobox()" />
+            <div id="atbComboboxDropdown" class="combobox-dropdown"></div>
           </div>
+          <select id="atbDrug" style="display:none;" onchange="calcATB()"></select>
         </div>
         <div class="col-6">
-          <label>Body Weight (kg)</label>
-          <input type="number" id="atbW" min="0" step="0.1" placeholder="ซิงค์จาก Topbar ABW" oninput="onTabWeightChange(this.value)">
+          <label>Active Weight (Single Source of Truth)</label>
+          <div class="weight-lock-chip">
+            <span>ABW/IBW:</span>
+            <strong id="atbWBadge">— kg</strong>
+            <span style="font-size:11px; color:var(--muted); margin-left:auto;">🔒 Topbar Sync</span>
+          </div>
         </div>
         <div class="col-6">
           <label>Form Strength Override (mg/mL, mg/tab)</label>
@@ -581,8 +772,11 @@
     <section id="fluids" class="card" style="display:none;">
       <div class="grid">
         <div class="col-4">
-          <label>Body Weight (kg)</label>
-          <input type="number" id="fW" min="0" step="0.1" placeholder="ซิงค์จาก Topbar ABW" oninput="onTabWeightChange(this.value)">
+          <label>Active Weight (Single Source of Truth)</label>
+          <div class="weight-lock-chip">
+            <span>BW:</span>
+            <strong id="fWBadge">— kg</strong>
+          </div>
         </div>
         <div class="col-4">
           <label>Dehydration Degree</label>
@@ -622,8 +816,12 @@
     <section id="pals" class="card" style="display:none;">
       <div class="grid">
         <div class="col-6">
-          <label>Body Weight (kg)</label>
-          <input type="number" id="pW" min="0" step="0.1" placeholder="ซิงค์จาก Topbar ABW" oninput="onTabWeightChange(this.value)">
+          <label>Active Weight (Single Source of Truth)</label>
+          <div class="weight-lock-chip">
+            <span>BW:</span>
+            <strong id="pWBadge">— kg</strong>
+            <span style="font-size:11px; color:var(--muted); margin-left:auto;">🔒 Topbar Sync</span>
+          </div>
         </div>
         <div class="col-6">
           <label>Patient Age (yr) (Optional for ETT)</label>
@@ -641,7 +839,10 @@
       <div class="grid">
         <div class="col-6">
           <label>Birth Weight (kg)</label>
-          <input type="number" id="nW" min="0" step="0.01" placeholder="น้ำหนักแรกเกิด kg" oninput="onTabWeightChange(this.value)">
+          <div style="display:flex; gap:6px;">
+            <input type="number" id="nW" min="0" step="0.01" placeholder="น้ำหนักแรกเกิด kg" oninput="calcNCPR()">
+            <button class="btn" style="padding:6px 10px; font-size:11px;" onclick="syncNCPRWithABW()" title="ดึงค่าน้ำหนักจาก Topbar ABW">Sync ABW</button>
+          </div>
         </div>
         <div class="col-6">
           <label>Gestational Age (wk)</label>
@@ -660,7 +861,8 @@
 
     <!-- Standalone Footer -->
     <footer class="app-footer">
-      <div><strong>ER-PED Calculator</strong> — Standalone Clinical Tool</div>
+      <div><strong>ER-PED Workstation</strong> — Braun Clinical Instrument</div>
+      <div style="font-size:11px; margin-top:4px; opacity:0.8;">Hotkeys: <code>Alt+1..5</code> Tabs | <code>Alt+P</code> Emergency PALS | <code>Esc</code> Close Drawer</div>
     </footer>
 
   </div><!-- /container -->
@@ -669,7 +871,7 @@
   <div id="broselowPanel" class="drawer hidden">
     <div class="drawer-header">
       <strong style="font-size:16px;">📏 Broselow Tape Reference</strong>
-      <button class="btn" style="padding:4px 10px; font-size:12px;" onclick="toggleBroselowPanel()">Close ✖</button>
+      <button class="btn" style="padding:4px 10px; font-size:12px;" onclick="toggleBroselowPanel()">Close ✖ (Esc)</button>
     </div>
     <div style="font-size:12px; color:var(--muted); margin-bottom:8px;">คำนวณตามน้ำหนัก ABW / IBW ปัจจุบัน</div>
     <div id="broselowContent" class="summary" style="white-space: pre-wrap;"></div>
@@ -677,12 +879,17 @@
 
   <!-- Emergency Floating Action Buttons -->
   <div class="fab">
-    <button class="pals-fab" onclick="showTab('pals')" title="เข้าถึง PALS Resuscitation ทันที">
+    <button class="pals-fab" onclick="showTab('pals')" title="เข้าถึง PALS Resuscitation ทันที (Alt+P)">
       🚨 PALS CODE
     </button>
     <button onclick="hardReload()" title="โหลดแอปใหม่">
       🔄 Reload
     </button>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">
+    <span>📋 Order copied to clipboard!</span>
   </div>
 
   <script src="app.js"></script>
