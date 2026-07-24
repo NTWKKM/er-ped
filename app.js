@@ -52,6 +52,8 @@ function loadDataset() {
         }
       });
   }
+}
+
 function initTheme() {
   const saved = localStorage.getItem('er_ped_theme');
   if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
