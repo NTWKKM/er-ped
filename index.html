@@ -527,6 +527,12 @@
       font-weight: 700;
     }
 
+    .combobox-item.kb-active {
+      background: var(--accent-subtle);
+      outline: 2px solid var(--accent);
+      outline-offset: -2px;
+    }
+
     .combobox-item .item-tag {
       font-size: 11px;
       padding: 2px 6px;
@@ -764,8 +770,8 @@
         <div class="col-12">
           <label>Drug Selection & Search (Combobox)</label>
           <div class="combobox-wrapper">
-            <input type="text" id="doseSearch" class="combobox-input" placeholder="🔍 พิมพ์ชื่อยาเพื่อค้นหา (e.g. Paracetamol, Ibuprofen, Diazepam)..." oninput="onDoseSearchInput()" onfocus="openDoseCombobox()" />
-            <div id="doseComboboxDropdown" class="combobox-dropdown"></div>
+            <input type="text" id="doseSearch" class="combobox-input" placeholder="🔍 พิมพ์ชื่อยาเพื่อค้นหา (e.g. Paracetamol, Ibuprofen, Diazepam)..." oninput="onDoseSearchInput()" onfocus="openDoseCombobox()" onkeydown="onComboboxKeydown(event,'dose')" role="combobox" aria-expanded="false" aria-controls="doseComboboxDropdown" aria-autocomplete="list" aria-label="ค้นหายา (Search medication)" />
+            <div id="doseComboboxDropdown" class="combobox-dropdown" role="listbox"></div>
           </div>
           <select id="doseDrug" style="display:none;" onchange="calcDose()"></select>
         </div>
@@ -794,8 +800,8 @@
         <div class="col-12">
           <label>Antibiotic Selection & Search (Combobox)</label>
           <div class="combobox-wrapper">
-            <input type="text" id="atbSearch" class="combobox-input" placeholder="🔍 พิมพ์ชื่อยาปฏิชีวนะเพื่อค้นหา (e.g. Amoxicillin, Augmentin, Ceftriaxone)..." oninput="onATBSearchInput()" onfocus="openATBCombobox()" />
-            <div id="atbComboboxDropdown" class="combobox-dropdown"></div>
+            <input type="text" id="atbSearch" class="combobox-input" placeholder="🔍 พิมพ์ชื่อยาปฏิชีวนะเพื่อค้นหา (e.g. Amoxicillin, Augmentin, Ceftriaxone)..." oninput="onATBSearchInput()" onfocus="openATBCombobox()" onkeydown="onComboboxKeydown(event,'atb')" role="combobox" aria-expanded="false" aria-controls="atbComboboxDropdown" aria-autocomplete="list" aria-label="ค้นหายาปฏิชีวนะ (Search antibiotic)" />
+            <div id="atbComboboxDropdown" class="combobox-dropdown" role="listbox"></div>
           </div>
           <select id="atbDrug" style="display:none;" onchange="calcATB()"></select>
         </div>

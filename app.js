@@ -67,11 +67,32 @@ function initUI(){
 // --------- IBW / Age & Length Weight Engine ---------
 
 function toggleAgeUnit(){
+  const prevUnit = gAgeUnit;
   gAgeUnit = (gAgeUnit === 'yr') ? 'mo' : 'yr';
   const btn = document.getElementById('ageUnitBtn');
   const input = document.getElementById('age');
   if (btn) btn.textContent = (gAgeUnit === 'yr') ? 'Yr' : 'Mo';
   if (input) input.placeholder = (gAgeUnit === 'yr') ? '0 (yr)' : '0 (mo)';
+
+  // Convert the raw numeric value into the new unit so the age it represents
+  // doesn't silently change (e.g. "12" months becoming "12" years).
+  if (input) {
+    const raw = parseFloat(input.value);
+    if (isFinite(raw) && raw > 0) {
+      let converted;
+      if (prevUnit === 'mo' && gAgeUnit === 'yr') {
+        converted = raw / 12;
+      } else if (prevUnit === 'yr' && gAgeUnit === 'mo') {
+        converted = raw * 12;
+      } else {
+        converted = raw;
+      }
+      // Round to a sensible precision: whole months, 1 decimal for years.
+      converted = (gAgeUnit === 'mo') ? Math.round(converted) : Math.round(converted * 10) / 10;
+      input.value = converted;
+    }
+  }
+
   estimateFromAge();
 }
 
@@ -289,6 +310,12 @@ function estimateFromAge(fromPAge = false) {
       gUserABW = estimateWeightFromAge(ageVal, gAgeUnit);
       gWeightSource = 'estimated';
     }
+  } else if (gWeightSource === 'estimated') {
+    // Age was cleared and the current weight value was only an age-derived
+    // estimate — clear it too rather than re-adopting the stale number as
+    // if it were a real measured weight.
+    gUserABW = null;
+    gWeightSource = null;
   } else {
     const weightInput = document.getElementById('weight');
     const wVal = weightInput ? parseFloat(weightInput.value) : NaN;
@@ -558,6 +585,7 @@ function openDoseCombobox(){
   closeAllComboboxes();
   const dropdown = document.getElementById('doseComboboxDropdown');
   if (dropdown) dropdown.classList.add('open');
+  document.getElementById('doseSearch')?.setAttribute('aria-expanded', 'true');
   renderDoseComboboxDropdown(document.getElementById('doseSearch').value);
 }
 
@@ -565,11 +593,14 @@ function openATBCombobox(){
   closeAllComboboxes();
   const dropdown = document.getElementById('atbComboboxDropdown');
   if (dropdown) dropdown.classList.add('open');
+  document.getElementById('atbSearch')?.setAttribute('aria-expanded', 'true');
   renderATBComboboxDropdown(document.getElementById('atbSearch').value);
 }
 
 function closeAllComboboxes(){
   document.querySelectorAll('.combobox-dropdown').forEach(d => d.classList.remove('open'));
+  document.getElementById('doseSearch')?.setAttribute('aria-expanded', 'false');
+  document.getElementById('atbSearch')?.setAttribute('aria-expanded', 'false');
 }
 
 function onDoseSearchInput(){
@@ -635,7 +666,7 @@ function renderDoseComboboxDropdown(filterTxt){
     const selectedClass = (d.key === currentKey) ? 'selected' : '';
     const cat = getDrugCategory(d.name);
     return `
-      <div class="combobox-item ${selectedClass}" onclick="selectDoseItem('${d.key}', '${d.name.replace(/'/g, "\\'")}')">
+      <div class="combobox-item ${selectedClass}" role="option" data-key="${d.key}" data-name="${d.name.replace(/"/g, '&quot;')}" onclick="selectDoseItem('${d.key}', '${d.name.replace(/'/g, "\\'")}')">
         <div>
           <strong>${d.name}</strong>
           <div style="font-size:11px; color:var(--muted);">${d.preparation || ''}</div>
@@ -667,7 +698,7 @@ function renderATBComboboxDropdown(filterTxt){
   dropdown.innerHTML = filtered.map(d => {
     const selectedClass = (d.key === currentKey) ? 'selected' : '';
     return `
-      <div class="combobox-item ${selectedClass}" onclick="selectATBItem('${d.key}', '${d.name.replace(/'/g, "\\'")}')">
+      <div class="combobox-item ${selectedClass}" role="option" data-key="${d.key}" data-name="${d.name.replace(/"/g, '&quot;')}" onclick="selectATBItem('${d.key}', '${d.name.replace(/'/g, "\\'")}')">
         <div>
           <strong>${d.name}</strong>
           <div style="font-size:11px; color:var(--muted);">${d.preparation || ''}</div>
@@ -676,6 +707,54 @@ function renderATBComboboxDropdown(filterTxt){
       </div>
     `;
   }).join('');
+}
+
+// Keyboard navigation (ArrowUp/ArrowDown/Enter/Escape) for the dose/atb comboboxes
+function onComboboxKeydown(e, kind){
+  const dropdownId = (kind === 'dose') ? 'doseComboboxDropdown' : 'atbComboboxDropdown';
+  const dropdown = document.getElementById(dropdownId);
+  if (!dropdown) return;
+
+  if (e.key === 'Escape') {
+    closeAllComboboxes();
+    e.target.setAttribute('aria-expanded', 'false');
+    return;
+  }
+
+  if (!dropdown.classList.contains('open')) {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      if (kind === 'dose') openDoseCombobox(); else openATBCombobox();
+      e.target.setAttribute('aria-expanded', 'true');
+    }
+    return;
+  }
+
+  const items = Array.from(dropdown.querySelectorAll('.combobox-item[role="option"]'));
+  if (!items.length) return;
+  let idx = items.findIndex(it => it.classList.contains('kb-active'));
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    items.forEach(it => it.classList.remove('kb-active'));
+    idx = (idx + 1) % items.length;
+    items[idx].classList.add('kb-active');
+    items[idx].scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    items.forEach(it => it.classList.remove('kb-active'));
+    idx = (idx <= 0) ? items.length - 1 : idx - 1;
+    items[idx].classList.add('kb-active');
+    items[idx].scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    const active = items[idx] || items[0];
+    if (active) {
+      const key = active.getAttribute('data-key');
+      const name = active.getAttribute('data-name');
+      if (kind === 'dose') selectDoseItem(key, name); else selectATBItem(key, name);
+      e.target.setAttribute('aria-expanded', 'false');
+    }
+  }
 }
 
 // --------- Formatting & Helper Utilities ---------
@@ -708,11 +787,33 @@ function parseStrength(prepText){
 
 function dosesPerDayFromFreq(freq){
   if (!freq) return null;
-  const m = String(freq).match(/q\s*(\d+)(?:[–-]\d+)?\s*h/i);
-  if (!m) return null;
-  const qh = parseFloat(m[1]);
-  if (!(qh>0)) return null;
-  return Math.max(1, Math.round(24 / qh));
+  // Composite strings like "bid/tid" or "bid-tid": use the first (lower, safer)
+  // frequency term found, left-to-right, rather than failing entirely.
+  const f = String(freq).trim().toLowerCase();
+
+  // div N (e.g. "div 3", "divided q8h x3")
+  let m = f.match(/div(?:ided)?\s*(\d+)/);
+  if (m) {
+    const n = parseInt(m[1], 10);
+    if (n > 0) return n;
+  }
+
+  // qXh / qX-Yh (e.g. "q8h", "q 6-8 h") — take the shorter (more frequent/safer) interval
+  m = f.match(/q\s*(\d+)(?:\s*[–-]\s*(\d+))?\s*h/);
+  if (m) {
+    const h1 = parseFloat(m[1]);
+    const h2 = m[2] ? parseFloat(m[2]) : h1;
+    const qh = Math.min(h1, h2);
+    if (qh > 0) return Math.max(1, Math.round(24 / qh));
+  }
+
+  // Named frequencies, checked as whole-word-ish tokens to avoid false matches
+  if (/\bqid\b/.test(f)) return 4;
+  if (/\btid\b/.test(f)) return 3;
+  if (/\bbid\b/.test(f)) return 2;
+  if (/\b(od|qd|once\s*daily|once\s*a\s*day|daily)\b/.test(f)) return 1;
+
+  return null;
 }
 
 function calcAll(){ calcDose(); calcATB(); calcFluids(); calcPALS(); calcNCPR(); }
@@ -856,8 +957,11 @@ function calcATB(){
   const outEl = document.getElementById('atbOut');
   if (!drug){ if(outEl) outEl.textContent='No dataset available'; return; }
 
-  const unit = (drug.unit || 'mg/kg').toLowerCase();
-  const isPerDay = unit.includes('mg/kg/day');
+  // NOTE: unlike the pediatricDose table, doseMinMgPerKg/doseMaxMgPerKg in the
+  // pediatricATB table are already PER-DOSE values (verified against every
+  // entry's "note" field: field × dosesPerDay(freq) reproduces the stated
+  // mg/kg/day total). The `unitType: "perDay"` tag on many entries does NOT
+  // mean the numeric field is a daily total — do not divide by dosesPerDay.
   const minPerKg = (drug.doseMinMgPerKg != null) ? Number(drug.doseMinMgPerKg) : null;
   const maxPerKg = (drug.doseMaxMgPerKg != null) ? Number(drug.doseMaxMgPerKg) : null;
 
@@ -867,22 +971,45 @@ function calcATB(){
 
   const dosesPerDay = dosesPerDayFromFreq(drug.split || drug.freq);
 
-  let perDoseMg = null, perDayMg = null;
-  if (isPerDay) {
-    if (bw && maxPerKg!=null) perDayMg = bw * maxPerKg;
-    if (perDayMg && limitMaxDay) perDayMg = cap(perDayMg, limitMaxDay);
-    if (perDayMg && dosesPerDay) perDoseMg = perDayMg / dosesPerDay;
-  } else {
-    if (bw && maxPerKg!=null) perDoseMg = bw * maxPerKg;
-    if (perDoseMg && limitMaxDose) perDoseMg = cap(perDoseMg, limitMaxDose);
-    if (perDoseMg && dosesPerDay) perDayMg = perDoseMg * dosesPerDay;
+  let perDoseMinMg = null, perDoseMaxMg = null, perDayMinMg = null, perDayMaxMg = null;
+  if (bw && minPerKg!=null) perDoseMinMg = bw * minPerKg;
+  if (bw && maxPerKg!=null) perDoseMaxMg = bw * maxPerKg;
+  if (limitMaxDose) {
+    if (perDoseMinMg!=null) perDoseMinMg = cap(perDoseMinMg, limitMaxDose);
+    if (perDoseMaxMg!=null) perDoseMaxMg = cap(perDoseMaxMg, limitMaxDose);
+  }
+  if (dosesPerDay) {
+    if (perDoseMinMg!=null) perDayMinMg = perDoseMinMg * dosesPerDay;
+    if (perDoseMaxMg!=null) perDayMaxMg = perDoseMaxMg * dosesPerDay;
+  }
+  if (limitMaxDay) {
+    if (perDayMinMg!=null) perDayMinMg = cap(perDayMinMg, limitMaxDay);
+    if (perDayMaxMg!=null) perDayMaxMg = cap(perDayMaxMg, limitMaxDay);
   }
 
-  const perDoseMgTxt = perDoseMg ? `${fmtMg(perDoseMg)} mg` : '—';
-  const perDayMgTxt  = perDayMg ? `${fmtMg(perDayMg)} mg` : '—';
+  // Use the highest available bound as the "single value" fallback so that
+  // maxPerDoseMg/EHR copy still reflects the safe upper reference dose.
+  const perDoseMg = (perDoseMaxMg!=null) ? perDoseMaxMg : perDoseMinMg;
+
+  function atbRangeTxt(minVal, maxVal){
+    if (minVal==null && maxVal==null) return '—';
+    if (minVal!=null && maxVal!=null && Math.abs(maxVal-minVal) >= 0.5) {
+      return `${fmtMg(minVal)}–${fmtMg(maxVal)} mg`;
+    }
+    return `${fmtMg(maxVal!=null?maxVal:minVal)} mg`;
+  }
+
+  const perDoseMgTxt = atbRangeTxt(perDoseMinMg, perDoseMaxMg);
+  const perDayMgTxt  = atbRangeTxt(perDayMinMg,  perDayMaxMg);
   let perDoseMlTxt = '';
-  if (form > 0 && perDoseMg) {
-    perDoseMlTxt = `${fmtMl(perDoseMg / form)} mL/tab`;
+  if (form > 0 && (perDoseMinMg!=null || perDoseMaxMg!=null)) {
+    const minMl = perDoseMinMg!=null ? perDoseMinMg / form : null;
+    const maxMl = perDoseMaxMg!=null ? perDoseMaxMg / form : null;
+    if (minMl!=null && maxMl!=null && Math.abs(maxMl-minMl) >= 0.05) {
+      perDoseMlTxt = `${fmtMl(minMl)}–${fmtMl(maxMl)} mL/tab`;
+    } else {
+      perDoseMlTxt = `${fmtMl(maxMl!=null?maxMl:minMl)} mL/tab`;
+    }
   }
 
   const title = (drug.name || drug.drug || 'Antibiotic');
@@ -1120,8 +1247,15 @@ function copyEHROrder(module){
       const concOverride = parseFloat(document.getElementById('doseConc')?.value);
       const strength = parseStrength(drug.preparation || drug.name || '');
       const mgPerMl = concOverride > 0 ? concOverride : (strength.mgPerMl || null);
-      
+
+      const unit = drug.unit || 'mg/kg';
+      const isPerDay = /mg\/kg\/day/i.test(unit) || drug.unitType === 'perDay';
       let doseMg = (drug.doseMaxMgPerKg || drug.dose || 10) * w;
+      if (isPerDay) {
+        if (drug.maxPerDayMg) doseMg = Math.min(doseMg, drug.maxPerDayMg);
+        const nPerDay = dosesPerDayFromFreq(drug.freq) || 1;
+        doseMg = doseMg / nPerDay;
+      }
       if (drug.maxPerDoseMg) doseMg = Math.min(doseMg, drug.maxPerDoseMg);
       
       let doseMlStr = '';
@@ -1137,6 +1271,8 @@ function copyEHROrder(module){
     const drug = (DS?.pediatricATB||[]).find(d=>d.key===key);
     if (drug) {
       const form = parseFloat(document.getElementById('atbForm')?.value);
+      // doseMaxMgPerKg is already a per-dose value in the ATB table (see calcATB
+      // note above) — do not divide by frequency here.
       let doseMg = (drug.doseMaxMgPerKg || drug.dose || 10) * w;
       if (drug.maxPerDoseMg) doseMg = Math.min(doseMg, drug.maxPerDoseMg);
       
