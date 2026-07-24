@@ -18,6 +18,15 @@
 - `--danger`: `#DC2626` (Emergency PALS critical red)
 - `--blue`: `#2563EB` (Dosing directive blue)
 
+### Braun Dark Mode Palette (`data-theme="dark"`)
+- `--bg`: `#121212` (Dark graphite chassis)
+- `--card`: `#242426` (Dark elevated surface)
+- `--panel`: `#1C1C1E` (Dark tactile panel)
+- `--ink`: `#F2F2F7` (High-contrast light text)
+- `--muted`: `#98989D` (Dark mode neutral label text)
+- `--border`: `#3A3A3C` (Dark precision border)
+- `--accent`: `#F05A24` (High-contrast Braun Signal Orange)
+
 ### Typography
 - **Primary Font**: `'Sarabun'`, system-ui, sans-serif (Google Fonts Sarabun for optimal legibility).
 - **Monospace / Tabular Nums**: `'JetBrains Mono'`, monospace for digital readouts and dosage metrics.

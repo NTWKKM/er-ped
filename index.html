@@ -34,6 +34,69 @@
       --blue: #2563EB;         /* Dosage directive blue */
     }
 
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #121212;
+        --card: #242426;
+        --panel: #1C1C1E;
+        --ink: #F2F2F7;
+        --muted: #98989D;
+        --border: #3A3A3C;
+        --border-dark: #52525B;
+        --accent: #F05A24;
+        --accent-hover: #D9480F;
+        --accent-subtle: #3A1E14;
+        --dark-btn: #3A3A3C;
+        --ring: rgba(240, 90, 36, 0.4);
+        --good: #22C55E;
+        --warning: #F59E0B;
+        --danger: #EF4444;
+        --blue: #3B82F6;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #121212;
+      --card: #242426;
+      --panel: #1C1C1E;
+      --ink: #F2F2F7;
+      --muted: #98989D;
+      --border: #3A3A3C;
+      --border-dark: #52525B;
+      --accent: #F05A24;
+      --accent-hover: #D9480F;
+      --accent-subtle: #3A1E14;
+      --dark-btn: #3A3A3C;
+      --ring: rgba(240, 90, 36, 0.4);
+      --good: #22C55E;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --blue: #3B82F6;
+    }
+
+    :root[data-theme="dark"] .topbar {
+      background: #1C1C1E;
+    }
+    :root[data-theme="dark"] input, 
+    :root[data-theme="dark"] select,
+    :root[data-theme="dark"] .chip input[type="number"] {
+      background: #2C2C2E;
+      color: #F2F2F7;
+      border-color: #3A3A3C;
+    }
+    :root[data-theme="dark"] .summary {
+      background: #1C1C1E;
+      border-color: #3A3A3C;
+    }
+    :root[data-theme="dark"] .combobox-dropdown {
+      background: #242426;
+      border-color: #3A3A3C;
+    }
+    :root[data-theme="dark"] .combobox-item:hover,
+    :root[data-theme="dark"] .combobox-item.kb-active {
+      background: #2C2C2E;
+    }
+
     * { box-sizing: border-box; }
     html, body { 
       margin: 0; 
@@ -749,6 +812,8 @@
         <span id="broselow" class="mono" style="padding:2px 8px; border-radius:4px; font-weight:800; background:#E5E7EB;">—</span>
         <span style="font-size:11px; color:var(--muted);">📊 Ref</span>
       </div>
+
+      <button id="themeToggleBtn" class="btn" style="padding:6px 12px; font-size:12px; margin-left:auto;" onclick="toggleTheme()" title="สลับ Dark / Light Mode">🌙 Dark</button>
     </div>
   </div>
 

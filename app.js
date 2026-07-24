@@ -52,11 +52,34 @@ function loadDataset() {
         }
       });
   }
+function initTheme() {
+  const saved = localStorage.getItem('er_ped_theme');
+  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    setTheme('dark');
+  } else {
+    setTheme('light');
+  }
 }
 
-window.addEventListener('DOMContentLoaded', loadDataset);
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('er_ped_theme', t);
+  const btn = document.getElementById('themeToggleBtn');
+  if (btn) btn.innerHTML = t === 'dark' ? '☀️ Light' : '🌙 Dark';
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'light';
+  setTheme(current === 'dark' ? 'light' : 'dark');
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  initTheme();
+  loadDataset();
+});
 
 function initUI(){
+  initTheme();
   populateDrugs();
   initComboboxes();
   setupKeyboardShortcuts();
@@ -615,7 +638,27 @@ function onATBSearchInput(){
   renderATBComboboxDropdown(val);
 }
 
+function getRecentDrugs(kind) {
+  try {
+    const raw = localStorage.getItem('er_ped_recent_' + kind);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveRecentDrug(kind, key) {
+  if (!key) return;
+  try {
+    let list = getRecentDrugs(kind).filter(k => k !== key);
+    list.unshift(key);
+    if (list.length > 8) list = list.slice(0, 8);
+    localStorage.setItem('er_ped_recent_' + kind, JSON.stringify(list));
+  } catch (e) {}
+}
+
 function selectDoseItem(key, name){
+  saveRecentDrug('dose', key);
   const sel = document.getElementById('doseDrug');
   const input = document.getElementById('doseSearch');
   if (sel) sel.value = key;
@@ -625,6 +668,7 @@ function selectDoseItem(key, name){
 }
 
 function selectATBItem(key, name){
+  saveRecentDrug('atb', key);
   const sel = document.getElementById('atbDrug');
   const input = document.getElementById('atbSearch');
   if (sel) sel.value = key;
@@ -636,7 +680,7 @@ function selectATBItem(key, name){
 function getDrugCategory(name){
   const n = (name || '').toLowerCase();
   if (n.includes('paracetamol') || n.includes('ibuprofen')) return 'Antipyretic / Analgesic';
-  if (n.includes('diazepam') || n.includes('midazolam') || n.includes('phenobarbital')) return 'Anticonvulsant';
+  if (n.includes('diazepam') || n.includes('midazolam') || n.includes('phenobarbital') || n.includes('phenytoin')) return 'Anticonvulsant';
   if (n.includes('salbutamol') || n.includes('budesonide') || n.includes('prednisolone') || n.includes('dexamethasone')) return 'Respiratory';
   if (n.includes('domperidone') || n.includes('ondansetron') || n.includes('ors')) return 'GI / Anti-emetic';
   if (n.includes('cetirizine') || n.includes('chlorpheniramine') || n.includes('loratadine')) return 'Antihistamine';
@@ -662,7 +706,31 @@ function renderDoseComboboxDropdown(filterTxt){
     return;
   }
 
-  dropdown.innerHTML = filtered.map(d => {
+  let html = '';
+  // Show RECENTLY USED if filter is empty and there are saved recent items
+  if (!q) {
+    const recentKeys = getRecentDrugs('dose');
+    const recentItems = recentKeys.map(k => list.find(d => d.key === k)).filter(Boolean);
+    if (recentItems.length > 0) {
+      html += `<div style="padding:6px 10px; font-size:11px; font-weight:800; color:var(--accent); background:var(--accent-subtle); letter-spacing:0.05em;">⭐️ RECENTLY USED</div>`;
+      html += recentItems.map(d => {
+        const selectedClass = (d.key === currentKey) ? 'selected' : '';
+        const cat = getDrugCategory(d.name);
+        return `
+          <div class="combobox-item ${selectedClass}" role="option" data-key="${d.key}" data-name="${d.name.replace(/"/g, '&quot;')}" onclick="selectDoseItem('${d.key}', '${d.name.replace(/'/g, "\\'")}')">
+            <div>
+              <strong>${d.name}</strong>
+              <div style="font-size:11px; color:var(--muted);">${d.preparation || ''}</div>
+            </div>
+            <span class="item-tag" style="background:var(--accent-subtle); color:var(--accent); border-color:var(--accent);">${cat}</span>
+          </div>
+        `;
+      }).join('');
+      html += `<div style="padding:6px 10px; font-size:11px; font-weight:800; color:var(--muted); background:var(--panel); letter-spacing:0.05em; border-top:1px solid var(--border);">ALL MEDICATIONS</div>`;
+    }
+  }
+
+  html += filtered.map(d => {
     const selectedClass = (d.key === currentKey) ? 'selected' : '';
     const cat = getDrugCategory(d.name);
     return `
@@ -675,6 +743,8 @@ function renderDoseComboboxDropdown(filterTxt){
       </div>
     `;
   }).join('');
+
+  dropdown.innerHTML = html;
 }
 
 function renderATBComboboxDropdown(filterTxt){
@@ -695,7 +765,29 @@ function renderATBComboboxDropdown(filterTxt){
     return;
   }
 
-  dropdown.innerHTML = filtered.map(d => {
+  let html = '';
+  if (!q) {
+    const recentKeys = getRecentDrugs('atb');
+    const recentItems = recentKeys.map(k => list.find(d => d.key === k)).filter(Boolean);
+    if (recentItems.length > 0) {
+      html += `<div style="padding:6px 10px; font-size:11px; font-weight:800; color:var(--accent); background:var(--accent-subtle); letter-spacing:0.05em;">⭐️ RECENTLY USED</div>`;
+      html += recentItems.map(d => {
+        const selectedClass = (d.key === currentKey) ? 'selected' : '';
+        return `
+          <div class="combobox-item ${selectedClass}" role="option" data-key="${d.key}" data-name="${d.name.replace(/"/g, '&quot;')}" onclick="selectATBItem('${d.key}', '${d.name.replace(/'/g, "\\'")}')">
+            <div>
+              <strong>${d.name}</strong>
+              <div style="font-size:11px; color:var(--muted);">${d.preparation || ''}</div>
+            </div>
+            <span class="item-tag" style="background:var(--accent-subtle); color:var(--accent); border-color:var(--accent);">Antibiotic</span>
+          </div>
+        `;
+      }).join('');
+      html += `<div style="padding:6px 10px; font-size:11px; font-weight:800; color:var(--muted); background:var(--panel); letter-spacing:0.05em; border-top:1px solid var(--border);">ALL ANTIBIOTICS</div>`;
+    }
+  }
+
+  html += filtered.map(d => {
     const selectedClass = (d.key === currentKey) ? 'selected' : '';
     return `
       <div class="combobox-item ${selectedClass}" role="option" data-key="${d.key}" data-name="${d.name.replace(/"/g, '&quot;')}" onclick="selectATBItem('${d.key}', '${d.name.replace(/'/g, "\\'")}')">
@@ -707,6 +799,8 @@ function renderATBComboboxDropdown(filterTxt){
       </div>
     `;
   }).join('');
+
+  dropdown.innerHTML = html;
 }
 
 // Keyboard navigation (ArrowUp/ArrowDown/Enter/Escape) for the dose/atb comboboxes
@@ -824,6 +918,7 @@ function calcDose(){
   if (!DS) return;
   const key = document.getElementById('doseDrug')?.value;
   const bw = getWeight();
+  const ageYr = getAgeInYears();
   const concOverride = parseFloat(document.getElementById('doseConc')?.value);
   const drug = (DS.pediatricDose||[]).find(d=>d.key===key) || (DS.pediatricDose||[])[0];
   const outEl = document.getElementById('doseOut');
@@ -838,9 +933,41 @@ function calcDose(){
   const mgPerTab = strength.mgPerTab || null;
 
   let perDoseMinMg = null, perDoseMaxMg = null, perDayMinMg = null, perDayMaxMg = null;
+  let perDoseMinUnits = null, perDoseMaxUnits = null;
   let isCappedPerDose = false, isCappedPerDay = false;
+  let bandNotice = '';
 
-  if (/mg\/kg\/day/i.test(unit) || drug.unitType === 'perDay') {
+  // 1. Handle Fixed Dose (e.g. Albendazole 400 mg)
+  if (drug.fixedDose) {
+    if (drug.fixedDose.doseMg != null) {
+      perDoseMinMg = perDoseMaxMg = drug.fixedDose.doseMg;
+    }
+  }
+  // 2. Handle Dose Bands (e.g. Oseltamivir, Nystatin)
+  else if (Array.isArray(drug.doseBands)) {
+    const matchedBand = drug.doseBands.find(b => {
+      if (b.minAgeYr != null && (ageYr == null || ageYr < b.minAgeYr)) return false;
+      if (b.maxAgeYr != null && ageYr != null && ageYr > b.maxAgeYr) return false;
+      if (b.minKg != null && (bw == null || bw < b.minKg)) return false;
+      if (b.maxKg != null && bw != null && bw > b.maxKg) return false;
+      return true;
+    });
+
+    if (matchedBand) {
+      if (matchedBand.doseMg != null) {
+        perDoseMinMg = perDoseMaxMg = matchedBand.doseMg;
+      }
+      if (matchedBand.doseUnits != null) {
+        perDoseMinUnits = perDoseMaxUnits = matchedBand.doseUnits;
+      }
+      if (matchedBand.minUnits != null) perDoseMinUnits = matchedBand.minUnits;
+      if (matchedBand.maxUnits != null) perDoseMaxUnits = matchedBand.maxUnits;
+    } else if (drug.doseBands.some(b => b.minAgeYr != null && b.minAgeYr >= 1.0) && (ageYr == null || ageYr < 1.0)) {
+      bandNotice = 'ℹ️ ขนาดยาสำหรับทารกอายุ < 1 ปี อ้างอิงตามอายุครรภ์/อายุทารกใน Clinical Note ด้านล่าง';
+    }
+  }
+  // 3. Handle Standard mg/kg calculation
+  else if (/mg\/kg\/day/i.test(unit) || drug.unitType === 'perDay') {
     if (bw && minPerKg!=null) perDayMinMg = bw * minPerKg;
     if (bw && maxPerKg!=null) perDayMaxMg = bw * maxPerKg;
 
@@ -908,7 +1035,11 @@ function calcDose(){
     if (tabTxt !== '—') perDoseTabsTxt = `${tabTxt} tab`;
   }
 
-  const perDoseMgTxt = toRangeTxt(perDoseMinMg, perDoseMaxMg, n=>`${fmtMg(n)} mg`);
+  let perDoseMgTxt = toRangeTxt(perDoseMinMg, perDoseMaxMg, n=>`${fmtMg(n)} mg`);
+  if (unit === 'units' || perDoseMinUnits != null || perDoseMaxUnits != null) {
+    perDoseMgTxt = toRangeTxt(perDoseMinUnits, perDoseMaxUnits, n=>`${n.toLocaleString()} U`);
+  }
+
   const perDayMgTxt  = toRangeTxt(perDayMinMg,  perDayMaxMg,  n=>`${fmtMg(n)} mg`);
 
   // Build Hero Metric Cards
@@ -924,6 +1055,7 @@ function calcDose(){
     <div class="hero-val">${perDoseMgTxt}${perDoseMlTxt ? ` <span class="unit">(${perDoseMlTxt})</span>` : ''}${perDoseTabsTxt ? ` <span class="unit">(${perDoseTabsTxt})</span>` : ''}</div>
     <div class="hero-sub">${drug.freq ? drug.freq.toUpperCase() : 'PO/IV'} ${drug.route ? `(${drug.route})` : ''}</div>
     ${isCappedPerDose ? `<span class="badge-cap">⚠️ Capped at max ${drug.maxPerDoseMg} mg/dose</span>` : ''}
+    ${drug.renalAdjust ? `<div style="margin-top:6px;"><span class="badge-cap" style="background:#FEF3C7; color:#92400E; border-color:#F59E0B;">⚠️ ปรับขนาดยาตาม CrCl / eGFR (Renal Impairment)</span></div>` : ''}
   </div>
   <div class="hero-metric blue">
     <div class="hero-label">TOTAL DAILY DOSE</div>
@@ -936,11 +1068,13 @@ function calcDose(){
 
   const blocks = [];
   blocks.push(heroCardHtml);
+  if (bandNotice) blocks.push(`<div style="padding:8px 12px; background:var(--accent-subtle); color:var(--accent); border-radius:6px; font-weight:700; font-size:13px;">${bandNotice}</div>`);
   blocks.push(`<strong>📝 Prescribing Directives & Limits:</strong>`);
   blocks.push(`• <strong>Dose Guideline:</strong> ${toRangeTxt(minPerKg, maxPerKg, n => `${n} mg/kg`)} ${drug.freq ? drug.freq : ''}`);
   if (drug.preparation) blocks.push(`• <strong>Preparation:</strong> ${drug.preparation}`);
   if (drug.maxPerDoseMg) blocks.push(`• <strong>Single Dose Limit:</strong> Max ${drug.maxPerDoseMg} mg`);
   if (drug.maxPerDayMg) blocks.push(`• <strong>Daily Limit:</strong> Max ${drug.maxPerDayMg} mg`);
+  if (drug.renalAdjust) blocks.push(`• <strong>Renal Adjustment:</strong> ⚠️ ต้องปรับขนาดยาตามระดับการทำงานของไต (CrCl/eGFR)`);
   if (drug.note) blocks.push(`• <strong>Clinical Note:</strong> ${drug.note}`);
 
   if (outEl) outEl.innerHTML = blocks.join('<br>');
@@ -952,16 +1086,12 @@ function calcATB(){
   if (!DS) return;
   const key = document.getElementById('atbDrug')?.value;
   const bw = getWeight();
+  const ageYr = getAgeInYears();
   const form = parseFloat(document.getElementById('atbForm')?.value);
   const drug = (DS.pediatricATB||[]).find(d=>d.key===key) || (DS.pediatricATB||[])[0];
   const outEl = document.getElementById('atbOut');
   if (!drug){ if(outEl) outEl.textContent='No dataset available'; return; }
 
-  // NOTE: unlike the pediatricDose table, doseMinMgPerKg/doseMaxMgPerKg in the
-  // pediatricATB table are already PER-DOSE values (verified against every
-  // entry's "note" field: field × dosesPerDay(freq) reproduces the stated
-  // mg/kg/day total). The `unitType: "perDay"` tag on many entries does NOT
-  // mean the numeric field is a daily total — do not divide by dosesPerDay.
   const minPerKg = (drug.doseMinMgPerKg != null) ? Number(drug.doseMinMgPerKg) : null;
   const maxPerKg = (drug.doseMaxMgPerKg != null) ? Number(drug.doseMaxMgPerKg) : null;
 
@@ -972,8 +1102,28 @@ function calcATB(){
   const dosesPerDay = dosesPerDayFromFreq(drug.split || drug.freq);
 
   let perDoseMinMg = null, perDoseMaxMg = null, perDayMinMg = null, perDayMaxMg = null;
-  if (bw && minPerKg!=null) perDoseMinMg = bw * minPerKg;
-  if (bw && maxPerKg!=null) perDoseMaxMg = bw * maxPerKg;
+  let bandNotice = '';
+
+  if (drug.fixedDose && drug.fixedDose.doseMg != null) {
+    perDoseMinMg = perDoseMaxMg = drug.fixedDose.doseMg;
+  } else if (Array.isArray(drug.doseBands)) {
+    const matchedBand = drug.doseBands.find(b => {
+      if (b.minAgeYr != null && (ageYr == null || ageYr < b.minAgeYr)) return false;
+      if (b.maxAgeYr != null && ageYr != null && ageYr > b.maxAgeYr) return false;
+      if (b.minKg != null && (bw == null || bw < b.minKg)) return false;
+      if (b.maxKg != null && bw != null && bw > b.maxKg) return false;
+      return true;
+    });
+    if (matchedBand) {
+      if (matchedBand.doseMg != null) perDoseMinMg = perDoseMaxMg = matchedBand.doseMg;
+    } else if (drug.doseBands.some(b => b.minAgeYr != null && b.minAgeYr >= 1.0) && (ageYr == null || ageYr < 1.0)) {
+      bandNotice = 'ℹ️ ขนาดยาสำหรับทารกอายุ < 1 ปี อ้างอิงตามอายุครรภ์/อายุทารกใน Clinical Note ด้านล่าง';
+    }
+  } else {
+    if (bw && minPerKg!=null) perDoseMinMg = bw * minPerKg;
+    if (bw && maxPerKg!=null) perDoseMaxMg = bw * maxPerKg;
+  }
+
   if (limitMaxDose) {
     if (perDoseMinMg!=null) perDoseMinMg = cap(perDoseMinMg, limitMaxDose);
     if (perDoseMaxMg!=null) perDoseMaxMg = cap(perDoseMaxMg, limitMaxDose);
@@ -986,10 +1136,6 @@ function calcATB(){
     if (perDayMinMg!=null) perDayMinMg = cap(perDayMinMg, limitMaxDay);
     if (perDayMaxMg!=null) perDayMaxMg = cap(perDayMaxMg, limitMaxDay);
   }
-
-  // Use the highest available bound as the "single value" fallback so that
-  // maxPerDoseMg/EHR copy still reflects the safe upper reference dose.
-  const perDoseMg = (perDoseMaxMg!=null) ? perDoseMaxMg : perDoseMinMg;
 
   function atbRangeTxt(minVal, maxVal){
     if (minVal==null && maxVal==null) return '—';
@@ -1023,6 +1169,7 @@ function calcATB(){
     <div class="hero-label">DOSE PER SINGLE DOSE</div>
     <div class="hero-val">${perDoseMgTxt}${perDoseMlTxt ? ` <span class="unit">(${perDoseMlTxt})</span>` : ''}</div>
     <div class="hero-sub">${drug.split || drug.freq || 'PO/IV'}</div>
+    ${drug.renalAdjust ? `<div style="margin-top:6px;"><span class="badge-cap" style="background:#FEF3C7; color:#92400E; border-color:#F59E0B;">⚠️ ปรับขนาดยาตาม CrCl / eGFR (Renal Impairment)</span></div>` : ''}
   </div>
   <div class="hero-metric blue">
     <div class="hero-label">TOTAL DAILY DOSE</div>
@@ -1034,11 +1181,13 @@ function calcATB(){
 
   const blocks = [];
   blocks.push(heroCardHtml);
+  if (bandNotice) blocks.push(`<div style="padding:8px 12px; background:var(--accent-subtle); color:var(--accent); border-radius:6px; font-weight:700; font-size:13px;">${bandNotice}</div>`);
   blocks.push(`<strong>📝 Prescribing Directives & Limits:</strong>`);
-  blocks.push(`• <strong>Dose Rule:</strong> ${minPerKg && maxPerKg ? `${minPerKg}–${maxPerKg}` : (drug.dose || '—')} mg/kg${isPerDay?'/day':''} ${drug.split || drug.freq || ''}`);
+  blocks.push(`• <strong>Dose Rule:</strong> ${minPerKg && maxPerKg ? `${minPerKg}–${maxPerKg}` : (drug.dose || '—')} mg/kg ${drug.split || drug.freq || ''}`);
   if (drug.preparation) blocks.push(`• <strong>Preparation:</strong> ${drug.preparation}`);
   if (limitMaxDose) blocks.push(`• <strong>Max Single Dose:</strong> ${limitMaxDose} mg`);
   if (limitMaxDay) blocks.push(`• <strong>Max Daily Limit:</strong> ${limitMaxDay} mg`);
+  if (drug.renalAdjust) blocks.push(`• <strong>Renal Adjustment:</strong> ⚠️ ต้องปรับขนาดยาตามระดับการทำงานของไต (CrCl/eGFR)`);
   if (drug.note) blocks.push(`• <strong>Clinical Note:</strong> ${drug.note}`);
 
   if (outEl) outEl.innerHTML = blocks.join('<br>');
