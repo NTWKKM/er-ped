@@ -880,7 +880,14 @@ function onComboboxKeydown(e, kind){
 // --------- Formatting & Helper Utilities ---------
 
 function fmt(n){ return (Math.abs(n) >= 10 ? Number(n).toFixed(0) : Number(n).toFixed(2)); }
-function fmtMg(n){ return (n>=100 ? n.toFixed(0) : n.toFixed(1)); }
+function fmtMg(n) {
+  if (n === null || n === undefined || isNaN(n)) return '—';
+  if (n === 0) return '0';
+  if (n >= 100) return n.toFixed(0);
+  if (n >= 1) return n.toFixed(1).replace(/\.0$/, '');
+  if (n >= 0.1) return n.toFixed(2).replace(/0$/, '');
+  return n.toFixed(3).replace(/0+$/, '').replace(/\.$/, '');
+}
 function fmtMl(n){ return (n>=10 ? n.toFixed(1) : n.toFixed(2)); }
 
 function parseStrength(prepText){

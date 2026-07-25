@@ -160,6 +160,24 @@ test('PSA Fentanyl (IN): 10 kg child (1.5–2 mcg/kg -> 15–20 mcg)', () => {
   assert.strictEqual(item.unit, 'mcg');
 });
 
+// 6. Test Sub-milligram fmtMg Formatting
+function fmtMgTest(n) {
+  if (n === null || n === undefined || isNaN(n)) return '—';
+  if (n === 0) return '0';
+  if (n >= 100) return n.toFixed(0);
+  if (n >= 1) return n.toFixed(1).replace(/\.0$/, '');
+  if (n >= 0.1) return n.toFixed(2).replace(/0$/, '');
+  return n.toFixed(3).replace(/0+$/, '').replace(/\.$/, '');
+}
+
+test('Sub-milligram fmtMg: 0.01 mg (Flumazenil/Terbutaline 1 kg) formats as 0.01, not 0.0', () => {
+  assert.strictEqual(fmtMgTest(0.01), '0.01');
+  assert.strictEqual(fmtMgTest(0.03), '0.03');
+  assert.strictEqual(fmtMgTest(0.05), '0.05');
+  assert.strictEqual(fmtMgTest(12.5), '12.5');
+  assert.strictEqual(fmtMgTest(150), '150');
+});
+
 console.log(`\n----------------------------------------`);
 console.log(`Test Results: ${passed} Passed, ${failed} Failed`);
 console.log(`----------------------------------------\n`);
