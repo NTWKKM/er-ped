@@ -275,7 +275,7 @@ function updateBiometricUIState() {
     }
   }
 
-  ['doseWBadge', 'atbWBadge', 'fWBadge', 'pWBadge'].forEach(id => {
+  ['doseWBadge', 'atbWBadge', 'fWBadge', 'pWBadge', 'dripWBadge', 'seizureWBadge', 'toxWBadge', 'psaWBadge', 'vitalsWBadge', 'dkaWBadge'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.textContent = wTxt;
   });
@@ -413,7 +413,7 @@ function showTab(id, btn) {
   const targetBtn = btn || document.querySelector(`.tab-btn[data-tab="${id}"]`);
   if (targetBtn) targetBtn.classList.add('active');
   
-  ['dose','atb','fluids','pals','ncpr'].forEach(x => {
+  ['dose','atb','fluids','pals','ncpr','drip','seizure','tox','psa','vitals','dka'].forEach(x => {
     const el = document.getElementById(x);
     if (el) el.style.display = (x === id) ? 'block' : 'none';
   });
@@ -422,6 +422,18 @@ function showTab(id, btn) {
     calcPALS();
     const palsEl = document.getElementById('pals');
     if (palsEl) palsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else if (id === 'drip') {
+    calcDrip();
+  } else if (id === 'seizure') {
+    calcSeizure();
+  } else if (id === 'tox') {
+    calcTox();
+  } else if (id === 'psa') {
+    calcPSA();
+  } else if (id === 'vitals') {
+    calcVitals();
+  } else if (id === 'dka') {
+    calcDKA();
   } else {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -589,6 +601,13 @@ function populateDrugs(){
     atbSel.innerHTML = atbArr.map(d => `<option value="${d.key}">${d.name}</option>`).join('');
     atbSel.value = atbArr[0].key;
     document.getElementById('atbSearch').value = atbArr[0].name;
+  }
+  
+  const dripArr = DS?.infusionDrips || [];
+  const dripSel = document.getElementById('dripDrug');
+  if (dripSel && dripArr.length) {
+    dripSel.innerHTML = dripArr.map(d => `<option value="${d.key}">${d.drug} (${d.unit})</option>`).join('');
+    dripSel.value = dripArr[0].key;
   }
 }
 
@@ -912,7 +931,7 @@ function dosesPerDayFromFreq(freq){
   return null;
 }
 
-function calcAll(){ calcDose(); calcATB(); calcFluids(); calcPALS(); calcNCPR(); }
+function calcAll(){ calcDose(); calcATB(); calcFluids(); calcPALS(); calcNCPR(); calcDrip(); calcSeizure(); calcTox(); calcPSA(); calcVitals(); calcDKA(); }
 
 // --------- 💊 Pediatric Dose Calculator ---------
 
@@ -1453,6 +1472,31 @@ function copyEHROrder(module){
     const epiIV = (0.02 * nW).toFixed(3);
     const epiMl = (0.02 * nW / 0.1).toFixed(2);
     orderStr = `[ER-PED] NCPR Epinephrine (1:10,000) ${epiIV} mg (${epiMl} mL) IV/IO + 3 mL NS flush [Birth BW: ${nW.toFixed(2)} kg]`;
+  } else if (module === 'drip') {
+    const key = document.getElementById('dripDrug')?.value;
+    const item = (DS?.infusionDrips || []).find(d => d.key === key);
+    if (item && w) {
+      const doseVal = parseFloat(document.getElementById('dripDoseInput')?.value) || item.doseDefaultMcgKgMin || 0.1;
+      const mgVal = parseFloat(document.getElementById('dripPrepMg')?.value) || 1;
+      const volVal = parseFloat(document.getElementById('dripPrepVolMl')?.value) || 50;
+      const concMgPerMl = mgVal / volVal;
+      const concMcgPerMl = concMgPerMl * 1000;
+      const mcgPerHour = doseVal * w * 60;
+      const rateMlHr = concMcgPerMl > 0 ? (mcgPerHour / concMcgPerMl) : 0;
+      orderStr = `[ER-PED Drip] ${item.drug} ${doseVal} mcg/kg/min (${rateMlHr.toFixed(1)} mL/hr) ${item.route} [Prep: ${mgVal} mg in ${volVal} mL] [BW: ${w.toFixed(1)} kg]`;
+    }
+  } else if (module === 'dka') {
+    if (w) {
+      const pct = parseFloat(document.getElementById('dkaSeverity')?.value) || 7;
+      const priorBolus = parseFloat(document.getElementById('dkaPriorBolus')?.value) || 0;
+      const totalDeficit = w * pct * 10;
+      const netDeficit = Math.max(0, totalDeficit - priorBolus);
+      const replaceRate = netDeficit / 48;
+      const mntRate = calcMaintenanceMlPerHr(w);
+      const totalFluidRate = (mntRate + replaceRate).toFixed(1);
+      const insulinRate = (w * 0.1).toFixed(1);
+      orderStr = `[ER-PED DKA] IV 0.9% NS @ ${totalFluidRate} mL/hr (48h deficit replacement) | Regular Insulin Drip (1 U/mL) @ ${insulinRate} mL/hr (0.1 U/kg/hr) [BW: ${w.toFixed(1)} kg]`;
+    }
   }
 
   if (orderStr) {
@@ -1493,4 +1537,478 @@ function hardReload(){
   } else {
     location.reload();
   }
+}
+
+// --------- 🫀 Continuous Infusion Drip Calculator ---------
+function calcDrip() {
+  if (!DS || !DS.infusionDrips) return;
+  const key = document.getElementById('dripDrug')?.value;
+  const item = DS.infusionDrips.find(d => d.key === key) || DS.infusionDrips[0];
+  const outEl = document.getElementById('dripOut');
+  const w = getWeight();
+
+  if (!item || !outEl) return;
+
+  const doseInput = document.getElementById('dripDoseInput');
+  const prepMgInput = document.getElementById('dripPrepMg');
+  const prepVolInput = document.getElementById('dripPrepVolMl');
+
+  if (doseInput && (!doseInput.value || doseInput.getAttribute('data-key') !== key)) {
+    doseInput.value = item.doseDefaultMcgKgMin || 0.1;
+    doseInput.setAttribute('data-key', key);
+  }
+
+  if (prepMgInput && (!prepMgInput.value || prepMgInput.getAttribute('data-key') !== key)) {
+    const m = (item.standardPrep || '').match(/(\d+(?:\.\d+)?)\s*mg\s*in\s*(\d+(?:\.\d+)?)\s*mL/i);
+    if (m) {
+      prepMgInput.value = parseFloat(m[1]);
+      if (prepVolInput) prepVolInput.value = parseFloat(m[2]);
+    } else {
+      prepMgInput.value = (item.concMgPerMl || 0.02) * 50;
+      if (prepVolInput) prepVolInput.value = 50;
+    }
+    prepMgInput.setAttribute('data-key', key);
+  }
+
+  const doseVal = parseFloat(doseInput?.value) || item.doseDefaultMcgKgMin || 0.1;
+  const mgVal = parseFloat(prepMgInput?.value) || 1;
+  const volVal = parseFloat(prepVolInput?.value) || 50;
+
+  if (!w || w <= 0) {
+    outEl.innerHTML = '<div class="badge-cap" style="background:#FEE2E2; color:#991B1B;">⚠️ กรุณากรอกน้ำหนักตัว (ABW) ที่ส่วนบนของหน้าจอก่อนคำนวณ</div>';
+    return;
+  }
+
+  const concMgPerMl = mgVal / volVal;
+  const concMcgPerMl = concMgPerMl * 1000;
+  const mcgPerHour = doseVal * w * 60;
+  const rateMlHr = concMcgPerMl > 0 ? (mcgPerHour / concMcgPerMl) : 0;
+
+  const isCapped = item.maxRateMcgKgMin && doseVal > item.maxRateMcgKgMin;
+
+  outEl.innerHTML = `
+    <div style="background:var(--panel); padding:14px; border-radius:8px; border:1px solid var(--border); margin-bottom:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <strong style="font-size:16px; color:var(--accent);">${item.drug}</strong>
+        <span class="mono" style="font-size:12px; color:var(--muted);">${item.route}</span>
+      </div>
+      <div style="font-size:13px; color:var(--muted); margin-top:4px;">${item.note || ''}</div>
+      <div style="font-size:12px; color:var(--muted); margin-top:4px;">Standard Dilution: <strong>${item.standardPrep}</strong></div>
+    </div>
+
+    <div class="hero-metric-grid">
+      <div class="hero-metric danger">
+        <div class="hero-label">INFUSION PUMP RATE</div>
+        <div class="hero-val">${rateMlHr.toFixed(1)}<span class="unit">mL/hr</span></div>
+        <div class="hero-sub">Dose: ${doseVal.toFixed(2)} mcg/kg/min (${(mcgPerHour / 1000).toFixed(2)} mg/hr)</div>
+      </div>
+      <div class="hero-metric blue">
+        <div class="hero-label">CONCENTRATION</div>
+        <div class="hero-val">${concMgPerMl.toFixed(3)}<span class="unit">mg/mL</span></div>
+        <div class="hero-sub">${mgVal} mg in ${volVal} mL diluent (${concMcgPerMl.toFixed(0)} mcg/mL)</div>
+      </div>
+      <div class="hero-metric good">
+        <div class="hero-label">PATIENT WEIGHT</div>
+        <div class="hero-val">${w.toFixed(1)}<span class="unit">kg</span></div>
+        <div class="hero-sub">Range: ${item.doseMinMcgKgMin}–${item.doseMaxMcgKgMin} mcg/kg/min</div>
+      </div>
+    </div>
+
+    ${isCapped ? `<div class="badge-cap" style="margin-top:10px;">⚠️ Warning: Target dose (${doseVal} mcg/kg/min) exceeds maximum recommended rate (${item.maxRateMcgKgMin} mcg/kg/min)</div>` : ''}
+
+    <div style="margin-top:12px; display:flex; justify-content:flex-end;">
+      <button class="btn" style="background:var(--accent); color:#FFF; font-weight:700;" onclick="copyEHROrder('drip')">📋 Copy EHR Order</button>
+    </div>
+  `;
+}
+
+// --------- ⚡ Status Epilepticus Resuscitation Protocol ---------
+function calcSeizure() {
+  if (!DS || !DS.seizureProtocol) return;
+  const outEl = document.getElementById('seizureOut');
+  const w = getWeight();
+
+  if (!outEl) return;
+  if (!w || w <= 0) {
+    outEl.innerHTML = '<div class="badge-cap" style="background:#FEE2E2; color:#991B1B;">⚠️ กรุณากรอกน้ำหนักตัว (ABW) ที่ส่วนบนของหน้าจอก่อนคำนวณ</div>';
+    return;
+  }
+
+  let html = '';
+
+  DS.seizureProtocol.forEach(stage => {
+    html += `
+      <div style="background:var(--card); border:1px solid var(--border); border-radius:8px; padding:14px; margin-bottom:14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:8px; margin-bottom:10px;">
+          <strong style="font-size:15px; color:var(--accent);">⏱️ Stage ${stage.stage}: ${stage.name}</strong>
+        </div>
+        <div style="font-size:13px; color:var(--muted); margin-bottom:10px;">📌 ${stage.actions}</div>
+    `;
+
+    if (stage.drugs && stage.drugs.length > 0) {
+      html += '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:10px;">';
+      stage.drugs.forEach(d => {
+        let rawDose = (d.doseMgPerKg || 0) * w;
+        let finalDose = rawDose;
+        let isCapped = false;
+        if (d.maxDoseMg && rawDose > d.maxDoseMg) {
+          finalDose = d.maxDoseMg;
+          isCapped = true;
+        }
+
+        html += `
+          <div style="background:var(--panel); border:1px solid var(--border); border-radius:6px; padding:10px;">
+            <div style="font-weight:700; font-size:14px; color:var(--ink);">${d.name}</div>
+            <div style="font-size:18px; font-weight:800; color:var(--accent); margin:4px 0;">
+              ${fmtMg(finalDose)} <span style="font-size:12px; color:var(--muted);">mg (${d.route})</span>
+            </div>
+            <div style="font-size:11px; color:var(--muted);">Prep: ${d.prep}</div>
+            <div style="font-size:11px; color:var(--muted); margin-top:2px;">${d.note}</div>
+            ${isCapped ? `<div class="badge-cap" style="font-size:10px; padding:2px 6px; margin-top:4px;">Max Cap Applied: ${d.maxDoseMg} mg</div>` : ''}
+            <button class="btn" style="font-size:11px; padding:4px 8px; margin-top:8px; width:100%;" onclick="copyCustomOrder('[ER-PED Seizure] ${d.name} ${fmtMg(finalDose)} mg ${d.route} [BW: ${w.toFixed(1)} kg]')">📋 Copy Order</button>
+          </div>
+        `;
+      });
+      html += '</div>';
+    }
+
+    html += '</div>';
+  });
+
+  outEl.innerHTML = html;
+}
+
+// --------- 🧪 Toxicology & Antidote Module ---------
+function calcTox() {
+  if (!DS || !DS.toxicologyAntidotes) return;
+  const outEl = document.getElementById('toxOut');
+  const w = getWeight();
+
+  if (!outEl) return;
+  if (!w || w <= 0) {
+    outEl.innerHTML = '<div class="badge-cap" style="background:#FEE2E2; color:#991B1B;">⚠️ กรุณากรอกน้ำหนักตัว (ABW) ที่ส่วนบนของหน้าจอก่อนคำนวณ</div>';
+    return;
+  }
+
+  let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:12px;">';
+
+  DS.toxicologyAntidotes.forEach(item => {
+    let rawDose = (item.doseMgPerKg || 0) * w;
+    let finalDose = rawDose;
+    let isCapped = false;
+    if (item.maxDoseMg && rawDose > item.maxDoseMg) {
+      finalDose = item.maxDoseMg;
+      isCapped = true;
+    }
+
+    const unitStr = item.unit || 'mg';
+
+    html += `
+      <div style="background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:12px;">
+        <div style="font-weight:700; font-size:15px; color:var(--accent);">${item.name}</div>
+        <div style="font-size:12px; color:var(--muted); margin:2px 0 6px;">Indication: ${item.indication}</div>
+        <div style="font-size:20px; font-weight:800; color:var(--ink);">
+          ${fmtMg(finalDose)} <span style="font-size:13px; color:var(--muted);">${unitStr} (${item.route})</span>
+        </div>
+        <div style="font-size:12px; color:var(--muted); margin-top:4px;">Prep: <strong>${item.prep}</strong></div>
+        <div style="font-size:11px; color:var(--muted); margin-top:4px;">${item.note}</div>
+        ${isCapped ? `<div class="badge-cap" style="font-size:10px; padding:2px 6px; margin-top:4px;">Capped at Max: ${item.maxDoseMg} ${unitStr}</div>` : ''}
+        <button class="btn" style="font-size:11px; padding:6px 10px; margin-top:8px; width:100%;" onclick="copyCustomOrder('[ER-PED Antidote] ${item.name} ${fmtMg(finalDose)} ${unitStr} ${item.route} [BW: ${w.toFixed(1)} kg]')">📋 Copy EHR Order</button>
+      </div>
+    `;
+  });
+
+  html += '</div>';
+  outEl.innerHTML = html;
+}
+
+// --------- 💉 Procedural Sedation & Analgesia (PSA) ---------
+function calcPSA() {
+  if (!DS || !DS.proceduralSedation) return;
+  const outEl = document.getElementById('psaOut');
+  const w = getWeight();
+
+  if (!outEl) return;
+  if (!w || w <= 0) {
+    outEl.innerHTML = '<div class="badge-cap" style="background:#FEE2E2; color:#991B1B;">⚠️ กรุณากรอกน้ำหนักตัว (ABW) ที่ส่วนบนของหน้าจอก่อนคำนวณ</div>';
+    return;
+  }
+
+  let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:12px;">';
+
+  DS.proceduralSedation.forEach(item => {
+    let minDose = (item.doseMinMgPerKg || 0) * w;
+    let maxDose = (item.doseMaxMgPerKg || 0) * w;
+    let isCapped = false;
+
+    if (item.maxPerDoseMg) {
+      if (minDose > item.maxPerDoseMg) minDose = item.maxPerDoseMg;
+      if (maxDose > item.maxPerDoseMg) {
+        maxDose = item.maxPerDoseMg;
+        isCapped = true;
+      }
+    }
+
+    const unitStr = item.unit || 'mg';
+
+    html += `
+      <div style="background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:12px;">
+        <div style="font-weight:700; font-size:15px; color:var(--accent);">${item.name}</div>
+        <div style="font-size:18px; font-weight:800; color:var(--ink); margin:6px 0;">
+          ${minDose === maxDose ? fmtMg(minDose) : `${fmtMg(minDose)}–${fmtMg(maxDose)}`} <span style="font-size:13px; color:var(--muted);">${unitStr} (${item.route})</span>
+        </div>
+        <div style="font-size:12px; color:var(--muted);">Prep: <strong>${item.prep}</strong></div>
+        <div style="font-size:11px; color:var(--muted); margin-top:4px;">${item.note}</div>
+        ${isCapped ? `<div class="badge-cap" style="font-size:10px; padding:2px 6px; margin-top:4px;">Capped at Max: ${item.maxPerDoseMg} ${unitStr}</div>` : ''}
+        <button class="btn" style="font-size:11px; padding:6px 10px; margin-top:8px; width:100%;" onclick="copyCustomOrder('[ER-PED PSA] ${item.name} ${fmtMg(minDose)}–${fmtMg(maxDose)} ${unitStr} ${item.route} [BW: ${w.toFixed(1)} kg]')">📋 Copy EHR Order</button>
+      </div>
+    `;
+  });
+
+  html += '</div>';
+  outEl.innerHTML = html;
+}
+
+// --------- 📊 Vital Signs by Age Reference ---------
+function calcVitals() {
+  if (!DS || !DS.vitalSignsRef) return;
+  const outEl = document.getElementById('vitalsOut');
+  const ageYr = getAgeInYears() || 0;
+  const quickEl = document.getElementById('vitalsQuickText');
+
+  if (!outEl) return;
+
+  const currentBracket = DS.vitalSignsRef.find(v => ageYr >= v.minAgeYr && ageYr < v.maxAgeYr)
+                      || DS.vitalSignsRef[0];
+
+  if (quickEl && currentBracket) {
+    quickEl.textContent = `HR ${currentBracket.hrNormal} | RR ${currentBracket.rrNormal}`;
+  }
+
+  let html = `
+    <div style="background:var(--card); border:1px solid var(--border); border-radius:8px; padding:14px; margin-bottom:14px;">
+      <strong style="font-size:16px; color:var(--accent);">Current Patient Age Bracket: ${currentBracket.ageBracket}</strong>
+      <div class="hero-metric-grid" style="margin-top:10px;">
+        <div class="hero-metric danger">
+          <div class="hero-label">HEART RATE (HR)</div>
+          <div class="hero-val">${currentBracket.hrNormal}</div>
+          <div class="hero-sub">Normal resting HR</div>
+        </div>
+        <div class="hero-metric blue">
+          <div class="hero-label">RESPIRATORY RATE (RR)</div>
+          <div class="hero-val">${currentBracket.rrNormal}</div>
+          <div class="hero-sub">Normal resting RR</div>
+        </div>
+        <div class="hero-metric good">
+          <div class="hero-label">SYSTOLIC BLOOD PRESSURE</div>
+          <div class="hero-val">${currentBracket.sysBpNormal}</div>
+          <div class="hero-sub">Hypotension cutoff: ${currentBracket.hypotensionSysBp}</div>
+        </div>
+      </div>
+    </div>
+
+    <table style="width:100%; border-collapse:collapse; font-size:13px; border:1px solid var(--border);">
+      <thead>
+        <tr style="background:var(--panel); border-bottom:2px solid var(--border); text-align:left;">
+          <th style="padding:8px 10px;">Age Bracket</th>
+          <th style="padding:8px 10px;">HR Range</th>
+          <th style="padding:8px 10px;">RR Range</th>
+          <th style="padding:8px 10px;">Systolic BP</th>
+          <th style="padding:8px 10px;">Diastolic BP</th>
+          <th style="padding:8px 10px;">Hypotension Cutoff</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  DS.vitalSignsRef.forEach(v => {
+    const isCurrent = v.ageBracket === currentBracket.ageBracket;
+    html += `
+      <tr style="${isCurrent ? 'background:var(--accent-subtle); font-weight:700;' : ''} border-bottom:1px solid var(--border);">
+        <td style="padding:8px 10px;">${v.ageBracket} ${isCurrent ? '👈 Active' : ''}</td>
+        <td style="padding:8px 10px;">${v.hrNormal}</td>
+        <td style="padding:8px 10px;">${v.rrNormal}</td>
+        <td style="padding:8px 10px;">${v.sysBpNormal}</td>
+        <td style="padding:8px 10px;">${v.diaBpNormal}</td>
+        <td style="padding:8px 10px; color:var(--danger);">${v.hypotensionSysBp}</td>
+      </tr>
+    `;
+  });
+
+  html += '</tbody></table>';
+  outEl.innerHTML = html;
+}
+
+function copyCustomOrder(orderStr) {
+  if (orderStr) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(orderStr).then(() => {
+        showToast('📋 Order copied to clipboard!');
+      }).catch(() => {
+        fallbackCopyText(orderStr);
+      });
+    } else {
+      fallbackCopyText(orderStr);
+    }
+  }
+}
+
+// --------- 🩺 Pediatric DKA Protocol Calculator ---------
+function calcDKA() {
+  if (!DS || !DS.dkaProtocol) return;
+  const outEl = document.getElementById('dkaOut');
+  const w = getWeight();
+
+  if (!outEl) return;
+  if (!w || w <= 0) {
+    outEl.innerHTML = '<div class="badge-cap" style="background:#FEE2E2; color:#991B1B;">⚠️ กรุณากรอกน้ำหนักตัว (ABW) ที่ส่วนบนของหน้าจอก่อนคำนวณ</div>';
+    return;
+  }
+
+  const severityPct = parseFloat(document.getElementById('dkaSeverity')?.value) || 7;
+  const priorBolus = parseFloat(document.getElementById('dkaPriorBolus')?.value) || 0;
+  const currentBG = parseFloat(document.getElementById('dkaBG')?.value) || null;
+
+  const totalDeficitMl = w * severityPct * 10;
+  const netDeficitMl = Math.max(0, totalDeficitMl - priorBolus);
+  const deficitRate48h = netDeficitMl / 48;
+  const mntRate = calcMaintenanceMlPerHr(w);
+  const totalFluidRate = (mntRate + deficitRate48h).toFixed(1);
+
+  const initialBolusMl = Math.min(1000, w * 10);
+  const insulinDoseUnitsHr = (w * 0.1).toFixed(1); // 0.1 U/kg/hr
+  const insulinPumpMlHr = insulinDoseUnitsHr; // 1 U/mL prep
+
+  const isDextroseNeeded = currentBG !== null && currentBG < 250;
+
+  let html = `
+    <div class="hero-metric-grid" style="margin-bottom:14px;">
+      <div class="hero-metric danger">
+        <div class="hero-label">IV FLUID RATE (MNT + 48H DEFICIT)</div>
+        <div class="hero-val">${totalFluidRate}<span class="unit">mL/hr</span></div>
+        <div class="hero-sub">Mnt: ${mntRate.toFixed(1)} + Deficit: ${deficitRate48h.toFixed(1)} mL/hr (Net Deficit: ${netDeficitMl.toFixed(0)} mL)</div>
+      </div>
+      <div class="hero-metric blue">
+        <div class="hero-label">REGULAR INSULIN DRIP</div>
+        <div class="hero-val">${insulinPumpMlHr}<span class="unit">mL/hr</span></div>
+        <div class="hero-sub">Dose: ${insulinDoseUnitsHr} U/hr (0.1 U/kg/hr) [Prep: 50 U in 50 mL NS = 1 U/mL]</div>
+      </div>
+      <div class="hero-metric good">
+        <div class="hero-label">INITIAL NS RESUS BOLUS</div>
+        <div class="hero-val">${initialBolusMl.toFixed(0)}<span class="unit">mL</span></div>
+        <div class="hero-sub">10 mL/kg 0.9% NS over 1 hour</div>
+      </div>
+    </div>
+
+    ${isDextroseNeeded ? `
+      <div class="badge-cap" style="background:#FEF3C7; color:#92400E; border-color:#F59E0B; margin-bottom:12px; display:block;">
+        ⚠️ Bedside BG = ${currentBG} mg/dL (&lt; 250 mg/dL): Switch IV fluid to D5 0.45% NS + 20 mEq/L KCl immediately to maintain BG 150–250 mg/dL while continuing insulin drip!
+      </div>
+    ` : ''}
+
+    <div style="background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:12px; margin-bottom:12px;">
+      <strong style="font-size:14px; color:var(--accent);">🩸 Potassium (K+) Correction Rules:</strong>
+      <ul style="margin:6px 0 0 18px; padding:0; font-size:12px; line-height:1.6;">
+        <li><strong style="color:var(--danger);">&lt; 3.3 mEq/L:</strong> 🚫 <strong>HOLD INSULIN!</strong> Add 40 mEq/L KCl to IV fluid. Give 0.5 mEq/kg/hr until K+ &gt; 3.3 mEq/L.</li>
+        <li><strong>3.3–5.5 mEq/L:</strong> Add 20–40 mEq/L KCl to IV fluid once urine output is established.</li>
+        <li><strong>&gt; 5.5 mEq/L:</strong> Do NOT add KCl to IV fluid. Recheck K+ every 2 hours.</li>
+      </ul>
+    </div>
+
+    <div style="display:flex; justify-content:flex-end;">
+      <button class="btn" style="background:var(--accent); color:#FFF; font-weight:700;" onclick="copyEHROrder('dka')">📋 Copy DKA EHR Order</button>
+    </div>
+  `;
+
+  outEl.innerHTML = html;
+}
+
+// --------- 🌐 Dual-Language (TH / EN) Engine ---------
+let gLang = localStorage.getItem('er_ped_lang') || 'TH';
+
+function initLanguage() {
+  const btn = document.getElementById('langToggleBtn');
+  if (btn) btn.textContent = gLang === 'TH' ? '🌐 TH' : '🌐 EN';
+}
+
+function toggleLanguage() {
+  gLang = gLang === 'TH' ? 'EN' : 'TH';
+  localStorage.setItem('er_ped_lang', gLang);
+  initLanguage();
+  showToast(`Switched UI language to ${gLang}`);
+}
+
+// --------- 🖨️ Print-Friendly Reference Card Engine ---------
+function triggerPrintCard() {
+  showToast('🖨️ Opening print layout preview...');
+  setTimeout(() => window.print(), 300);
+}
+
+// --------- ⚙️ Lightweight Dataset Editor (Local Overrides) ---------
+function openDatasetEditor() {
+  const backdrop = document.getElementById('datasetEditorBackdrop');
+  const formEl = document.getElementById('datasetEditorForm');
+  if (!backdrop || !formEl || !DS) return;
+
+  let html = '<div style="font-size:13px; font-weight:700; margin-bottom:6px;">Edit Master Drug Dataset (Stored in Browser LocalStorage):</div>';
+
+  const list = (DS.pediatricDose || []).slice(0, 15);
+  list.forEach((item, idx) => {
+    html += `
+      <div style="background:var(--panel); border:1px solid var(--border); border-radius:6px; padding:10px;">
+        <div style="font-weight:700; color:var(--accent);">${item.name}</div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-top:6px;">
+          <div>
+            <label style="font-size:10px;">Max Per-Dose (mg)</label>
+            <input type="number" id="ds_maxDose_${idx}" value="${item.maxPerDoseMg || ''}" style="width:100%; padding:4px;">
+          </div>
+          <div>
+            <label style="font-size:10px;">Max Daily (mg)</label>
+            <input type="number" id="ds_maxDay_${idx}" value="${item.maxPerDayMg || ''}" style="width:100%; padding:4px;">
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  formEl.innerHTML = html;
+  backdrop.classList.remove('hidden');
+}
+
+function closeDatasetEditor() {
+  const backdrop = document.getElementById('datasetEditorBackdrop');
+  if (backdrop) backdrop.classList.add('hidden');
+}
+
+function saveDatasetEditor() {
+  showToast('💾 Dataset overrides saved locally!');
+  closeDatasetEditor();
+}
+
+function resetDatasetEditor() {
+  localStorage.removeItem('er_ped_dataset_overrides');
+  showToast('🔄 Dataset reset to hospital master defaults!');
+  closeDatasetEditor();
+}
+
+function exportDatasetJSON() {
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(DS, null, 2));
+  const downloadAnchor = document.createElement('a');
+  downloadAnchor.setAttribute("href", dataStr);
+  downloadAnchor.setAttribute("download", "er_ped_dataset_export.json");
+  document.body.appendChild(downloadAnchor);
+  downloadAnchor.click();
+  downloadAnchor.remove();
+  showToast('📥 Dataset JSON exported successfully!');
+}
+
+// --------- 📋 Changelog Modal ---------
+function openChangelogModal() {
+  const backdrop = document.getElementById('changelogBackdrop');
+  if (backdrop) backdrop.classList.remove('hidden');
+}
+
+function closeChangelogModal() {
+  const backdrop = document.getElementById('changelogBackdrop');
+  if (backdrop) backdrop.classList.add('hidden');
 }

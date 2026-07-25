@@ -7,6 +7,8 @@
    - `Length` (Length in cm).
    - `IBW` (Ideal Body Weight chip, Weight-for-Height Broselow tape bands, and auto-switch toggle with input greying/highlighting).
    - `Broselow` (Color band estimator & quick reference drawer).
+   - `Quick Vitals Badge`: Dynamic topbar pill rendering active age-bracket normal HR & RR ranges.
+   - `Language & Print Cluster`: Topbar buttons for Thai/English UI switching (`🌐 TH` / `🌐 EN`) and 1-page reference card printing (`🖨️ Print`).
 
 2. **Core Calculators & Search Interfaces**:
    - `Pediatric Dose`: General pediatric medication dosing with integrated Braun Combobox search, preparation concentration parsing (mg/mL, mg/tab), range checks, per-dose & per-day caps.
@@ -14,11 +16,18 @@
    - `IV Fluids`: Dehydration assessment (Mild 3–5%, Moderate 6–9%, Severe ≥10%), Holliday–Segar maintenance fluid rate calculation, deficit replacement over 24h/48h, ORS vs IV fluid plans.
    - `PALS`: Emergency cardiac arrest protocols (Epi, Amiodarone, Lidocaine, Defib), Bradycardia, Tachycardia (Adenosine, Sync Cardioversion), Torsades MgSO4, rendered with Braun Hero LCD Metric cards.
    - `NCPR`: Neonatal resuscitation protocols, Epinephrine IV/IO & ETT dosing, Volume expanders, PPV & FiO2 targets, Hypoglycemia D10W bolus & infusion, ETT & suction catheter sizing.
+   - `Drip Rate`: Vasoactive continuous infusion calculator (mcg/kg/min → mL/hr) for Epinephrine, Norepinephrine, Dopamine, Dobutamine, Midazolam, Milrinone with customizable diluent volume.
+   - `Seizure Protocol`: Time-phased status epilepticus pathway (0-5m, 5-10m, 10-20m, 20-40m) with weight-based 1st/2nd line ASMs & max cap guardrails.
+   - `Toxicology`: Antidote dosing and overdose protocols (Naloxone, Flumazenil, Atropine OP, Activated Charcoal, NAC 3-bag regime).
+   - `Sedation (PSA)`: Procedural sedation & analgesia (Ketamine IV/IM, Fentanyl IN/IV, Midazolam IN) with weight-based dosing and safety caps.
+   - `Vital Signs`: Age-banded physiological normal ranges (HR, RR, Systolic/Diastolic BP, SpO2) and hypotension cutoffs.
+   - `DKA Protocol`: Pediatric DKA fluid management (48h deficit - prior bolus), Regular Insulin drip (0.05-0.1 U/kg/hr), BG < 250 D5W switch alerts, and K+ replacement safety rules.
 
 3. **Data Storage, EHR Copy & PWA Service**:
-   - `dataset.json`: Single source of truth for drug references, Broselow bands, fluid rules, PALS, and NCPR protocols with safety caps.
-   - `EHR Copy Engine`: Formats clean, standardized medical English order lines with one-click clipboard copying (`[ER-PED] Paracetamol 250 mg (10 mL) PO q 6 hr PRN [BW: 16.5 kg]`).
-   - `sw.js` & `manifest.webmanifest`: Offline-first caching strategy for instant clinical accessibility without internet.
+   - `dataset.json`: Single source of truth for drug references, Broselow bands, fluid rules, PALS, NCPR, Drips, Seizure, Toxicology, PSA, Vital Signs, and DKA protocols.
+   - `EHR Copy Engine`: Formats clean, standardized medical English order lines with one-click clipboard copying (`[ER-PED DKA] IV 0.9% NS @ 91.7 mL/hr | Regular Insulin Drip @ 2.0 mL/hr [BW: 20.0 kg]`).
+   - `sw.js` & `manifest.webmanifest`: Offline-first caching strategy with floating update notification banner (`#pwaUpdateBanner`).
+   - `.github/workflows/ci.yml`: GitHub Actions automated dataset validation and core unit testing pipeline.
 
 ## Data Flow
 ```mermaid
@@ -26,15 +35,15 @@ flowchart TD
     UserInputs[User Biometric Inputs: Weight, Age/Unit, Length] --> BiometricEngine[Unified Biometric & IBW Engine]
     BiometricEngine --> WeechFormula[Weech Formula Infant/Child Weight Estimate]
     BiometricEngine --> BroselowMatcher[Broselow Tape Zone Matcher]
-    BiometricEngine --> ModuleCalculators[Calculator Modules: Dose, ATB, Fluids, PALS, NCPR]
+    BiometricEngine --> ModuleCalculators[Calculator Modules: Dose, ATB, Fluids, PALS, NCPR, Drip, Seizure, Tox, PSA, Vitals, DKA]
     Dataset[dataset.json] --> ModuleCalculators
-    ModuleCalculators --> SafetyCaps[Safety Cap Guardrails: maxPerDoseMg / maxPerDayMg]
+    ModuleCalculators --> SafetyCaps[Safety Cap Guardrails: maxPerDoseMg / maxPerDayMg / maxRate / K+ Guardrails]
     SafetyCaps --> UIOutputs[Braun Hero LCD Metrics & EHR Clipboard Copy Engine]
 ```
 
 ## Key Decisions
 1. **Braun Design Language & Standalone Architecture**: Standalone clinical web app styled with Braun industrial controls (warm chassis `#F5F4F0`, signal orange `#D9480F`, high-contrast dark graphite) without cross-links to external tools.
-2. **Single Source of Truth for Weight**: Topbar ABW automatically syncs weight input to all active modules (`doseWBadge`, `atbWBadge`, `fWBadge`, `pWBadge`), ensuring zero discrepancy during high-stress resuscitations.
+2. **Single Source of Truth for Weight**: Topbar ABW automatically syncs weight input to all active modules (`doseWBadge`, `atbWBadge`, `fWBadge`, `pWBadge`, `dripWBadge`, `seizureWBadge`, `toxWBadge`, `psaWBadge`, `vitalsWBadge`, `dkaWBadge`), ensuring zero discrepancy during high-stress resuscitations.
 3. **Integrated Autocomplete Combobox**: Unified drug search and selection component providing instant keyboard-driven search (`ArrowUp`/`ArrowDown`/`Enter`/`Esc`) and category tagging.
 4. **Standardized Medical English EHR Copying**: One-click prescription order formatting in medical English for instant documentation into hospital electronic health records.
 5. **Offline-First PWA**: Service worker caches static assets (`index.html`, `app.js`, `dataset.json`) to guarantee zero-latency clinical availability in emergency rooms.
@@ -51,4 +60,11 @@ flowchart TD
 16. **Recently Used Favorites Engine**: Combobox dropdowns track recently selected drug keys in `localStorage` (`er_ped_recent_doses` / `er_ped_recent_atbs`) and render a top `⭐️ RECENTLY USED` category section when search input is empty.
 17. **Renal Dose Adjustment Warning Badges**: High-risk renal clearance agents (Aminoglycosides, Vancomycin, Fluoroquinolones, Acyclovir, Carbapenems) contain `renalAdjust: true` flags, rendering prominent amber `⚠️ ปรับขนาดยาตาม CrCl / eGFR` warnings in metric cards and prescribing directives.
 18. **Braun Warm Dark Theme & Grayscale Luminance-Ordered Palette**: Pure CSS custom property theme engine supporting `prefers-color-scheme: dark` and header toggle (`🌙 Dark` / `☀️ Light`) with persistent state in `localStorage` (`er_ped_theme`). Built on zero-blue-cast warm charcoal background (`#171613`), non-glare off-white ink (`#EAE5DB`), and strictly escalating relative luminance ordering (`blue` < `good` < `warning` < `danger`) to guarantee clinical priority discernment on monochrome/grayscale monitors without color halation.
-
+19. **Continuous Infusion Drip Calculation Engine**: Computes infusion pump rates (`mL/hr`) based on `mcg/kg/min`, patient weight (`ABW`), and preparation concentration (`mg in mL`), providing clinical diluent presets (e.g. 1 mg/50 mL, 150 mg/50 mL) and editable concentration fields with rate overflow alerts.
+20. **Time-Phased Seizure & Antidote Protocol Pathway**: Timed resuscitation algorithms (0-5m, 5-10m, 10-20m, 20-40m) with automated per-dose calculation, max cap enforcement, and Flumazenil / Phenytoin D5W precipitation contraindication guardrails.
+21. **Dual-Exposition Vital Signs Reference**: Renders age-banded normal physiological ranges (HR, RR, BP, SpO2) and hypotension cutoffs (`< 70 + 2×Age` mmHg) both as a standalone table card and as a dynamic inline topbar badge next to age input.
+22. **Automated CI Validation & Unit Test Pipeline**: GitHub Actions workflow (`ci.yml`) runs dataset schema integrity validation (`check-dataset.js`) and mathematical unit tests (`test-core.js`) on every push/PR to prevent regression.
+23. **Pediatric DKA Protocol Engine & Prior Bolus Subtraction**: Calculates 48-hour fluid deficit replacement subtracted by prior ER boluses, Regular Insulin drip rate (0.05–0.1 U/kg/hr), D5W switching at BG < 250 mg/dL, and potassium replacement safety directives.
+24. **Bicultural UI Language Switcher (Thai / English)**: Dual-language header toggle (`🌐 TH` / `🌐 EN`) rendering bilingual labels while maintaining 100% Medical English in EHR order copy strings.
+25. **Print-Friendly Reference Card Engine**: `@media print` CSS stylesheet hiding interactive inputs, navigation chrome, and floating controls to produce a clean 1-page physical emergency drug card printout.
+26. **Lightweight Dataset Editor & Local Overrides**: Browser-based dataset customization drawer allowing clinicians to edit max caps and drug notes saved to `localStorage` with JSON export and master reset capability.

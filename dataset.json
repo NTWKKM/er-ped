@@ -12,8 +12,8 @@
       "note": "10–15 mg/kg/dose q4–6h PRN fever/pain ; 10 kg ≈ 1 tsp ⚠️ Max 90 mg/kg/day or 4 g/day",
       "unit": "mg/kg",
       "unitType": "perDose",
-      "doseMinMgPerKg": 10.0,
-      "doseMaxMgPerKg": 15.0,
+      "doseMinMgPerKg": 10,
+      "doseMaxMgPerKg": 15,
       "maxPerDoseMg": 1000,
       "maxPerDayMg": 4000,
       "freq": "prn q 6 hr",
@@ -34,8 +34,8 @@
       "note": "10–15 mg/kg/dose q4–6h PRN ; 10 kg ≈ 1/2 tsp ⚠️ Max 90 mg/kg/day or 4 g/day",
       "unit": "mg/kg",
       "unitType": "perDose",
-      "doseMinMgPerKg": 10.0,
-      "doseMaxMgPerKg": 15.0,
+      "doseMinMgPerKg": 10,
+      "doseMaxMgPerKg": 15,
       "maxPerDoseMg": 1000,
       "maxPerDayMg": 4000,
       "freq": "prn q 6 hr",
@@ -54,8 +54,8 @@
       "note": "10–15 mg/kg/dose q4–6h PRN ; 1 kg ≈ 0.1 mL ; some hospitals label as 'Kit F' ⚠️ Max 90 mg/kg/day or 4 g/day",
       "unit": "mg/kg",
       "unitType": "perDose",
-      "doseMinMgPerKg": 10.0,
-      "doseMaxMgPerKg": 15.0,
+      "doseMinMgPerKg": 10,
+      "doseMaxMgPerKg": 15,
       "maxPerDoseMg": 1000,
       "maxPerDayMg": 4000,
       "freq": "prn q 6 hr",
@@ -76,8 +76,8 @@
       "note": "10–15 mg/kg/dose q4–6h PRN ; 30 kg ≈ 1 tab ⚠️ Max 90 mg/kg/day or 4 g/day",
       "unit": "mg/kg",
       "unitType": "perDose",
-      "doseMinMgPerKg": 10.0,
-      "doseMaxMgPerKg": 15.0,
+      "doseMinMgPerKg": 10,
+      "doseMaxMgPerKg": 15,
       "maxPerDoseMg": 1000,
       "maxPerDayMg": 4000,
       "freq": "prn q 6 hr",
@@ -96,8 +96,8 @@
       "note": "10–15 mg/kg/dose q4–6h PRN ; 25 kg ≈ 1/2 tab ⚠️ Max 90 mg/kg/day or 4 g/day",
       "unit": "mg/kg",
       "unitType": "perDose",
-      "doseMinMgPerKg": 10.0,
-      "doseMaxMgPerKg": 15.0,
+      "doseMinMgPerKg": 10,
+      "doseMaxMgPerKg": 15,
       "maxPerDoseMg": 1000,
       "maxPerDayMg": 4000,
       "freq": "prn q 6 hr",
@@ -116,8 +116,8 @@
       "note": "5–10 mg/kg/dose q6–8h PRN ; 10 kg ≈ 1/2 tsp ⚠️ Max 40 mg/kg/day",
       "unit": "mg/kg",
       "unitType": "perDose",
-      "doseMinMgPerKg": 5.0,
-      "doseMaxMgPerKg": 10.0,
+      "doseMinMgPerKg": 5,
+      "doseMaxMgPerKg": 10,
       "maxPerDoseMg": 400,
       "maxPerDayMg": 1200,
       "freq": "prn q 8 hr",
@@ -136,8 +136,8 @@
       "note": "5–10 mg/kg/dose q6–8h PRN ; 20 kg ≈ 1/2–1 tab ⚠️ Max 40 mg/kg/day, ระวังไข้เลือดออก",
       "unit": "mg/kg",
       "unitType": "perDose",
-      "doseMinMgPerKg": 5.0,
-      "doseMaxMgPerKg": 10.0,
+      "doseMinMgPerKg": 5,
+      "doseMaxMgPerKg": 10,
       "maxPerDoseMg": 400,
       "maxPerDayMg": 1200,
       "freq": "prn q 8 hr",
@@ -156,8 +156,8 @@
       "note": "5–10 mg/kg/dose q6–8h PRN ; 40 kg ≈ 1/2–1 tab ⚠️ Max 40 mg/kg/day, ระวังไข้เลือดออก",
       "unit": "mg/kg",
       "unitType": "perDose",
-      "doseMinMgPerKg": 5.0,
-      "doseMaxMgPerKg": 10.0,
+      "doseMinMgPerKg": 5,
+      "doseMaxMgPerKg": 10,
       "maxPerDoseMg": 400,
       "maxPerDayMg": 1200,
       "freq": "prn q 8 hr",
@@ -427,7 +427,7 @@
       "note": "1 mg/kg/dose q8–12h ⚠️ Max 60 mg/dose ; 10 kg ≈ 1/2 tsp bid",
       "unit": "mg/kg",
       "unitType": "perDose",
-      "doseMinMgPerKg": 1.0,
+      "doseMinMgPerKg": 1,
       "freq": "q 8–12 hr",
       "route": "PO",
       "minAgeYr": null,
@@ -466,7 +466,7 @@
       "note": "1 mg/kg/dose q6–8h; caution: palpitations, dizziness; tachyphylaxis with prolonged use",
       "unit": "mg/kg",
       "unitType": "perDose",
-      "doseMinMgPerKg": 1.0,
+      "doseMinMgPerKg": 1,
       "freq": "q 6–8 hr",
       "route": "PO",
       "minAgeYr": null,
@@ -483,7 +483,7 @@
       "note": "1 mg/kg/dose q6–8h; caution: palpitations, dizziness; tachyphylaxis with prolonged use",
       "unit": "mg/kg",
       "unitType": "perDose",
-      "doseMinMgPerKg": 1.0,
+      "doseMinMgPerKg": 1,
       "freq": "q 6–8 hr",
       "route": "PO",
       "minAgeYr": null,
@@ -733,7 +733,7 @@
       "note": "1 mg/kg/dose IV/PO q6–8h ; avoid <2 yr ; sedating, anticholinergic",
       "unit": "mg/kg",
       "unitType": "perDose",
-      "doseMinMgPerKg": 1.0,
+      "doseMinMgPerKg": 1,
       "freq": "q 6–8 hr",
       "route": "IV/PO",
       "minAgeYr": 2,
@@ -751,7 +751,7 @@
       "unit": "mg/kg",
       "unitType": "perDay",
       "doseMinMgPerKg": 0.5,
-      "doseMaxMgPerKg": 2.0,
+      "doseMaxMgPerKg": 2,
       "freq": "q 12–24 hr",
       "route": "PO/IV",
       "minAgeYr": null,
@@ -768,8 +768,8 @@
       "note": "2–4 mg/kg/day PO q12h / IV q8h ⚠️ Max 50 mg/dose IV ; many centers avoid now **",
       "unit": "mg/kg",
       "unitType": "perDay",
-      "doseMinMgPerKg": 2.0,
-      "doseMaxMgPerKg": 4.0,
+      "doseMinMgPerKg": 2,
+      "doseMaxMgPerKg": 4,
       "freq": "PO q12h / IV q8h",
       "route": "PO/IV",
       "renalAdjust": true,
@@ -1078,7 +1078,7 @@
       "note": "5 mg/kg/dose IV q6h for asthma/anaphylaxis ⚠️ Max 250 mg/dose – check indication-specific dosing",
       "unit": "mg/kg",
       "unitType": "perDose",
-      "doseMinMgPerKg": 5.0,
+      "doseMinMgPerKg": 5,
       "freq": "q 6 hr",
       "route": "IV",
       "minAgeYr": null,
@@ -1097,8 +1097,8 @@
       "note": "Asthma: 1–2 mg/kg IV load then 0.5–1 mg/kg IV q6h ⚠️ Max 60 mg/dose – check indication-specific dosing",
       "unit": "mg/kg",
       "unitType": "perDose",
-      "doseMinMgPerKg": 1.0,
-      "doseMaxMgPerKg": 2.0,
+      "doseMinMgPerKg": 1,
+      "doseMaxMgPerKg": 2,
       "freq": "q 6 hr",
       "route": "IV",
       "minAgeYr": null,
@@ -1133,8 +1133,8 @@
       "note": "1–2 mg/kg/day depending on indication ⚠️ Max 60 mg/day",
       "unit": "mg/kg",
       "unitType": "perDay",
-      "doseMinMgPerKg": 1.0,
-      "doseMaxMgPerKg": 2.0,
+      "doseMinMgPerKg": 1,
+      "doseMaxMgPerKg": 2,
       "maxPerDayMg": 60,
       "freq": "OD/BID",
       "route": "PO",
@@ -1169,7 +1169,7 @@
       "note": "Load 20 mg/kg (repeat +10 mg/kg) ; Maintenance 4–6 mg/kg/day q12h ⚠️ Max 1000 mg [lv 10-40 mg/dl] Frequent use in Newborn ; S/E – SJS/TEN, Serum sickness, Hyperactivity",
       "unit": "mg/kg",
       "unitType": "perDose",
-      "doseMinMgPerKg": 20.0,
+      "doseMinMgPerKg": 20,
       "freq": "loading then q12h",
       "route": "IV/PO",
       "minAgeYr": null,
@@ -1186,8 +1186,8 @@
       "note": "Loading dose 20 mg/kg single dose (repeat +10 mg/kg PRN) ⚠️ NSS only ; Max rate 50 mg/min (1 mg/kg/min in infants) ; Max 1000 mg/dose ; S/E – SJS/TEN, Arrhythmia, Hypotension if infused rapidly",
       "unit": "mg/kg",
       "unitType": "perDose",
-      "doseMinMgPerKg": 20.0,
-      "doseMaxMgPerKg": 20.0,
+      "doseMinMgPerKg": 20,
+      "doseMaxMgPerKg": 20,
       "maxPerDoseMg": 1000,
       "maxPerDayMg": 1500,
       "freq": "Single Loading Dose",
@@ -1209,8 +1209,8 @@
       "note": "Maintenance 5–8 mg/kg/day q8–12h ⚠️ Max 300 mg/day ; Target therapeutic level 10–20 mcg/mL (zero-order kinetics) ; Dilute in NSS only",
       "unit": "mg/kg",
       "unitType": "perDay",
-      "doseMinMgPerKg": 5.0,
-      "doseMaxMgPerKg": 8.0,
+      "doseMinMgPerKg": 5,
+      "doseMaxMgPerKg": 8,
       "maxPerDoseMg": 300,
       "maxPerDayMg": 300,
       "freq": "q 8-12 hr",
@@ -1231,8 +1231,8 @@
       "note": "Load 20–40 mg/kg/dose (+10 mg/kg PRN) ; Maintenance 15–60 mg/kg/day q8–12h ⚠️ Max 60 mkDay [lv 50-120 mg/dl] avoid <2 yr hepatotoxicity ; S/E – Dyspepsia, N/V, Tremor, Hair loss, Weight gain, Thrombocytopenia, Pancreatitis, Hyperammonia",
       "unit": "mg/kg",
       "unitType": "perDose",
-      "doseMinMgPerKg": 20.0,
-      "doseMaxMgPerKg": 40.0,
+      "doseMinMgPerKg": 20,
+      "doseMaxMgPerKg": 40,
       "freq": "loading then q8–12h",
       "route": "IV/PO",
       "minAgeYr": 2,
@@ -1251,8 +1251,8 @@
       "note": "Load 20–40 mg/kg; Maintenance 20–80 mg/kg/day q12h ⚠️ Max 60 mkDay ; renal elimination ; S/E – Aggressive behavior, somnolence",
       "unit": "mg/kg",
       "unitType": "perDose",
-      "doseMinMgPerKg": 20.0,
-      "doseMaxMgPerKg": 40.0,
+      "doseMinMgPerKg": 20,
+      "doseMaxMgPerKg": 40,
       "freq": "loading then q12h",
       "route": "IV/PO",
       "minAgeYr": null,
@@ -1271,8 +1271,8 @@
       "note": "25–75 mg/kg PO 30 min pre-procedure ; repeat q30 min PRN ; best in <2 yr ⚠️ Max 0.5–2 g/dose",
       "unit": "mg/kg",
       "unitType": "perDose",
-      "doseMinMgPerKg": 25.0,
-      "doseMaxMgPerKg": 75.0,
+      "doseMinMgPerKg": 25,
+      "doseMaxMgPerKg": 75,
       "freq": "single pre-procedure (repeat q30 min PRN)",
       "route": "PO",
       "minAgeYr": null,
@@ -1289,8 +1289,8 @@
       "note": "25–75 mg/kg PO 30 min pre-procedure ; repeat q30 min PRN ; best in <2 yr ⚠️ Max 0.5–2 g/dose",
       "unit": "mg/kg",
       "unitType": "perDose",
-      "doseMinMgPerKg": 25.0,
-      "doseMaxMgPerKg": 75.0,
+      "doseMinMgPerKg": 25,
+      "doseMaxMgPerKg": 75,
       "freq": "single pre-procedure (repeat q30 min PRN)",
       "route": "PO",
       "minAgeYr": null,
@@ -1308,7 +1308,7 @@
       "unit": "mcg/kg",
       "unitType": "perDose",
       "doseMinMgPerKg": 0.5,
-      "doseMaxMgPerKg": 1.0,
+      "doseMaxMgPerKg": 1,
       "freq": "q 30–60 min PRN",
       "route": "IV",
       "minAgeYr": null,
@@ -1326,7 +1326,7 @@
       "unit": "mg/kg",
       "unitType": "perDose",
       "doseMinMgPerKg": 0.05,
-      "doseMaxMgPerKg": 1.0,
+      "doseMaxMgPerKg": 1,
       "freq": "PRN",
       "route": "IV ** คำนวณตามขนาดยา IV",
       "minAgeYr": null,
@@ -1343,8 +1343,8 @@
       "note": "Treatment 4–6 mg/kg/day then 2–3 mg/kg/day maintenance ; various salts (fumarate, gluconate, sulfate)",
       "unit": "mg/kg",
       "unitType": "perDay",
-      "doseMinMgPerKg": 4.0,
-      "doseMaxMgPerKg": 6.0,
+      "doseMinMgPerKg": 4,
+      "doseMaxMgPerKg": 6,
       "freq": "OD/BID",
       "route": "PO",
       "minAgeYr": null,
@@ -1408,7 +1408,9 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": ["MTV"]
+      "aliases": [
+        "MTV"
+      ]
     }
   ],
   "pediatricATB": [
@@ -1420,8 +1422,8 @@
       "note": "HSV 0–3 mo: 60 mg/kg/day IV q8h ×21 d ; 3 mo–12 yr: 30–45 mg/kg/day IV q8h ×14–21 d ; >12 yr: 30 mg/kg/day IV q8h ×14–21 d. VZV PO: 80 mg/kg/day ÷4 ×5 d (max 800 mg/dose). VZV IV: 30 mg/kg/day q8h ×7–10 d",
       "unit": "mg/kg",
       "unitType": "perDay",
-      "doseMinMgPerKg": 10.0,
-      "doseMaxMgPerKg": 20.0,
+      "doseMinMgPerKg": 10,
+      "doseMaxMgPerKg": 20,
       "freq": "q 8 hr",
       "route": "IV/PO ** คำนวณตามขนาดยา IV",
       "renalAdjust": true,
@@ -1444,10 +1446,26 @@
       "freq": "bid",
       "route": "PO",
       "doseBands": [
-        { "minAgeYr": 1.0, "maxKg": 15, "doseMg": 30 },
-        { "minAgeYr": 1.0, "maxKg": 23, "doseMg": 45 },
-        { "minAgeYr": 1.0, "maxKg": 40, "doseMg": 60 },
-        { "minAgeYr": 1.0, "maxKg": null, "doseMg": 75 }
+        {
+          "minAgeYr": 1,
+          "maxKg": 15,
+          "doseMg": 30
+        },
+        {
+          "minAgeYr": 1,
+          "maxKg": 23,
+          "doseMg": 45
+        },
+        {
+          "minAgeYr": 1,
+          "maxKg": 40,
+          "doseMg": 60
+        },
+        {
+          "minAgeYr": 1,
+          "maxKg": null,
+          "doseMg": 75
+        }
       ],
       "minAgeYr": null,
       "maxAgeYr": null,
@@ -1537,8 +1555,8 @@
       "note": "Scabies: 200 mcg/kg PO day 0 & day 7/14 ; Pediculosis: 400 mcg/kg PO day 0 & day 7 ⚠️ Avoid pregnancy, breastfeeding, <5 yr or <15 kg; CNS toxicity risk",
       "unit": "mcg/kg",
       "unitType": "perDose",
-      "doseMinMgPerKg": 200.0,
-      "doseMaxMgPerKg": 400.0,
+      "doseMinMgPerKg": 200,
+      "doseMaxMgPerKg": 400,
       "freq": "repeat per protocol",
       "route": "PO",
       "minAgeYr": 5,
@@ -1557,7 +1575,9 @@
       "unitType": "perDose",
       "doseMinMgPerKg": null,
       "doseMaxMgPerKg": null,
-      "fixedDose": { "doseMg": 400 },
+      "fixedDose": {
+        "doseMg": 400
+      },
       "freq": "OD (per regimen)",
       "route": "PO",
       "minAgeYr": 2,
@@ -1574,8 +1594,8 @@
       "note": "3–5 mg/kg/day OD/BID ⚠️ Max 400 mg/day ; pulse therapy 1 wk on/ then 3 wk off for onychomycosis ; solution on empty stomach",
       "unit": "mg/kg",
       "unitType": "perDay",
-      "doseMinMgPerKg": 3.0,
-      "doseMaxMgPerKg": 5.0,
+      "doseMinMgPerKg": 3,
+      "doseMaxMgPerKg": 5,
       "maxPerDayMg": 400,
       "freq": "OD",
       "route": "PO",
@@ -1636,11 +1656,23 @@
       "freq": "qid",
       "route": "PO (swish/swallow)",
       "doseBands": [
-        { "maxAgeYr": 0.0833, "maxKg": 2, "doseUnits": 100000 },
-        { "maxAgeYr": 0.0833, "minKg": 2, "doseUnits": 200000 },
-        { "minAgeYr": 0.0833, "minUnits": 400000, "maxUnits": 600000 }
+        {
+          "maxAgeYr": 0.0833,
+          "maxKg": 2,
+          "doseUnits": 100000
+        },
+        {
+          "maxAgeYr": 0.0833,
+          "minKg": 2,
+          "doseUnits": 200000
+        },
+        {
+          "minAgeYr": 0.0833,
+          "minUnits": 400000,
+          "maxUnits": 600000
+        }
       ],
-      "minAgeYr": 0.0,
+      "minAgeYr": 0,
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
@@ -2232,77 +2264,195 @@
       ]
     }
   ],
-
   "fluids": {
     "maintenanceRule": "Holliday–Segar",
     "types": [
-      { "key": "ORS", "name": "ORS (oral)" },
-      { "key": "NS", "name": "0.9% NS (IV)" },
-      { "key": "RL", "name": "Ringer's Lactate (IV)" },
-      { "key": "D5-1/2NS", "name": "D5 1/2NS (IV)" },
-      { "key": "D5-NS", "name": "D5 NS (IV)" }
+      {
+        "key": "ORS",
+        "name": "ORS (oral)"
+      },
+      {
+        "key": "NS",
+        "name": "0.9% NS (IV)"
+      },
+      {
+        "key": "RL",
+        "name": "Ringer's Lactate (IV)"
+      },
+      {
+        "key": "D5-1/2NS",
+        "name": "D5 1/2NS (IV)"
+      },
+      {
+        "key": "D5-NS",
+        "name": "D5 NS (IV)"
+      }
     ],
     "plans": [
-      { "degree": "Mild (3–5%)", "rec": "ORS 50 mL/kg over 4 h + maintenance", "ivOption": "NS/RL ถ้าทานไม่ได้" },
-      { "degree": "Moderate (6–9%)", "rec": "ORS 75 mL/kg over 4 h หรือ IV correction + maintenance", "ivOption": "NS/RL แก้ไข 24–48 h" },
-      { "degree": "Severe (≥10%) / Shock", "rec": "Bolus 20 mL/kg NS/RL ทันที; ทำซ้ำได้; แล้วแก้ deficit 24–48 h + maintenance", "ivOption": "NS/RL" }
+      {
+        "degree": "Mild (3–5%)",
+        "rec": "ORS 50 mL/kg over 4 h + maintenance",
+        "ivOption": "NS/RL ถ้าทานไม่ได้"
+      },
+      {
+        "degree": "Moderate (6–9%)",
+        "rec": "ORS 75 mL/kg over 4 h หรือ IV correction + maintenance",
+        "ivOption": "NS/RL แก้ไข 24–48 h"
+      },
+      {
+        "degree": "Severe (≥10%) / Shock",
+        "rec": "Bolus 20 mL/kg NS/RL ทันที; ทำซ้ำได้; แล้วแก้ deficit 24–48 h + maintenance",
+        "ivOption": "NS/RL"
+      }
     ]
   },
-
   "pals": {
-    "epiArrest": { "dose_mgPerKg": 0.01, "conc_mgPerMl": 0.1, "repeatMin": [3, 5] },
-    "amiodarone": { "bolus_mgPerKg": 5, "maxTotal_mgPerKg": 15 },
-    "lidocaine": { "bolus_mgPerKg": 1, "repeat_mgPerKg": [0.5, 1], "maxTotal_mgPerKg": 3 },
-    "defib": { "first_JPerKg": 2, "next_JPerKg": 4, "upper_JPerKg": 4 },
-
-    "atropine": { "dose_mgPerKg": 0.02, "minSingle_mg": 0.1, "maxSingle_mg_child": 0.5, "maxTotal_mg_child": 1.0 },
-    "epiInfusion": { "range_mcgPerKgPerMin": [0.01, 0.1] },
-    "dopamineInfusion": { "range_mcgPerKgPerMin": [2, 20] },
-
+    "epiArrest": {
+      "dose_mgPerKg": 0.01,
+      "conc_mgPerMl": 0.1,
+      "repeatMin": [
+        3,
+        5
+      ]
+    },
+    "amiodarone": {
+      "bolus_mgPerKg": 5,
+      "maxTotal_mgPerKg": 15
+    },
+    "lidocaine": {
+      "bolus_mgPerKg": 1,
+      "repeat_mgPerKg": [
+        0.5,
+        1
+      ],
+      "maxTotal_mgPerKg": 3
+    },
+    "defib": {
+      "first_JPerKg": 2,
+      "next_JPerKg": 4,
+      "upper_JPerKg": 4
+    },
+    "atropine": {
+      "dose_mgPerKg": 0.02,
+      "minSingle_mg": 0.1,
+      "maxSingle_mg_child": 0.5,
+      "maxTotal_mg_child": 1
+    },
+    "epiInfusion": {
+      "range_mcgPerKgPerMin": [
+        0.01,
+        0.1
+      ]
+    },
+    "dopamineInfusion": {
+      "range_mcgPerKgPerMin": [
+        2,
+        20
+      ]
+    },
     "adenosine": {
       "first_mgPerKg": 0.1,
       "first_max_mg": 6,
       "second_mgPerKg": 0.2,
       "second_max_mg": 12,
       "lineAdjust": [
-        { "key": "peripheral", "label": "Peripheral/proximal IV", "factor": 1.0, "note": "มาตรฐาน + NSS flush" },
-        { "key": "central", "label": "Central/very proximal line", "factor": 0.5, "note": "พิจารณาลด initial dose" },
-        { "key": "transplant", "label": "Post-transplant heart", "factor": 0.5, "note": "พิจารณาลด initial dose" }
+        {
+          "key": "peripheral",
+          "label": "Peripheral/proximal IV",
+          "factor": 1,
+          "note": "มาตรฐาน + NSS flush"
+        },
+        {
+          "key": "central",
+          "label": "Central/very proximal line",
+          "factor": 0.5,
+          "note": "พิจารณาลด initial dose"
+        },
+        {
+          "key": "transplant",
+          "label": "Post-transplant heart",
+          "factor": 0.5,
+          "note": "พิจารณาลด initial dose"
+        }
       ],
-      "defaultConc_mgPerMl": 3.0
+      "defaultConc_mgPerMl": 3
     },
-    "syncCardioversion": { "first_JPerKg": [0.5, 1], "next_JPerKg": 2 },
-
+    "syncCardioversion": {
+      "first_JPerKg": [
+        0.5,
+        1
+      ],
+      "next_JPerKg": 2
+    },
     "mgso4_tdp": {
-      "range_mgPerKg": [25, 50],
+      "range_mgPerKg": [
+        25,
+        50
+      ],
       "max_mg": 2000,
-      "overMin": [10, 20],
+      "overMin": [
+        10,
+        20
+      ],
       "presets": [
-        { "label": "1 g in 100 mL", "drugMg": 1000, "volMl": 100 },
-        { "label": "2 g in 50 mL", "drugMg": 2000, "volMl": 50 }
+        {
+          "label": "1 g in 100 mL",
+          "drugMg": 1000,
+          "volMl": 100
+        },
+        {
+          "label": "2 g in 50 mL",
+          "drugMg": 2000,
+          "volMl": 50
+        }
       ]
     },
-
     "infusionPresets": {
       "epi": [
-        { "label": "1 mg in 100 mL", "drugMg": 1, "volMl": 100 },
-        { "label": "2 mg in 250 mL", "drugMg": 2, "volMl": 250 },
-        { "label": "4 mg in 250 mL", "drugMg": 4, "volMl": 250 }
+        {
+          "label": "1 mg in 100 mL",
+          "drugMg": 1,
+          "volMl": 100
+        },
+        {
+          "label": "2 mg in 250 mL",
+          "drugMg": 2,
+          "volMl": 250
+        },
+        {
+          "label": "4 mg in 250 mL",
+          "drugMg": 4,
+          "volMl": 250
+        }
       ],
       "dopamine": [
-        { "label": "160 mg in 100 mL", "drugMg": 160, "volMl": 100 },
-        { "label": "200 mg in 50 mL", "drugMg": 200, "volMl": 50 }
+        {
+          "label": "160 mg in 100 mL",
+          "drugMg": 160,
+          "volMl": 100
+        },
+        {
+          "label": "200 mg in 50 mL",
+          "drugMg": 200,
+          "volMl": 50
+        }
       ],
       "amiodarone": [
-        { "label": "150 mg in 100 mL", "drugMg": 150, "volMl": 100 },
-        { "label": "300 mg in 100 mL", "drugMg": 300, "volMl": 100 }
+        {
+          "label": "150 mg in 100 mL",
+          "drugMg": 150,
+          "volMl": 100
+        },
+        {
+          "label": "300 mg in 100 mL",
+          "drugMg": 300,
+          "volMl": 100
+        }
       ]
     },
-
     "defibJoulesPerKg_initial": 2,
     "defibJoulesPerKg_next": 4
   },
-
   "ncpr": {
     "epiIV_mgPerKg": 0.02,
     "epiIV_range_min": 0.01,
@@ -2311,10 +2461,11 @@
     "epiIntervalMin_min": 3,
     "epiIntervalMax_min": 5,
     "epiFlushMl": 3,
-
     "fluidBolus_mlPerKg": 10,
-    "fluidBolus_overMin": [5, 10],
-
+    "fluidBolus_overMin": [
+      5,
+      10
+    ],
     "ppv": {
       "flowLpm": 10,
       "ratePerMin_min": 40,
@@ -2325,531 +2476,1344 @@
       "maxPIP_term_cmH2O": 40,
       "maxPIP_preterm_cmH2O": 30
     },
-    "o2": { "gaCutoffWk": 35, "geCutoff_FiO2": "21%", "ltCutoff_FiO2": "21–30%" },
-
+    "o2": {
+      "gaCutoffWk": 35,
+      "geCutoff_FiO2": "21%",
+      "ltCutoff_FiO2": "21–30%"
+    },
     "hypoglycemia": {
-      "thresholds": { "symptomatic": 40, "atRisk_lt": 25, "atRisk_range": [25, 45], "ok_gt": 40 },
+      "thresholds": {
+        "symptomatic": 40,
+        "atRisk_lt": 25,
+        "atRisk_range": [
+          25,
+          45
+        ],
+        "ok_gt": 40
+      },
       "bolusD10_mlPerKg": 2,
       "infusionD10_mlPerKg_perHr": 3.5
     },
-
     "ett": {
       "sizeRules": {
         "byWeightKg": [
-          { "max": 1.0, "size": 2.5 },
-          { "min": 1.0, "max": 2.0, "size": 3.0 },
-          { "min": 2.0, "size": 3.5 }
+          {
+            "max": 1,
+            "size": 2.5
+          },
+          {
+            "min": 1,
+            "max": 2,
+            "size": 3
+          },
+          {
+            "min": 2,
+            "size": 3.5
+          }
         ],
         "byGAWeeks": [
-          { "max": 28, "size": 2.5 },
-          { "min": 28, "max": 34, "size": 3.0 },
-          { "min": 34, "size": 3.5 }
+          {
+            "max": 28,
+            "size": 2.5
+          },
+          {
+            "min": 28,
+            "max": 34,
+            "size": 3
+          },
+          {
+            "min": 34,
+            "size": 3.5
+          }
         ]
       },
       "depthByGAWeeks": [
-        { "min": 23, "max": 24, "depthCm": 5.5, "wKgRange": [0.5, 0.6] },
-        { "min": 25, "max": 26, "depthCm": 6.0, "wKgRange": [0.7, 0.8] },
-        { "min": 27, "max": 29, "depthCm": 6.5, "wKgRange": [0.9, 1.0] },
-        { "min": 30, "max": 32, "depthCm": 7.0, "wKgRange": [1.1, 1.4] },
-        { "min": 33, "max": 34, "depthCm": 7.5, "wKgRange": [1.5, 1.8] },
-        { "min": 35, "max": 37, "depthCm": 8.0, "wKgRange": [1.9, 2.4] },
-        { "min": 38, "max": 40, "depthCm": 8.5, "wKgRange": [2.5, 3.1] },
-        { "min": 41, "max": 43, "depthCm": 9.0, "wKgRange": [3.2, 4.2] }
+        {
+          "min": 23,
+          "max": 24,
+          "depthCm": 5.5,
+          "wKgRange": [
+            0.5,
+            0.6
+          ]
+        },
+        {
+          "min": 25,
+          "max": 26,
+          "depthCm": 6,
+          "wKgRange": [
+            0.7,
+            0.8
+          ]
+        },
+        {
+          "min": 27,
+          "max": 29,
+          "depthCm": 6.5,
+          "wKgRange": [
+            0.9,
+            1
+          ]
+        },
+        {
+          "min": 30,
+          "max": 32,
+          "depthCm": 7,
+          "wKgRange": [
+            1.1,
+            1.4
+          ]
+        },
+        {
+          "min": 33,
+          "max": 34,
+          "depthCm": 7.5,
+          "wKgRange": [
+            1.5,
+            1.8
+          ]
+        },
+        {
+          "min": 35,
+          "max": 37,
+          "depthCm": 8,
+          "wKgRange": [
+            1.9,
+            2.4
+          ]
+        },
+        {
+          "min": 38,
+          "max": 40,
+          "depthCm": 8.5,
+          "wKgRange": [
+            2.5,
+            3.1
+          ]
+        },
+        {
+          "min": 41,
+          "max": 43,
+          "depthCm": 9,
+          "wKgRange": [
+            3.2,
+            4.2
+          ]
+        }
       ],
       "suctionCatheterF": [
-        { "ettSize": 2.5, "catheter": "5F–6F" },
-        { "ettSize": 3.0, "catheter": "6F–8F" },
-        { "ettSize": 3.5, "catheter": "8F" }
+        {
+          "ettSize": 2.5,
+          "catheter": "5F–6F"
+        },
+        {
+          "ettSize": 3,
+          "catheter": "6F–8F"
+        },
+        {
+          "ettSize": 3.5,
+          "catheter": "8F"
+        }
       ]
     }
   },
-
   "broselow": [
-  {
-    "color": "🩶 Grey",
-    "min": 3, "max": 5, "approxKg": 5,
-    "drugs": {
-      "resuscitation": {
-        "epi_ET_1_1000_ml": 2.5,
-        "epi_1_10000_ml": 0.5,
-        "atropine_mg": 0.10,
-        "atropine_ET_mg": 0.15,
-        "sodium_bicarb_mEq": 5,
-        "lidocaine_mg": 5,
-        "lidocaine_ET_mg": 10,
-        "adenosine_mg": { "first": 0.5, "second": 1.0 },
-        "amiodarone_mg": 25,
-        "calcium_gluconate10_pct_ml": 2.5,
-        "magnesium_sulfate_mg": 250,
-        "d10w_ml": 50,
-        "d25w_ml": 5,
-        "naloxone_mg": 0.5,
-        "procainamide_mg": 75
-      },
-      "rsi": {
-        "premed": { "atropine_mg": 0.10, "lidocaine_mg": 10, "fentanyl_mcg": 10 },
-        "induction": { "etomidate_mg": 1.5, "ketamine_mg": 15, "thiopental_mg": 15 },
-        "paralytic": { "rocuronium_mg": 5, "vecuronium_mg": 1.0, "succinylcholine_mg": 15 }
-      },
-      "anaphylaxis": {
-        "epi_1_1000_IM_SC_ml": 0.05,
-        "albuterol_0_5pct_nb_5mgml_ml": 0.5,
-        "chlorpheniramine_iv_mg": 1.0,
-        "methylprednisolone_mg": 10,
-        "nss_ml": 100
-      },
-      "croup": { "epi_1_1000_nb_ml": 0.25, "dexamethasone_im_mg": 3 },
-      "epilepsy": {
-        "diazepam_iv_mg": 1.7,
-        "diazepam_rectal_mg": 2.5,
-        "phenytoin_mg": "75–100",
-        "fosphenytoin_mgPE": "75–100",
-        "phenobarbital_mg": 100
-      },
-      "infusion": {
-        "dopamine_in100ml_mg": 30, "dopamine_rate_ml_hr": "2–20",
-        "dobutamine_in100ml_mg": 30, "dobutamine_rate_ml_hr": "2–20",
-        "epinephrine_in100ml_mg": 3, "epinephrine_rate_ml_hr": "1–10",
-        "norepinephrine_in100ml_mg": 1.5, "norepinephrine_rate_ml_hr": "1–20",
-        "lidocaine_in100ml_mg": 10, "lidocaine_rate_ml_hr": "20–50",
-        "pge1_in100ml_mg": 1.5, "pge1_rate_ml_hr": "1–2",
-        "nitroprusside_in100ml_mg": 3, "nitroprusside_rate_ml_hr": "5–80"
-      },
-      "increasedICP": { "mannitol_g": null, "furosemide_mg": null },
-      "overdose": { "charcoal_g": 5 }
+    {
+      "color": "🩶 Grey",
+      "min": 3,
+      "max": 5,
+      "approxKg": 5,
+      "drugs": {
+        "resuscitation": {
+          "epi_ET_1_1000_ml": 2.5,
+          "epi_1_10000_ml": 0.5,
+          "atropine_mg": 0.1,
+          "atropine_ET_mg": 0.15,
+          "sodium_bicarb_mEq": 5,
+          "lidocaine_mg": 5,
+          "lidocaine_ET_mg": 10,
+          "adenosine_mg": {
+            "first": 0.5,
+            "second": 1
+          },
+          "amiodarone_mg": 25,
+          "calcium_gluconate10_pct_ml": 2.5,
+          "magnesium_sulfate_mg": 250,
+          "d10w_ml": 50,
+          "d25w_ml": 5,
+          "naloxone_mg": 0.5,
+          "procainamide_mg": 75
+        },
+        "rsi": {
+          "premed": {
+            "atropine_mg": 0.1,
+            "lidocaine_mg": 10,
+            "fentanyl_mcg": 10
+          },
+          "induction": {
+            "etomidate_mg": 1.5,
+            "ketamine_mg": 15,
+            "thiopental_mg": 15
+          },
+          "paralytic": {
+            "rocuronium_mg": 5,
+            "vecuronium_mg": 1,
+            "succinylcholine_mg": 15
+          }
+        },
+        "anaphylaxis": {
+          "epi_1_1000_IM_SC_ml": 0.05,
+          "albuterol_0_5pct_nb_5mgml_ml": 0.5,
+          "chlorpheniramine_iv_mg": 1,
+          "methylprednisolone_mg": 10,
+          "nss_ml": 100
+        },
+        "croup": {
+          "epi_1_1000_nb_ml": 0.25,
+          "dexamethasone_im_mg": 3
+        },
+        "epilepsy": {
+          "diazepam_iv_mg": 1.7,
+          "diazepam_rectal_mg": 2.5,
+          "phenytoin_mg": "75–100",
+          "fosphenytoin_mgPE": "75–100",
+          "phenobarbital_mg": 100
+        },
+        "infusion": {
+          "dopamine_in100ml_mg": 30,
+          "dopamine_rate_ml_hr": "2–20",
+          "dobutamine_in100ml_mg": 30,
+          "dobutamine_rate_ml_hr": "2–20",
+          "epinephrine_in100ml_mg": 3,
+          "epinephrine_rate_ml_hr": "1–10",
+          "norepinephrine_in100ml_mg": 1.5,
+          "norepinephrine_rate_ml_hr": "1–20",
+          "lidocaine_in100ml_mg": 10,
+          "lidocaine_rate_ml_hr": "20–50",
+          "pge1_in100ml_mg": 1.5,
+          "pge1_rate_ml_hr": "1–2",
+          "nitroprusside_in100ml_mg": 3,
+          "nitroprusside_rate_ml_hr": "5–80"
+        },
+        "increasedICP": {
+          "mannitol_g": null,
+          "furosemide_mg": null
+        },
+        "overdose": {
+          "charcoal_g": 5
+        }
+      }
+    },
+    {
+      "color": "🩷 Pink",
+      "min": 6,
+      "max": 7,
+      "approxKg": 6.5,
+      "drugs": {
+        "resuscitation": {
+          "epi_ET_1_1000_ml": 3.3,
+          "epi_1_10000_ml": 0.65,
+          "atropine_mg": 0.13,
+          "atropine_ET_mg": 0.2,
+          "sodium_bicarb_mEq": 6.5,
+          "lidocaine_mg": 6.5,
+          "lidocaine_ET_mg": 13,
+          "adenosine_mg": {
+            "first": 0.65,
+            "second": 1.3
+          },
+          "amiodarone_mg": 32,
+          "calcium_gluconate10_pct_ml": 3.3,
+          "magnesium_sulfate_mg": 325,
+          "d10w_ml": 65,
+          "d25w_ml": 6.5,
+          "naloxone_mg": 0.65,
+          "procainamide_mg": 97
+        },
+        "rsi": {
+          "premed": {
+            "atropine_mg": 0.13,
+            "lidocaine_mg": 13,
+            "fentanyl_mcg": 20
+          },
+          "induction": {
+            "etomidate_mg": 2,
+            "ketamine_mg": 13,
+            "thiopental_mg": 20
+          },
+          "paralytic": {
+            "rocuronium_mg": 6.5,
+            "vecuronium_mg": 1.3,
+            "succinylcholine_mg": 13
+          }
+        },
+        "anaphylaxis": {
+          "epi_1_1000_IM_SC_ml": 0.065,
+          "albuterol_0_5pct_nb_5mgml_ml": 0.65,
+          "chlorpheniramine_iv_mg": 1.25,
+          "methylprednisolone_mg": 13,
+          "nss_ml": 85
+        },
+        "croup": {
+          "epi_1_1000_nb_ml": 0.2,
+          "dexamethasone_im_mg": 2.4
+        },
+        "epilepsy": {
+          "diazepam_iv_mg": 1.3,
+          "diazepam_rectal_mg": 2,
+          "phenytoin_mg": 100,
+          "fosphenytoin_mgPE": 100,
+          "phenobarbital_mg": 130
+        },
+        "infusion": {
+          "dopamine_in100ml_mg": 40,
+          "dopamine_rate_ml_hr": "2–20",
+          "dobutamine_in100ml_mg": 40,
+          "dobutamine_rate_ml_hr": "2–20",
+          "epinephrine_in100ml_mg": 4,
+          "epinephrine_rate_ml_hr": "1–10",
+          "norepinephrine_in100ml_mg": 2,
+          "norepinephrine_rate_ml_hr": "1–20",
+          "lidocaine_in100ml_mg": 13,
+          "lidocaine_rate_ml_hr": "20–50",
+          "pge1_in100ml_mg": 1.3,
+          "pge1_rate_ml_hr": "1–2",
+          "nitroprusside_in100ml_mg": 2.6,
+          "nitroprusside_rate_ml_hr": "5–80"
+        },
+        "increasedICP": {
+          "mannitol_g": 6.5,
+          "furosemide_mg": 6.5
+        },
+        "overdose": {
+          "charcoal_g": 6.5
+        }
+      }
+    },
+    {
+      "color": "❤️ Red",
+      "min": 8,
+      "max": 9,
+      "approxKg": 8.5,
+      "drugs": {
+        "resuscitation": {
+          "epi_ET_1_1000_ml": 4.3,
+          "epi_1_10000_ml": 0.85,
+          "atropine_mg": 0.17,
+          "atropine_ET_mg": 0.26,
+          "sodium_bicarb_mEq": 8.5,
+          "lidocaine_mg": 8.5,
+          "lidocaine_ET_mg": 17,
+          "adenosine_mg": {
+            "first": 0.85,
+            "second": 1.7
+          },
+          "amiodarone_mg": 42,
+          "calcium_gluconate10_pct_ml": 4.5,
+          "magnesium_sulfate_mg": 425,
+          "d10w_ml": 85,
+          "d25w_ml": 8.5,
+          "naloxone_mg": 0.85,
+          "procainamide_mg": 128
+        },
+        "rsi": {
+          "premed": {
+            "atropine_mg": 0.17,
+            "lidocaine_mg": 13,
+            "fentanyl_mcg": 30
+          },
+          "induction": {
+            "etomidate_mg": 2.5,
+            "ketamine_mg": 17,
+            "thiopental_mg": 25
+          },
+          "paralytic": {
+            "rocuronium_mg": 8.5,
+            "vecuronium_mg": 1.7,
+            "succinylcholine_mg": 17
+          }
+        },
+        "anaphylaxis": {
+          "epi_1_1000_IM_SC_ml": 0.085,
+          "albuterol_0_5pct_nb_5mgml_ml": 0.85,
+          "chlorpheniramine_iv_mg": 1.7,
+          "methylprednisolone_mg": 17,
+          "nss_ml": 170
+        },
+        "croup": {
+          "epi_1_1000_nb_ml": 0.5,
+          "dexamethasone_im_mg": 3
+        },
+        "epilepsy": {
+          "diazepam_iv_mg": 1.7,
+          "diazepam_rectal_mg": 2.5,
+          "phenytoin_mg": 130,
+          "fosphenytoin_mgPE": 130,
+          "phenobarbital_mg": 170
+        },
+        "infusion": {
+          "dopamine_in100ml_mg": 50,
+          "dopamine_rate_ml_hr": "2–20",
+          "dobutamine_in100ml_mg": 50,
+          "dobutamine_rate_ml_hr": "2–20",
+          "epinephrine_in100ml_mg": 5,
+          "epinephrine_rate_ml_hr": "1–10",
+          "norepinephrine_in100ml_mg": 2.5,
+          "norepinephrine_rate_ml_hr": "1–20",
+          "lidocaine_in100ml_mg": 17,
+          "lidocaine_rate_ml_hr": "20–50",
+          "pge1_in100ml_mg": 1.7,
+          "pge1_rate_ml_hr": "1–2",
+          "nitroprusside_in100ml_mg": 3.4,
+          "nitroprusside_rate_ml_hr": "5–80"
+        },
+        "increasedICP": {
+          "mannitol_g": 8.5,
+          "furosemide_mg": 8.5
+        },
+        "overdose": {
+          "charcoal_g": 8.5
+        }
+      }
+    },
+    {
+      "color": "💜 Purple",
+      "min": 10,
+      "max": 11,
+      "approxKg": 10.5,
+      "drugs": {
+        "resuscitation": {
+          "epi_ET_1_1000_ml": 5,
+          "epi_1_10000_ml": 1,
+          "atropine_mg": 0.21,
+          "atropine_ET_mg": 0.32,
+          "sodium_bicarb_mEq": 10,
+          "lidocaine_mg": 10,
+          "lidocaine_ET_mg": "20–30",
+          "adenosine_mg": {
+            "first": 1,
+            "second": 2
+          },
+          "amiodarone_mg": 52,
+          "calcium_gluconate10_pct_ml": 5,
+          "magnesium_sulfate_mg": 525,
+          "d10w_ml": 100,
+          "d25w_ml": 40,
+          "naloxone_mg": 1,
+          "procainamide_mg": 150
+        },
+        "rsi": {
+          "premed": {
+            "atropine_mg": 0.21,
+            "lidocaine_mg": 15,
+            "fentanyl_mcg": 32
+          },
+          "induction": {
+            "etomidate_mg": 3.2,
+            "ketamine_mg": 20,
+            "thiopental_mg": 32
+          },
+          "paralytic": {
+            "rocuronium_mg": 10,
+            "vecuronium_mg": 2.1,
+            "succinylcholine_mg": 20
+          }
+        },
+        "anaphylaxis": {
+          "epi_1_1000_IM_SC_ml": 0.1,
+          "albuterol_0_5pct_nb_5mgml_ml": 0.5,
+          "chlorpheniramine_iv_mg": 2,
+          "methylprednisolone_mg": 20,
+          "nss_ml": 200
+        },
+        "croup": {
+          "epi_1_1000_nb_ml": 0.5,
+          "dexamethasone_im_mg": 6
+        },
+        "epilepsy": {
+          "diazepam_iv_mg": 2,
+          "diazepam_rectal_mg": 5,
+          "phenytoin_mg": 160,
+          "fosphenytoin_mgPE": 160,
+          "phenobarbital_mg": 210
+        },
+        "infusion": {
+          "dopamine_in100ml_mg": 60,
+          "dopamine_rate_ml_hr": "2–20",
+          "dobutamine_in100ml_mg": 60,
+          "dobutamine_rate_ml_hr": "2–20",
+          "epinephrine_in100ml_mg": 6,
+          "epinephrine_rate_ml_hr": "1–10",
+          "norepinephrine_in100ml_mg": 3,
+          "norepinephrine_rate_ml_hr": "1–20",
+          "lidocaine_in100ml_mg": 20,
+          "lidocaine_rate_ml_hr": "20–50",
+          "pge1_in100ml_mg": 3,
+          "pge1_rate_ml_hr": "1–2",
+          "nitroprusside_in100ml_mg": 6,
+          "nitroprusside_rate_ml_hr": "5–80"
+        },
+        "increasedICP": {
+          "mannitol_g": 10,
+          "furosemide_mg": 10
+        },
+        "overdose": {
+          "charcoal_g": 10
+        }
+      }
+    },
+    {
+      "color": "💛 Yellow",
+      "min": 12,
+      "max": 14,
+      "approxKg": 13,
+      "drugs": {
+        "resuscitation": {
+          "epi_ET_1_1000_ml": 6,
+          "epi_1_10000_ml": 1.3,
+          "atropine_mg": 0.26,
+          "atropine_ET_mg": 0.4,
+          "sodium_bicarb_mEq": 13,
+          "lidocaine_mg": 13,
+          "lidocaine_ET_mg": "26–40",
+          "adenosine_mg": {
+            "first": 1.3,
+            "second": 2.6
+          },
+          "amiodarone_mg": 65,
+          "calcium_gluconate10_pct_ml": 8,
+          "magnesium_sulfate_mg": 650,
+          "d10w_ml": 130,
+          "d25w_ml": 52,
+          "naloxone_mg": 1.3,
+          "procainamide_mg": 195
+        },
+        "rsi": {
+          "premed": {
+            "atropine_mg": 0.26,
+            "lidocaine_mg": 20,
+            "fentanyl_mcg": 40
+          },
+          "induction": {
+            "etomidate_mg": 4,
+            "ketamine_mg": 26,
+            "thiopental_mg": 40
+          },
+          "paralytic": {
+            "rocuronium_mg": 13,
+            "vecuronium_mg": 2.6,
+            "succinylcholine_mg": 26
+          }
+        },
+        "anaphylaxis": {
+          "epi_1_1000_IM_SC_ml": 0.13,
+          "albuterol_0_5pct_nb_5mgml_ml": 0.5,
+          "chlorpheniramine_iv_mg": 3.25,
+          "methylprednisolone_mg": 26,
+          "nss_ml": 260
+        },
+        "croup": {
+          "epi_1_1000_nb_ml": 0.7,
+          "dexamethasone_im_mg": 8
+        },
+        "epilepsy": {
+          "diazepam_iv_mg": 2.6,
+          "diazepam_rectal_mg": 6.5,
+          "phenytoin_mg": 200,
+          "fosphenytoin_mgPE": 200,
+          "phenobarbital_mg": 260
+        },
+        "infusion": {
+          "dopamine_in100ml_mg": 80,
+          "dopamine_rate_ml_hr": "2–20",
+          "dobutamine_in100ml_mg": 80,
+          "dobutamine_rate_ml_hr": "2–20",
+          "epinephrine_in100ml_mg": 8,
+          "epinephrine_rate_ml_hr": "1–10",
+          "norepinephrine_in100ml_mg": 4,
+          "norepinephrine_rate_ml_hr": "1–20",
+          "lidocaine_in100ml_mg": 26,
+          "lidocaine_rate_ml_hr": "20–50",
+          "pge1_in100ml_mg": 4,
+          "pge1_rate_ml_hr": "1–2",
+          "nitroprusside_in100ml_mg": 8,
+          "nitroprusside_rate_ml_hr": "5–80"
+        },
+        "increasedICP": {
+          "mannitol_g": 13,
+          "furosemide_mg": 13
+        },
+        "overdose": {
+          "charcoal_g": 13
+        }
+      }
+    },
+    {
+      "color": "🤍 White",
+      "min": 15,
+      "max": 18,
+      "approxKg": 16.5,
+      "drugs": {
+        "resuscitation": {
+          "epi_ET_1_1000_ml": 8,
+          "epi_1_10000_ml": 1.7,
+          "atropine_mg": 0.33,
+          "atropine_ET_mg": 0.5,
+          "sodium_bicarb_mEq": 16.5,
+          "lidocaine_mg": 17,
+          "lidocaine_ET_mg": "34–50",
+          "adenosine_mg": {
+            "first": 1.7,
+            "second": 3.3
+          },
+          "amiodarone_mg": 80,
+          "calcium_gluconate10_pct_ml": 10,
+          "magnesium_sulfate_mg": 820,
+          "d10w_ml": 165,
+          "d25w_ml": 66,
+          "naloxone_mg": 1.7,
+          "procainamide_mg": 248
+        },
+        "rsi": {
+          "premed": {
+            "atropine_mg": 0.33,
+            "lidocaine_mg": 25,
+            "fentanyl_mcg": 50
+          },
+          "induction": {
+            "etomidate_mg": 5,
+            "ketamine_mg": 33,
+            "thiopental_mg": 50
+          },
+          "paralytic": {
+            "rocuronium_mg": 17,
+            "vecuronium_mg": 3.3,
+            "succinylcholine_mg": 33
+          }
+        },
+        "anaphylaxis": {
+          "epi_1_1000_IM_SC_ml": 0.17,
+          "albuterol_0_5pct_nb_5mgml_ml": 0.5,
+          "chlorpheniramine_iv_mg": 4.25,
+          "methylprednisolone_mg": 33,
+          "nss_ml": 330
+        },
+        "croup": {
+          "epi_1_1000_nb_ml": 0.9,
+          "dexamethasone_im_mg": 10
+        },
+        "epilepsy": {
+          "diazepam_iv_mg": 3.3,
+          "diazepam_rectal_mg": 8,
+          "phenytoin_mg": 250,
+          "fosphenytoin_mgPE": 250,
+          "phenobarbital_mg": 330
+        },
+        "infusion": {
+          "dopamine_in100ml_mg": 100,
+          "dopamine_rate_ml_hr": "2–20",
+          "dobutamine_in100ml_mg": 100,
+          "dobutamine_rate_ml_hr": "2–20",
+          "epinephrine_in100ml_mg": 10,
+          "epinephrine_rate_ml_hr": "1–10",
+          "norepinephrine_in100ml_mg": 5,
+          "norepinephrine_rate_ml_hr": "1–20",
+          "lidocaine_in100ml_mg": 33,
+          "lidocaine_rate_ml_hr": "20–50",
+          "pge1_in100ml_mg": 5,
+          "pge1_rate_ml_hr": "1–2",
+          "nitroprusside_in100ml_mg": 10,
+          "nitroprusside_rate_ml_hr": "5–80"
+        },
+        "increasedICP": {
+          "mannitol_g": 17,
+          "furosemide_mg": 17
+        },
+        "overdose": {
+          "charcoal_g": 17
+        }
+      }
+    },
+    {
+      "color": "💙 Blue",
+      "min": 19,
+      "max": 23,
+      "approxKg": 21,
+      "drugs": {
+        "resuscitation": {
+          "epi_ET_1_1000_ml": 10.5,
+          "epi_1_10000_ml": 2.1,
+          "atropine_mg": 0.42,
+          "atropine_ET_mg": 0.6,
+          "sodium_bicarb_mEq": 20,
+          "lidocaine_mg": 20,
+          "lidocaine_ET_mg": "40–60",
+          "adenosine_mg": {
+            "first": 2.1,
+            "second": 4.2
+          },
+          "amiodarone_mg": 105,
+          "calcium_gluconate10_pct_ml": 12.5,
+          "magnesium_sulfate_mg": 1050,
+          "d10w_ml": 210,
+          "d25w_ml": 80,
+          "naloxone_mg": 2,
+          "procainamide_mg": 315
+        },
+        "rsi": {
+          "premed": {
+            "atropine_mg": 0.42,
+            "lidocaine_mg": 32,
+            "fentanyl_mcg": 63
+          },
+          "induction": {
+            "etomidate_mg": 6.3,
+            "ketamine_mg": 42,
+            "thiopental_mg": 63
+          },
+          "paralytic": {
+            "rocuronium_mg": 21,
+            "vecuronium_mg": 4.2,
+            "succinylcholine_mg": 40
+          }
+        },
+        "anaphylaxis": {
+          "epi_1_1000_IM_SC_ml": 0.21,
+          "albuterol_0_5pct_nb_5mgml_ml": 0.6,
+          "chlorpheniramine_iv_mg": 5.25,
+          "methylprednisolone_mg": 42,
+          "nss_ml": 420
+        },
+        "croup": {
+          "epi_1_1000_nb_ml": 1,
+          "dexamethasone_im_mg": 13
+        },
+        "epilepsy": {
+          "diazepam_iv_mg": 4.2,
+          "diazepam_rectal_mg": 10,
+          "phenytoin_mg": 315,
+          "fosphenytoin_mgPE": 315,
+          "phenobarbital_mg": 420
+        },
+        "infusion": {
+          "dopamine_in100ml_mg": 125,
+          "dopamine_rate_ml_hr": "2–20",
+          "dobutamine_in100ml_mg": 125,
+          "dobutamine_rate_ml_hr": "2–20",
+          "epinephrine_in100ml_mg": 12.5,
+          "epinephrine_rate_ml_hr": "1–10",
+          "norepinephrine_in100ml_mg": 6,
+          "norepinephrine_rate_ml_hr": "1–20",
+          "lidocaine_in100ml_mg": 21,
+          "lidocaine_rate_ml_hr": "20–50",
+          "pge1_in100ml_mg": 6.5,
+          "pge1_rate_ml_hr": "1–2",
+          "nitroprusside_in100ml_mg": 12.5,
+          "nitroprusside_rate_ml_hr": "5–80"
+        },
+        "increasedICP": {
+          "mannitol_g": 21,
+          "furosemide_mg": 21
+        },
+        "overdose": {
+          "charcoal_g": 21
+        }
+      }
+    },
+    {
+      "color": "🧡 Orange",
+      "min": 24,
+      "max": 29,
+      "approxKg": 26.5,
+      "drugs": {
+        "resuscitation": {
+          "epi_ET_1_1000_ml": 13,
+          "epi_1_10000_ml": 2.7,
+          "atropine_mg": 0.5,
+          "atropine_ET_mg": 0.8,
+          "sodium_bicarb_mEq": 27,
+          "lidocaine_mg": 27,
+          "lidocaine_ET_mg": "54–80",
+          "adenosine_mg": {
+            "first": 2.7,
+            "second": 5.4
+          },
+          "amiodarone_mg": 130,
+          "calcium_gluconate10_pct_ml": 16,
+          "magnesium_sulfate_mg": 1325,
+          "d10w_ml": 270,
+          "d25w_ml": 108,
+          "naloxone_mg": 2,
+          "procainamide_mg": 405
+        },
+        "rsi": {
+          "premed": {
+            "atropine_mg": 0.5,
+            "lidocaine_mg": 40,
+            "fentanyl_mcg": 80
+          },
+          "induction": {
+            "etomidate_mg": 8,
+            "ketamine_mg": 50,
+            "thiopental_mg": 80
+          },
+          "paralytic": {
+            "rocuronium_mg": 27,
+            "vecuronium_mg": 5.3,
+            "succinylcholine_mg": 53
+          }
+        },
+        "anaphylaxis": {
+          "epi_1_1000_IM_SC_ml": 0.27,
+          "albuterol_0_5pct_nb_5mgml_ml": 0.8,
+          "chlorpheniramine_iv_mg": 6.75,
+          "methylprednisolone_mg": 53,
+          "nss_ml": 530
+        },
+        "croup": {
+          "epi_1_1000_nb_ml": 1.4,
+          "dexamethasone_im_mg": 16
+        },
+        "epilepsy": {
+          "diazepam_iv_mg": 5.3,
+          "diazepam_rectal_mg": 13,
+          "phenytoin_mg": 400,
+          "fosphenytoin_mgPE": 400,
+          "phenobarbital_mg": 530
+        },
+        "infusion": {
+          "dopamine_in100ml_mg": 160,
+          "dopamine_rate_ml_hr": "2–20",
+          "dobutamine_in100ml_mg": 160,
+          "dobutamine_rate_ml_hr": "2–20",
+          "epinephrine_in100ml_mg": 16,
+          "epinephrine_rate_ml_hr": "1–10",
+          "norepinephrine_in100ml_mg": 8,
+          "norepinephrine_rate_ml_hr": "1–20",
+          "lidocaine_in100ml_mg": 27,
+          "lidocaine_rate_ml_hr": "20–50",
+          "pge1_in100ml_mg": 8,
+          "pge1_rate_ml_hr": "1–2",
+          "nitroprusside_in100ml_mg": 16,
+          "nitroprusside_rate_ml_hr": "5–80"
+        },
+        "increasedICP": {
+          "mannitol_g": 27,
+          "furosemide_mg": 27
+        },
+        "overdose": {
+          "charcoal_g": 27
+        }
+      }
+    },
+    {
+      "color": "💚 Green",
+      "min": 30,
+      "max": 36,
+      "approxKg": 33,
+      "drugs": {
+        "resuscitation": {
+          "epi_ET_1_1000_ml": 16.5,
+          "epi_1_10000_ml": 3.3,
+          "atropine_mg": 0.5,
+          "atropine_ET_mg": 1,
+          "sodium_bicarb_mEq": 33,
+          "lidocaine_mg": 33,
+          "lidocaine_ET_mg": "66–100",
+          "adenosine_mg": {
+            "first": 3.3,
+            "second": 6.6
+          },
+          "amiodarone_mg": 165,
+          "calcium_gluconate10_pct_ml": 20,
+          "magnesium_sulfate_mg": 1650,
+          "d10w_ml": 330,
+          "d25w_ml": 132,
+          "naloxone_mg": 2,
+          "procainamide_mg": 495
+        },
+        "rsi": {
+          "premed": {
+            "atropine_mg": 0.5,
+            "lidocaine_mg": 50,
+            "fentanyl_mcg": 100
+          },
+          "induction": {
+            "etomidate_mg": 10,
+            "ketamine_mg": 66,
+            "thiopental_mg": 100
+          },
+          "paralytic": {
+            "rocuronium_mg": 33,
+            "vecuronium_mg": 6.6,
+            "succinylcholine_mg": 66
+          }
+        },
+        "anaphylaxis": {
+          "epi_1_1000_IM_SC_ml": 0.33,
+          "albuterol_0_5pct_nb_5mgml_ml": 1,
+          "chlorpheniramine_iv_mg": 8.25,
+          "methylprednisolone_mg": 66,
+          "nss_ml": 660
+        },
+        "croup": {
+          "epi_1_1000_nb_ml": 1.7,
+          "dexamethasone_im_mg": 20
+        },
+        "epilepsy": {
+          "diazepam_iv_mg": 6.6,
+          "diazepam_rectal_mg": 16.5,
+          "phenytoin_mg": 500,
+          "fosphenytoin_mgPE": 500,
+          "phenobarbital_mg": 660
+        },
+        "infusion": {
+          "dopamine_in100ml_mg": 200,
+          "dopamine_rate_ml_hr": "2–20",
+          "dobutamine_in100ml_mg": 200,
+          "dobutamine_rate_ml_hr": "2–20",
+          "epinephrine_in100ml_mg": 20,
+          "epinephrine_rate_ml_hr": "1–10",
+          "norepinephrine_in100ml_mg": 10,
+          "norepinephrine_rate_ml_hr": "1–20",
+          "lidocaine_in100ml_mg": 33,
+          "lidocaine_rate_ml_hr": "20–50",
+          "pge1_in100ml_mg": 10,
+          "pge1_rate_ml_hr": "1–2",
+          "nitroprusside_in100ml_mg": 20,
+          "nitroprusside_rate_ml_hr": "5–80"
+        },
+        "increasedICP": {
+          "mannitol_g": 33,
+          "furosemide_mg": 33
+        },
+        "overdose": {
+          "charcoal_g": 33
+        }
+      }
     }
-  },
-  {
-    "color": "🩷 Pink",
-    "min": 6, "max": 7, "approxKg": 6.5,
-    "drugs": {
-      "resuscitation": {
-        "epi_ET_1_1000_ml": 3.3,
-        "epi_1_10000_ml": 0.65,
-        "atropine_mg": 0.13,
-        "atropine_ET_mg": 0.20,
-        "sodium_bicarb_mEq": 6.5,
-        "lidocaine_mg": 6.5,
-        "lidocaine_ET_mg": 13,
-        "adenosine_mg": { "first": 0.65, "second": 1.3 },
-        "amiodarone_mg": 32,
-        "calcium_gluconate10_pct_ml": 3.3,
-        "magnesium_sulfate_mg": 325,
-        "d10w_ml": 65,
-        "d25w_ml": 6.5,
-        "naloxone_mg": 0.65,
-        "procainamide_mg": 97
-      },
-      "rsi": {
-        "premed": { "atropine_mg": 0.13, "lidocaine_mg": 13, "fentanyl_mcg": 20 },
-        "induction": { "etomidate_mg": 2, "ketamine_mg": 13, "thiopental_mg": 20 },
-        "paralytic": { "rocuronium_mg": 6.5, "vecuronium_mg": 1.3, "succinylcholine_mg": 13 }
-      },
-      "anaphylaxis": {
-        "epi_1_1000_IM_SC_ml": 0.065,
-        "albuterol_0_5pct_nb_5mgml_ml": 0.65,
-        "chlorpheniramine_iv_mg": 1.25,
-        "methylprednisolone_mg": 13,
-        "nss_ml": 85
-      },
-      "croup": { "epi_1_1000_nb_ml": 0.2, "dexamethasone_im_mg": 2.4 },
-      "epilepsy": {
-        "diazepam_iv_mg": 1.3,
-        "diazepam_rectal_mg": 2.0,
-        "phenytoin_mg": 100,
-        "fosphenytoin_mgPE": 100,
-        "phenobarbital_mg": 130
-      },
-      "infusion": {
-        "dopamine_in100ml_mg": 40, "dopamine_rate_ml_hr": "2–20",
-        "dobutamine_in100ml_mg": 40, "dobutamine_rate_ml_hr": "2–20",
-        "epinephrine_in100ml_mg": 4, "epinephrine_rate_ml_hr": "1–10",
-        "norepinephrine_in100ml_mg": 2, "norepinephrine_rate_ml_hr": "1–20",
-        "lidocaine_in100ml_mg": 13, "lidocaine_rate_ml_hr": "20–50",
-        "pge1_in100ml_mg": 1.3, "pge1_rate_ml_hr": "1–2",
-        "nitroprusside_in100ml_mg": 2.6, "nitroprusside_rate_ml_hr": "5–80"
-      },
-      "increasedICP": { "mannitol_g": 6.5, "furosemide_mg": 6.5 },
-      "overdose": { "charcoal_g": 6.5 }
+  ],
+  "infusionDrips": [
+    {
+      "key": "epinephrine-drip",
+      "drug": "Epinephrine Infusion",
+      "doseMinMcgKgMin": 0.05,
+      "doseMaxMcgKgMin": 1,
+      "doseDefaultMcgKgMin": 0.1,
+      "unit": "mcg/kg/min",
+      "standardPrep": "1 mg in 50 mL D5W / NSS (0.02 mg/mL = 20 mcg/mL)",
+      "concMgPerMl": 0.02,
+      "maxRateMcgKgMin": 2,
+      "note": "Indication: Inotropic/Vasopressor in septic or cardiogenic shock. Titrate by 0.05–0.1 mcg/kg/min q5-15m.",
+      "route": "IV Continuous Infusion"
+    },
+    {
+      "key": "norepinephrine-drip",
+      "drug": "Norepinephrine Infusion",
+      "doseMinMcgKgMin": 0.05,
+      "doseMaxMcgKgMin": 1,
+      "doseDefaultMcgKgMin": 0.1,
+      "unit": "mcg/kg/min",
+      "standardPrep": "1 mg in 50 mL D5W / NSS (0.02 mg/mL = 20 mcg/mL)",
+      "concMgPerMl": 0.02,
+      "maxRateMcgKgMin": 2,
+      "note": "Indication: Vasodilatory / Septic shock with low SVR. Prefer central venous line.",
+      "route": "IV Continuous Infusion"
+    },
+    {
+      "key": "dopamine-drip",
+      "drug": "Dopamine Infusion",
+      "doseMinMcgKgMin": 2,
+      "doseMaxMcgKgMin": 20,
+      "doseDefaultMcgKgMin": 5,
+      "unit": "mcg/kg/min",
+      "standardPrep": "150 mg in 50 mL D5W / NSS (3.0 mg/mL = 3000 mcg/mL)",
+      "concMgPerMl": 3,
+      "maxRateMcgKgMin": 20,
+      "note": "Indication: Inotropic support (5–10 mcg/kg/min), Vasopressor (>10 mcg/kg/min).",
+      "route": "IV Continuous Infusion"
+    },
+    {
+      "key": "dobutamine-drip",
+      "drug": "Dobutamine Infusion",
+      "doseMinMcgKgMin": 2,
+      "doseMaxMcgKgMin": 20,
+      "doseDefaultMcgKgMin": 5,
+      "unit": "mcg/kg/min",
+      "standardPrep": "250 mg in 50 mL D5W / NSS (5.0 mg/mL = 5000 mcg/mL)",
+      "concMgPerMl": 5,
+      "maxRateMcgKgMin": 20,
+      "note": "Indication: Cardiogenic shock, low cardiac output state.",
+      "route": "IV Continuous Infusion"
+    },
+    {
+      "key": "midazolam-drip",
+      "drug": "Midazolam Infusion",
+      "doseMinMcgKgMin": 1,
+      "doseMaxMcgKgMin": 6,
+      "doseDefaultMcgKgMin": 2,
+      "unit": "mcg/kg/min",
+      "standardPrep": "15 mg in 50 mL D5W / NSS (0.3 mg/mL = 300 mcg/mL)",
+      "concMgPerMl": 0.3,
+      "maxRateMcgKgMin": 10,
+      "note": "Indication: Refractory status epilepticus, continuous sedation in ICU.",
+      "route": "IV Continuous Infusion"
+    },
+    {
+      "key": "milrinone-drip",
+      "drug": "Milrinone Infusion",
+      "doseMinMcgKgMin": 0.25,
+      "doseMaxMcgKgMin": 0.75,
+      "doseDefaultMcgKgMin": 0.5,
+      "unit": "mcg/kg/min",
+      "standardPrep": "10 mg in 50 mL D5W / NSS (0.2 mg/mL = 200 mcg/mL)",
+      "concMgPerMl": 0.2,
+      "maxRateMcgKgMin": 1,
+      "note": "Indication: Inodilator in acute heart failure or pulmonary hypertension.",
+      "route": "IV Continuous Infusion"
     }
-  },
-  {
-    "color": "❤️ Red",
-    "min": 8, "max": 9, "approxKg": 8.5,
-    "drugs": {
-      "resuscitation": {
-        "epi_ET_1_1000_ml": 4.3,
-        "epi_1_10000_ml": 0.85,
-        "atropine_mg": 0.17,
-        "atropine_ET_mg": 0.26,
-        "sodium_bicarb_mEq": 8.5,
-        "lidocaine_mg": 8.5,
-        "lidocaine_ET_mg": 17,
-        "adenosine_mg": { "first": 0.85, "second": 1.7 },
-        "amiodarone_mg": 42,
-        "calcium_gluconate10_pct_ml": 4.5,
-        "magnesium_sulfate_mg": 425,
-        "d10w_ml": 85,
-        "d25w_ml": 8.5,
-        "naloxone_mg": 0.85,
-        "procainamide_mg": 128
-      },
-      "rsi": {
-        "premed": { "atropine_mg": 0.17, "lidocaine_mg": 13, "fentanyl_mcg": 30 },
-        "induction": { "etomidate_mg": 2.5, "ketamine_mg": 17, "thiopental_mg": 25 },
-        "paralytic": { "rocuronium_mg": 8.5, "vecuronium_mg": 1.7, "succinylcholine_mg": 17 }
-      },
-      "anaphylaxis": {
-        "epi_1_1000_IM_SC_ml": 0.085,
-        "albuterol_0_5pct_nb_5mgml_ml": 0.85,
-        "chlorpheniramine_iv_mg": 1.7,
-        "methylprednisolone_mg": 17,
-        "nss_ml": 170
-      },
-      "croup": { "epi_1_1000_nb_ml": 0.5, "dexamethasone_im_mg": 3 },
-      "epilepsy": {
-        "diazepam_iv_mg": 1.7,
-        "diazepam_rectal_mg": 2.5,
-        "phenytoin_mg": 130,
-        "fosphenytoin_mgPE": 130,
-        "phenobarbital_mg": 170
-      },
-      "infusion": {
-        "dopamine_in100ml_mg": 50, "dopamine_rate_ml_hr": "2–20",
-        "dobutamine_in100ml_mg": 50, "dobutamine_rate_ml_hr": "2–20",
-        "epinephrine_in100ml_mg": 5, "epinephrine_rate_ml_hr": "1–10",
-        "norepinephrine_in100ml_mg": 2.5, "norepinephrine_rate_ml_hr": "1–20",
-        "lidocaine_in100ml_mg": 17, "lidocaine_rate_ml_hr": "20–50",
-        "pge1_in100ml_mg": 1.7, "pge1_rate_ml_hr": "1–2",
-        "nitroprusside_in100ml_mg": 3.4, "nitroprusside_rate_ml_hr": "5–80"
-      },
-      "increasedICP": { "mannitol_g": 8.5, "furosemide_mg": 8.5 },
-      "overdose": { "charcoal_g": 8.5 }
+  ],
+  "seizureProtocol": [
+    {
+      "stage": "0–5 min",
+      "name": "Initial Assessment & Stabilization",
+      "actions": "Maintain airway, high-flow O2, check Bedside Blood Glucose (DTX), establish IV/IO access if possible.",
+      "drugs": []
+    },
+    {
+      "stage": "5–10 min",
+      "name": "First-Line Benzodiazepines",
+      "actions": "Give 1st dose Benzodiazepine immediately. May repeat ONCE in 5 min if seizure persists.",
+      "drugs": [
+        {
+          "key": "midazolam-buccal-in",
+          "name": "Midazolam (Intranasal / Buccal)",
+          "doseMgPerKg": 0.2,
+          "maxDoseMg": 10,
+          "route": "IN / Buccal",
+          "prep": "5 mg/mL solution (0.04 mL/kg/dose)",
+          "note": "Preferred option if no IV access established yet."
+        },
+        {
+          "key": "lorazepam-iv",
+          "name": "Lorazepam (IV / IO)",
+          "doseMgPerKg": 0.1,
+          "maxDoseMg": 4,
+          "route": "IV / IO over 2 min",
+          "prep": "2 mg/mL or 4 mg/mL ampoule",
+          "note": "First-line IV benzodiazepine (longer duration of action)."
+        },
+        {
+          "key": "diazepam-iv",
+          "name": "Diazepam (IV / IO)",
+          "doseMgPerKg": 0.2,
+          "maxDoseMg": 10,
+          "route": "IV / IO slow push (2 mg/min)",
+          "prep": "10 mg / 2 mL ampoule",
+          "note": "Caution: High risk of respiratory depression / apnea."
+        },
+        {
+          "key": "diazepam-rectal",
+          "name": "Diazepam (Rectal Suppository / Solution)",
+          "doseMgPerKg": 0.5,
+          "maxDoseMg": 20,
+          "route": "PR (Rectal)",
+          "prep": "5 mg / 2.5 mL or 10 mg / 2.5 mL tube",
+          "note": "Use if no IV access and IN Midazolam unavailable."
+        }
+      ]
+    },
+    {
+      "stage": "10–20 min",
+      "name": "Second-Line Non-Sedating ASMs",
+      "actions": "If seizure continues >10 min, start Second-Line IV Infusion immediately. Call PICU/Pediatrician.",
+      "drugs": [
+        {
+          "key": "levetiracetam-iv-load",
+          "name": "Levetiracetam (Keppra IV Load)",
+          "doseMgPerKg": 60,
+          "maxDoseMg": 4500,
+          "route": "IV infusion over 10–15 min",
+          "prep": "100 mg/mL injection diluted in NSS/D5W",
+          "note": "Preferred 2nd-line drug due to high safety profile & fast infusion."
+        },
+        {
+          "key": "phenytoin-iv-load-protocol",
+          "name": "Phenytoin (Dilantin IV Load)",
+          "doseMgPerKg": 20,
+          "maxDoseMg": 1000,
+          "route": "IV infusion in NSS ONLY (max 1 mg/kg/min or 50 mg/min)",
+          "prep": "250 mg / 5 mL ampoule (MUST NOT use D5W - precipitates!)",
+          "note": "Requires continuous ECG & BP monitoring during infusion (purple glove syndrome risk)."
+        },
+        {
+          "key": "fosphenytoin-iv-load",
+          "name": "Fosphenytoin IV Load",
+          "doseMgPerKg": 20,
+          "maxDoseMg": 1500,
+          "route": "IV infusion over 10 min (max 150 mg PE/min)",
+          "prep": "50 mg PE/mL vial",
+          "note": "Water-soluble pro-drug, lower risk of tissue necrosis & hypotension."
+        },
+        {
+          "key": "phenobarbital-iv-load",
+          "name": "Phenobarbital IV Load",
+          "doseMgPerKg": 20,
+          "maxDoseMg": 1000,
+          "route": "IV infusion over 10–20 min (max 30 mg/min)",
+          "prep": "100 mg/mL or 200 mg/mL ampoule",
+          "note": "Drug of choice in Neonatal Seizures (<28 days old)."
+        }
+      ]
+    },
+    {
+      "stage": "20–40 min",
+      "name": "Refractory Status Epilepticus (RSE)",
+      "actions": "Prepare for Endotracheal Intubation (RSI) & Continuous IV Anesthetic Infusion in PICU.",
+      "drugs": [
+        {
+          "key": "midazolam-rse-infusion",
+          "name": "Midazolam Continuous Drip",
+          "doseMgPerKg": 0.2,
+          "maxDoseMg": 10,
+          "route": "IV Bolus 0.2 mg/kg, then infusion 0.1–2.0 mg/kg/hr",
+          "prep": "15 mg in 50 mL D5W/NSS",
+          "note": "Requires mechanical ventilation readiness."
+        },
+        {
+          "key": "propofol-rse-infusion",
+          "name": "Propofol Infusion (Age >16y or short-term only)",
+          "doseMgPerKg": 2,
+          "maxDoseMg": 200,
+          "route": "IV Bolus 1–2 mg/kg over 5 min, then 2–10 mg/kg/hr",
+          "prep": "10 mg/mL (1%) emulsion",
+          "note": "⚠️ CAUTION: Propofol Infusion Syndrome (PRIS) risk in young children."
+        }
+      ]
     }
-  },
-  {
-    "color": "💜 Purple",
-    "min": 10, "max": 11, "approxKg": 10.5,
-    "drugs": {
-      "resuscitation": {
-        "epi_ET_1_1000_ml": 5.0,
-        "epi_1_10000_ml": 1.0,
-        "atropine_mg": 0.21,
-        "atropine_ET_mg": 0.32,
-        "sodium_bicarb_mEq": 10,
-        "lidocaine_mg": 10,
-        "lidocaine_ET_mg": "20–30",
-        "adenosine_mg": { "first": 1.0, "second": 2.0 },
-        "amiodarone_mg": 52,
-        "calcium_gluconate10_pct_ml": 5.0,
-        "magnesium_sulfate_mg": 525,
-        "d10w_ml": 100,
-        "d25w_ml": 40,
-        "naloxone_mg": 1.0,
-        "procainamide_mg": 150
-      },
-      "rsi": {
-        "premed": { "atropine_mg": 0.21, "lidocaine_mg": 15, "fentanyl_mcg": 32 },
-        "induction": { "etomidate_mg": 3.2, "ketamine_mg": 20, "thiopental_mg": 32 },
-        "paralytic": { "rocuronium_mg": 10, "vecuronium_mg": 2.1, "succinylcholine_mg": 20 }
-      },
-      "anaphylaxis": {
-        "epi_1_1000_IM_SC_ml": 0.10,
-        "albuterol_0_5pct_nb_5mgml_ml": 0.5,
-        "chlorpheniramine_iv_mg": 2.0,
-        "methylprednisolone_mg": 20,
-        "nss_ml": 200
-      },
-      "croup": { "epi_1_1000_nb_ml": 0.5, "dexamethasone_im_mg": 6 },
-      "epilepsy": {
-        "diazepam_iv_mg": 2,
-        "diazepam_rectal_mg": 5,
-        "phenytoin_mg": 160,
-        "fosphenytoin_mgPE": 160,
-        "phenobarbital_mg": 210
-      },
-      "infusion": {
-        "dopamine_in100ml_mg": 60, "dopamine_rate_ml_hr": "2–20",
-        "dobutamine_in100ml_mg": 60, "dobutamine_rate_ml_hr": "2–20",
-        "epinephrine_in100ml_mg": 6, "epinephrine_rate_ml_hr": "1–10",
-        "norepinephrine_in100ml_mg": 3, "norepinephrine_rate_ml_hr": "1–20",
-        "lidocaine_in100ml_mg": 20, "lidocaine_rate_ml_hr": "20–50",
-        "pge1_in100ml_mg": 3, "pge1_rate_ml_hr": "1–2",
-        "nitroprusside_in100ml_mg": 6, "nitroprusside_rate_ml_hr": "5–80"
-      },
-      "increasedICP": { "mannitol_g": 10, "furosemide_mg": 10 },
-      "overdose": { "charcoal_g": 10 }
+  ],
+  "toxicologyAntidotes": [
+    {
+      "key": "naloxone-antidote",
+      "name": "Naloxone (Opioid Antagonist)",
+      "indication": "Opioid Overdose / Respiratory Depression",
+      "doseMgPerKg": 0.1,
+      "maxDoseMg": 2,
+      "route": "IV / IO / IM / IN / ETT",
+      "prep": "0.4 mg/mL ampoule",
+      "note": "If patient <5y or <20kg: 0.1 mg/kg. If >5y or >20kg: 2.0 mg. Repeat q2–3m PRN."
+    },
+    {
+      "key": "flumazenil-antidote",
+      "name": "Flumazenil (Benzodiazepine Antagonist)",
+      "indication": "Benzodiazepine Toxicity / Over-sedation",
+      "doseMgPerKg": 0.01,
+      "maxDoseMg": 0.2,
+      "route": "IV over 15 seconds",
+      "prep": "0.5 mg / 5 mL ampoule (0.1 mg/mL)",
+      "note": "⚠️ CONTRAINDICATED in chronic BZD users, seizure history, or TCA co-ingestion (seizure risk)."
+    },
+    {
+      "key": "atropine-organophosphate",
+      "name": "Atropine (Organophosphate / Carbamate Poisoning)",
+      "indication": "Cholinergic Crisis (SLUDGE / Killer Bs: Bronchospasm, Bronchorrhea)",
+      "doseMgPerKg": 0.05,
+      "maxDoseMg": 5,
+      "route": "IV / IO q5–10m until atropinized",
+      "prep": "0.6 mg/mL ampoule",
+      "note": "Double dose every 5 minutes until lungs clear and secretions dry. (Min dose 0.1 mg to avoid paradoxical bradycardia)."
+    },
+    {
+      "key": "activated-charcoal",
+      "name": "Activated Charcoal (Decontamination)",
+      "indication": "Acute Oral Toxin Ingestion (<1–2 hours post-ingestion)",
+      "doseMgPerKg": 1,
+      "unit": "g/kg",
+      "maxDoseMg": 50000,
+      "route": "PO / NG tube",
+      "prep": "Slurry with water (50 g bottle)",
+      "note": "Dose: 1 g/kg (Max 50 g in children, 100 g in adults). Ineffective for Heavy Metals, Alcohols, Lithium, Corrosives, Hydrocarbons."
+    },
+    {
+      "key": "nac-paracetamol",
+      "name": "N-Acetylcysteine (NAC) - Paracetamol Toxicity",
+      "indication": "Acetaminophen (Paracetamol) Overdose (Rumack-Matthew Nomogram toxic level)",
+      "doseMgPerKg": 150,
+      "maxDoseMg": 15000,
+      "route": "IV Infusion Protocol (3-Bag Regime)",
+      "prep": "200 mg/mL (20%) ampoule",
+      "note": "Bag 1: 150 mg/kg in D5W 200 mL over 1 hr. Bag 2: 50 mg/kg over 4 hr. Bag 3: 100 mg/kg over 16 hr."
     }
-  },
-  {
-    "color": "💛 Yellow",
-    "min": 12, "max": 14, "approxKg": 13,
-    "drugs": {
-      "resuscitation": {
-        "epi_ET_1_1000_ml": 6.0,
-        "epi_1_10000_ml": 1.3,
-        "atropine_mg": 0.26,
-        "atropine_ET_mg": 0.40,
-        "sodium_bicarb_mEq": 13,
-        "lidocaine_mg": 13,
-        "lidocaine_ET_mg": "26–40",
-        "adenosine_mg": { "first": 1.3, "second": 2.6 },
-        "amiodarone_mg": 65,
-        "calcium_gluconate10_pct_ml": 8,
-        "magnesium_sulfate_mg": 650,
-        "d10w_ml": 130,
-        "d25w_ml": 52,
-        "naloxone_mg": 1.3,
-        "procainamide_mg": 195
-      },
-      "rsi": {
-        "premed": { "atropine_mg": 0.26, "lidocaine_mg": 20, "fentanyl_mcg": 40 },
-        "induction": { "etomidate_mg": 4, "ketamine_mg": 26, "thiopental_mg": 40 },
-        "paralytic": { "rocuronium_mg": 13, "vecuronium_mg": 2.6, "succinylcholine_mg": 26 }
-      },
-      "anaphylaxis": {
-        "epi_1_1000_IM_SC_ml": 0.13,
-        "albuterol_0_5pct_nb_5mgml_ml": 0.5,
-        "chlorpheniramine_iv_mg": 3.25,
-        "methylprednisolone_mg": 26,
-        "nss_ml": 260
-      },
-      "croup": { "epi_1_1000_nb_ml": 0.7, "dexamethasone_im_mg": 8 },
-      "epilepsy": {
-        "diazepam_iv_mg": 2.6,
-        "diazepam_rectal_mg": 6.5,
-        "phenytoin_mg": 200,
-        "fosphenytoin_mgPE": 200,
-        "phenobarbital_mg": 260
-      },
-      "infusion": {
-        "dopamine_in100ml_mg": 80, "dopamine_rate_ml_hr": "2–20",
-        "dobutamine_in100ml_mg": 80, "dobutamine_rate_ml_hr": "2–20",
-        "epinephrine_in100ml_mg": 8, "epinephrine_rate_ml_hr": "1–10",
-        "norepinephrine_in100ml_mg": 4, "norepinephrine_rate_ml_hr": "1–20",
-        "lidocaine_in100ml_mg": 26, "lidocaine_rate_ml_hr": "20–50",
-        "pge1_in100ml_mg": 4, "pge1_rate_ml_hr": "1–2",
-        "nitroprusside_in100ml_mg": 8, "nitroprusside_rate_ml_hr": "5–80"
-      },
-      "increasedICP": { "mannitol_g": 13, "furosemide_mg": 13 },
-      "overdose": { "charcoal_g": 13 }
+  ],
+  "proceduralSedation": [
+    {
+      "key": "ketamine-psa-iv",
+      "name": "Ketamine (IV)",
+      "doseMinMgPerKg": 1,
+      "doseMaxMgPerKg": 2,
+      "maxPerDoseMg": 100,
+      "route": "IV slow push over 1 min",
+      "prep": "50 mg/mL vial",
+      "note": "Dissociative sedation of choice for painful procedures. Preserves airway reflexes."
+    },
+    {
+      "key": "ketamine-psa-im",
+      "name": "Ketamine (IM)",
+      "doseMinMgPerKg": 3,
+      "doseMaxMgPerKg": 4,
+      "maxPerDoseMg": 200,
+      "route": "IM injection",
+      "prep": "50 mg/mL vial",
+      "note": "Use when IV access cannot be established immediately. Onset 3–5 min."
+    },
+    {
+      "key": "fentanyl-psa-in",
+      "name": "Fentanyl (Intranasal - IN)",
+      "doseMinMgPerKg": 0.0015,
+      "doseMaxMgPerKg": 0.002,
+      "maxPerDoseMg": 0.1,
+      "route": "IN via Mucosal Atomization Device (MAD)",
+      "prep": "50 mcg/mL ampoule (1.5–2 mcg/kg)",
+      "note": "Rapid analgesia without IV placement. Divide volume equally between nostrils."
+    },
+    {
+      "key": "fentanyl-psa-iv",
+      "name": "Fentanyl (IV)",
+      "doseMinMgPerKg": 0.001,
+      "doseMaxMgPerKg": 0.002,
+      "maxPerDoseMg": 0.1,
+      "route": "IV slow push over 3 min",
+      "prep": "50 mcg/mL ampoule (1–2 mcg/kg)",
+      "note": "Potent opioid analgesia. Watch for chest wall rigidity with rapid push."
+    },
+    {
+      "key": "midazolam-psa-in",
+      "name": "Midazolam (Intranasal - IN)",
+      "doseMinMgPerKg": 0.2,
+      "doseMaxMgPerKg": 0.3,
+      "maxPerDoseMg": 10,
+      "route": "IN via MAD device",
+      "prep": "5 mg/mL vial",
+      "note": "Anxiolysis & sedation for minor non-painful or mild procedures."
     }
-  },
-  {
-    "color": "🤍 White",
-    "min": 15, "max": 18, "approxKg": 16.5,
-    "drugs": {
-      "resuscitation": {
-        "epi_ET_1_1000_ml": 8.0,
-        "epi_1_10000_ml": 1.7,
-        "atropine_mg": 0.33,
-        "atropine_ET_mg": 0.50,
-        "sodium_bicarb_mEq": 16.5,
-        "lidocaine_mg": 17,
-        "lidocaine_ET_mg": "34–50",
-        "adenosine_mg": { "first": 1.7, "second": 3.3 },
-        "amiodarone_mg": 80,
-        "calcium_gluconate10_pct_ml": 10,
-        "magnesium_sulfate_mg": 820,
-        "d10w_ml": 165,
-        "d25w_ml": 66,
-        "naloxone_mg": 1.7,
-        "procainamide_mg": 248
-      },
-      "rsi": {
-        "premed": { "atropine_mg": 0.33, "lidocaine_mg": 25, "fentanyl_mcg": 50 },
-        "induction": { "etomidate_mg": 5, "ketamine_mg": 33, "thiopental_mg": 50 },
-        "paralytic": { "rocuronium_mg": 17, "vecuronium_mg": 3.3, "succinylcholine_mg": 33 }
-      },
-      "anaphylaxis": {
-        "epi_1_1000_IM_SC_ml": 0.17,
-        "albuterol_0_5pct_nb_5mgml_ml": 0.5,
-        "chlorpheniramine_iv_mg": 4.25,
-        "methylprednisolone_mg": 33,
-        "nss_ml": 330
-      },
-      "croup": { "epi_1_1000_nb_ml": 0.9, "dexamethasone_im_mg": 10 },
-      "epilepsy": {
-        "diazepam_iv_mg": 3.3,
-        "diazepam_rectal_mg": 8,
-        "phenytoin_mg": 250,
-        "fosphenytoin_mgPE": 250,
-        "phenobarbital_mg": 330
-      },
-      "infusion": {
-        "dopamine_in100ml_mg": 100, "dopamine_rate_ml_hr": "2–20",
-        "dobutamine_in100ml_mg": 100, "dobutamine_rate_ml_hr": "2–20",
-        "epinephrine_in100ml_mg": 10, "epinephrine_rate_ml_hr": "1–10",
-        "norepinephrine_in100ml_mg": 5, "norepinephrine_rate_ml_hr": "1–20",
-        "lidocaine_in100ml_mg": 33, "lidocaine_rate_ml_hr": "20–50",
-        "pge1_in100ml_mg": 5, "pge1_rate_ml_hr": "1–2",
-        "nitroprusside_in100ml_mg": 10, "nitroprusside_rate_ml_hr": "5–80"
-      },
-      "increasedICP": { "mannitol_g": 17, "furosemide_mg": 17 },
-      "overdose": { "charcoal_g": 17 }
+  ],
+  "vitalSignsRef": [
+    {
+      "ageBracket": "< 1 year (Infant)",
+      "minAgeYr": 0,
+      "maxAgeYr": 1,
+      "hrNormal": "100–160 bpm",
+      "hrMin": 100,
+      "hrMax": 160,
+      "rrNormal": "30–60 bpm",
+      "rrMin": 30,
+      "rrMax": 60,
+      "sysBpNormal": "70–90 mmHg",
+      "diaBpNormal": "45–65 mmHg",
+      "sysBpMin": 70,
+      "hypotensionSysBp": "< 70 mmHg",
+      "spo2Normal": "95–100%"
+    },
+    {
+      "ageBracket": "1–2 years (Toddler)",
+      "minAgeYr": 1,
+      "maxAgeYr": 3,
+      "hrNormal": "90–150 bpm",
+      "hrMin": 90,
+      "hrMax": 150,
+      "rrNormal": "24–40 bpm",
+      "rrMin": 24,
+      "rrMax": 40,
+      "sysBpNormal": "80–100 mmHg",
+      "diaBpNormal": "50–70 mmHg",
+      "sysBpMin": 80,
+      "hypotensionSysBp": "< 70 + (2 × Age) mmHg",
+      "spo2Normal": "95–100%"
+    },
+    {
+      "ageBracket": "3–5 years (Preschool)",
+      "minAgeYr": 3,
+      "maxAgeYr": 6,
+      "hrNormal": "80–140 bpm",
+      "hrMin": 80,
+      "hrMax": 140,
+      "rrNormal": "22–34 bpm",
+      "rrMin": 22,
+      "rrMax": 34,
+      "sysBpNormal": "90–110 mmHg",
+      "diaBpNormal": "55–75 mmHg",
+      "sysBpMin": 90,
+      "hypotensionSysBp": "< 70 + (2 × Age) mmHg",
+      "spo2Normal": "95–100%"
+    },
+    {
+      "ageBracket": "6–11 years (School Age)",
+      "minAgeYr": 6,
+      "maxAgeYr": 12,
+      "hrNormal": "70–120 bpm",
+      "hrMin": 70,
+      "hrMax": 120,
+      "rrNormal": "18–30 bpm",
+      "rrMin": 18,
+      "rrMax": 30,
+      "sysBpNormal": "95–115 mmHg",
+      "diaBpNormal": "60–80 mmHg",
+      "sysBpMin": 95,
+      "hypotensionSysBp": "< 70 + (2 × Age) mmHg",
+      "spo2Normal": "95–100%"
+    },
+    {
+      "ageBracket": "≥ 12 years (Adolescent)",
+      "minAgeYr": 12,
+      "maxAgeYr": 18,
+      "hrNormal": "60–100 bpm",
+      "hrMin": 60,
+      "hrMax": 100,
+      "rrNormal": "12–20 bpm",
+      "rrMin": 12,
+      "rrMax": 20,
+      "sysBpNormal": "100–120 mmHg",
+      "diaBpNormal": "65–85 mmHg",
+      "sysBpMin": 100,
+      "hypotensionSysBp": "< 90 mmHg",
+      "spo2Normal": "95–100%"
     }
-  },
-  {
-    "color": "💙 Blue",
-    "min": 19, "max": 23, "approxKg": 21,
-    "drugs": {
-      "resuscitation": {
-        "epi_ET_1_1000_ml": 10.5,
-        "epi_1_10000_ml": 2.1,
-        "atropine_mg": 0.42,
-        "atropine_ET_mg": 0.60,
-        "sodium_bicarb_mEq": 20,
-        "lidocaine_mg": 20,
-        "lidocaine_ET_mg": "40–60",
-        "adenosine_mg": { "first": 2.1, "second": 4.2 },
-        "amiodarone_mg": 105,
-        "calcium_gluconate10_pct_ml": 12.5,
-        "magnesium_sulfate_mg": 1050,
-        "d10w_ml": 210,
-        "d25w_ml": 80,
-        "naloxone_mg": 2,
-        "procainamide_mg": 315
+  ],
+  "dkaProtocol": {
+    "name": "Pediatric Diabetic Ketoacidosis (DKA) Protocol",
+    "initialResus": {
+      "fluid": "0.9% Normal Saline (NS)",
+      "rateMlPerKg": 10,
+      "maxRateMl": 1000,
+      "durationHr": 1,
+      "note": "Initial 10-20 mL/kg NS over 1 hr. Do not give >20 mL/kg in first 4 hours unless in hypovolemic shock."
+    },
+    "insulinDrip": {
+      "drug": "Regular Insulin Continuous Infusion",
+      "rateMinUnitsPerKgHr": 0.05,
+      "rateMaxUnitsPerKgHr": 0.1,
+      "prep": "50 Units Regular Insulin in 50 mL 0.9% NS (1 Unit/mL)",
+      "kThresholdMin": 3.3,
+      "note": "⚠️ Start Insulin 1–2 hours AFTER starting fluid replacement. DO NOT start Insulin if K+ < 3.3 mEq/L! Target BG drop: 50–75 mg/dL/hr."
+    },
+    "dextroseSwitch": {
+      "bgThresholdMgDl": 250,
+      "switchFluid": "D5 0.45% NS + 20 mEq/L KCl (or D5 0.9% NS)",
+      "note": "When BG drops to < 250 mg/dL, add 5% Dextrose to IV fluids to maintain BG 150–250 mg/dL while continuing insulin drip."
+    },
+    "potassiumRules": [
+      {
+        "range": "< 3.3 mEq/L",
+        "action": "HOLD Insulin. Add 40 mEq/L KCl to IV fluid. Give 0.5 mEq/kg/hr until K+ > 3.3 mEq/L."
       },
-      "rsi": {
-        "premed": { "atropine_mg": 0.42, "lidocaine_mg": 32, "fentanyl_mcg": 63 },
-        "induction": { "etomidate_mg": 6.3, "ketamine_mg": 42, "thiopental_mg": 63 },
-        "paralytic": { "rocuronium_mg": 21, "vecuronium_mg": 4.2, "succinylcholine_mg": 40 }
+      {
+        "range": "3.3–5.5 mEq/L",
+        "action": "Add 20–40 mEq/L KCl to IV fluid once urine output is established."
       },
-      "anaphylaxis": {
-        "epi_1_1000_IM_SC_ml": 0.21,
-        "albuterol_0_5pct_nb_5mgml_ml": 0.6,
-        "chlorpheniramine_iv_mg": 5.25,
-        "methylprednisolone_mg": 42,
-        "nss_ml": 420
-      },
-      "croup": { "epi_1_1000_nb_ml": 1.0, "dexamethasone_im_mg": 13 },
-      "epilepsy": {
-        "diazepam_iv_mg": 4.2,
-        "diazepam_rectal_mg": 10,
-        "phenytoin_mg": 315,
-        "fosphenytoin_mgPE": 315,
-        "phenobarbital_mg": 420
-      },
-      "infusion": {
-        "dopamine_in100ml_mg": 125, "dopamine_rate_ml_hr": "2–20",
-        "dobutamine_in100ml_mg": 125, "dobutamine_rate_ml_hr": "2–20",
-        "epinephrine_in100ml_mg": 12.5, "epinephrine_rate_ml_hr": "1–10",
-        "norepinephrine_in100ml_mg": 6, "norepinephrine_rate_ml_hr": "1–20",
-        "lidocaine_in100ml_mg": 21, "lidocaine_rate_ml_hr": "20–50",
-        "pge1_in100ml_mg": 6.5, "pge1_rate_ml_hr": "1–2",
-        "nitroprusside_in100ml_mg": 12.5, "nitroprusside_rate_ml_hr": "5–80"
-      },
-      "increasedICP": { "mannitol_g": 21, "furosemide_mg": 21 },
-      "overdose": { "charcoal_g": 21 }
-    }
-  },
-  {
-    "color": "🧡 Orange",
-    "min": 24, "max": 29, "approxKg": 26.5,
-    "drugs": {
-      "resuscitation": {
-        "epi_ET_1_1000_ml": 13.0,
-        "epi_1_10000_ml": 2.7,
-        "atropine_mg": 0.50,
-        "atropine_ET_mg": 0.80,
-        "sodium_bicarb_mEq": 27,
-        "lidocaine_mg": 27,
-        "lidocaine_ET_mg": "54–80",
-        "adenosine_mg": { "first": 2.7, "second": 5.4 },
-        "amiodarone_mg": 130,
-        "calcium_gluconate10_pct_ml": 16,
-        "magnesium_sulfate_mg": 1325,
-        "d10w_ml": 270,
-        "d25w_ml": 108,
-        "naloxone_mg": 2,
-        "procainamide_mg": 405
-      },
-      "rsi": {
-        "premed": { "atropine_mg": 0.5, "lidocaine_mg": 40, "fentanyl_mcg": 80 },
-        "induction": { "etomidate_mg": 8, "ketamine_mg": 50, "thiopental_mg": 80 },
-        "paralytic": { "rocuronium_mg": 27, "vecuronium_mg": 5.3, "succinylcholine_mg": 53 }
-      },
-      "anaphylaxis": {
-        "epi_1_1000_IM_SC_ml": 0.27,
-        "albuterol_0_5pct_nb_5mgml_ml": 0.8,
-        "chlorpheniramine_iv_mg": 6.75,
-        "methylprednisolone_mg": 53,
-        "nss_ml": 530
-      },
-      "croup": { "epi_1_1000_nb_ml": 1.4, "dexamethasone_im_mg": 16 },
-      "epilepsy": {
-        "diazepam_iv_mg": 5.3,
-        "diazepam_rectal_mg": 13,
-        "phenytoin_mg": 400,
-        "fosphenytoin_mgPE": 400,
-        "phenobarbital_mg": 530
-      },
-      "infusion": {
-        "dopamine_in100ml_mg": 160, "dopamine_rate_ml_hr": "2–20",
-        "dobutamine_in100ml_mg": 160, "dobutamine_rate_ml_hr": "2–20",
-        "epinephrine_in100ml_mg": 16, "epinephrine_rate_ml_hr": "1–10",
-        "norepinephrine_in100ml_mg": 8, "norepinephrine_rate_ml_hr": "1–20",
-        "lidocaine_in100ml_mg": 27, "lidocaine_rate_ml_hr": "20–50",
-        "pge1_in100ml_mg": 8, "pge1_rate_ml_hr": "1–2",
-        "nitroprusside_in100ml_mg": 16, "nitroprusside_rate_ml_hr": "5–80"
-      },
-      "increasedICP": { "mannitol_g": 27, "furosemide_mg": 27 },
-      "overdose": { "charcoal_g": 27 }
-    }
-  },
-  {
-    "color": "💚 Green",
-    "min": 30, "max": 36, "approxKg": 33,
-    "drugs": {
-      "resuscitation": {
-        "epi_ET_1_1000_ml": 16.5,
-        "epi_1_10000_ml": 3.3,
-        "atropine_mg": 0.50,
-        "atropine_ET_mg": 1.0,
-        "sodium_bicarb_mEq": 33,
-        "lidocaine_mg": 33,
-        "lidocaine_ET_mg": "66–100",
-        "adenosine_mg": { "first": 3.3, "second": 6.6 },
-        "amiodarone_mg": 165,
-        "calcium_gluconate10_pct_ml": 20,
-        "magnesium_sulfate_mg": 1650,
-        "d10w_ml": 330,
-        "d25w_ml": 132,
-        "naloxone_mg": 2,
-        "procainamide_mg": 495
-      },
-      "rsi": {
-        "premed": { "atropine_mg": 0.5, "lidocaine_mg": 50, "fentanyl_mcg": 100 },
-        "induction": { "etomidate_mg": 10, "ketamine_mg": 66, "thiopental_mg": 100 },
-        "paralytic": { "rocuronium_mg": 33, "vecuronium_mg": 6.6, "succinylcholine_mg": 66 }
-      },
-      "anaphylaxis": {
-        "epi_1_1000_IM_SC_ml": 0.33,
-        "albuterol_0_5pct_nb_5mgml_ml": 1.0,
-        "chlorpheniramine_iv_mg": 8.25,
-        "methylprednisolone_mg": 66,
-        "nss_ml": 660
-      },
-      "croup": { "epi_1_1000_nb_ml": 1.7, "dexamethasone_im_mg": 20 },
-      "epilepsy": {
-        "diazepam_iv_mg": 6.6,
-        "diazepam_rectal_mg": 16.5,
-        "phenytoin_mg": 500,
-        "fosphenytoin_mgPE": 500,
-        "phenobarbital_mg": 660
-      },
-      "infusion": {
-        "dopamine_in100ml_mg": 200, "dopamine_rate_ml_hr": "2–20",
-        "dobutamine_in100ml_mg": 200, "dobutamine_rate_ml_hr": "2–20",
-        "epinephrine_in100ml_mg": 20, "epinephrine_rate_ml_hr": "1–10",
-        "norepinephrine_in100ml_mg": 10, "norepinephrine_rate_ml_hr": "1–20",
-        "lidocaine_in100ml_mg": 33, "lidocaine_rate_ml_hr": "20–50",
-        "pge1_in100ml_mg": 10, "pge1_rate_ml_hr": "1–2",
-        "nitroprusside_in100ml_mg": 20, "nitroprusside_rate_ml_hr": "5–80"
-      },
-      "increasedICP": { "mannitol_g": 33, "furosemide_mg": 33 },
-      "overdose": { "charcoal_g": 33 }
-    }
+      {
+        "range": "> 5.5 mEq/L",
+        "action": "Do NOT add KCl to IV fluid. Recheck K+ in 2 hours."
+      }
+    ]
   }
-]
 }

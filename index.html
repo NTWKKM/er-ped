@@ -776,6 +776,38 @@
       .broselow-chip { padding: 4px 8px; font-size: 11px; }
       .hero-metric .hero-val { font-size: 20px; }
     }
+
+    /* Print-Friendly Reference Card Stylesheet */
+    @media print {
+      body { background: #FFFFFF !important; color: #000000 !important; }
+      .topbar, .segmented-control, .fab, .app-footer, .note, button, .combobox-dropdown { display: none !important; }
+      .container { margin: 0 !important; padding: 0 !important; max-width: 100% !important; }
+      .card { border: none !important; box-shadow: none !important; padding: 0 !important; display: block !important; }
+      .hero-metric-grid { display: flex !important; gap: 8px !important; }
+      .hero-metric { border: 1px solid #000 !important; background: #FFF !important; color: #000 !important; padding: 6px !important; }
+      .hero-val { color: #000 !important; font-size: 16px !important; }
+      table { border-collapse: collapse !important; width: 100% !important; }
+      th, td { border: 1px solid #000 !important; padding: 4px 6px !important; }
+    }
+
+    /* PWA Floating Update Banner */
+    .pwa-update-banner {
+      position: fixed;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: #FFFFFF;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      z-index: 999;
+      display: none;
+      align-items: center;
+      gap: 12px;
+    }
   </style>
 </head>
 <body>
@@ -794,6 +826,7 @@
         <label class="chip-label" style="margin-left:4px;">Age</label>
         <input type="number" id="age" min="0" step="0.1" placeholder="0" oninput="estimateFromAge()"/>
         <button id="ageUnitBtn" class="unit-toggle-btn" onclick="toggleAgeUnit()" title="คลิกเพื่อสลับหน่วยปี/เดือน">Yr</button>
+        <span id="vitalsQuickChip" onclick="showTab('vitals')" style="font-size:11px; font-weight:800; padding:2px 6px; border-radius:4px; background:var(--panel); border:1px solid var(--border); color:var(--accent); cursor:pointer; display:inline-flex; align-items:center; gap:2px;" title="ดูสัญญาณชีพตามวัย (Vital Signs by Age)">📊 <span id="vitalsQuickText">Vitals</span></span>
         
         <label class="chip-label" style="margin-left:4px;">HT</label>
         <input type="number" id="length" min="0" step="0.1" placeholder="cm" oninput="updateIBW()"/>
@@ -816,7 +849,11 @@
         <span style="font-size:11px; color:var(--muted);">📊 Ref</span>
       </div>
 
-      <button id="themeToggleBtn" class="btn" style="padding:6px 12px; font-size:12px; margin-left:auto;" onclick="toggleTheme()" title="สลับ Dark / Light Mode">🌙 Dark</button>
+      <div style="display:flex; align-items:center; gap:6px; margin-left:auto;">
+        <button id="printBtn" class="btn" style="padding:6px 10px; font-size:12px;" onclick="triggerPrintCard()" title="พิมพ์การ์ดสรุปยาฉุกเฉิน (Print Reference Card)">🖨️ Print</button>
+        <button id="langToggleBtn" class="btn" style="padding:6px 10px; font-size:12px;" onclick="toggleLanguage()" title="สลับภาษา (TH / EN)">🌐 TH</button>
+        <button id="themeToggleBtn" class="btn" style="padding:6px 10px; font-size:12px;" onclick="toggleTheme()" title="สลับ Dark / Light Mode">🌙 Dark</button>
+      </div>
     </div>
   </div>
 
@@ -830,6 +867,12 @@
       <button class="tab-btn" data-tab="fluids" onclick="showTab('fluids', this)">💧 IV Fluids <span style="font-size:10px; opacity:0.7;">[Alt+3]</span></button>
       <button class="tab-btn" data-tab="pals" onclick="showTab('pals', this)">🧒🏻 PALS <span style="font-size:10px; opacity:0.7;">[Alt+4]</span></button>
       <button class="tab-btn" data-tab="ncpr" onclick="showTab('ncpr', this)">👶🏻 NCPR <span style="font-size:10px; opacity:0.7;">[Alt+5]</span></button>
+      <button class="tab-btn" data-tab="drip" onclick="showTab('drip', this)">🫀 Drip Rate</button>
+      <button class="tab-btn" data-tab="seizure" onclick="showTab('seizure', this)">⚡ Seizure</button>
+      <button class="tab-btn" data-tab="tox" onclick="showTab('tox', this)">🧪 Toxicology</button>
+      <button class="tab-btn" data-tab="psa" onclick="showTab('psa', this)">💉 Sedation</button>
+      <button class="tab-btn" data-tab="vitals" onclick="showTab('vitals', this)">📊 Vitals</button>
+      <button class="tab-btn" data-tab="dka" onclick="showTab('dka', this)">🩺 DKA Protocol</button>
     </div>
 
     <!-- Pediatric Dose Calculator -->
@@ -983,13 +1026,207 @@
       <div class="note">⚠️ แนวทาง NRP Resuscitation Guideline — ตรวจสอบซ้ำก่อนใช้จริง</div>
     </section>
 
+    <!-- 🫀 Continuous Infusion Drip Calculator -->
+    <section id="drip" class="card" style="display:none;">
+      <div class="grid">
+        <div class="col-12">
+          <label>Vasoactive & Continuous Infusion Selection</label>
+          <select id="dripDrug" style="width:100%; padding:10px; border-radius:6px; border:1px solid var(--border); font-size:14px; font-weight:700; background:var(--panel); color:var(--ink);" onchange="calcDrip()"></select>
+        </div>
+        <div class="col-6">
+          <label>Active Weight (Single Source of Truth)</label>
+          <div class="weight-lock-chip">
+            <span>ABW/IBW:</span>
+            <strong id="dripWBadge">— kg</strong>
+            <span style="font-size:11px; color:var(--muted); margin-left:auto;">🔒 Topbar Sync</span>
+          </div>
+        </div>
+        <div class="col-6">
+          <label>Target Infusion Dose (mcg/kg/min)</label>
+          <input type="number" id="dripDoseInput" min="0" step="0.01" placeholder="mcg/kg/min" oninput="calcDrip()">
+        </div>
+        <div class="col-6">
+          <label>Preparation Drug Amount (mg)</label>
+          <input type="number" id="dripPrepMg" min="0" step="0.1" placeholder="mg in diluent" oninput="calcDrip()">
+        </div>
+        <div class="col-6">
+          <label>Diluent Volume (mL)</label>
+          <input type="number" id="dripPrepVolMl" min="1" step="1" placeholder="mL D5W / NSS" oninput="calcDrip()">
+        </div>
+        <div class="col-12">
+          <div id="dripOut" class="summary"></div>
+        </div>
+      </div>
+      <div class="note">⚠️ เครื่องมือช่วยคำนวณอัตราหยดยา — ตรวจสอบสาย IV / Central Line และตั้งค่า Syringe Pump / Infusion Pump อย่างระมัดระวัง</div>
+    </section>
+
+    <!-- ⚡ Status Epilepticus / Seizure Protocol -->
+    <section id="seizure" class="card" style="display:none;">
+      <div class="grid">
+        <div class="col-12">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h2>⚡ Status Epilepticus Resuscitation Protocol</h2>
+            <div class="weight-lock-chip" style="width:auto; padding:4px 10px;">
+              <span>BW:</span>
+              <strong id="seizureWBadge">— kg</strong>
+            </div>
+          </div>
+          <div id="seizureOut" class="summary"></div>
+        </div>
+      </div>
+      <div class="note">⚠️ ลำดับการรักษาชักในเด็ก — เริ่มยา Benzodiazepine ทันทีที่ชัก >5 นาที และเตรียมยา 2nd Line ล่วงหน้า</div>
+    </section>
+
+    <!-- 🧪 Toxicology & Antidote Module -->
+    <section id="tox" class="card" style="display:none;">
+      <div class="grid">
+        <div class="col-12">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h2>🧪 Toxicology & Antidote Dosing</h2>
+            <div class="weight-lock-chip" style="width:auto; padding:4px 10px;">
+              <span>BW:</span>
+              <strong id="toxWBadge">— kg</strong>
+            </div>
+          </div>
+          <div id="toxOut" class="summary"></div>
+        </div>
+      </div>
+      <div class="note">⚠️ การดูแลเคสได้รับสารพิษ — ตรวจสอบสิทธิและปรึกษาศูนย์พิษวิทยา (Poison Center) เพิ่มเติมในเคสซับซ้อน</div>
+    </section>
+
+    <!-- 💉 Procedural Sedation & Analgesia (PSA) -->
+    <section id="psa" class="card" style="display:none;">
+      <div class="grid">
+        <div class="col-12">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h2>💉 Procedural Sedation & Analgesia (PSA)</h2>
+            <div class="weight-lock-chip" style="width:auto; padding:4px 10px;">
+              <span>BW:</span>
+              <strong id="psaWBadge">— kg</strong>
+            </div>
+          </div>
+          <div id="psaOut" class="summary"></div>
+        </div>
+      </div>
+      <div class="note">⚠️ เตรียมอุปกรณ์ Suction, Bag-Valve-Mask และ Suction พร้อมก่อนเริ่ม Procedural Sedation เสมอ</div>
+    </section>
+
+    <!-- 📊 Vital Signs by Age Reference -->
+    <section id="vitals" class="card" style="display:none;">
+      <div class="grid">
+        <div class="col-12">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h2>📊 Pediatric Vital Signs by Age Reference</h2>
+            <div class="weight-lock-chip" style="width:auto; padding:4px 10px;">
+              <span>BW:</span>
+              <strong id="vitalsWBadge">— kg</strong>
+            </div>
+          </div>
+          <div id="vitalsOut" class="summary"></div>
+        </div>
+      </div>
+      <div class="note">⚠️ เกณฑ์สัญญาณชีพตามช่วงอายุ (AHA PALS Reference) — ภาวะความดันโลหิตต่ำ (Hypotension) นิยามจาก Systolic BP < 70 + (2 × อายุปี)</div>
+    </section>
+
+    <!-- 🩺 Pediatric DKA Protocol Calculator -->
+    <section id="dka" class="card" style="display:none;">
+      <div class="grid">
+        <div class="col-12">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <h2>🩺 Pediatric DKA Protocol & Fluid Management</h2>
+            <div class="weight-lock-chip" style="width:auto; padding:4px 10px;">
+              <span>BW:</span>
+              <strong id="dkaWBadge">— kg</strong>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <label>Dehydration Severity (%)</label>
+          <select id="dkaSeverity" style="width:100%; padding:8px; border-radius:6px; border:1px solid var(--border); font-weight:700; background:var(--panel); color:var(--ink);" onchange="calcDKA()">
+            <option value="5">Mild (5% Deficit)</option>
+            <option value="7" selected>Moderate (7% Deficit)</option>
+            <option value="10">Severe (10% Deficit)</option>
+          </select>
+        </div>
+        <div class="col-4">
+          <label>Prior Fluid Boluses Given (mL)</label>
+          <input type="number" id="dkaPriorBolus" min="0" step="50" placeholder="mL NS given in ER" oninput="calcDKA()">
+        </div>
+        <div class="col-4">
+          <label>Current Bedside BG (mg/dL)</label>
+          <input type="number" id="dkaBG" min="0" step="10" placeholder="mg/dL" oninput="calcDKA()">
+        </div>
+        <div class="col-12">
+          <div id="dkaOut" class="summary"></div>
+        </div>
+      </div>
+      <div class="note">⚠️ โปรโตคอลการรักษา DKA ในเด็ก — ให้ Regular Insulin หลังเริ่มสารน้ำแล้ว 1–2 ชม. และห้ามเริ่ม Insulin หาก K+ &lt; 3.3 mEq/L</div>
+    </section>
+
     <!-- Standalone Footer -->
     <footer class="app-footer">
-      <div><strong>ER-PED Workstation</strong> — Braun Clinical Instrument</div>
+      <div><strong>ER-PED Workstation</strong> — Braun Clinical Instrument <span style="font-size:11px; padding:2px 6px; border-radius:4px; background:var(--accent); color:#FFF; font-weight:800; cursor:pointer;" onclick="openChangelogModal()" title="ดูบันทึกการเปลี่ยนแปลง v1.2.0">v1.2.0</span></div>
+      <div style="font-size:11px; margin-top:6px; display:flex; justify-content:center; gap:14px;">
+        <span style="cursor:pointer; color:var(--accent);" onclick="openDatasetEditor()">⚙️ Dataset Editor</span>
+        <span style="cursor:pointer; color:var(--accent);" onclick="openChangelogModal()">📋 Changelog</span>
+        <span style="cursor:pointer; color:var(--accent);" onclick="triggerPrintCard()">🖨️ Printable Card</span>
+      </div>
       <div style="font-size:11px; margin-top:4px; opacity:0.8;">Hotkeys: <code>Alt+1..5</code> Tabs | <code>Alt+P</code> Emergency PALS | <code>Esc</code> Close Drawer</div>
     </footer>
 
   </div><!-- /container -->
+
+  <!-- PWA Floating Update Banner -->
+  <div id="pwaUpdateBanner" class="pwa-update-banner">
+    <span>🎉 มีการอัปเดตเวอร์ชันใหม่ของ ER-PED!</span>
+    <button class="btn" style="background:#FFFFFF; color:var(--accent); font-weight:800; padding:4px 10px; font-size:12px;" onclick="hardReload()">Reload App 🔄</button>
+  </div>
+
+  <!-- Dataset Editor Drawer Overlay Modal -->
+  <div id="datasetEditorBackdrop" class="drawer-backdrop hidden" onclick="if(event.target.id==='datasetEditorBackdrop') closeDatasetEditor()">
+    <div class="drawer" onclick="event.stopPropagation()">
+      <div class="drawer-header">
+        <strong style="font-size:16px;">⚙️ Lightweight Dataset Editor (Local Overrides)</strong>
+        <button class="btn" style="padding:4px 10px; font-size:12px;" onclick="closeDatasetEditor()">Close ✖ (Esc)</button>
+      </div>
+      <div style="font-size:12px; color:var(--muted); flex-shrink:0;">ปรับแต่งข้อมูลยา / Safety Caps สำหรับใช้งานใน รพ. (บันทึกใน localStorage)</div>
+      <div class="drawer-body">
+        <div id="datasetEditorForm" style="display:flex; flex-direction:column; gap:10px;"></div>
+        <div style="margin-top:14px; display:flex; justify-content:space-between; gap:10px;">
+          <button class="btn" style="background:var(--danger); color:#FFF;" onclick="resetDatasetEditor()">🔄 Reset to Master</button>
+          <div style="display:flex; gap:10px;">
+            <button class="btn" onclick="exportDatasetJSON()">📥 Export JSON</button>
+            <button class="btn" style="background:var(--accent); color:#FFF; font-weight:700;" onclick="saveDatasetEditor()">💾 Save Changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Changelog Drawer Overlay Modal -->
+  <div id="changelogBackdrop" class="drawer-backdrop hidden" onclick="if(event.target.id==='changelogBackdrop') closeChangelogModal()">
+    <div class="drawer" onclick="event.stopPropagation()">
+      <div class="drawer-header">
+        <strong style="font-size:16px;">📋 ER-PED Version 1.2.0 Changelog</strong>
+        <button class="btn" style="padding:4px 10px; font-size:12px;" onclick="closeChangelogModal()">Close ✖ (Esc)</button>
+      </div>
+      <div class="drawer-body" style="font-size:13px; line-height:1.6;">
+        <h3 style="color:var(--accent); margin-top:4px;">🎉 What's New in v1.2.0:</h3>
+        <ul>
+          <li><strong>🫀 Continuous Infusion Drip Calculator</strong>: คำนวณ Drip Rate (mcg/kg/min → mL/hr) สำหรับ Epinephrine, Norepinephrine, Dopamine, Dobutamine, Midazolam, Milrinone</li>
+          <li><strong>⚡ Status Epilepticus Resuscitation Protocol</strong>: แนวทางการรักษาชักแยกตามช่วงเวลา 4 สเต็ป คำนวณขนาดยา ยาอันดับ 1 และ 2 อัตโนมัติ</li>
+          <li><strong>🧪 Toxicology & Antidote Dosing</strong>: ขนาดยาต้านพิษ (Naloxone, Flumazenil, Atropine OP, Activated Charcoal, NAC 3-Bag)</li>
+          <li><strong>💉 Procedural Sedation & Analgesia (PSA)</strong>: คำนวณ Ketamine, Fentanyl, Midazolam สำหรับหัตถการ</li>
+          <li><strong>📊 Vital Signs by Age & Inline Badge</strong>: แสดงสัญญาณชีพปกติของเด็กตามวัยและปุ่มลัดสัญญาณชีพบนแถบ Topbar</li>
+          <li><strong>🩺 DKA Protocol Module</strong>: สารน้ำทดแทน 48 ชม. + Regular Insulin drip 0.05–0.1 U/kg/hr + สวิตช์ D5W เมื่อ BG &lt; 250</li>
+          <li><strong>🌐 Thai / English UI Toggle</strong>: สลับป้ายภาษาไทย/อังกฤษ สองภาษา</li>
+          <li><strong>🖨️ Print-Friendly Reference Card</strong>: จัดหน้าพิมพ์การ์ดสรุปยาฉุกเฉิน 1 หน้ากระดาษ</li>
+          <li><strong>⚙️ Lightweight Dataset Editor</strong>: ฟอร์มแก้ไขขนาดยา/ขีดจำกัดความปลอดภัย</li>
+          <li><strong>⚙️ GitHub Actions CI & Unit Tests</strong>: ทดสอบระบบอัตโนมัติตรวจจับ Regression</li>
+        </ul>
+      </div>
+    </div>
+  </div>
 
   <!-- Broselow Quick Panel Drawer Overlay Modal -->
   <div id="broselowBackdrop" class="drawer-backdrop hidden" onclick="handleBroselowBackdropClick(event)">

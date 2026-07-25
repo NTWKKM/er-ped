@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npx serve .",
     "dev": "npx serve .",
-    "test": "node scripts/check-dataset.js"
+    "test": "node scripts/check-dataset.js && node scripts/test-core.js"
   },
   "keywords": [
     "pediatric",
