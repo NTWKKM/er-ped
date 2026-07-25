@@ -1742,30 +1742,42 @@ function calcPSA() {
   let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:12px;">';
 
   DS.proceduralSedation.forEach(item => {
-    let minDose = (item.doseMinMgPerKg || 0) * w;
-    let maxDose = (item.doseMaxMgPerKg || 0) * w;
+    const isMcg = item.unit === 'mcg' || item.doseMinMcgPerKg != null;
+    let minDose = isMcg
+      ? (item.doseMinMcgPerKg != null ? item.doseMinMcgPerKg : (item.doseMinMgPerKg || 0) * 1000) * w
+      : (item.doseMinMgPerKg || 0) * w;
+    let maxDose = isMcg
+      ? (item.doseMaxMcgPerKg != null ? item.doseMaxMcgPerKg : (item.doseMaxMgPerKg || 0) * 1000) * w
+      : (item.doseMaxMgPerKg || 0) * w;
+
+    let maxCap = isMcg
+      ? (item.maxPerDoseMcg != null ? item.maxPerDoseMcg : (item.maxPerDoseMg ? item.maxPerDoseMg * 1000 : null))
+      : item.maxPerDoseMg;
+
     let isCapped = false;
 
-    if (item.maxPerDoseMg) {
-      if (minDose > item.maxPerDoseMg) minDose = item.maxPerDoseMg;
-      if (maxDose > item.maxPerDoseMg) {
-        maxDose = item.maxPerDoseMg;
+    if (maxCap) {
+      if (minDose > maxCap) minDose = maxCap;
+      if (maxDose > maxCap) {
+        maxDose = maxCap;
         isCapped = true;
       }
     }
 
-    const unitStr = item.unit || 'mg';
+    const unitStr = item.unit || (isMcg ? 'mcg' : 'mg');
+    const formatValue = (n) => isMcg ? (n % 1 === 0 ? n.toFixed(0) : n.toFixed(1)) : fmtMg(n);
+    const doseStr = minDose === maxDose ? formatValue(minDose) : `${formatValue(minDose)}–${formatValue(maxDose)}`;
 
     html += `
       <div style="background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:12px;">
         <div style="font-weight:700; font-size:15px; color:var(--accent);">${item.name}</div>
         <div style="font-size:18px; font-weight:800; color:var(--ink); margin:6px 0;">
-          ${minDose === maxDose ? fmtMg(minDose) : `${fmtMg(minDose)}–${fmtMg(maxDose)}`} <span style="font-size:13px; color:var(--muted);">${unitStr} (${item.route})</span>
+          ${doseStr} <span style="font-size:13px; color:var(--muted);">${unitStr} (${item.route})</span>
         </div>
         <div style="font-size:12px; color:var(--muted);">Prep: <strong>${item.prep}</strong></div>
         <div style="font-size:11px; color:var(--muted); margin-top:4px;">${item.note}</div>
-        ${isCapped ? `<div class="badge-cap" style="font-size:10px; padding:2px 6px; margin-top:4px;">Capped at Max: ${item.maxPerDoseMg} ${unitStr}</div>` : ''}
-        <button class="btn" style="font-size:11px; padding:6px 10px; margin-top:8px; width:100%;" onclick="copyCustomOrder('[ER-PED PSA] ${item.name} ${fmtMg(minDose)}–${fmtMg(maxDose)} ${unitStr} ${item.route} [BW: ${w.toFixed(1)} kg]')">📋 Copy EHR Order</button>
+        ${isCapped ? `<div class="badge-cap danger" style="font-size:10px; padding:2px 6px; margin-top:4px;">Capped at Max: ${maxCap} ${unitStr}</div>` : ''}
+        <button class="btn" style="font-size:11px; padding:6px 10px; margin-top:8px; width:100%;" onclick="copyCustomOrder('[ER-PED PSA] ${item.name} ${doseStr} ${unitStr} ${item.route} [BW: ${w.toFixed(1)} kg]')">📋 Copy EHR Order</button>
       </div>
     `;
   });

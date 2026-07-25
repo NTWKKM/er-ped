@@ -139,6 +139,27 @@ test('DKA Regular Insulin Drip: 0.1 U/kg/hr for 20 kg child (1 U/mL prep)', () =
   assert.strictEqual(rate, 2.0);
 });
 
+// 5. Test Procedural Sedation (PSA) Fentanyl Dosing
+test('PSA Fentanyl (IV): 10 kg child (1–2 mcg/kg -> 10–20 mcg)', () => {
+  const item = dataset.proceduralSedation.find(d => d.key === 'fentanyl-psa-iv');
+  const w = 10;
+  const minDose = item.doseMinMcgPerKg * w;
+  const maxDose = item.doseMaxMcgPerKg * w;
+  assert.strictEqual(minDose, 10);
+  assert.strictEqual(maxDose, 20);
+  assert.strictEqual(item.unit, 'mcg');
+});
+
+test('PSA Fentanyl (IN): 10 kg child (1.5–2 mcg/kg -> 15–20 mcg)', () => {
+  const item = dataset.proceduralSedation.find(d => d.key === 'fentanyl-psa-in');
+  const w = 10;
+  const minDose = item.doseMinMcgPerKg * w;
+  const maxDose = item.doseMaxMcgPerKg * w;
+  assert.strictEqual(minDose, 15);
+  assert.strictEqual(maxDose, 20);
+  assert.strictEqual(item.unit, 'mcg');
+});
+
 console.log(`\n----------------------------------------`);
 console.log(`Test Results: ${passed} Passed, ${failed} Failed`);
 console.log(`----------------------------------------\n`);

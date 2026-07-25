@@ -3669,9 +3669,10 @@
     {
       "key": "fentanyl-psa-in",
       "name": "Fentanyl (Intranasal - IN)",
-      "doseMinMgPerKg": 0.0015,
-      "doseMaxMgPerKg": 0.002,
-      "maxPerDoseMg": 0.1,
+      "doseMinMcgPerKg": 1.5,
+      "doseMaxMcgPerKg": 2,
+      "maxPerDoseMcg": 100,
+      "unit": "mcg",
       "route": "IN via Mucosal Atomization Device (MAD)",
       "prep": "50 mcg/mL ampoule (1.5–2 mcg/kg)",
       "note": "Rapid analgesia without IV placement. Divide volume equally between nostrils."
@@ -3679,9 +3680,10 @@
     {
       "key": "fentanyl-psa-iv",
       "name": "Fentanyl (IV)",
-      "doseMinMgPerKg": 0.001,
-      "doseMaxMgPerKg": 0.002,
-      "maxPerDoseMg": 0.1,
+      "doseMinMcgPerKg": 1,
+      "doseMaxMcgPerKg": 2,
+      "maxPerDoseMcg": 100,
+      "unit": "mcg",
       "route": "IV slow push over 3 min",
       "prep": "50 mcg/mL ampoule (1–2 mcg/kg)",
       "note": "Potent opioid analgesia. Watch for chest wall rigidity with rapid push."
