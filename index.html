@@ -32,6 +32,8 @@
       --warning: #D97706;      /* Amber warning / Broselow */
       --danger: #DC2626;       /* Critical emergency red */
       --blue: #2563EB;         /* Dosage directive blue */
+      --danger-subtle: rgba(220, 38, 38, 0.12);
+      --warning-subtle: rgba(217, 119, 6, 0.12);
     }
 
     @media (prefers-color-scheme: dark) {
@@ -55,6 +57,8 @@
         --good: #8FB07A;         /* L≈0.26 — safe / normal */
         --warning: #D9A94A;      /* L≈0.38 — caution */
         --danger: #F0705A;       /* L≈0.41 — highest luminance, most urgent */
+        --danger-subtle: rgba(240, 112, 90, 0.18);
+        --warning-subtle: rgba(217, 169, 74, 0.18);
       }
     }
 
@@ -75,6 +79,13 @@
       --good: #8FB07A;
       --warning: #D9A94A;
       --danger: #F0705A;
+      --danger-subtle: rgba(240, 112, 90, 0.18);
+      --warning-subtle: rgba(217, 169, 74, 0.18);
+    }
+
+    :root[data-theme="dark"] .segmented-control {
+      background: #22201C;
+      border-color: #3A3733;
     }
 
     :root[data-theme="dark"] .topbar {
@@ -290,6 +301,7 @@
     /* Braun Segmented Controls (Radio-style Tabs) */
     .segmented-control { 
       display: flex; 
+      flex-wrap: wrap;
       gap: 4px; 
       background: #E4E3DD; 
       padding: 4px; 
@@ -300,14 +312,15 @@
     }
 
     .tab-btn { 
-      flex: 1; 
-      padding: 10px 14px; 
+      flex: 1 1 auto; 
+      min-width: 90px;
+      padding: 10px 12px; 
       border-radius: 6px; 
       border: none; 
       background: transparent; 
       color: var(--muted); 
       font-weight: 700; 
-      font-size: 14px; 
+      font-size: 13px; 
       cursor: pointer; 
       transition: all 0.15s ease;
       text-align: center;
@@ -501,13 +514,25 @@
     .badge-cap {
       display: inline-block;
       padding: 4px 10px;
-      background: #FEF3C7;
-      color: #92400E;
-      border: 1px solid #F59E0B;
+      background: var(--warning-subtle);
+      color: var(--warning);
+      border: 1px solid var(--warning);
       border-radius: 4px;
       font-size: 12px;
       font-weight: 800;
       margin-top: 6px;
+    }
+
+    .badge-cap.danger {
+      background: var(--danger-subtle);
+      color: var(--danger);
+      border-color: var(--danger);
+    }
+
+    .badge-cap.warning {
+      background: var(--warning-subtle);
+      color: var(--warning);
+      border-color: var(--warning);
     }
 
     .weight-lock-chip {
@@ -867,12 +892,12 @@
       <button class="tab-btn" data-tab="fluids" onclick="showTab('fluids', this)">💧 IV Fluids <span style="font-size:10px; opacity:0.7;">[Alt+3]</span></button>
       <button class="tab-btn" data-tab="pals" onclick="showTab('pals', this)">🧒🏻 PALS <span style="font-size:10px; opacity:0.7;">[Alt+4]</span></button>
       <button class="tab-btn" data-tab="ncpr" onclick="showTab('ncpr', this)">👶🏻 NCPR <span style="font-size:10px; opacity:0.7;">[Alt+5]</span></button>
-      <button class="tab-btn" data-tab="drip" onclick="showTab('drip', this)">🫀 Drip Rate</button>
-      <button class="tab-btn" data-tab="seizure" onclick="showTab('seizure', this)">⚡ Seizure</button>
-      <button class="tab-btn" data-tab="tox" onclick="showTab('tox', this)">🧪 Toxicology</button>
-      <button class="tab-btn" data-tab="psa" onclick="showTab('psa', this)">💉 Sedation</button>
-      <button class="tab-btn" data-tab="vitals" onclick="showTab('vitals', this)">📊 Vitals</button>
-      <button class="tab-btn" data-tab="dka" onclick="showTab('dka', this)">🩺 DKA Protocol</button>
+      <button class="tab-btn" data-tab="drip" onclick="showTab('drip', this)">🫀 Drip Rate <span style="font-size:10px; opacity:0.7;">[Alt+6]</span></button>
+      <button class="tab-btn" data-tab="seizure" onclick="showTab('seizure', this)">⚡ Seizure <span style="font-size:10px; opacity:0.7;">[Alt+7]</span></button>
+      <button class="tab-btn" data-tab="tox" onclick="showTab('tox', this)">🧪 Toxicology <span style="font-size:10px; opacity:0.7;">[Alt+8]</span></button>
+      <button class="tab-btn" data-tab="psa" onclick="showTab('psa', this)">💉 Sedation <span style="font-size:10px; opacity:0.7;">[Alt+9]</span></button>
+      <button class="tab-btn" data-tab="vitals" onclick="showTab('vitals', this)">📊 Vitals <span style="font-size:10px; opacity:0.7;">[Alt+0]</span></button>
+      <button class="tab-btn" data-tab="dka" onclick="showTab('dka', this)">🩺 DKA <span style="font-size:10px; opacity:0.7;">[Alt+K]</span></button>
     </div>
 
     <!-- Pediatric Dose Calculator -->

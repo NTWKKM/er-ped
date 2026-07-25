@@ -447,7 +447,12 @@ function setupKeyboardShortcuts(){
       if (e.key === '3') { e.preventDefault(); showTab('fluids'); }
       if (e.key === '4') { e.preventDefault(); showTab('pals'); }
       if (e.key === '5') { e.preventDefault(); showTab('ncpr'); }
-      if (e.key.toLowerCase() === 'p') { e.preventDefault(); showTab('pals'); }
+      if (e.key === '6') { e.preventDefault(); showTab('drip'); }
+      if (e.key === '7') { e.preventDefault(); showTab('seizure'); }
+      if (e.key === '8') { e.preventDefault(); showTab('tox'); }
+      if (e.key === '9') { e.preventDefault(); showTab('psa'); }
+      if (e.key === '0') { e.preventDefault(); showTab('vitals'); }
+      if (e.key.toLowerCase() === 'k') { e.preventDefault(); showTab('dka'); }
     }
     if (e.key === 'Escape') {
       closeAllComboboxes();
@@ -1076,7 +1081,7 @@ function calcDose(){
     <div class="hero-val">${perDoseMgTxt}${perDoseMlTxt ? ` <span class="unit">(${perDoseMlTxt})</span>` : ''}${perDoseTabsTxt ? ` <span class="unit">(${perDoseTabsTxt})</span>` : ''}</div>
     <div class="hero-sub">${drug.freq ? drug.freq.toUpperCase() : 'PO/IV'} ${drug.route ? `(${drug.route})` : ''}</div>
     ${isCappedPerDose ? `<span class="badge-cap">⚠️ Capped at max ${drug.maxPerDoseMg} mg/dose</span>` : ''}
-    ${drug.renalAdjust ? `<div style="margin-top:6px;"><span class="badge-cap" style="background:#FEF3C7; color:#92400E; border-color:#F59E0B;">⚠️ ปรับขนาดยาตาม CrCl / eGFR (Renal Impairment)</span></div>` : ''}
+    ${drug.renalAdjust ? `<div style="margin-top:6px;"><span class="badge-cap warning">⚠️ ปรับขนาดยาตาม CrCl / eGFR (Renal Impairment)</span></div>` : ''}
   </div>
   <div class="hero-metric blue">
     <div class="hero-label">TOTAL DAILY DOSE</div>
@@ -1190,7 +1195,7 @@ function calcATB(){
     <div class="hero-label">DOSE PER SINGLE DOSE</div>
     <div class="hero-val">${perDoseMgTxt}${perDoseMlTxt ? ` <span class="unit">(${perDoseMlTxt})</span>` : ''}</div>
     <div class="hero-sub">${drug.split || drug.freq || 'PO/IV'}</div>
-    ${drug.renalAdjust ? `<div style="margin-top:6px;"><span class="badge-cap" style="background:#FEF3C7; color:#92400E; border-color:#F59E0B;">⚠️ ปรับขนาดยาตาม CrCl / eGFR (Renal Impairment)</span></div>` : ''}
+    ${drug.renalAdjust ? `<div style="margin-top:6px;"><span class="badge-cap warning">⚠️ ปรับขนาดยาตาม CrCl / eGFR (Renal Impairment)</span></div>` : ''}
   </div>
   <div class="hero-metric blue">
     <div class="hero-label">TOTAL DAILY DOSE</div>
@@ -1575,7 +1580,7 @@ function calcDrip() {
   const volVal = parseFloat(prepVolInput?.value) || 50;
 
   if (!w || w <= 0) {
-    outEl.innerHTML = '<div class="badge-cap" style="background:#FEE2E2; color:#991B1B;">⚠️ กรุณากรอกน้ำหนักตัว (ABW) ที่ส่วนบนของหน้าจอก่อนคำนวณ</div>';
+    outEl.innerHTML = '<div class="badge-cap danger">⚠️ กรุณากรอกน้ำหนักตัว (ABW) ที่ส่วนบนของหน้าจอก่อนคำนวณ</div>';
     return;
   }
 
@@ -1630,7 +1635,7 @@ function calcSeizure() {
 
   if (!outEl) return;
   if (!w || w <= 0) {
-    outEl.innerHTML = '<div class="badge-cap" style="background:#FEE2E2; color:#991B1B;">⚠️ กรุณากรอกน้ำหนักตัว (ABW) ที่ส่วนบนของหน้าจอก่อนคำนวณ</div>';
+    outEl.innerHTML = '<div class="badge-cap danger">⚠️ กรุณากรอกน้ำหนักตัว (ABW) ที่ส่วนบนของหน้าจอก่อนคำนวณ</div>';
     return;
   }
 
@@ -1686,7 +1691,7 @@ function calcTox() {
 
   if (!outEl) return;
   if (!w || w <= 0) {
-    outEl.innerHTML = '<div class="badge-cap" style="background:#FEE2E2; color:#991B1B;">⚠️ กรุณากรอกน้ำหนักตัว (ABW) ที่ส่วนบนของหน้าจอก่อนคำนวณ</div>';
+    outEl.innerHTML = '<div class="badge-cap danger">⚠️ กรุณากรอกน้ำหนักตัว (ABW) ที่ส่วนบนของหน้าจอก่อนคำนวณ</div>';
     return;
   }
 
@@ -1730,7 +1735,7 @@ function calcPSA() {
 
   if (!outEl) return;
   if (!w || w <= 0) {
-    outEl.innerHTML = '<div class="badge-cap" style="background:#FEE2E2; color:#991B1B;">⚠️ กรุณากรอกน้ำหนักตัว (ABW) ที่ส่วนบนของหน้าจอก่อนคำนวณ</div>';
+    outEl.innerHTML = '<div class="badge-cap danger">⚠️ กรุณากรอกน้ำหนักตัว (ABW) ที่ส่วนบนของหน้าจอก่อนคำนวณ</div>';
     return;
   }
 
@@ -1861,7 +1866,7 @@ function calcDKA() {
 
   if (!outEl) return;
   if (!w || w <= 0) {
-    outEl.innerHTML = '<div class="badge-cap" style="background:#FEE2E2; color:#991B1B;">⚠️ กรุณากรอกน้ำหนักตัว (ABW) ที่ส่วนบนของหน้าจอก่อนคำนวณ</div>';
+    outEl.innerHTML = '<div class="badge-cap danger">⚠️ กรุณากรอกน้ำหนักตัว (ABW) ที่ส่วนบนของหน้าจอก่อนคำนวณ</div>';
     return;
   }
 
@@ -1901,7 +1906,7 @@ function calcDKA() {
     </div>
 
     ${isDextroseNeeded ? `
-      <div class="badge-cap" style="background:#FEF3C7; color:#92400E; border-color:#F59E0B; margin-bottom:12px; display:block;">
+      <div class="badge-cap warning" style="margin-bottom:12px; display:block;">
         ⚠️ Bedside BG = ${currentBG} mg/dL (&lt; 250 mg/dL): Switch IV fluid to D5 0.45% NS + 20 mEq/L KCl immediately to maintain BG 150–250 mg/dL while continuing insulin drip!
       </div>
     ` : ''}
