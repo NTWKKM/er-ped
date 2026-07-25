@@ -420,8 +420,6 @@ function showTab(id, btn) {
   
   if (id === 'pals') {
     calcPALS();
-    const palsEl = document.getElementById('pals');
-    if (palsEl) palsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
   } else if (id === 'drip') {
     calcDrip();
   } else if (id === 'seizure') {
@@ -434,9 +432,8 @@ function showTab(id, btn) {
     calcVitals();
   } else if (id === 'dka') {
     calcDKA();
-  } else {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function setupKeyboardShortcuts(){

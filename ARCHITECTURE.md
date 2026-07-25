@@ -6,8 +6,7 @@
    - `Age` & `Unit Switch` (Years/Months toggle with Weech formula: `<1 yr`: `(mo + 9) / 2`, `1–6 yr`: `2 × age + 8`, `>6 yr`: `(7 × age - 5) / 2`).
    - `Length` (Length in cm).
    - `IBW` (Ideal Body Weight chip, Weight-for-Height Broselow tape bands, and auto-switch toggle with input greying/highlighting).
-   - `Broselow` (Color band estimator & quick reference drawer).
-   - `Quick Vitals Badge`: Dynamic topbar pill rendering active age-bracket normal HR & RR ranges.
+   - `Minimalist Topbar & Action Cluster`: Minimal topbar layout without ER-PED brand badge clutter. Left cluster houses patient inputs (`ABW`, `Age`, `HT`, `IBW`). Right cluster houses reference tools & actions (`Vital Signs` quick chip, `Broselow` tape chip, `Print`, `TH/EN` language, `Dark/Light` theme toggle). Main tab bar explicitly splits into Row 1 (`Dose`, `ATB`, `IV Fluids`, `PALS`, `NCPR`, `Drip Rate`) and Row 2 (`Seizure`, `Toxicology`, `Sedation`, `Vitals`, `DKA`).
    - `Language & Print Cluster`: Topbar buttons for Thai/English UI switching (`🌐 TH` / `🌐 EN`) and 1-page reference card printing (`🖨️ Print`).
 
 2. **Core Calculators & Search Interfaces**:
@@ -68,4 +67,4 @@ flowchart TD
 24. **Bicultural UI Language Switcher (Thai / English)**: Dual-language header toggle (`🌐 TH` / `🌐 EN`) rendering bilingual labels while maintaining 100% Medical English in EHR order copy strings.
 25. **Print-Friendly Reference Card Engine**: `@media print` CSS stylesheet hiding interactive inputs, navigation chrome, and floating controls to produce a clean 1-page physical emergency drug card printout.
 26. **Lightweight Dataset Editor & Local Overrides**: Browser-based dataset customization drawer allowing clinicians to edit max caps and drug notes saved to `localStorage` with JSON export and master reset capability.
-27. **Zero-Conflict Alt Shortcuts, Responsive Flex-Wrap Tab Navigation, & Semantic CSS Error Tokens**: Tab bar uses `flex-wrap: wrap` desktop multi-row layout to support 11 modules without overflow. Zero-latency keyboard shortcuts are mapped to `Alt+1`..`Alt+0` (tabs 1–10) and `Alt+K` (DKA), explicitly excluding browser-reserved Alt mnemonic letters (`Alt+D/S/T/V`). Error/warning states utilize semantic `--danger-subtle` and `--warning-subtle` CSS tokens to guarantee eye-comfort and zero night-glare contrast in warm dark mode.
+27. **Zero-Conflict Alt Shortcuts, Structured 2-Row Nav Layout, & Non-Disruptive Page Scrolling**: Navigation tab bar explicitly groups modules into 2 structured rows: Row 1 (Dose, ATB, IV Fluids, PALS, NCPR, Drip Rate) and Row 2 (Seizure, Toxicology, Sedation, Vitals, DKA, Broselow Reference button). PALS tab auto-scrolling is disabled to maintain non-disruptive, top-of-page alignment across all tabs. Keyboard shortcuts remain mapped (`Alt+1`..`Alt+0`, `Alt+K`), preserving instant clinician navigation.
