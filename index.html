@@ -846,32 +846,34 @@
   <!-- Industrial Top Bar Instrument Cluster -->
   <div class="topbar">
     <div class="topbar-inner">
-      <!-- Section 1: Patient Biometrics Cluster -->
-      <div class="chip">
-        <label class="chip-label">ABW</label>
-        <input type="number" id="weight" min="0" step="0.1" placeholder="kg" oninput="onWeightChange()"/>
-        
-        <label class="chip-label" style="margin-left:4px;">Age</label>
-        <input type="number" id="age" min="0" step="0.1" placeholder="0" oninput="estimateFromAge()"/>
-        <button id="ageUnitBtn" class="unit-toggle-btn" onclick="toggleAgeUnit()" title="คลิกเพื่อสลับหน่วยปี/เดือน">Yr</button>
-        
-        <label class="chip-label" style="margin-left:4px;">HT</label>
-        <input type="number" id="length" min="0" step="0.1" placeholder="cm" oninput="updateIBW()"/>
+      <!-- Centered Section: Patient Biometrics Cluster -->
+      <div style="display:flex; align-items:center; gap:8px; margin: 0 auto;">
+        <div class="chip">
+          <label class="chip-label">ABW</label>
+          <input type="number" id="weight" min="0" step="0.1" placeholder="kg" oninput="onWeightChange()"/>
+          
+          <label class="chip-label" style="margin-left:4px;">Age</label>
+          <input type="number" id="age" min="0" step="0.1" placeholder="0" oninput="estimateFromAge()"/>
+          <button id="ageUnitBtn" class="unit-toggle-btn" onclick="toggleAgeUnit()" title="คลิกเพื่อสลับหน่วยปี/เดือน">Yr</button>
+          
+          <label class="chip-label" style="margin-left:4px;">HT</label>
+          <input type="number" id="length" min="0" step="0.1" placeholder="cm" oninput="updateIBW()"/>
 
-        <label style="display:flex; align-items:center; gap:4px; margin:0; cursor:pointer;" title="ใช้ IBW ตามสูตร Weech แทนน้ำหนักจริง">
-          <input type="checkbox" id="useIBW" class="switch" onchange="applyIBWToBW()"/>
-          <span style="font-size:11px; font-weight:700; color:var(--muted);">IBW</span>
-        </label>
+          <label style="display:flex; align-items:center; gap:4px; margin:0; cursor:pointer;" title="ใช้ IBW ตามสูตร Weech แทนน้ำหนักจริง">
+            <input type="checkbox" id="useIBW" class="switch" onchange="applyIBWToBW()"/>
+            <span style="font-size:11px; font-weight:700; color:var(--muted);">IBW</span>
+          </label>
+        </div>
+
+        <div class="chip" id="ibwChip">
+          <label class="chip-label">IBW</label>
+          <strong id="ibwVal" class="mono" style="color:var(--accent);">—</strong>
+          <span id="ibwSource" style="font-size:11px; color:var(--muted);"></span>
+        </div>
       </div>
 
-      <div class="chip" id="ibwChip">
-        <label class="chip-label">IBW</label>
-        <strong id="ibwVal" class="mono" style="color:var(--accent);">—</strong>
-        <span id="ibwSource" style="font-size:11px; color:var(--muted);"></span>
-      </div>
-
-      <!-- Section 2: Reference Cluster (Vital Signs & Broselow Tape) -->
-      <div style="display:flex; align-items:center; gap:6px;">
+      <!-- Right-Aligned Section (ชิดขวา): Reference & Action Cluster -->
+      <div style="display:flex; align-items:center; gap:6px; margin-left:auto;">
         <span id="vitalsQuickChip" onclick="showTab('vitals')" style="font-size:11px; font-weight:800; padding:6px 10px; border-radius:6px; background:var(--card); border:1px solid var(--border); color:var(--accent); cursor:pointer; display:inline-flex; align-items:center; gap:4px;" title="ดูสัญญาณชีพตามวัย (Vital Signs by Age)">📊 <span id="vitalsQuickText">Vitals</span></span>
         
         <div class="broselow-chip" onclick="toggleBroselowPanel()" title="กดเพื่อโชว์/ซ่อน Broselow Tape Info" style="padding:4px 8px; font-size:12px;">
@@ -879,10 +881,7 @@
           <span id="broselow" class="mono" style="padding:1px 6px; border-radius:4px; font-weight:800; background:#E5E7EB; color:#111;">—</span>
           <span style="font-size:11px; color:var(--muted);">📊 Ref</span>
         </div>
-      </div>
 
-      <!-- Section 3: Right-Aligned Action Buttons (Print, TH/EN, Dark/Light Mode) -->
-      <div style="display:flex; align-items:center; gap:6px; margin-left:auto;">
         <button id="printBtn" class="btn" style="padding:6px 10px; font-size:12px;" onclick="triggerPrintCard()" title="พิมพ์การ์ดสรุปยาฉุกเฉิน (Print Reference Card)">🖨️ Print</button>
         <button id="langToggleBtn" class="btn" style="padding:6px 10px; font-size:12px;" onclick="toggleLanguage()" title="สลับภาษา (TH / EN)">🌐 TH</button>
         <button id="themeToggleBtn" class="btn" style="padding:6px 10px; font-size:12px;" onclick="toggleTheme()" title="สลับ Dark / Light Mode">🌙 Dark</button>

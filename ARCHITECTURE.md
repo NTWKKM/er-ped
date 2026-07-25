@@ -6,7 +6,7 @@
    - `Age` & `Unit Switch` (Years/Months toggle with Weech formula: `<1 yr`: `(mo + 9) / 2`, `1–6 yr`: `2 × age + 8`, `>6 yr`: `(7 × age - 5) / 2`).
    - `Length` (Length in cm).
    - `IBW` (Ideal Body Weight chip, Weight-for-Height Broselow tape bands, and auto-switch toggle with input greying/highlighting).
-   - `Minimalist Topbar & Action Cluster`: Minimal topbar layout without ER-PED brand badge clutter. Left cluster houses patient inputs (`ABW`, `Age`, `HT`, `IBW`). Right cluster houses reference tools & actions (`Vital Signs` quick chip, `Broselow` tape chip, `Print`, `TH/EN` language, `Dark/Light` theme toggle). Main tab bar explicitly splits into Row 1 (`Dose`, `ATB`, `IV Fluids`, `PALS`, `NCPR`, `Drip Rate`) and Row 2 (`Seizure`, `Toxicology`, `Sedation`, `Vitals`, `DKA`).
+   - `Minimalist Centered Topbar & Right Action Cluster`: Minimal topbar layout without ER-PED brand badge clutter. Centered cluster houses patient inputs (`ABW`, `Age`, `HT`, `IBW` switch & display). Right-aligned cluster (`margin-left: auto`) houses reference tools & actions (`Vital Signs` quick chip, `Broselow` tape chip, `Print`, `TH/EN` language, `Dark/Light` theme toggle). Main tab bar explicitly splits into Row 1 (`Dose`, `ATB`, `IV Fluids`, `PALS`, `NCPR`, `Drip Rate`) and Row 2 (`Seizure`, `Toxicology`, `Sedation`, `Vitals`, `DKA`).
    - `Language & Print Cluster`: Topbar buttons for Thai/English UI switching (`🌐 TH` / `🌐 EN`) and 1-page reference card printing (`🖨️ Print`).
 
 2. **Core Calculators & Search Interfaces**:
