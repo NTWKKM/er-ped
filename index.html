@@ -36,65 +36,68 @@
 
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) {
-        --bg: #121212;
-        --card: #242426;
-        --panel: #1C1C1E;
-        --ink: #F2F2F7;
-        --muted: #98989D;
-        --border: #3A3A3C;
-        --border-dark: #52525B;
-        --accent: #F05A24;
+        --bg: #171613;           /* Warm charcoal, not pure black (reduces OLED/LCD glare) */
+        --card: #26241F;         /* One luminance step up from bg */
+        --panel: #1E1C19;        /* Inset surface, between bg and card */
+        --ink: #EAE5DB;          /* Warm off-white text — not pure white, less halation at night */
+        --muted: #A39C8E;        /* Warm neutral grey, no blue cast */
+        --border: #3A3733;
+        --border-dark: #59554D;
+        --accent: #E8863D;       /* Braun orange, lightened to read clearly on dark */
         --accent-hover: #D9480F;
-        --accent-subtle: #3A1E14;
-        --dark-btn: #3A3A3C;
-        --ring: rgba(240, 90, 36, 0.4);
-        --good: #22C55E;
-        --warning: #F59E0B;
-        --danger: #EF4444;
-        --blue: #3B82F6;
+        --accent-subtle: #2E2119;
+        --dark-btn: #322F2A;
+        --ring: rgba(232, 134, 61, 0.4);
+        /* Semantic colors are ordered by luminance (blue < good < warning < danger),
+           not just hue — so severity still reads correctly by brightness alone on a
+           monochrome/grayscale panel, not only on colour displays. */
+        --blue: #7FA0B8;         /* L≈0.19 — calmest, informational */
+        --good: #8FB07A;         /* L≈0.26 — safe / normal */
+        --warning: #D9A94A;      /* L≈0.38 — caution */
+        --danger: #F0705A;       /* L≈0.41 — highest luminance, most urgent */
       }
     }
 
     :root[data-theme="dark"] {
-      --bg: #121212;
-      --card: #242426;
-      --panel: #1C1C1E;
-      --ink: #F2F2F7;
-      --muted: #98989D;
-      --border: #3A3A3C;
-      --border-dark: #52525B;
-      --accent: #F05A24;
+      --bg: #171613;
+      --card: #26241F;
+      --panel: #1E1C19;
+      --ink: #EAE5DB;
+      --muted: #A39C8E;
+      --border: #3A3733;
+      --border-dark: #59554D;
+      --accent: #E8863D;
       --accent-hover: #D9480F;
-      --accent-subtle: #3A1E14;
-      --dark-btn: #3A3A3C;
-      --ring: rgba(240, 90, 36, 0.4);
-      --good: #22C55E;
-      --warning: #F59E0B;
-      --danger: #EF4444;
-      --blue: #3B82F6;
+      --accent-subtle: #2E2119;
+      --dark-btn: #322F2A;
+      --ring: rgba(232, 134, 61, 0.4);
+      --blue: #7FA0B8;
+      --good: #8FB07A;
+      --warning: #D9A94A;
+      --danger: #F0705A;
     }
 
     :root[data-theme="dark"] .topbar {
-      background: #1C1C1E;
+      background: #1E1C19;
     }
     :root[data-theme="dark"] input, 
     :root[data-theme="dark"] select,
     :root[data-theme="dark"] .chip input[type="number"] {
-      background: #2C2C2E;
-      color: #F2F2F7;
-      border-color: #3A3A3C;
+      background: #2E2B26;
+      color: #EAE5DB;
+      border-color: #3A3733;
     }
     :root[data-theme="dark"] .summary {
-      background: #1C1C1E;
-      border-color: #3A3A3C;
+      background: #1E1C19;
+      border-color: #3A3733;
     }
     :root[data-theme="dark"] .combobox-dropdown {
-      background: #242426;
-      border-color: #3A3A3C;
+      background: #26241F;
+      border-color: #3A3733;
     }
     :root[data-theme="dark"] .combobox-item:hover,
     :root[data-theme="dark"] .combobox-item.kb-active {
-      background: #2C2C2E;
+      background: #2E2B26;
     }
 
     * { box-sizing: border-box; }

@@ -19,13 +19,22 @@
 - `--blue`: `#2563EB` (Dosing directive blue)
 
 ### Braun Dark Mode Palette (`data-theme="dark"`)
-- `--bg`: `#121212` (Dark graphite chassis)
-- `--card`: `#242426` (Dark elevated surface)
-- `--panel`: `#1C1C1E` (Dark tactile panel)
-- `--ink`: `#F2F2F7` (High-contrast light text)
-- `--muted`: `#98989D` (Dark mode neutral label text)
-- `--border`: `#3A3A3C` (Dark precision border)
-- `--accent`: `#F05A24` (High-contrast Braun Signal Orange)
+- `--bg`: `#171613` (Warm charcoal matte chassis, non-glare LCD/OLED)
+- `--card`: `#26241F` (Warm elevated surface container)
+- `--panel`: `#1E1C19` (Warm tactile inset panel)
+- `--ink`: `#EAE5DB` (Warm off-white text — non-glare, eye fatigue reduction)
+- `--muted`: `#A39C8E` (Warm neutral grey secondary label text)
+- `--border`: `#3A3733` (Warm precision 1px border)
+- `--border-dark`: `#59554D` (Warm dark border)
+- `--accent`: `#E8863D` (Braun Signal Orange tuned for high dark contrast)
+- `--accent-hover`: `#D9480F` (Darkened Braun Signal Orange)
+- `--accent-subtle`: `#2E2119` (Subtle dark signal orange tint)
+- `--dark-btn`: `#322F2A` (Tactile dark action button)
+- `--blue`: `#7FA0B8` (L≈0.19 — calmest, informational)
+- `--good`: `#8FB07A` (L≈0.26 — safe green)
+- `--warning`: `#D9A94A` (L≈0.38 — amber caution)
+- `--danger`: `#F0705A` (L≈0.41 — highest luminance urgent red)
+*(Note: Semantic colors are ordered by escalating relative luminance `blue < good < warning < danger` so urgency maps strictly to visual brightness even on monochrome/grayscale clinical displays).*
 
 ### Typography
 - **Primary Font**: `'Sarabun'`, system-ui, sans-serif (Google Fonts Sarabun for optimal legibility).
