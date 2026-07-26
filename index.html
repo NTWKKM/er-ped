@@ -36,7 +36,7 @@
       --warning-subtle: rgba(217, 119, 6, 0.12);
     }
 
-    @media (prefers-color-scheme: dark) {
+    @media (prefers-color-scheme: dark), (monochrome) {
       :root:not([data-theme="light"]) {
         --bg: #171613;           /* Warm charcoal, not pure black (reduces OLED/LCD glare) */
         --card: #26241F;         /* One luminance step up from bg */
@@ -486,6 +486,13 @@
     .hero-metric.danger { border-left-color: var(--danger); }
     .hero-metric.blue { border-left-color: var(--blue); }
 
+    /* Shape-coded prefixes: severity must read on a 1-bit/grayscale panel
+       even if the border-left color difference disappears at a distance. */
+    .hero-metric.good .hero-label::before { content: "\2713  "; }
+    .hero-metric.warning .hero-label::before { content: "\25B2  "; }
+    .hero-metric.danger .hero-label::before { content: "\2715  "; }
+    .hero-metric.blue .hero-label::before { content: "\2139  "; }
+
     .hero-metric .hero-label {
       font-size: 11px;
       letter-spacing: 0.08em;
@@ -806,6 +813,40 @@
       .brand-badge { padding: 4px 8px; font-size: 11px; }
       .broselow-chip { padding: 4px 8px; font-size: 11px; }
       .hero-metric .hero-val { font-size: 20px; }
+    }
+
+    /* ============================================================
+       JVC Monochrome Panel — 1200×800, mounted portrait
+       Native 1200×800 rotated 90° gives a ~800(w)×1200(h) CSS-pixel
+       viewport at DPR 1. Assumption: adjust the width band below if
+       the panel reports a different effective viewport (check via
+       window.innerWidth on-device). Grayscale panels also need
+       thicker color-coded borders and bigger touch targets since
+       viewing distance in an ED is usually greater than a handheld.
+       ============================================================ */
+    @media (orientation: portrait) and (min-width: 700px) and (max-width: 900px) {
+      .container { max-width: 760px; margin: 130px auto 100px; padding: 16px; }
+
+      .topbar-inner { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px 14px; }
+      .chip { justify-content: space-between; }
+
+      html, body { font-size: 16px; }
+
+      .grid { grid-template-columns: repeat(6, 1fr); gap: 12px; }
+      .col-12, .col-9, .col-8, .col-6 { grid-column: span 6; }
+      .col-4, .col-3 { grid-column: span 3; }
+
+      .hero-metric-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .hero-metric { border-left-width: 8px; padding: 14px 16px; }
+      .hero-metric .hero-val { font-size: 27px; }
+      .hero-metric .hero-label { font-size: 12px; }
+
+      .segmented-control { gap: 6px; padding: 6px; }
+      .tab-btn { min-width: 30%; min-height: 44px; padding: 12px 10px; font-size: 14px; }
+
+      .chip input[type="number"] { min-height: 40px; font-size: 15px; width: 84px; }
+      .broselow-chip, .unit-toggle-btn { min-height: 44px; }
+      button { min-height: 44px; }
     }
 
     /* Print-Friendly Reference Card Stylesheet */
