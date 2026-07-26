@@ -1299,7 +1299,7 @@ function calcPALS(){
     if(out) out.innerHTML = `
 <div class="hero-metric danger">
   <div>
-    <div class="hero-label">🚨 PALS ARREST RESUSCITATION (AHA GUIDELINES)</div>
+    <div class="hero-label">PALS ARREST RESUSCITATION (AHA GUIDELINES)</div>
     <div style="font-size: 14px; color: #FFFFFF; margin-top: 4px; font-weight: 600;">
       Please enter patient weight (kg) in topbar ABW to compute Epinephrine, Defib Joules, Amiodarone, and ETT sizes.
     </div>
