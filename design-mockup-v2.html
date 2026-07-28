@@ -52,8 +52,7 @@
   --accent2:#C8C8C4; --accent2-soft:#222220;
   --good:#BDBDB8; --good-soft:#222220;
   --warning:#D8D8D2; --warning-soft:#222220;
-  --danger:#FFFFFF; --danger-soft:#
-222220;
+  --danger:#FFFFFF; --danger-soft:#222220;
   --dark-btn:#0A0A09;
   --shadow-1:none; /* avoid gray halos on monochrome */
   --shadow-2:none;
@@ -130,8 +129,7 @@ body{
   text-transform:uppercase; letter-spacing:.06em; cursor:pointer;
 }
 .segmented button.on{background:var(--ink); color:var(--bg)}
-[data-theme
-="mono"] .segmented button.on{background:#FFFFFF; color:#1C1C1A}
+[data-theme="mono"] .segmented button.on{background:#FFFFFF; color:#1C1C1A}
 
 /* ====== Tab bar (segmented control) ====== */
 .tabs{
@@ -145,35 +143,6 @@ body{
   font:600 13px 'Sarabun',sans-serif; color:var(--muted);
   display:flex; align-items:center; justify-content:center; gap:6px;
   min-height:44px; /* touch floor */
-}
-.tab:hover{background:var(--card); color:var(--ink)}
-.tab.active{background:var(--card); color:var(--ink); box-shadow:0 1px 0 var(--border),0 4px 10px rgba(0,0,0,.06); border:1px solid var(--border); padding:9px 11px}
-.tab .kbd{font:500 10px 'JetBrains Mono',monospace; color:var(--muted); opacity:.75}
-.tab.active .kbd{color:var(--accent)}
-
-/* ====== Card ====== */
-.card{
-  background:var(--card); border:1px solid var(--border);
-  border-radius:var(--r-md); padding:var(--s5); box-shadow:var(--shadow-1);
-  margin-bottom:var(--s3);
-}
-.card-h{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:var(--s4)}
-.card-h h2{margin:0; font:700 16px 'Sarabun',sans-serif; color:var(--ink); letter-spacing:-.01em}
-.card-h .meta{font:500 11px 'JetBrains Mono',monospace; color:var(--muted); text-transform:uppercase; letter-spacing:.08em}
-="mono"] .segmented button.on{background:#FFFFFF; color:#1C1C1A}
-
-/* ====== Tab bar (segmented control) ====== */
-.tabs{
-  display:flex; gap:var(--s1); margin-bottom:var(--s3);
-  background:var(--panel); border:1px solid var(--border);
-  border-radius:var(--r-md); padding:var(--s1); box-shadow:var(--shadow-1);
-}
-.tab{
-  flex:1; border:0; background:transparent; cursor:pointer;
-  padding:10px 12px; border-radius:var(--r-sm);
-  font:600 13px 'Sarabun',sans-serif; color:var(--muted);
-  display:flex; align-items:center; justify-content:center; gap:6px;
-  min-height:44px;
 }
 .tab:hover{background:var(--card); color:var(--ink)}
 .tab.active{background:var(--card); color:var(--ink); box-shadow:0 1px 0 var(--border),0 4px 10px rgba(0,0,0,.06); border:1px solid var(--border); padding:9px 11px}
@@ -242,8 +211,7 @@ body{
 .hero-label::before{content:""; display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--accent)}
 .hero.good{border-left-color:var(--good)} .hero.good .hero-label::before{background:var(--good)}
 .hero.warning{border-left-color:var(--warning)} .hero.warning .hero-label::before{background:var(--warning)}
-.hero.danger{border-left-color:var(--danger)} .hero.danger .hero-label::before{background
-:var(--danger)}
+.hero.danger{border-left-color:var(--danger)} .hero.danger .hero-label::before{background:var(--danger)}
 .hero.blue{border-left-color:var(--accent2)} .hero.blue .hero-label::before{background:var(--accent2)}
 .hero-val{
   font:800 34px/1 'JetBrains Mono',monospace; color:var(--ink);
@@ -338,8 +306,7 @@ body{
 /* traveling dot inside weight badge on sync */
 .sync-dot{
   position:absolute; top:6px; right:8px;
-  width:6px;
- height:6px; border-radius:50%; background:var(--accent);
+  width:6px; height:6px; border-radius:50%; background:var(--accent);
   opacity:0; transform:scale(.5);
 }
 .sync-bound.is-syncing .sync-dot{
@@ -372,7 +339,11 @@ body{
 .tag.warn{background:var(--warning-soft); color:var(--warning)}
 .tag.danger{background:var(--danger-soft); color:var(--danger)}
 [data-theme="mono"] .tag{background:transparent; color:var(--ink); border:1px solid var(--ink)}
-[data-theme="mono"] .tag.danger{color:#FFFFFF; border-color:#FFFFFF}
+[data-theme="mono"] .tag.good::before{content:"✓ "}
+[data-theme="mono"] .tag.warn{border:2px double var(--ink); font-weight:800}
+[data-theme="mono"] .tag.warn::before{content:"⚠ "}
+[data-theme="mono"] .tag.danger{color:#FFFFFF; border-color:#FFFFFF; font-weight:800}
+[data-theme="mono"] .tag.danger::before{content:"🚨 "}
 
 /* ====== ATB table ====== */
 table.atb{width:100%; border-collapse:separate; border-spacing:0; font-size:13px}
@@ -404,8 +375,7 @@ table.atb .range-cell .hi{color:var(--ink)}
 .phase-pill .t{font:700 13px 'JetBrains Mono',monospace; color:var(--ink)}
 .phase-pill:hover{border-color:var(--accent)}
 .phase-pill.active{background:var(--ink); color:var(--bg); border-color:var(--ink)}
-.phase-pill.active .t{
-color:var(--bg)}
+.phase-pill.active .t{color:var(--bg)}
 [data-theme="mono"] .phase-pill.active{background:#FFFFFF; color:#1C1C1A; border-color:#FFFFFF}
 .phase-pill.active .t{color:inherit}
 </style>
@@ -470,8 +440,8 @@ color:var(--bg)}
     <!-- Sticky result strip: appears once calculation has a result -->
     <div class="sticky-result sync-bound" id="stickyResult" data-weight-bound hidden>
       <div>
-        <div class="lbl">Primary dose · Paracetamol syrup 120 mg/5 mL</div>
-        <div class="val"><span id="stickyVal">175</span><span class="unit">mg · 7.3 mL PO q6h PRN</span></div>
+        <div class="lbl" id="stickyLbl">Primary dose · Paracetamol syrup 120 mg/5 mL</div>
+        <div class="val"><span id="stickyVal">175</span><span class="unit" id="stickySub">mg · 7.3 mL PO q6h PRN</span></div>
       </div>
       <div class="row">
         <span class="tag good">within range</span>
@@ -479,8 +449,7 @@ color:var(--bg)}
           <button class="btn" style="background:transparent;color:inherit;border:0;border-radius:0" onclick="armCopy(this)" aria-label="Arm copy">
             <span aria-hidden="true">⧉</span> Copy EHR
           </button>
-          <button class
-="confirm-go" id="copyGo" onclick="doCopy()">Confirm</button>
+          <button class="confirm-go" id="copyGo" onclick="doCopy()">Confirm</button>
         </div>
       </div>
       <span class="sync-dot" aria-hidden="true"></span>
@@ -489,46 +458,46 @@ color:var(--bg)}
     <div class="card sync-bound" id="doseCard" data-weight-bound>
       <div class="card-h">
         <h2>Dose Calculator</h2>
-        <div class="meta">BW <span class="num" id="doseWBadge">14.0 kg</span></div>
+        <div class="meta"><span class="tag blue" style="font-size:9px; margin-right:6px">PROTOTYPE: DYNAMIC MOCK DATASET</span> BW <span class="num" id="doseWBadge">14.0 kg</span></div>
       </div>
 
       <label for="drugSearch" class="sr">Search drug</label>
       <div class="search-row">
         <div class="search">
           <span class="cat">DOSE</span>
-          <input id="drugSearch" type="text" placeholder="Search drug (e.g. paracetamol, ibuprofen, amoxicillin)..." aria-label="Search drug" aria-autocomplete="list" />
+          <input id="drugSearch" type="text" placeholder="Search drug (e.g. paracetamol, ibuprofen, amoxicillin)..." aria-label="Search drug" aria-autocomplete="list" oninput="onSearchInput(this.value)" />
         </div>
         <button class="btn btn-dark" type="button" onclick="recalc()">Calc</button>
       </div>
 
       <!-- Quick grid: one-tap for common drugs -->
       <div class="quick-grid" id="quickGrid" aria-label="Common drugs">
-        <button class="quick" onclick="pickDrug('Paracetamol syrup 120 mg/5 mL')">
+        <button class="quick" onclick="pickDrug('paracetamol')">
           <span class="qunit">analgesic</span>
           <span class="qname">Paracetamol</span>
           <span class="qrange">10-15 mg/kg/dose</span>
         </button>
-        <button class="quick" onclick="pickDrug('Ibuprofen syrup 100 mg/5 mL')">
+        <button class="quick" onclick="pickDrug('ibuprofen')">
           <span class="qunit">nsaid</span>
           <span class="qname">Ibuprofen</span>
           <span class="qrange">5-10 mg/kg/dose</span>
         </button>
-        <button class="quick" onclick="pickDrug('Amoxicillin syrup 250 mg/5 mL')">
+        <button class="quick" onclick="pickDrug('amoxicillin')">
           <span class="qunit">atb</span>
           <span class="qname">Amoxicillin</span>
           <span class="qrange">25-50 mg/kg/d</span>
         </button>
-        <button class="quick" onclick="pickDrug('Ondansetron syrup 4 mg/5 mL')">
+        <button class="quick" onclick="pickDrug('ondansetron')">
           <span class="qunit">antiemetic</span>
           <span class="qname">Ondansetron</span>
           <span class="qrange">0.15 mg/kg/dose</span>
         </button>
-        <button class="quick" onclick="pickDrug('Salbutamol neb 2.5 mg/3 mL')">
+        <button class="quick" onclick="pickDrug('salbutamol')">
           <span class="qunit">broncho</span>
           <span class="qname">Salbutamol neb</span>
           <span class="qrange">0.15 mg/kg/dose</span>
         </button>
-        <button class="quick" onclick="pickDrug('Diazepam rectal 5 mg')">
+        <button class="quick" onclick="pickDrug('diazepam')">
           <span class="qunit">seizure</span>
           <span class="qname">Diazepam PR</span>
           <span class="qrange">0.5 mg/kg/dose</span>
@@ -540,22 +509,22 @@ color:var(--bg)}
         <div class="hero good" id="primaryHero">
           <div class="hero-label">Dose per administration</div>
           <div class="hero-val"><span id="doseVal">175</span><span class="unit">mg</span></div>
-          <div class="hero-sub"><span class="num" id="doseVol">7.3 mL</span> · PO q6h PRN · BW <span class="num">14.0 kg</span></div>
-          <div class="verify">VERIFY: 12.5 mg/kg x 14.0 kg = 175 mg</div>
+          <div class="hero-sub"><span class="num" id="doseVol">7.3 mL · PO q6h PRN · BW 14.0 kg</span></div>
+          <div class="verify" id="doseVerify">VERIFY: 12.5 mg/kg x 14.0 kg = 175 mg</div>
         </div>
 
         <div class="hero blue">
-          <div class="hero-label">Daily total · max 90 mg/kg/day</div>
+          <div class="hero-label">Daily total · max dose</div>
           <div class="hero-val" style="font-size:24px"><span id="dailyVal">700</span><span class="unit">mg/day</span></div>
-          <div class="hero-sub">Cap 1260 mg/day · 50 mg/kg/day actual</div>
+          <div class="hero-sub" id="dailySub">Cap 4000 mg/day · 50 mg/kg/day actual</div>
         </div>
       </div>
 
       <div class="row" style="margin-top:var(--s4)">
-        <span class="tag">Route: PO</span>
-        <span class="tag blue">Freq: q6h PRN</span>
-        <span class="tag good">Safety: within max</span>
-        <span class="muted" style="font-size:12px">Max single dose 1000 mg · Max daily 4000 mg</span>
+        <span class="tag" id="tagRoute">Route: PO</span>
+        <span class="tag blue" id="tagFreq">Freq: q6h PRN</span>
+        <span class="tag good" id="tagSafety">Safety: within max</span>
+        <span class="muted" style="font-size:12px" id="doseNote">Max single dose 1000 mg · Max daily 4000 mg</span>
       </div>
 
       <span class="sync-dot" aria-hidden="true"></span>
@@ -586,8 +555,7 @@ color:var(--bg)}
           <tr><td>Amoxicillin-clav</td><td class="num"><div class="range-cell"><span class="lo">25</span><span>-</span><span class="hi">45</span></div></td><td class="num">q8h</td><td>PO</td><td class="num">90 mg/kg/d</td></tr>
           <tr><td>Azithromycin</td><td class="num">10</td><td class="num">q24h x5d</td><td>PO</td><td class="num">500 mg/d</td></tr>
           <tr><td>Cefdinir</td><td class="num">14</td><td class="num">q12-24h</td><td>PO</td><td class="num">600 mg/d</td></tr>
-          <tr><td>C
-efixime</td><td class="num">8</td><td class="num">q12-24h</td><td>PO</td><td class="num">400 mg/d</td></tr>
+          <tr><td>Cefixime</td><td class="num">8</td><td class="num">q12-24h</td><td>PO</td><td class="num">400 mg/d</td></tr>
           <tr><td>Cefotaxime</td><td class="num">50</td><td class="num">q8h</td><td>IV</td><td class="num">200 mg/kg/d</td></tr>
           <tr><td>Ceftriaxone</td><td class="num">50</td><td class="num">q24h</td><td>IV</td><td class="num">100 mg/kg/d</td></tr>
           <tr><td>Vancomycin</td><td class="num">15</td><td class="num">q6h</td><td>IV</td><td class="num">60 mg/kg/d · trough</td></tr>
@@ -615,8 +583,7 @@ efixime</td><td class="num">8</td><td class="num">q12-24h</td><td>PO</td><td cla
       <div class="phase-rail">
         <div class="phase-pills" role="tablist" aria-label="PALS phases">
           <button class="phase-pill active" role="tab" aria-selected="true">
-            <span>Phase
- 1</span>
+            <span>Phase 1</span>
             <span class="t">0-5 min</span>
           </button>
           <button class="phase-pill" role="tab" aria-selected="false">
@@ -629,7 +596,7 @@ efixime</td><td class="num">8</td><td class="num">q12-24h</td><td>PO</td><td cla
           </button>
           <button class="phase-pill" role="tab" aria-selected="false">
             <span>Phase 4</span>
-            <span class="t">>20 min</span>
+            <span class="t">&gt;20 min</span>
           </button>
         </div>
 
@@ -650,13 +617,73 @@ efixime</td><td class="num">8</td><td class="num">q12-24h</td><td>PO</td><td cla
             <div class="hero blue">
               <div class="hero-label">Amiodarone · 2nd dose</div>
               <div class="hero-val" style="font-size:24px"><span>70</span><span class="unit">mg</span></div>
-              <div class
-="hero-sub">5 mg/kg · 150 mg max single dose</div>
+              <div class="hero-sub">5 mg/kg · 150 mg max single dose</div>
             </div>
           </div>
         </div>
       </div>
 
+      <span class="sync-dot" aria-hidden="true"></span>
+    </div>
+  </section>
+
+  <!-- ============== SCREEN 4: DRIP CALCULATOR (prototype placeholder) ============== -->
+  <section id="screen-drip" class="screen" aria-label="Drip calculator" hidden>
+    <div class="card sync-bound" id="dripCard" data-weight-bound>
+      <div class="card-h">
+        <h2>Continuous Infusion (Drip)</h2>
+        <div class="meta">BW <span class="num" id="dripWBadge">14.0 kg</span> · <span class="tag warn">PROTOTYPE PLACEHOLDER</span></div>
+      </div>
+      <div style="padding:var(--s4); background:var(--panel); border:1px dashed var(--border-strong); border-radius:var(--r-md); text-align:center">
+        <h3 style="margin-top:0">Inotrope & Vasopressor Drip Calculator</h3>
+        <p class="muted" style="font-size:13px; max-width:500px; margin:0 auto var(--s4)">
+          Dedicated interactive drip calculator screen under development. Will feature dopamine, epinephrine, norepinephrine, and milrinone infusion rate calculations (mcg/kg/min &rarr; mL/hr).
+        </p>
+        <div class="hero-row" style="text-align:left">
+          <div class="hero blue">
+            <div class="hero-label">Dopamine · 5 mcg/kg/min</div>
+            <div class="hero-val" style="font-size:24px"><span>2.1</span><span class="unit">mL/hr</span></div>
+            <div class="hero-sub">Standard conc: 400 mg/250 mL D5W (1600 mcg/mL)</div>
+          </div>
+          <div class="hero danger">
+            <div class="hero-label">Epinephrine · 0.1 mcg/kg/min</div>
+            <div class="hero-val" style="font-size:24px"><span>5.25</span><span class="unit">mL/hr</span></div>
+            <div class="hero-sub">Standard conc: 1 mg/250 mL D5W (4 mcg/mL)</div>
+          </div>
+        </div>
+      </div>
+      <span class="sync-dot" aria-hidden="true"></span>
+    </div>
+  </section>
+
+  <!-- ============== SCREEN 5: VITALS REFERENCE (prototype placeholder) ============== -->
+  <section id="screen-vitals" class="screen" aria-label="Pediatric Vitals" hidden>
+    <div class="card sync-bound" id="vitalsCard" data-weight-bound>
+      <div class="card-h">
+        <h2>Pediatric Vital Signs Reference</h2>
+        <div class="meta">Age <span class="num">3 Yr</span> · <span class="tag warn">PROTOTYPE PLACEHOLDER</span></div>
+      </div>
+      <table class="atb" aria-label="Pediatric vital signs reference table">
+        <thead>
+          <tr>
+            <th>Age Group</th>
+            <th>Heart Rate (bpm)</th>
+            <th>Resp Rate (/min)</th>
+            <th>Systolic BP (mmHg)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Infant (1-12 mo)</td><td class="num">100 - 160</td><td class="num">30 - 53</td><td class="num">72 - 104</td></tr>
+          <tr><td>Toddler (1-2 yr)</td><td class="num">98 - 140</td><td class="num">22 - 37</td><td class="num">86 - 106</td></tr>
+          <tr style="font-weight:700; background:var(--accent-soft)"><td>Preschooler (3-5 yr) ★</td><td class="num">80 - 120</td><td class="num">20 - 28</td><td class="num">89 - 112</td></tr>
+          <tr><td>School Age (6-11 yr)</td><td class="num">75 - 118</td><td class="num">18 - 25</td><td class="num">97 - 115</td></tr>
+          <tr><td>Adolescent (&ge;12 yr)</td><td class="num">60 - 100</td><td class="num">12 - 20</td><td class="num">110 - 131</td></tr>
+        </tbody>
+      </table>
+      <div class="row" style="margin-top:var(--s4)">
+        <span class="tag good">PALS 2020 Norms</span>
+        <span class="muted" style="font-size:12px">Hypotension threshold for 3 yr: SBP &lt; 70 + (2 × 3) = 76 mmHg</span>
+      </div>
       <span class="sync-dot" aria-hidden="true"></span>
     </div>
   </section>
@@ -671,11 +698,10 @@ efixime</td><td class="num">8</td><td class="num">q12-24h</td><td>PO</td><td cla
       <ol style="margin:0; padding-left:18px; font-size:13px; line-height:1.7; color:var(--muted)">
         <li><b style="color:var(--ink)">Sync Ring</b> - change ABW in the topbar. Every card bound to weight pulses a ring + traveling dot for 1.2s. Confirms cross-module recompute.</li>
         <li><b style="color:var(--ink)">Sticky result strip</b> - once a calculation resolves, the primary dose pins to top of the card and survives scroll.</li>
-        <li><b style="color:var(--ink)">Quick grid</b> - empty search state replaces with one-tap tiles for the 6 most common drugs. No typing required for the common path.</li>
-        <li><b style="color:var(--ink)">2-tap Copy EHR
-</b> - clicking Copy arms a Confirm pill (red widening). Clicking Confirm executes. Avoids mis-tap on irreversible action.</li>
+        <li><b style="color:var(--ink)">Quick grid</b> - empty search state replaces with one-tap tiles for common drugs. Now dynamically computes dose for selected drug in prototype.</li>
+        <li><b style="color:var(--ink)">2-tap Copy EHR</b> - clicking Copy arms a Confirm pill (red widening). Clicking Confirm executes. Avoids mis-tap on irreversible action.</li>
         <li><b style="color:var(--ink)">Verify line</b> - every hero result renders the math underneath (e.g. 12.5 mg/kg x 14.0 kg = 175 mg) so clinicians can audit the calc at a glance.</li>
-        <li><b style="color:var(--ink)">Three themes</b> - click Theme in the topbar to cycle light to dark to mono. Mono is grayscale-only with luminance-ordered severity (pure white = danger).</li>
+        <li><b style="color:var(--ink)">Three themes</b> - click Theme in the topbar to cycle light to dark to mono. Mono is grayscale-only with luminance-ordered severity (pure white = danger, distinct glyphs for good/warn).</li>
         <li><b style="color:var(--ink)">Focus</b> - every interactive element has a 3px solid accent focus ring. Tab through to verify.</li>
         <li><b style="color:var(--ink)">Reduced motion</b> - if your OS has reduced-motion enabled, sync ring collapses to a static outline and dot (CSS only).</li>
       </ol>
@@ -699,20 +725,20 @@ document.getElementById('themeBtn').addEventListener('click', () => {
 
 /* ====== Tab switching ====== */
 const tabs = document.querySelectorAll('.tab');
-const screens = {dose:document.getElementById('screen-dose'),
-  atb:document.getElementById('screen-atb'),
-  pals:document.getElementById('screen-pals'),
-  drip:document.getElementById('screen-dose'),
-  vitals:document.getElementById('screen-dose')};
+const screens = {
+  dose: document.getElementById('screen-dose'),
+  atb: document.getElementById('screen-atb'),
+  pals: document.getElementById('screen-pals'),
+  drip: document.getElementById('screen-drip'),
+  vitals: document.getElementById('screen-vitals')
+};
 tabs.forEach(t => t.addEventListener('click', () => {
   tabs.forEach(x => {x.classList.remove('active'); x.setAttribute('aria-selected','false');});
   t.classList.add('active'); t.setAttribute('aria-selected','true');
   const which = t.dataset.tab;
   document.querySelectorAll('.screen').forEach(s => s.hidden = true);
-  if (which === 'dose' || which === 'drip' || which === 'vitals') {
-    document.getElementById('screen-dose').hidden = false;
-  } else {
-    document.getElementById('screen-' + which).hidden = false;
+  if (screens[which]) {
+    screens[which].hidden = false;
   }
 }));
 
@@ -727,8 +753,7 @@ document.querySelectorAll('.segmented button[data-unit]').forEach(b => {
 /* ====== Weight change → Sync Ring across bound cards ====== */
 function triggerSync(){
   document.querySelectorAll('[data-weight-bound]').forEach(el => {
-    el
-.classList.remove('is-syncing');
+    el.classList.remove('is-syncing');
     // force reflow to restart animation
     void el.offsetWidth;
     el.classList.add('is-syncing');
@@ -747,33 +772,138 @@ function triggerSync(){
   });
 });
 
-/* ====== Recalc (mock) ====== */
+/* ====== Dynamic Drug Dataset for Prototype Recalc ====== */
+let currentDrugKey = 'paracetamol';
+
+const MOCK_DRUGS = {
+  paracetamol: {
+    name: 'Paracetamol syrup 120 mg/5 mL',
+    category: 'analgesic',
+    perKg: 12.5,
+    concMgPerMl: 24,
+    unit: 'mg',
+    route: 'PO',
+    freq: 'q6h PRN',
+    maxSingleMg: 1000,
+    maxDailyMgKg: 90,
+    maxDailyMg: 4000,
+    verifyText: (w, mg) => `VERIFY: 12.5 mg/kg × ${w.toFixed(1)} kg = ${mg} mg`
+  },
+  ibuprofen: {
+    name: 'Ibuprofen syrup 100 mg/5 mL',
+    category: 'nsaid',
+    perKg: 10,
+    concMgPerMl: 20,
+    unit: 'mg',
+    route: 'PO',
+    freq: 'q6-8h PRN',
+    maxSingleMg: 400,
+    maxDailyMgKg: 40,
+    maxDailyMg: 1200,
+    verifyText: (w, mg) => `VERIFY: 10 mg/kg × ${w.toFixed(1)} kg = ${mg} mg`
+  },
+  amoxicillin: {
+    name: 'Amoxicillin syrup 250 mg/5 mL',
+    category: 'atb',
+    perKg: 15,
+    concMgPerMl: 50,
+    unit: 'mg',
+    route: 'PO',
+    freq: 'q8h',
+    maxSingleMg: 1000,
+    maxDailyMgKg: 90,
+    maxDailyMg: 3000,
+    verifyText: (w, mg) => `VERIFY: 15 mg/kg × ${w.toFixed(1)} kg = ${mg} mg (45 mg/kg/d)`
+  },
+  ondansetron: {
+    name: 'Ondansetron syrup 4 mg/5 mL',
+    category: 'antiemetic',
+    perKg: 0.15,
+    concMgPerMl: 0.8,
+    unit: 'mg',
+    route: 'PO',
+    freq: 'q8h PRN',
+    maxSingleMg: 8,
+    maxDailyMgKg: 0.45,
+    maxDailyMg: 24,
+    verifyText: (w, mg) => `VERIFY: 0.15 mg/kg × ${w.toFixed(1)} kg = ${mg} mg`
+  },
+  salbutamol: {
+    name: 'Salbutamol neb 2.5 mg/3 mL',
+    category: 'broncho',
+    perKg: 0.15,
+    concMgPerMl: 0.833,
+    unit: 'mg',
+    route: 'Neb',
+    freq: 'q4-6h PRN',
+    maxSingleMg: 5,
+    maxDailyMgKg: 0.9,
+    maxDailyMg: 20,
+    verifyText: (w, mg) => `VERIFY: 0.15 mg/kg × ${w.toFixed(1)} kg = ${mg} mg`
+  },
+  diazepam: {
+    name: 'Diazepam rectal 5 mg',
+    category: 'seizure',
+    perKg: 0.5,
+    concMgPerMl: 0,
+    unit: 'mg',
+    route: 'PR',
+    freq: 'STAT / PRN',
+    maxSingleMg: 10,
+    maxDailyMgKg: 1.0,
+    maxDailyMg: 20,
+    verifyText: (w, mg) => `VERIFY: 0.5 mg/kg × ${w.toFixed(1)} kg = ${mg} mg`
+  }
+};
+
+/* ====== Recalc ====== */
 function recalc(){
   const w = parseFloat(document.getElementById('abw').value) || 0;
-  const perKg = 12.5;
-  const mg = +(perKg * w).toFixed(1);
-  const volMl = +(mg / 24).toFixed(1); // 120mg/5mL => 24mg/mL
-  const daily = +(mg * 4).toFixed(1);
+  const drug = MOCK_DRUGS[currentDrugKey] || MOCK_DRUGS.paracetamol;
+  const mg = +(drug.perKg * w).toFixed(1);
+  const volMlText = drug.concMgPerMl > 0 ? (mg / drug.concMgPerMl).toFixed(1) + ' mL' : drug.unit;
+  const daily = +(mg * (drug.freq.includes('q8h') ? 3 : drug.freq.includes('q6h') ? 4 : 1)).toFixed(1);
+
   document.getElementById('doseVal').textContent = mg;
-  document.getElementById('doseVol').textContent = volMl.toFixed(1) + ' mL';
+  document.getElementById('doseVol').textContent = `${volMlText} · ${drug.route} ${drug.freq} · BW ${w.toFixed(1)} kg`;
+  document.getElementById('doseVerify').textContent = drug.verifyText(w, mg);
   document.getElementById('dailyVal').textContent = daily;
+  document.getElementById('dailySub').textContent = `Cap ${drug.maxDailyMg} mg/day · ${(daily / Math.max(1, w)).toFixed(1)} mg/kg/day actual`;
+  
+  document.getElementById('tagRoute').textContent = `Route: ${drug.route}`;
+  document.getElementById('tagFreq').textContent = `Freq: ${drug.freq}`;
+  document.getElementById('doseNote').textContent = `Max single ${drug.maxSingleMg} mg · Max daily ${drug.maxDailyMg} mg`;
+
+  document.getElementById('stickyLbl').textContent = `Primary dose · ${drug.name}`;
   document.getElementById('stickyVal').textContent = mg;
+  document.getElementById('stickySub').textContent = `${drug.unit} (${volMlText}) ${drug.route} ${drug.freq}`;
   document.getElementById('stickyResult').hidden = false;
 }
 recalc();
 
 /* ====== Quick grid tap ====== */
-function pickDrug(name){
-  document.getElementById('drugSearch').value = name;
+function pickDrug(keyOrName){
+  let key = Object.keys(MOCK_DRUGS).find(k => keyOrName.toLowerCase().includes(k));
+  if (!key) key = 'paracetamol';
+  currentDrugKey = key;
+  const drug = MOCK_DRUGS[key];
+  document.getElementById('drugSearch').value = drug.name;
   recalc();
   document.getElementById('stickyResult').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function onSearchInput(val){
+  const match = Object.keys(MOCK_DRUGS).find(k => k.includes(val.toLowerCase()) || MOCK_DRUGS[k].name.toLowerCase().includes(val.toLowerCase()));
+  if (match) {
+    currentDrugKey = match;
+    recalc();
+  }
 }
 
 /* ====== 2-tap Copy EHR ====== */
 let armedTimer;
 function armCopy(btn){
-  const c = document
-.getElementById('copyConfirm');
+  const c = document.getElementById('copyConfirm');
   c.classList.add('armed');
   btn.setAttribute('aria-expanded','true');
   clearTimeout(armedTimer);
@@ -784,9 +914,10 @@ function armCopy(btn){
 }
 function doCopy(){
   const w = parseFloat(document.getElementById('abw').value) || 0;
+  const drug = MOCK_DRUGS[currentDrugKey] || MOCK_DRUGS.paracetamol;
   const mg = document.getElementById('doseVal').textContent;
-  const vol = document.getElementById('doseVol').textContent;
-  const text = `Paracetamol ${mg} mg (${vol}) PO q6h PRN [BW: ${w.toFixed(1)} kg]`;
+  const vol = document.getElementById('doseVol').textContent.split('·')[0].trim();
+  const text = `${drug.name}: ${mg} mg (${vol}) ${drug.route} ${drug.freq} [BW: ${w.toFixed(1)} kg]`;
   navigator.clipboard?.writeText(text).catch(()=>{});
   toast('Copied: ' + text);
   const c = document.getElementById('copyConfirm');
