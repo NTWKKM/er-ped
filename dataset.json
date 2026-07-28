@@ -1090,22 +1090,47 @@
       ]
     },
     {
-      "key": "methylprednisolone-iv-40mg-ml",
-      "drug": "Methylprednisolone",
-      "name": "Methylprednisolone",
+      "key": "methylprednisolone-iv-load",
+      "drug": "Methylprednisolone (Loading)",
+      "name": "Methylprednisolone IV Loading Dose",
       "preparation": "40 mg/mL",
-      "note": "Asthma: 1–2 mg/kg IV load then 0.5–1 mg/kg IV q6h ⚠️ Max 60 mg/dose – check indication-specific dosing",
+      "note": "Asthma Exacerbation / Status Asthmaticus: 1–2 mg/kg IV loading dose ⚠️ Max 60 mg/dose",
       "unit": "mg/kg",
       "unitType": "perDose",
       "doseMinMgPerKg": 1,
       "doseMaxMgPerKg": 2,
+      "maxPerDoseMg": 60,
+      "freq": "Single Loading Dose",
+      "route": "IV",
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Solu-Medrol Load"
+      ]
+    },
+    {
+      "key": "methylprednisolone-iv-maint",
+      "drug": "Methylprednisolone (Maintenance)",
+      "name": "Methylprednisolone IV Maintenance Dose",
+      "preparation": "40 mg/mL",
+      "note": "Asthma Maintenance: 0.5–1 mg/kg/dose IV q6h ⚠️ Max 60 mg/dose",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.5,
+      "doseMaxMgPerKg": 1,
+      "maxPerDoseMg": 60,
+      "maxPerDayMg": 240,
       "freq": "q 6 hr",
       "route": "IV",
       "minAgeYr": null,
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [
+        "Solu-Medrol Maint"
+      ]
     },
     {
       "key": "dexamethasone-iv-4-5mg-vial",
