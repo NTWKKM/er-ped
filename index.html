@@ -1058,27 +1058,27 @@
       <!-- Row 1: Primary Calculators -->
       <div class="tabs" role="tablist" aria-label="Primary Calculators" style="overflow-x:auto;">
         <span style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); padding:0 8px; align-self:center; white-space:nowrap;">Primary</span>
-        <button type="button" class="tab tab-btn active" data-tab="dose" onclick="showTab('dose', this)" title="Pediatric Dose Calculator [Alt+1]" aria-keyshortcuts="Alt+1" role="tab" aria-selected="true">💊 Dose</button>
-        <button type="button" class="tab tab-btn" data-tab="atb" onclick="showTab('atb', this)" title="Antibiotic Dosing Calculator [Alt+2]" aria-keyshortcuts="Alt+2" role="tab" aria-selected="false">🦠 ATB</button>
-        <button type="button" class="tab tab-btn" data-tab="fluids" onclick="showTab('fluids', this)" title="IV Maintenance & Deficit Calculator [Alt+3]" aria-keyshortcuts="Alt+3" role="tab" aria-selected="false">💧 IV Fluids</button>
-        <button type="button" class="tab tab-btn" data-tab="pals" onclick="showTab('pals', this)" title="Pediatric Advanced Life Support Protocol [Alt+4]" aria-keyshortcuts="Alt+4" role="tab" aria-selected="false">🧒🏻 PALS</button>
-        <button type="button" class="tab tab-btn" data-tab="ncpr" onclick="showTab('ncpr', this)" title="Neonatal Resuscitation Program Protocol [Alt+5]" aria-keyshortcuts="Alt+5" role="tab" aria-selected="false">👶🏻 NCPR</button>
-        <button type="button" class="tab tab-btn" data-tab="drip" onclick="showTab('drip', this)" title="Continuous Vasoactive Infusion Calculator [Alt+6]" aria-keyshortcuts="Alt+6" role="tab" aria-selected="false">🫀 Drip Rate</button>
+        <button type="button" class="tab tab-btn active" data-tab="dose" onclick="showTab('dose', this)" title="Pediatric Dose Calculator [Alt+1]" aria-keyshortcuts="Alt+1" role="tab" aria-selected="true" aria-controls="dose">💊 Dose</button>
+        <button type="button" class="tab tab-btn" data-tab="atb" onclick="showTab('atb', this)" title="Antibiotic Dosing Calculator [Alt+2]" aria-keyshortcuts="Alt+2" role="tab" aria-selected="false" aria-controls="atb">🦠 ATB</button>
+        <button type="button" class="tab tab-btn" data-tab="fluids" onclick="showTab('fluids', this)" title="IV Maintenance & Deficit Calculator [Alt+3]" aria-keyshortcuts="Alt+3" role="tab" aria-selected="false" aria-controls="fluids">💧 IV Fluids</button>
+        <button type="button" class="tab tab-btn" data-tab="pals" onclick="showTab('pals', this)" title="Pediatric Advanced Life Support Protocol [Alt+4]" aria-keyshortcuts="Alt+4" role="tab" aria-selected="false" aria-controls="pals">🧒🏻 PALS</button>
+        <button type="button" class="tab tab-btn" data-tab="ncpr" onclick="showTab('ncpr', this)" title="Neonatal Resuscitation Program Protocol [Alt+5]" aria-keyshortcuts="Alt+5" role="tab" aria-selected="false" aria-controls="ncpr">👶🏻 NCPR</button>
+        <button type="button" class="tab tab-btn" data-tab="drip" onclick="showTab('drip', this)" title="Continuous Vasoactive Infusion Calculator [Alt+6]" aria-keyshortcuts="Alt+6" role="tab" aria-selected="false" aria-controls="drip">🫀 Drip Rate</button>
       </div>
 
       <!-- Row 2: Specialty Protocols & Vitals -->
       <div class="tabs" role="tablist" aria-label="Specialty Protocols" style="overflow-x:auto;">
         <span style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); padding:0 8px; align-self:center; white-space:nowrap;">Specialty</span>
-        <button type="button" class="tab tab-btn" data-tab="seizure" onclick="showTab('seizure', this)" title="Status Epilepticus Resuscitation Protocol [Alt+7]" aria-keyshortcuts="Alt+7" role="tab" aria-selected="false">⚡ Seizure</button>
-        <button type="button" class="tab tab-btn" data-tab="tox" onclick="showTab('tox', this)" title="Antidotes & Overdose Protocol [Alt+8]" aria-keyshortcuts="Alt+8" role="tab" aria-selected="false">🧪 Toxicology</button>
-        <button type="button" class="tab tab-btn" data-tab="psa" onclick="showTab('psa', this)" title="Procedural Sedation & Analgesia [Alt+9]" aria-keyshortcuts="Alt+9" role="tab" aria-selected="false">💉 Sedation</button>
-        <button type="button" class="tab tab-btn" data-tab="vitals" onclick="showTab('vitals', this)" title="Age-Banded Physiological Normal Ranges [Alt+0]" aria-keyshortcuts="Alt+0" role="tab" aria-selected="false">📊 Vitals</button>
-        <button type="button" class="tab tab-btn" data-tab="dka" onclick="showTab('dka', this)" title="Pediatric DKA Protocol Engine [Alt+K]" aria-keyshortcuts="Alt+K" role="tab" aria-selected="false">🩺 DKA</button>
+        <button type="button" class="tab tab-btn" data-tab="seizure" onclick="showTab('seizure', this)" title="Status Epilepticus Resuscitation Protocol [Alt+7]" aria-keyshortcuts="Alt+7" role="tab" aria-selected="false" aria-controls="seizure">⚡ Seizure</button>
+        <button type="button" class="tab tab-btn" data-tab="tox" onclick="showTab('tox', this)" title="Antidotes & Overdose Protocol [Alt+8]" aria-keyshortcuts="Alt+8" role="tab" aria-selected="false" aria-controls="tox">🧪 Toxicology</button>
+        <button type="button" class="tab tab-btn" data-tab="psa" onclick="showTab('psa', this)" title="Procedural Sedation & Analgesia [Alt+9]" aria-keyshortcuts="Alt+9" role="tab" aria-selected="false" aria-controls="psa">💉 Sedation</button>
+        <button type="button" class="tab tab-btn" data-tab="vitals" onclick="showTab('vitals', this)" title="Age-Banded Physiological Normal Ranges [Alt+0]" aria-keyshortcuts="Alt+0" role="tab" aria-selected="false" aria-controls="vitals">📊 Vitals</button>
+        <button type="button" class="tab tab-btn" data-tab="dka" onclick="showTab('dka', this)" title="Pediatric DKA Protocol Engine [Alt+K]" aria-keyshortcuts="Alt+K" role="tab" aria-selected="false" aria-controls="dka">🩺 DKA</button>
       </div>
     </div>
 
     <!-- Pediatric Dose Calculator -->
-    <section id="dose" class="card">
+    <section id="dose" class="card" role="tabpanel">
       <div class="grid">
         <div class="col-12">
           <label>Drug Selection & Search (Combobox)</label>
@@ -1108,7 +1108,7 @@
     </section>
 
     <!-- Pediatric ATB Calculator -->
-    <section id="atb" class="card" style="display:none;">
+    <section id="atb" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
           <label>Antibiotic Selection & Search (Combobox)</label>
@@ -1138,7 +1138,7 @@
     </section>
 
     <!-- IV Fluids -->
-    <section id="fluids" class="card" style="display:none;">
+    <section id="fluids" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-4">
           <label>Active Weight (Single Source of Truth)</label>
@@ -1182,7 +1182,7 @@
     </section>
 
     <!-- PALS Resuscitation -->
-    <section id="pals" class="card" style="display:none;">
+    <section id="pals" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-6">
           <label>Active Weight (Single Source of Truth)</label>
@@ -1204,7 +1204,7 @@
     </section>
 
     <!-- NCPR Resuscitation -->
-    <section id="ncpr" class="card" style="display:none;">
+    <section id="ncpr" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-6">
           <label>Birth Weight (kg)</label>
@@ -1229,7 +1229,7 @@
     </section>
 
     <!-- 🫀 Continuous Infusion Drip Calculator -->
-    <section id="drip" class="card" style="display:none;">
+    <section id="drip" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
           <label>Vasoactive & Continuous Infusion Selection</label>
@@ -1263,7 +1263,7 @@
     </section>
 
     <!-- ⚡ Status Epilepticus / Seizure Protocol -->
-    <section id="seizure" class="card" style="display:none;">
+    <section id="seizure" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -1280,7 +1280,7 @@
     </section>
 
     <!-- 🧪 Toxicology & Antidote Module -->
-    <section id="tox" class="card" style="display:none;">
+    <section id="tox" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -1297,7 +1297,7 @@
     </section>
 
     <!-- 💉 Procedural Sedation & Analgesia (PSA) -->
-    <section id="psa" class="card" style="display:none;">
+    <section id="psa" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -1314,7 +1314,7 @@
     </section>
 
     <!-- 📊 Vital Signs by Age Reference -->
-    <section id="vitals" class="card" style="display:none;">
+    <section id="vitals" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -1331,7 +1331,7 @@
     </section>
 
     <!-- 🩺 Pediatric DKA Protocol Calculator -->
-    <section id="dka" class="card" style="display:none;">
+    <section id="dka" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">

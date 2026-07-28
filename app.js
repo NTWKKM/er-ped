@@ -89,10 +89,11 @@ function setTheme(t) {
   localStorage.setItem('er_ped_theme', t);
   const btn = document.getElementById('themeToggleBtn');
   if (btn) {
-    if (t === 'mono') btn.innerHTML = '🔲 Mono';
-    else if (t === 'dark') btn.innerHTML = '☀️ Light';
+    if (t === 'mono') btn.innerHTML = '☀️ Light';
+    else if (t === 'dark') btn.innerHTML = '🔲 Mono';
     else btn.innerHTML = '🌙 Dark';
   }
+  if (typeof refreshBroselowChip === 'function') refreshBroselowChip();
 }
 
 function toggleTheme() {
@@ -572,6 +573,8 @@ function broselowColor(w){
 }
 
 function colorSwatch(colorLabel){
+  const isMono = typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme') === 'mono';
+  if (isMono) return 'var(--panel)';
   const base = (colorLabel || '').toString().trim().split(/\s+/).pop();
   return (BROSELOW_COLOR_MAP[base] && BROSELOW_COLOR_MAP[base].bg) || '#f3f4f6';
 }
