@@ -85,16 +85,52 @@ function initTheme() {
   }
 }
 
+const THEMES = ['light', 'dark', 'mono'];
+
+function initTheme() {
+  const saved = localStorage.getItem('er_ped_theme') || 'light';
+  setTheme(saved);
+}
+
 function setTheme(t) {
+  if (!THEMES.includes(t)) t = 'light';
   document.documentElement.setAttribute('data-theme', t);
   localStorage.setItem('er_ped_theme', t);
   const btn = document.getElementById('themeToggleBtn');
-  if (btn) btn.innerHTML = t === 'dark' ? '☀️ Light' : '🌙 Dark';
+  if (btn) {
+    if (t === 'mono') btn.innerHTML = '🔲 Mono';
+    else if (t === 'dark') btn.innerHTML = '☀️ Light';
+    else btn.innerHTML = '🌙 Dark';
+  }
 }
 
 function toggleTheme() {
   const current = document.documentElement.getAttribute('data-theme') || 'light';
-  setTheme(current === 'dark' ? 'light' : 'dark');
+  const nextIndex = (THEMES.indexOf(current) + 1) % THEMES.length;
+  setTheme(THEMES[nextIndex]);
+}
+
+function toggleRefPopover(e) {
+  if (e) e.stopPropagation();
+  const menu = document.getElementById('refPopoverMenu');
+  const overflowMenu = document.getElementById('overflowMenu');
+  if (overflowMenu) overflowMenu.classList.remove('open');
+  if (menu) menu.classList.toggle('open');
+}
+
+function toggleOverflowMenu(e) {
+  if (e) e.stopPropagation();
+  const menu = document.getElementById('overflowMenu');
+  const refMenu = document.getElementById('refPopoverMenu');
+  if (refMenu) refMenu.classList.remove('open');
+  if (menu) menu.classList.toggle('open');
+}
+
+function closeAllPopovers() {
+  const refMenu = document.getElementById('refPopoverMenu');
+  const overflowMenu = document.getElementById('overflowMenu');
+  if (refMenu) refMenu.classList.remove('open');
+  if (overflowMenu) overflowMenu.classList.remove('open');
 }
 
 if (typeof window !== 'undefined') {
@@ -111,6 +147,19 @@ function initUI(){
   setupKeyboardShortcuts();
   calculateIBW();
   updateBiometricUIState();
+
+  if (typeof window !== 'undefined') {
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.popover-wrapper')) {
+        closeAllPopovers();
+      }
+    });
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeAllPopovers();
+      }
+    });
+  }
 }
 
 // --------- IBW / Age & Length Weight Engine ---------
@@ -512,7 +561,31 @@ function refreshBroselowChip(){
   const chip = document.getElementById('broselow');
   if (!chip) return;
   chip.textContent = color || '—';
-  chip.style.background = colorSwatch(color);
+  if (color && color !== '—') {
+    const base = color.toString().trim().split(/\s+/).pop();
+    const isMono = document.documentElement.getAttribute('data-theme') === 'mono';
+    if (isMono) {
+      chip.style.background = 'var(--panel)';
+      chip.style.color = 'var(--ink)';
+      chip.style.border = '1px solid var(--border-strong)';
+    } else {
+      const bgMap = {
+        'Grey':'#E5E7EB','Pink':'#FCE7F3','Red':'#FEE2E2','Purple':'#F3E8FF','Yellow':'#FEF3C7',
+        'White':'#FFFFFF','Blue':'#DBEAFE','Orange':'#FFEDD5','Green':'#DCFCE7'
+      };
+      const fgMap = {
+        'Grey':'#374151','Pink':'#9D174D','Red':'#991B1B','Purple':'#6B21A8','Yellow':'#92400E',
+        'White':'#1F2937','Blue':'#1E40AF','Orange':'#9A3412','Green':'#166534'
+      };
+      chip.style.background = bgMap[base] || 'var(--panel)';
+      chip.style.color = fgMap[base] || 'var(--ink)';
+      chip.style.border = '1px solid var(--border)';
+    }
+  } else {
+    chip.style.background = 'var(--panel)';
+    chip.style.color = 'var(--ink)';
+    chip.style.border = '1px solid var(--border)';
+  }
 }
 
 function toggleBroselowPanel(){

@@ -81,6 +81,21 @@ window.eval('populateDrugs();');
 
 // --- TEST SUITES USING PRODUCTION FUNCTIONS ---
 
+// 0. Test Theme Cycling Engine (Light -> Dark -> Mono -> Light)
+test('3-State Theme Cycling: Light -> Dark -> Mono -> Light', () => {
+  window.eval('setTheme("light")');
+  assert.strictEqual(document.documentElement.getAttribute('data-theme'), 'light');
+  
+  window.eval('toggleTheme()');
+  assert.strictEqual(document.documentElement.getAttribute('data-theme'), 'dark');
+  
+  window.eval('toggleTheme()');
+  assert.strictEqual(document.documentElement.getAttribute('data-theme'), 'mono');
+  
+  window.eval('toggleTheme()');
+  assert.strictEqual(document.documentElement.getAttribute('data-theme'), 'light');
+});
+
 // 1. Test Weech Formula (estimateWeightFromAge exported from app.js)
 test('Weech Formula: 6 months infant', () => {
   assert.strictEqual(appExports.estimateWeightFromAge(6, 'mo'), 7.5);

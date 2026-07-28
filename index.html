@@ -16,71 +16,159 @@
 
   <style>
     :root {
-      --bg: #F5F4F0;           /* Vintage Braun warm chassis */
-      --card: #FFFFFF;         /* Crisp white surface */
-      --panel: #EBEAE5;        /* Tactile inset surface */
-      --ink: #1E1E1E;          /* Dark graphite text */
-      --muted: #666563;        /* Neutral dark grey */
-      --border: #D5D3CE;       /* Precision tactile border */
-      --border-dark: #A3A19C;  /* Emphasized border */
-      --accent: #D9480F;       /* Braun Signal Orange */
-      --accent-hover: #C23E0A; /* Darkened signal orange */
-      --accent-subtle: #FDF2E9;/* Subtle orange tint */
-      --dark-btn: #2A2927;     /* Dark graphite button */
-      --ring: rgba(217, 72, 15, 0.35);
-      --good: #16A34A;         /* Clinical safe green */
-      --warning: #D97706;      /* Amber warning / Broselow */
-      --danger: #DC2626;       /* Critical emergency red */
-      --blue: #2563EB;         /* Dosage directive blue */
-      --danger-subtle: rgba(220, 38, 38, 0.12);
-      --warning-subtle: rgba(217, 119, 6, 0.12);
+      /* Light (Braun warm chassis, refined) */
+      --bg: #F5F4F0;           --card: #FFFFFF;         --panel: #EBEAE5;
+      --ink: #1E1E1E;          --muted: #666563;
+      --border: #D5D3CE;       --border-strong: #A3A19C; --border-dark: #A3A19C;
+      --accent: #B83A07;       --accent-hover: #8E2C04; --accent-soft: #FBE7DA; --accent-subtle: #FDF2E9;
+      --accent2: #0B6BCB;      --accent2-soft: #E4ECF8;
+      --good: #0E7A38;         --good-soft: #E2F2E8;
+      --warning: #A85B05;      --warning-soft: #FCEEDB;
+      --danger: #B91C1C;       --danger-soft: #FBE3E3;
+      --dark-btn: #2A2927;
+      --ring: rgba(184, 58, 7, 0.35);
+      --danger-subtle: rgba(185, 28, 28, 0.12);
+      --warning-subtle: rgba(168, 91, 5, 0.12);
+      --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 20px; --s6: 24px; --s8: 32px;
+      --r-sm: 6px; --r-md: 10px; --r-lg: 14px;
+      --shadow-1: 0 1px 0 rgba(0,0,0,.04), 0 2px 6px rgba(0,0,0,.04);
+      --shadow-2: 0 2px 12px rgba(0,0,0,.06);
+      --t-fast: 120ms cubic-bezier(.2,.7,.2,1);
+      --t-med: 240ms cubic-bezier(.2,.7,.2,1);
     }
 
     @media (prefers-color-scheme: dark), (monochrome) {
       :root:not([data-theme="light"]) {
-        --bg: #171613;           /* Warm charcoal, not pure black (reduces OLED/LCD glare) */
-        --card: #26241F;         /* One luminance step up from bg */
-        --panel: #1E1C19;        /* Inset surface, between bg and card */
-        --ink: #EAE5DB;          /* Warm off-white text — not pure white, less halation at night */
-        --muted: #A39C8E;        /* Warm neutral grey, no blue cast */
-        --border: #3A3733;
-        --border-dark: #59554D;
-        --accent: #E8863D;       /* Braun orange, lightened to read clearly on dark */
-        --accent-hover: #D9480F;
-        --accent-subtle: #2E2119;
+        --bg: #171613; --card: #26241F; --panel: #1E1C19;
+        --ink: #EAE5DB; --muted: #A39C8E;
+        --border: #3A3733; --border-strong: #59554D; --border-dark: #59554D;
+        --accent: #E8863D; --accent-hover: #F5A05F; --accent-soft: #2E2119; --accent-subtle: #2E2119;
+        --accent2: #7FA0B8; --accent2-soft: #1E2A33;
+        --good: #8FB07A; --good-soft: #1F2A1A;
+        --warning: #D9A94A; --warning-soft: #2E2519;
+        --danger: #F0705A; --danger-soft: #2E1C18;
         --dark-btn: #322F2A;
         --ring: rgba(232, 134, 61, 0.4);
-        /* Semantic colors are ordered by luminance (blue < good < warning < danger),
-           not just hue — so severity still reads correctly by brightness alone on a
-           monochrome/grayscale panel, not only on colour displays. */
-        --blue: #7FA0B8;         /* L≈0.19 — calmest, informational */
-        --good: #8FB07A;         /* L≈0.26 — safe / normal */
-        --warning: #D9A94A;      /* L≈0.38 — caution */
-        --danger: #F0705A;       /* L≈0.41 — highest luminance, most urgent */
         --danger-subtle: rgba(240, 112, 90, 0.18);
         --warning-subtle: rgba(217, 169, 74, 0.18);
+        --shadow-1: 0 1px 0 rgba(0,0,0,.4), 0 2px 8px rgba(0,0,0,.5);
+        --shadow-2: 0 4px 18px rgba(0,0,0,.6);
       }
     }
 
     :root[data-theme="dark"] {
-      --bg: #171613;
-      --card: #26241F;
-      --panel: #1E1C19;
-      --ink: #EAE5DB;
-      --muted: #A39C8E;
-      --border: #3A3733;
-      --border-dark: #59554D;
-      --accent: #E8863D;
-      --accent-hover: #D9480F;
-      --accent-subtle: #2E2119;
+      --bg: #171613; --card: #26241F; --panel: #1E1C19;
+      --ink: #EAE5DB; --muted: #A39C8E;
+      --border: #3A3733; --border-strong: #59554D; --border-dark: #59554D;
+      --accent: #E8863D; --accent-hover: #F5A05F; --accent-soft: #2E2119; --accent-subtle: #2E2119;
+      --accent2: #7FA0B8; --accent2-soft: #1E2A33;
+      --good: #8FB07A; --good-soft: #1F2A1A;
+      --warning: #D9A94A; --warning-soft: #2E2519;
+      --danger: #F0705A; --danger-soft: #2E1C18;
       --dark-btn: #322F2A;
       --ring: rgba(232, 134, 61, 0.4);
-      --blue: #7FA0B8;
-      --good: #8FB07A;
-      --warning: #D9A94A;
-      --danger: #F0705A;
       --danger-subtle: rgba(240, 112, 90, 0.18);
       --warning-subtle: rgba(217, 169, 74, 0.18);
+      --shadow-1: 0 1px 0 rgba(0,0,0,.4), 0 2px 8px rgba(0,0,0,.5);
+      --shadow-2: 0 4px 18px rgba(0,0,0,.6);
+    }
+
+    /* Monochrome / Grayscale Theme (JVC Hospital Displays) */
+    :root[data-theme="mono"] {
+      --bg: #1C1C1A; --card: #222220; --panel: #161614;
+      --ink: #F2F2F0; --muted: #A8A8A4;
+      --border: #4A4A47; --border-strong: #7A7A77; --border-dark: #7A7A77;
+      --accent: #EAEAE6; --accent-hover: #FFFFFF; --accent-soft: #2A2A28; --accent-subtle: #2A2A28;
+      --accent2: #C8C8C4; --accent2-soft: #222220;
+      --good: #BDBDB8; --good-soft: #222220;
+      --warning: #D8D8D2; --warning-soft: #222220;
+      --danger: #FFFFFF; --danger-soft: #222220;
+      --dark-btn: #0A0A09;
+      --ring: rgba(255,255,255,0.4);
+      --danger-subtle: rgba(255,255,255,0.15);
+      --warning-subtle: rgba(216,216,210,0.15);
+      --shadow-1: none;
+      --shadow-2: none;
+    }
+
+    /* Popover Menu Components */
+    .popover-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    .popover-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      z-index: 200;
+      background: var(--card);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--r-md);
+      box-shadow: var(--shadow-2);
+      min-width: 210px;
+      padding: 6px;
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .popover-menu.open {
+      display: flex;
+    }
+    .popover-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: var(--r-sm);
+      background: transparent;
+      border: 0;
+      color: var(--ink);
+      font: 600 13px 'Sarabun', sans-serif;
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+    }
+    .popover-item:hover {
+      background: var(--panel);
+    }
+
+    /* Tab Group Containers */
+    .tabs {
+      display: flex;
+      gap: var(--s1);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: var(--s1);
+      box-shadow: var(--shadow-1);
+    }
+    .tab, .tab-btn {
+      flex: 1;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      padding: 10px 12px;
+      border-radius: var(--r-sm);
+      font: 600 13px 'Sarabun', sans-serif;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 44px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .tab:hover, .tab-btn:hover {
+      background: var(--card);
+      color: var(--ink);
+    }
+    .tab.active, .tab-btn.active {
+      background: var(--card);
+      color: var(--ink);
+      box-shadow: 0 1px 0 var(--border), 0 4px 10px rgba(0,0,0,.06);
+      border: 1px solid var(--border);
+      padding: 9px 11px;
     }
 
     :root[data-theme="dark"] .segmented-control {
@@ -495,11 +583,12 @@
     .hero-metric.blue { border-left-color: var(--blue); }
 
     /* Shape-coded prefixes: severity must read on a 1-bit/grayscale panel
-       even if the border-left color difference disappears at a distance. */
-    .hero-metric.good .hero-label::before { content: "\2713  "; }
-    .hero-metric.warning .hero-label::before { content: "\25B2  "; }
-    .hero-metric.danger .hero-label::before { content: "\2715  "; }
-    .hero-metric.blue .hero-label::before { content: "\2139  "; }
+       even if the border-left color difference disappears at a distance.
+       Appended \FE0E forces text-presentation to prevent emoji rendering. */
+    .hero-metric.good .hero-label::before { content: "\2713\FE0E  "; }
+    .hero-metric.warning .hero-label::before { content: "\25B2\FE0E  "; }
+    .hero-metric.danger .hero-label::before { content: "\2716\FE0E  "; }
+    .hero-metric.blue .hero-label::before { content: "\2139\FE0E  "; }
 
     .hero-metric .hero-label {
       font-size: 11px;
@@ -894,10 +983,10 @@
 
   <!-- Industrial Top Bar Instrument Cluster -->
   <div class="topbar">
-    <div class="topbar-inner">
-      <!-- Centered Section: Patient Biometrics Cluster -->
-      <div style="display:flex; align-items:center; gap:8px; margin: 0 auto;">
-        <div class="chip">
+    <div class="topbar-inner" style="display:flex; flex-direction:column; gap:10px; width:100%;">
+      <!-- Row 1: Patient Biometrics Cluster -->
+      <div class="topbar-row-1" style="display:flex; align-items:center; gap:8px; width:100%; overflow-x:auto;">
+        <div class="chip" style="flex-wrap:wrap; flex:1;">
           <label class="chip-label">ABW</label>
           <input type="number" id="weight" min="0" step="0.1" placeholder="kg" oninput="onWeightChange()"/>
           
@@ -921,19 +1010,42 @@
         </div>
       </div>
 
-      <!-- Right-Aligned Section (ชิดขวา): Reference & Action Cluster -->
-      <div style="display:flex; align-items:center; gap:6px; margin-left:auto;">
-        <span id="vitalsQuickChip" onclick="showTab('vitals')" style="font-size:11px; font-weight:800; padding:6px 10px; border-radius:6px; background:var(--card); border:1px solid var(--border); color:var(--accent); cursor:pointer; display:inline-flex; align-items:center; gap:4px;" title="ดูสัญญาณชีพตามวัย (Vital Signs by Age)">📊 <span id="vitalsQuickText">Vitals</span></span>
-        
-        <div class="broselow-chip" onclick="toggleBroselowPanel()" title="กดเพื่อโชว์/ซ่อน Broselow Tape Info" style="padding:4px 8px; font-size:12px;">
-          <label class="chip-label" style="cursor:pointer; font-size:11px;">Broselow</label>
-          <span id="broselow" class="mono" style="padding:1px 6px; border-radius:4px; font-weight:800; background:#E5E7EB; color:#111;">—</span>
-          <span style="font-size:11px; color:var(--muted);">📊 Ref</span>
+      <!-- Row 2: Reference & Action Cluster (Decluttered with Popover & Overflow Menu) -->
+      <div class="topbar-row-2" style="display:flex; align-items:center; gap:8px; width:100%;">
+        <!-- Reference ▾ Popover Trigger -->
+        <div class="popover-wrapper">
+          <button id="refPopoverBtn" class="btn" style="padding:6px 12px; font-size:12px; display:inline-flex; align-items:center; gap:6px;" onclick="toggleRefPopover(event)" title="เมนูข้อมูลอ้างอิง (Reference Tools)">
+            <span>Reference ▾</span>
+            <span id="broselow" class="mono" style="padding:2px 8px; border-radius:var(--r-sm); font-weight:800; background:var(--panel); color:var(--ink); border:1px solid var(--border);">—</span>
+          </button>
+          <div id="refPopoverMenu" class="popover-menu" role="menu">
+            <button class="popover-item" onclick="showTab('vitals'); closeAllPopovers();" role="menuitem">
+              <span>📊 Vital Signs by Age</span>
+            </button>
+            <button class="popover-item" onclick="toggleBroselowPanel(); closeAllPopovers();" role="menuitem">
+              <span>🎨 Broselow Color Tape Reference</span>
+            </button>
+          </div>
         </div>
 
-        <button id="printBtn" class="btn" style="padding:6px 10px; font-size:12px;" onclick="triggerPrintCard()" title="พิมพ์การ์ดสรุปยาฉุกเฉิน (Print Reference Card)">🖨️ Print</button>
-        <button id="langToggleBtn" class="btn" style="padding:6px 10px; font-size:12px;" onclick="toggleLanguage()" title="สลับภาษา (TH / EN)">🌐 TH</button>
-        <button id="themeToggleBtn" class="btn" style="padding:6px 10px; font-size:12px;" onclick="toggleTheme()" title="สลับ Dark / Light Mode">🌙 Dark</button>
+        <!-- Right-Aligned Action Cluster -->
+        <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
+          <!-- ◐ Theme Toggle Button -->
+          <button id="themeToggleBtn" class="btn" style="padding:6px 12px; font-size:12px;" onclick="toggleTheme()" title="สลับ Dark / Light / Mono Mode">🌙 Dark</button>
+
+          <!-- ⋯ Overflow Menu Popover Trigger -->
+          <div class="popover-wrapper">
+            <button id="overflowBtn" class="btn" style="padding:6px 10px; font-size:14px; font-weight:800;" onclick="toggleOverflowMenu(event)" title="เมนูเพิ่มเติม (More Options)" aria-label="More actions">⋯</button>
+            <div id="overflowMenu" class="popover-menu" role="menu">
+              <button id="printBtn" class="popover-item" onclick="triggerPrintCard(); closeAllPopovers();" role="menuitem">
+                <span>🖨️ Print Reference Card</span>
+              </button>
+              <button id="langToggleBtn" class="popover-item" onclick="toggleLanguage(); closeAllPopovers();" role="menuitem">
+                <span>🌐 TH / EN Language Switch</span>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -941,24 +1053,28 @@
   <!-- MAIN APP CONTAINER -->
   <div class="container" id="app">
     
-    <!-- Braun Radio-Style Segmented Navigation Tabs -->
-    <div class="segmented-control" role="tablist">
-      <!-- Row 1: Primary Calculators & Resuscitation -->
-      <button class="tab-btn active" data-tab="dose" onclick="showTab('dose', this)">💊 Dose <span style="font-size:10px; opacity:0.7;">[Alt+1]</span></button>
-      <button class="tab-btn" data-tab="atb" onclick="showTab('atb', this)">🦠 ATB <span style="font-size:10px; opacity:0.7;">[Alt+2]</span></button>
-      <button class="tab-btn" data-tab="fluids" onclick="showTab('fluids', this)">💧 IV Fluids <span style="font-size:10px; opacity:0.7;">[Alt+3]</span></button>
-      <button class="tab-btn" data-tab="pals" onclick="showTab('pals', this)">🧒🏻 PALS <span style="font-size:10px; opacity:0.7;">[Alt+4]</span></button>
-      <button class="tab-btn" data-tab="ncpr" onclick="showTab('ncpr', this)">👶🏻 NCPR <span style="font-size:10px; opacity:0.7;">[Alt+5]</span></button>
-      <button class="tab-btn" data-tab="drip" onclick="showTab('drip', this)">🫀 Drip Rate <span style="font-size:10px; opacity:0.7;">[Alt+6]</span></button>
+    <!-- Braun Radio-Style Segmented Navigation Tabs (Grouped 2-Row Layout) -->
+    <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;">
+      <!-- Row 1: Primary Calculators -->
+      <div class="tabs" role="tablist" aria-label="Primary Calculators" style="overflow-x:auto;">
+        <span style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); padding:0 8px; align-self:center; white-space:nowrap;">Primary</span>
+        <button class="tab tab-btn active" data-tab="dose" onclick="showTab('dose', this)" title="Pediatric Dose Calculator [Alt+1]" aria-keyshortcuts="Alt+1">💊 Dose</button>
+        <button class="tab tab-btn" data-tab="atb" onclick="showTab('atb', this)" title="Antibiotic Dosing Calculator [Alt+2]" aria-keyshortcuts="Alt+2">🦠 ATB</button>
+        <button class="tab tab-btn" data-tab="fluids" onclick="showTab('fluids', this)" title="IV Maintenance & Deficit Calculator [Alt+3]" aria-keyshortcuts="Alt+3">💧 IV Fluids</button>
+        <button class="tab tab-btn" data-tab="pals" onclick="showTab('pals', this)" title="Pediatric Advanced Life Support Protocol [Alt+4]" aria-keyshortcuts="Alt+4">🧒🏻 PALS</button>
+        <button class="tab tab-btn" data-tab="ncpr" onclick="showTab('ncpr', this)" title="Neonatal Resuscitation Program Protocol [Alt+5]" aria-keyshortcuts="Alt+5">👶🏻 NCPR</button>
+        <button class="tab tab-btn" data-tab="drip" onclick="showTab('drip', this)" title="Continuous Vasoactive Infusion Calculator [Alt+6]" aria-keyshortcuts="Alt+6">🫀 Drip Rate</button>
+      </div>
 
-      <div class="nav-break"></div>
-
-      <!-- Row 2: Specialty Protocols, Vitals & DKA -->
-      <button class="tab-btn" data-tab="seizure" onclick="showTab('seizure', this)">⚡ Seizure <span style="font-size:10px; opacity:0.7;">[Alt+7]</span></button>
-      <button class="tab-btn" data-tab="tox" onclick="showTab('tox', this)">🧪 Toxicology <span style="font-size:10px; opacity:0.7;">[Alt+8]</span></button>
-      <button class="tab-btn" data-tab="psa" onclick="showTab('psa', this)">💉 Sedation <span style="font-size:10px; opacity:0.7;">[Alt+9]</span></button>
-      <button class="tab-btn" data-tab="vitals" onclick="showTab('vitals', this)">📊 Vitals <span style="font-size:10px; opacity:0.7;">[Alt+0]</span></button>
-      <button class="tab-btn" data-tab="dka" onclick="showTab('dka', this)">🩺 DKA <span style="font-size:10px; opacity:0.7;">[Alt+K]</span></button>
+      <!-- Row 2: Specialty Protocols & Vitals -->
+      <div class="tabs" role="tablist" aria-label="Specialty Protocols" style="overflow-x:auto;">
+        <span style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); padding:0 8px; align-self:center; white-space:nowrap;">Specialty</span>
+        <button class="tab tab-btn" data-tab="seizure" onclick="showTab('seizure', this)" title="Status Epilepticus Resuscitation Protocol [Alt+7]" aria-keyshortcuts="Alt+7">⚡ Seizure</button>
+        <button class="tab tab-btn" data-tab="tox" onclick="showTab('tox', this)" title="Antidotes & Overdose Protocol [Alt+8]" aria-keyshortcuts="Alt+8">🧪 Toxicology</button>
+        <button class="tab tab-btn" data-tab="psa" onclick="showTab('psa', this)" title="Procedural Sedation & Analgesia [Alt+9]" aria-keyshortcuts="Alt+9">💉 Sedation</button>
+        <button class="tab tab-btn" data-tab="vitals" onclick="showTab('vitals', this)" title="Age-Banded Physiological Normal Ranges [Alt+0]" aria-keyshortcuts="Alt+0">📊 Vitals</button>
+        <button class="tab tab-btn" data-tab="dka" onclick="showTab('dka', this)" title="Pediatric DKA Protocol Engine [Alt+K]" aria-keyshortcuts="Alt+K">🩺 DKA</button>
+      </div>
     </div>
 
     <!-- Pediatric Dose Calculator -->
