@@ -148,11 +148,32 @@ if (typeof window !== 'undefined') {
   });
 }
 
+// Publishes the fixed topbar's real height as --topbar-h so .container can
+// clear it at any viewport. Hardcoded margins occluded content on every
+// viewport under 900px once the bar wrapped to a taller stacked layout.
+function syncTopbarHeight() {
+  const bar = document.querySelector('.topbar');
+  if (!bar || typeof document === 'undefined') return;
+  const apply = () => {
+    const h = bar.getBoundingClientRect().height;
+    if (h > 0) document.documentElement.style.setProperty('--topbar-h', `${Math.ceil(h)}px`);
+  };
+  apply();
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(apply).observe(bar);
+  } else {
+    window.addEventListener('resize', apply);
+  }
+  // Web fonts land after first paint and change the bar's height.
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(apply);
+}
+
 function initUI(){
   initTheme();
   populateDrugs();
   initComboboxes();
   setupKeyboardShortcuts();
+  syncTopbarHeight();
   calculateIBW();
   updateBiometricUIState();
 
@@ -252,11 +273,12 @@ function estimateWeightFromLength(lengthVal) {
 
 function calculateIBW() {
   const lenInput = document.getElementById('length');
-  const useIBWBox = document.getElementById('useIBW');
-  const isIBWChecked = useIBWBox?.checked || false;
   const lenVal = lenInput ? parseFloat(lenInput.value) : NaN;
 
-  if (isIBWChecked && isFinite(lenVal) && lenVal > 0) {
+  // IBW is derived from height alone. The useIBW toggle governs whether it is
+  // USED for dosing, not whether it is COMPUTED — clinicians must be able to
+  // read IBW next to ABW before committing the dose engine to it.
+  if (isFinite(lenVal) && lenVal > 0) {
     gIBW = estimateWeightFromLength(lenVal);
     gIBWSource = 'length';
   } else {
@@ -270,19 +292,14 @@ function calculateIBW() {
 function updateIBWChipUI() {
   const el = document.getElementById('ibwVal');
   const src = document.getElementById('ibwSource');
-  const useIBWBox = document.getElementById('useIBW');
-  const isIBWChecked = useIBWBox?.checked || false;
 
-  if (!isIBWChecked || !gIBW) {
+  if (!gIBW) {
     if (el) el.textContent = '—';
     if (src) src.textContent = '';
     return;
   }
   if (el) el.textContent = `${Number(gIBW).toFixed(1)} kg`;
-  if (src) {
-    if (gIBWSource === 'length') src.textContent = '(Wt-for-Ht)';
-    else src.textContent = '';
-  }
+  if (src) src.textContent = (gIBWSource === 'length') ? 'Wt-for-Ht' : '';
 }
 
 function getAgeInYears(){
@@ -318,43 +335,66 @@ function getWeight() {
   return null;
 }
 
-function updateBiometricUIState() {
+// Resolves the human-readable provenance of the weight the dose engine is using.
+// Returns { value, label, detail } — detail names the source AND its input value
+// so a clinician can audit the number without hunting for another field.
+function getWeightSourceLabel() {
   const isIBWChecked = document.getElementById('useIBW')?.checked || false;
+  const lenInput = document.getElementById('length');
+  const lenVal = lenInput ? parseFloat(lenInput.value) : NaN;
+  const ageInput = document.getElementById('age');
+  const ageVal = ageInput ? parseFloat(ageInput.value) : NaN;
+
+  if (isIBWChecked && gIBW && gIBW > 0) {
+    const ht = (isFinite(lenVal) && lenVal > 0) ? ` ${lenVal} cm` : '';
+    return { value: gIBW, label: 'IBW', detail: `IBW · Wt-for-Ht${ht}` };
+  }
+  if (gUserABW && gUserABW > 0) {
+    if (gWeightSource === 'estimated') {
+      const unit = (gAgeUnit === 'mo') ? 'mo' : 'yr';
+      const age = (isFinite(ageVal) && ageVal > 0) ? ` ${ageVal} ${unit}` : '';
+      return { value: gUserABW, label: 'est', detail: `estimated · Weech${age}` };
+    }
+    return { value: gUserABW, label: '', detail: 'measured BW' };
+  }
+  return { value: null, label: '', detail: 'enter BW or age' };
+}
+
+function updateBiometricUIState() {
   const lenInput = document.getElementById('length');
   const weightInput = document.getElementById('weight');
 
+  // Height is always enterable: it is a measured biometric, not a mode. It is
+  // never cleared by the IBW toggle — a patient's height does not change
+  // because a checkbox moved.
   if (lenInput) {
-    if (isIBWChecked) {
-      lenInput.disabled = false;
-      lenInput.classList.remove('disabled-input');
-      lenInput.classList.add('highlight-input');
-    } else {
-      lenInput.disabled = true;
-      lenInput.value = '';
-      lenInput.classList.remove('highlight-input');
-      lenInput.classList.add('disabled-input');
-    }
+    lenInput.disabled = false;
+    lenInput.classList.remove('disabled-input', 'highlight-input');
   }
 
-  if (weightInput) {
-    if (isIBWChecked && gIBW) {
-      weightInput.value = Number(gIBW).toFixed(1);
-    } else {
-      weightInput.value = gUserABW !== null ? gUserABW.toString() : '';
-    }
+  // The BW field mirrors clinician-entered ABW ONLY. IBW is never written back
+  // into it — overwriting a measured weight in place is silent data loss.
+  if (weightInput && document.activeElement !== weightInput) {
+    weightInput.value = gUserABW !== null ? String(gUserABW) : '';
   }
 
-  const w = getWeight();
-  let wTxt = '— kg';
-  if (w) {
-    if (isIBWChecked && gIBW) {
-      wTxt = `${w.toFixed(1)} kg (IBW)`;
-    } else if (gWeightSource === 'estimated') {
-      wTxt = `${w.toFixed(1)} kg (est.)`;
-    } else {
-      wTxt = `${w.toFixed(1)} kg`;
-    }
+  const srcInfo = getWeightSourceLabel();
+  const w = srcInfo.value;
+
+  const boxVal = document.getElementById('activeWeightVal');
+  const boxSrc = document.getElementById('activeWeightSrc');
+  if (boxVal) boxVal.textContent = w ? `${w.toFixed(1)} kg` : '— kg';
+  if (boxSrc) boxSrc.textContent = srcInfo.detail;
+
+  const box = document.getElementById('activeWeightBox');
+  if (box) {
+    box.classList.toggle('is-empty', !w);
+    box.classList.toggle('is-derived', !!w && srcInfo.label !== '');
   }
+
+  const wTxt = w
+    ? (srcInfo.label ? `${w.toFixed(1)} kg · ${srcInfo.label}` : `${w.toFixed(1)} kg`)
+    : '— kg';
 
   ['doseWBadge', 'atbWBadge', 'fWBadge', 'pWBadge', 'dripWBadge', 'seizureWBadge', 'toxWBadge', 'psaWBadge', 'vitalsWBadge', 'dkaWBadge'].forEach(id => {
     const el = document.getElementById(id);
@@ -371,12 +411,10 @@ function onWeightChange() {
   const lenInput = document.getElementById('length');
   const val = weightInput ? parseFloat(weightInput.value) : NaN;
 
-  // Auto OFF IBW if user types in Weight field
+  // Typing a measured BW takes the dose engine off IBW, but the height reading
+  // itself is preserved — IBW stays visible for comparison.
   if (useIBWBox && useIBWBox.checked) {
     useIBWBox.checked = false;
-  }
-  if (lenInput) {
-    lenInput.value = '';
   }
 
   gUserABW = (isFinite(val) && val > 0) ? val : null;
@@ -397,12 +435,10 @@ function estimateFromAge(fromPAge = false) {
     pAgeInput.value = ageInput.value;
   }
 
-  // Auto OFF IBW if user types in Age field
+  // Entering age takes the dose engine off IBW, but the measured height is
+  // retained so the IBW readout remains available for comparison.
   if (useIBWBox && useIBWBox.checked) {
     useIBWBox.checked = false;
-  }
-  if (lenInput) {
-    lenInput.value = '';
   }
 
   const ageVal = ageInput ? parseFloat(ageInput.value) : NaN;
@@ -444,15 +480,8 @@ function onPALSAgeChange() {
 function updateIBW() {
   const lenInput = document.getElementById('length');
   const useIBWBox = document.getElementById('useIBW');
-  const lenVal = lenInput ? parseFloat(lenInput.value) : NaN;
-
-  // Auto ON IBW if user types in Length field
-  if (isFinite(lenVal) && lenVal > 0) {
-    if (useIBWBox && !useIBWBox.checked) {
-      useIBWBox.checked = true;
-    }
-  }
-
+  // Entering height computes and displays IBW but does NOT switch the dose
+  // engine onto it — adopting IBW is an explicit clinician decision.
   calculateIBW();
   updateBiometricUIState();
 }
@@ -462,14 +491,12 @@ function applyIBWToBW() {
   const lenInput = document.getElementById('length');
   const isChecked = useIBWBox?.checked || false;
 
-  if (!isChecked && lenInput) {
-    lenInput.value = '';
-  }
-
   calculateIBW();
   updateBiometricUIState();
 
-  if (isChecked && lenInput) {
+  // Adopting IBW without a height reading is a dead end — send the clinician
+  // straight to the field that makes the toggle meaningful.
+  if (isChecked && lenInput && !(parseFloat(lenInput.value) > 0)) {
     lenInput.focus();
   }
 }
@@ -1189,9 +1216,8 @@ function calcDose(){
   // Build Hero Metric Cards
   const title = (drug.name || drug.drug) || 'Medication';
   const heroCardHtml = `
-<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+<div style="margin-bottom:10px;">
   <strong style="font-size:16px;">💊 ${title}</strong>
-  <button class="btn-copy" onclick="copyEHROrder('dose')">📋 Copy EHR Order</button>
 </div>
 <div class="hero-metric-grid">
   <div class="hero-metric">
@@ -1304,9 +1330,8 @@ function calcATB(){
 
   const title = (drug.name || drug.drug || 'Antibiotic');
   const heroCardHtml = `
-<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+<div style="margin-bottom:10px;">
   <strong style="font-size:16px;">🦠 ${title}</strong>
-  <button class="btn-copy" onclick="copyEHROrder('atb')">📋 Copy EHR Order</button>
 </div>
 <div class="hero-metric-grid">
   <div class="hero-metric good">
@@ -1364,9 +1389,8 @@ function calcFluids(){
   const totalCombinedRate = mnt + replaceRate;
 
   const heroCardHtml = `
-<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+<div style="margin-bottom:10px;">
   <strong style="font-size:16px;">💧 IV Fluid Directives (${gFluidType})</strong>
-  <button class="btn-copy" onclick="copyEHROrder('fluids')">📋 Copy EHR Order</button>
 </div>
 <div class="hero-metric-grid">
   <div class="hero-metric blue">
@@ -1441,9 +1465,8 @@ function calcPALS(){
   }
 
   const heroCardHtml = `
-<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+<div style="margin-bottom:10px;">
   <strong style="font-size:16px;">🚨 AHA PALS Emergency Directives</strong>
-  <button class="btn-copy" onclick="copyEHROrder('pals')">📋 Copy EHR Order</button>
 </div>
 <div class="hero-metric-grid">
   <div class="hero-metric danger">
@@ -1494,9 +1517,8 @@ function calcNCPR(){
   const bolusMl = 10 * w;
 
   const heroCardHtml = `
-<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+<div style="margin-bottom:10px;">
   <strong style="font-size:16px;">👶🏻 NRP Neonatal Resuscitation Directives</strong>
-  <button class="btn-copy" onclick="copyEHROrder('ncpr')">📋 Copy EHR Order</button>
 </div>
 <div class="hero-metric-grid">
   <div class="hero-metric danger">
@@ -1743,9 +1765,6 @@ function calcDrip() {
 
     ${isCapped ? `<div class="badge-cap" style="margin-top:10px;">⚠️ Warning: Target dose (${doseVal} mcg/kg/min) exceeds maximum recommended rate (${item.maxRateMcgKgMin} mcg/kg/min)</div>` : ''}
 
-    <div style="margin-top:12px; display:flex; justify-content:flex-end;">
-      <button class="btn" style="background:var(--accent); color:#FFF; font-weight:700;" onclick="copyEHROrder('drip')">📋 Copy EHR Order</button>
-    </div>
   `;
 }
 
@@ -1792,7 +1811,6 @@ function calcSeizure() {
             <div style="font-size:11px; color:var(--muted);">Prep: ${d.prep}</div>
             <div style="font-size:11px; color:var(--muted); margin-top:2px;">${d.note}</div>
             ${isCapped ? `<div class="badge-cap" style="font-size:10px; padding:2px 6px; margin-top:4px;">Max Cap Applied: ${d.maxDoseMg} mg</div>` : ''}
-            <button class="btn" style="font-size:11px; padding:4px 8px; margin-top:8px; width:100%;" onclick="copyCustomOrder('[ER-PED Seizure] ${d.name} ${fmtMg(finalDose)} mg ${d.route} [BW: ${w.toFixed(1)} kg]')">📋 Copy Order</button>
           </div>
         `;
       });
@@ -1840,7 +1858,6 @@ function calcTox() {
         <div style="font-size:12px; color:var(--muted); margin-top:4px;">Prep: <strong>${item.prep}</strong></div>
         <div style="font-size:11px; color:var(--muted); margin-top:4px;">${item.note}</div>
         ${isCapped ? `<div class="badge-cap" style="font-size:10px; padding:2px 6px; margin-top:4px;">Capped at Max: ${item.maxDoseMg} ${unitStr}</div>` : ''}
-        <button class="btn" style="font-size:11px; padding:6px 10px; margin-top:8px; width:100%;" onclick="copyCustomOrder('[ER-PED Antidote] ${item.name} ${fmtMg(finalDose)} ${unitStr} ${item.route} [BW: ${w.toFixed(1)} kg]')">📋 Copy EHR Order</button>
       </div>
     `;
   });
@@ -1899,7 +1916,6 @@ function calcPSA() {
         <div style="font-size:12px; color:var(--muted);">Prep: <strong>${item.prep}</strong></div>
         <div style="font-size:11px; color:var(--muted); margin-top:4px;">${item.note}</div>
         ${isCapped ? `<div class="badge-cap danger" style="font-size:10px; padding:2px 6px; margin-top:4px;">Capped at Max: ${maxCap} ${unitStr}</div>` : ''}
-        <button class="btn" style="font-size:11px; padding:6px 10px; margin-top:8px; width:100%;" onclick="copyCustomOrder('[ER-PED PSA] ${item.name} ${doseStr} ${unitStr} ${item.route} [BW: ${w.toFixed(1)} kg]')">📋 Copy EHR Order</button>
       </div>
     `;
   });
@@ -2054,9 +2070,6 @@ function calcDKA() {
       </ul>
     </div>
 
-    <div style="display:flex; justify-content:flex-end;">
-      <button class="btn" style="background:var(--accent); color:#FFF; font-weight:700;" onclick="copyEHROrder('dka')">📋 Copy DKA EHR Order</button>
-    </div>
   `;
 
   outEl.innerHTML = html;

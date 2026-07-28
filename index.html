@@ -7,32 +7,36 @@
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.webmanifest" />
-  <meta name="theme-color" content="#D9480F" />
+  <meta name="theme-color" content="#A8452A" />
+  <!-- Inline favicon: prevents the browser's automatic /favicon.ico 404. -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23A8452A'/><text x='16' y='23' font-size='19' font-family='Georgia,serif' fill='%23F0EEE6' text-anchor='middle'>P</text></svg>" />
 
   <!-- Fonts: Sarabun + JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Sarabun:wght@300;400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      /* Light (Braun warm chassis, refined) */
-      --bg: #F5F4F0;           --card: #FFFFFF;         --panel: #EBEAE5;
-      --ink: #1E1E1E;          --muted: #666563;
-      --border: #D5D3CE;       --border-strong: #A3A19C; --border-dark: #A3A19C;
-      --accent: #B83A07;       --accent-hover: #8E2C04; --accent-soft: #FBE7DA; --accent-subtle: #FDF2E9;
+      /* Light — Anthropic ivory chassis + clay accent */
+      --bg: #F0EEE6;           --card: #FBFAF7;         --panel: #E8E5DA;
+      --ink: #191919;          --muted: #6B6862;
+      --border: #DDD9CD;       --border-strong: #A8A399; --border-dark: #A8A399;
+      --accent: #A8452A;       --accent-hover: #7F321D; --accent-soft: #F3E3DA; --accent-subtle: #F7EDE6;
       --accent2: #0B6BCB;      --accent2-soft: #E4ECF8;
       --good: #0E7A38;         --good-soft: #E2F2E8;
       --warning: #A85B05;      --warning-soft: #FCEEDB;
       --danger: #B91C1C;       --danger-soft: #FBE3E3;
       --dark-btn: #2A2927;
-      --ring: rgba(184, 58, 7, 0.35);
+      --ring: rgba(168, 69, 42, 0.30);
       --danger-subtle: rgba(185, 28, 28, 0.12);
       --warning-subtle: rgba(168, 91, 5, 0.12);
       --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 20px; --s6: 24px; --s8: 32px;
       --r-sm: 6px; --r-md: 10px; --r-lg: 14px;
-      --shadow-1: 0 1px 0 rgba(0,0,0,.04), 0 2px 6px rgba(0,0,0,.04);
-      --shadow-2: 0 2px 12px rgba(0,0,0,.06);
+      /* Anthropic: flat surfaces, borders carry hierarchy — no drop shadows */
+      --shadow-1: none;
+      --shadow-2: 0 1px 3px rgba(0,0,0,.07);
+      --font-display: 'Newsreader', Georgia, serif;
       --t-fast: 120ms cubic-bezier(.2,.7,.2,1);
       --t-med: 240ms cubic-bezier(.2,.7,.2,1);
     }
@@ -42,7 +46,7 @@
         --bg: #171613; --card: #26241F; --panel: #1E1C19;
         --ink: #EAE5DB; --muted: #A39C8E;
         --border: #3A3733; --border-strong: #59554D; --border-dark: #59554D;
-        --accent: #E8863D; --accent-hover: #F5A05F; --accent-soft: #2E2119; --accent-subtle: #2E2119;
+        --accent: #DE9070; --accent-hover: #EFA98C; --accent-soft: #2C201A; --accent-subtle: #2C201A;
         --accent2: #7FA0B8; --accent2-soft: #1E2A33;
         --good: #8FB07A; --good-soft: #1F2A1A;
         --warning: #D9A94A; --warning-soft: #2E2519;
@@ -60,7 +64,7 @@
       --bg: #171613; --card: #26241F; --panel: #1E1C19;
       --ink: #EAE5DB; --muted: #A39C8E;
       --border: #3A3733; --border-strong: #59554D; --border-dark: #59554D;
-      --accent: #E8863D; --accent-hover: #F5A05F; --accent-soft: #2E2119; --accent-subtle: #2E2119;
+      --accent: #DE9070; --accent-hover: #EFA98C; --accent-soft: #2C201A; --accent-subtle: #2C201A;
       --accent2: #7FA0B8; --accent2-soft: #1E2A33;
       --good: #8FB07A; --good-soft: #1F2A1A;
       --warning: #D9A94A; --warning-soft: #2E2519;
@@ -184,6 +188,7 @@
     }
     :root[data-theme="dark"] input, 
     :root[data-theme="dark"] select,
+    :root[data-theme="dark"] .bio-fields input[type="number"],
     :root[data-theme="dark"] .chip input[type="number"] {
       background: #2E2B26;
       color: #EAE5DB;
@@ -213,6 +218,14 @@
     }
 
     h1, h2, h3 { margin: 0 0 8px; font-weight: 700; }
+    /* Anthropic display type: serif headings on module titles */
+    h1, h2 {
+      font-family: var(--font-display);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      line-height: 1.25;
+    }
+    h2 { font-size: 21px; }
     code, .mono { font-family: 'JetBrains Mono', monospace; }
 
     /* Industrial Top Header Instrument Bar */
@@ -261,6 +274,87 @@
       display: inline-block;
     }
 
+    /* ---- Biometric groups: Measured / Derived / In Use ---- */
+    .bio-group {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 6px 12px 7px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      justify-content: center;
+    }
+    .bio-group-title {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      line-height: 1;
+    }
+    .bio-fields {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .bio-derived-val {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+      min-width: 62px;
+    }
+    .bio-derived-src {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+    .bio-use-toggle {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin: 0 0 0 4px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .bio-use-toggle:hover { color: var(--ink); }
+
+    /* IN USE — the value the dose engine runs on. Loudest element in the bar. */
+    .active-weight {
+      margin-left: auto;
+      border-left: 3px solid var(--accent);
+      background: var(--accent-subtle);
+      min-width: 190px;
+    }
+    .active-weight #activeWeightVal {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.05;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+    .active-weight-src {
+      font-size: 11px;
+      font-weight: 600;
+      /* Measured 4.4:1 against the tinted panel with --muted; --ink at 78%
+         opacity clears 4.5:1 in all three themes. Provenance must be legible. */
+      color: color-mix(in srgb, var(--ink) 78%, transparent);
+      letter-spacing: 0.01em;
+    }
+    .active-weight.is-derived {
+      border-left-color: var(--warning);
+      background: var(--warning-soft);
+    }
+    .active-weight.is-empty {
+      border-left-color: var(--border-strong);
+      background: var(--panel);
+    }
+    .active-weight.is-empty #activeWeightVal { color: var(--muted); }
+
     .chip { 
       background: var(--card); 
       border: 1px solid var(--border); 
@@ -280,6 +374,7 @@
       color: var(--muted);
     }
 
+    .bio-fields input[type="number"],
     .chip input[type="number"] { 
       width: 72px; 
       padding: 6px 8px; 
@@ -289,15 +384,17 @@
       font-family: 'JetBrains Mono', monospace;
       font-weight: 700;
       font-size: 14px;
-      background: #FAFAFA;
+      background: var(--bg);
       color: var(--ink);
     }
 
+    .bio-fields input[type="number"]:focus,
     .chip input[type="number"]:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 2px var(--ring);
     }
 
+    .bio-fields input[type="number"]:disabled,
     .chip input[type="number"]:disabled,
     .chip input[type="number"].disabled-input {
       background: #E5E4DF;
@@ -315,6 +412,9 @@
 
     .unit-toggle-btn {
       padding: 4px 8px;
+      /* WCAG 2.5.8: 24px minimum hit area. */
+      min-height: 26px;
+      min-width: 30px;
       font-size: 11px;
       font-weight: 800;
       border-radius: 4px;
@@ -331,25 +431,34 @@
       color: #FFFFFF;
     }
 
-    /* Braun Tactile Toggle Switch */
-    .chip .switch { 
+    /* Tactile Toggle Switch — global, not scoped to .chip, so any container
+       (biometric groups included) renders a real slider rather than a raw box. */
+    .switch { 
       appearance: none; 
+      -webkit-appearance: none;
+      flex: 0 0 auto;
       width: 34px; 
       height: 18px; 
       border-radius: 10px; 
-      background: #D5D3CE; 
+      background: var(--border); 
       position: relative; 
       outline: none; 
       cursor: pointer; 
-      border: 1px solid #B8B5B0;
-      transition: background 0.2s;
+      border: 1px solid var(--border-strong);
+      transition: background var(--t-fast), border-color var(--t-fast);
+      margin: 0;
     }
 
-    .chip .switch:checked { 
+    .switch:checked { 
       background: var(--accent); 
+      border-color: var(--accent);
     }
 
-    .chip .switch:before { 
+    .switch:focus-visible {
+      box-shadow: 0 0 0 3px var(--ring);
+    }
+
+    .switch:before { 
       content: ''; 
       position: absolute; 
       top: 1px; 
@@ -358,12 +467,28 @@
       height: 14px; 
       border-radius: 50%; 
       background: #FFFFFF; 
-      transition: transform 0.2s; 
-      box-shadow: 0 1px 2px rgba(0,0,0,0.2); 
+      transition: transform var(--t-fast); 
+      box-shadow: 0 1px 2px rgba(0,0,0,0.25); 
     }
 
-    .chip .switch:checked:before { 
+    .switch:checked:before { 
       transform: translateX(16px); 
+    }
+
+    /* The label reads as active state, not just as a name. */
+    /* WCAG 2.5.8 minimum 24px. The slider stays visually 18px tall but its
+       hit area is padded out to 24px so gloved hands can actually hit it. */
+    .switch {
+      padding: 3px 0;
+      background-clip: content-box;
+      height: 24px;
+      box-sizing: border-box;
+    }
+    .switch:before { top: 4px; }
+
+    .bio-use-toggle:has(.switch:checked) {
+      color: var(--accent);
+      font-weight: 700;
     }
 
     .broselow-chip { 
@@ -386,8 +511,11 @@
 
     /* Container */
     .container { 
-      max-width: 1040px; 
-      margin: 98px auto 90px; 
+      max-width: 1180px; 
+      /* Clears the fixed topbar at ANY height. --topbar-h is measured and
+         published by syncTopbarHeight() (ResizeObserver) — hardcoded margins
+         silently occluded content on every viewport under 900px. */
+      margin: calc(var(--topbar-h, 140px) + 12px) auto 70px; 
       padding: 16px; 
     }
 
@@ -445,11 +573,11 @@
       background: var(--card); 
       border: 1px solid var(--border); 
       border-radius: 10px; 
-      padding: 20px; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.03); 
+      padding: 14px 16px; 
+      box-shadow: none; 
     }
 
-    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 14px; }
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 10px; }
     .col-3 { grid-column: span 3; }
     .col-4 { grid-column: span 4; }
     .col-6 { grid-column: span 6; }
@@ -499,26 +627,6 @@
 
     .btn:hover { background: #DFDED9; }
 
-    .btn-copy {
-      background: var(--dark-btn);
-      color: #FFFFFF;
-      border: 1px solid #111;
-      padding: 8px 14px;
-      font-size: 13px;
-      font-weight: 700;
-      border-radius: 6px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: background 0.15s, transform 0.1s;
-    }
-
-    .btn-copy:hover {
-      background: var(--accent);
-      transform: translateY(-1px);
-    }
-
     .pill { 
       display: inline-block; 
       padding: 6px 12px; 
@@ -546,9 +654,9 @@
 
     /* Output Summary & Braun LCD Digital Readout Blocks */
     .summary { 
-      background: #F9F8F6; 
+      background: var(--card); 
       border: 1px solid var(--border); 
-      padding: 18px; 
+      padding: 12px 14px; 
       border-radius: 8px; 
       white-space: pre-wrap; 
       line-height: 1.6; 
@@ -557,9 +665,9 @@
 
     .hero-metric-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-      margin-bottom: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 8px;
+      margin-bottom: 10px;
     }
 
     .hero-metric {
@@ -568,13 +676,13 @@
       border: 1px solid #000;
       border-left: 5px solid var(--accent);
       border-radius: 8px;
-      padding: 12px 16px;
+      padding: 9px 12px;
       font-family: 'JetBrains Mono', monospace;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 4px;
-      box-shadow: inset 0 1px 3px rgba(255,255,255,0.05), 0 2px 6px rgba(0,0,0,0.15);
+      gap: 2px;
+      box-shadow: none;
     }
 
     .hero-metric.good { border-left-color: var(--good); }
@@ -600,7 +708,7 @@
     }
 
     .hero-metric .hero-val {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 800;
       color: #FFFFFF;
       line-height: 1.2;
@@ -897,15 +1005,20 @@
 
     /* Responsive Mobile Tweaks */
     @media (max-width: 768px) {
-      .container { margin-top: 120px; padding: 10px; }
+      .container { margin-top: calc(var(--topbar-h, 140px) + 10px); padding: 10px; }
       .grid { grid-template-columns: repeat(6, 1fr); gap: 10px; }
       .col-12, .col-9, .col-8, .col-6, .col-4 { grid-column: span 6; }
       .col-3 { grid-column: span 3; }
       .segmented-control { flex-wrap: wrap; }
       .tab-btn { min-width: 30%; font-size: 12px; padding: 6px 8px; }
       .topbar-inner { padding: 6px 10px; gap: 6px; justify-content: space-between; }
+      .topbar-row-1 { flex-wrap: wrap; }
+      .bio-group { flex: 1 1 auto; padding: 5px 9px 6px; }
+      .active-weight { margin-left: 0; min-width: 150px; }
+      .active-weight #activeWeightVal { font-size: 19px; }
       .chip { padding: 4px 6px; gap: 4px; }
       .chip label.chip-label { font-size: 10px; }
+      .bio-fields input[type="number"],
       .chip input[type="number"] { width: 56px; padding: 4px 6px; font-size: 13px; }
       .brand-badge { padding: 4px 8px; font-size: 11px; }
       .broselow-chip { padding: 4px 8px; font-size: 11px; }
@@ -922,10 +1035,16 @@
        viewing distance in an ED is usually greater than a handheld.
        ============================================================ */
     @media (orientation: portrait) and (min-width: 700px) and (max-width: 900px) {
-      .container { max-width: 760px; margin: 130px auto 100px; padding: 16px; }
+      .container { max-width: 760px; margin: calc(var(--topbar-h, 140px) + 12px) auto 100px; padding: 16px; }
 
       .topbar-inner { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px 14px; }
       .chip { justify-content: space-between; }
+      /* 2-up instead of one group per row: three stacked rows made the fixed
+         topbar 285px = 24% of an 800x1200 ED panel. */
+      .topbar-row-1 { flex-wrap: wrap; gap: 8px; }
+      .bio-group { flex: 1 1 auto; padding: 5px 10px 6px; }
+      .active-weight { margin-left: 0; min-width: 160px; }
+      .bio-group-title { font-size: 8.5px; }
 
       html, body { font-size: 16px; }
 
@@ -941,6 +1060,7 @@
       .segmented-control { gap: 6px; padding: 6px; }
       .tab-btn { min-width: 30%; min-height: 44px; padding: 12px 10px; font-size: 14px; }
 
+      .bio-fields input[type="number"],
       .chip input[type="number"] { min-height: 40px; font-size: 15px; width: 84px; }
       .broselow-chip, .unit-toggle-btn { min-height: 44px; }
       button { min-height: 44px; }
@@ -951,7 +1071,17 @@
       body { background: #FFFFFF !important; color: #000000 !important; }
       .topbar, .segmented-control, .fab, .app-footer, .note, button, .combobox-dropdown { display: none !important; }
       .container { margin: 0 !important; padding: 0 !important; max-width: 100% !important; }
-      .card { border: none !important; box-shadow: none !important; padding: 0 !important; display: block !important; }
+      .bio-group-title { display: none !important; }
+      /* Only the ACTIVE tabpanel prints. The previous rule forced
+         display:block !important on every .card, which overrode the inline
+         display:none on the 10 inactive panels and produced a 5-page dump. */
+      .card { border: none !important; box-shadow: none !important; padding: 0 !important; }
+      section[role="tabpanel"][style*="display:none"],
+      section[role="tabpanel"][style*="display: none"] { display: none !important; }
+      .drawer-backdrop, .pwa-update-banner, .toast, .popover-menu, .tabs { display: none !important; }
+      /* Keep clinical readouts atomic across page breaks. */
+      .hero-metric, tr, .summary { break-inside: avoid; page-break-inside: avoid; }
+      @page { size: A4; margin: 10mm; }
       .hero-metric-grid { display: flex !important; gap: 8px !important; }
       .hero-metric { border: 1px solid #000 !important; background: #FFF !important; color: #000 !important; padding: 6px !important; }
       .hero-val { color: #000 !important; font-size: 16px !important; }
@@ -984,29 +1114,44 @@
   <!-- Industrial Top Bar Instrument Cluster -->
   <div class="topbar">
     <div class="topbar-inner" style="display:flex; flex-direction:column; gap:10px; width:100%;">
-      <!-- Row 1: Patient Biometrics Cluster -->
-      <div class="topbar-row-1" style="display:flex; align-items:center; gap:8px; width:100%; overflow-x:auto;">
-        <div class="chip" style="flex-wrap:wrap; flex:1;">
-          <label class="chip-label">ABW</label>
-          <input type="number" id="weight" min="0" step="0.1" placeholder="kg" oninput="onWeightChange()"/>
-          
-          <label class="chip-label" style="margin-left:4px;">Age</label>
-          <input type="number" id="age" min="0" step="0.1" placeholder="0" oninput="estimateFromAge()"/>
-          <button type="button" id="ageUnitBtn" class="unit-toggle-btn" onclick="toggleAgeUnit()" title="คลิกเพื่อสลับหน่วยปี/เดือน">Yr</button>
-          
-          <label class="chip-label" style="margin-left:4px;">HT</label>
-          <input type="number" id="length" min="0" step="0.1" placeholder="cm" oninput="updateIBW()"/>
+      <!-- Row 1: Patient Biometrics — Measured / Derived / In Use -->
+      <div class="topbar-row-1" style="display:flex; align-items:stretch; gap:10px; width:100%; overflow-x:auto;">
 
-          <label style="display:flex; align-items:center; gap:4px; margin:0; cursor:pointer;" title="ใช้ IBW ตามสูตร Weech แทนน้ำหนักจริง">
-            <input type="checkbox" id="useIBW" class="switch" onchange="applyIBWToBW()"/>
-            <span style="font-size:11px; font-weight:700; color:var(--muted);">IBW</span>
-          </label>
+        <!-- MEASURED: clinician input only, never overwritten by the app -->
+        <div class="bio-group">
+          <span class="bio-group-title">Measured</span>
+          <div class="bio-fields">
+            <label class="chip-label" for="weight">BW</label>
+            <input type="number" id="weight" min="0" step="0.1" placeholder="kg" oninput="onWeightChange()"/>
+
+            <label class="chip-label" for="age">Age</label>
+            <input type="number" id="age" min="0" step="0.1" placeholder="0" oninput="estimateFromAge()"/>
+            <button type="button" id="ageUnitBtn" class="unit-toggle-btn" onclick="toggleAgeUnit()" title="คลิกเพื่อสลับหน่วยปี/เดือน">Yr</button>
+
+            <label class="chip-label" for="length">HT</label>
+            <input type="number" id="length" min="0" step="0.1" placeholder="cm" oninput="updateIBW()"/>
+          </div>
         </div>
 
-        <div class="chip" id="ibwChip">
-          <label class="chip-label">IBW</label>
-          <strong id="ibwVal" class="mono" style="color:var(--accent);">—</strong>
-          <span id="ibwSource" style="font-size:11px; color:var(--muted);"></span>
+        <!-- DERIVED: computed, read-only, with the explicit dosing opt-in -->
+        <div class="bio-group">
+          <span class="bio-group-title">Derived</span>
+          <div class="bio-fields">
+            <label class="chip-label">IBW</label>
+            <strong id="ibwVal" class="mono bio-derived-val">—</strong>
+            <span id="ibwSource" class="bio-derived-src"></span>
+            <label class="bio-use-toggle" title="ใช้ IBW แทนน้ำหนักจริงในการคำนวณยา">
+              <input type="checkbox" id="useIBW" class="switch" onchange="applyIBWToBW()"/>
+              <span>use for dosing</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- IN USE: the weight the dose engine is actually running on -->
+        <div class="bio-group active-weight is-empty" id="activeWeightBox">
+          <span class="bio-group-title">In use</span>
+          <strong id="activeWeightVal" class="mono">— kg</strong>
+          <span id="activeWeightSrc" class="active-weight-src">enter BW or age</span>
         </div>
       </div>
 
@@ -1091,7 +1236,7 @@
         <div class="col-6">
           <label>Active Weight (Single Source of Truth)</label>
           <div class="weight-lock-chip">
-            <span>ABW/IBW:</span>
+            <span>Weight in use:</span>
             <strong id="doseWBadge">— kg</strong>
             <span style="font-size:11px; color:var(--muted); margin-left:auto;">🔒 Topbar Sync</span>
           </div>
@@ -1121,7 +1266,7 @@
         <div class="col-6">
           <label>Active Weight (Single Source of Truth)</label>
           <div class="weight-lock-chip">
-            <span>ABW/IBW:</span>
+            <span>Weight in use:</span>
             <strong id="atbWBadge">— kg</strong>
             <span style="font-size:11px; color:var(--muted); margin-left:auto;">🔒 Topbar Sync</span>
           </div>
@@ -1238,7 +1383,7 @@
         <div class="col-6">
           <label>Active Weight (Single Source of Truth)</label>
           <div class="weight-lock-chip">
-            <span>ABW/IBW:</span>
+            <span>Weight in use:</span>
             <strong id="dripWBadge">— kg</strong>
             <span style="font-size:11px; color:var(--muted); margin-left:auto;">🔒 Topbar Sync</span>
           </div>
@@ -1460,7 +1605,7 @@
 
   <!-- Toast Notification -->
   <div id="toast" class="toast">
-    <span>📋 Order copied to clipboard!</span>
+    <span></span>
   </div>
 
   <script src="dataset.js"></script>
