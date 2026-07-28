@@ -1243,7 +1243,7 @@
 
     <!-- Standalone Footer -->
     <footer class="app-footer">
-      <div><strong>ER-PED Workstation</strong> — Braun Clinical Instrument <span style="font-size:11px; padding:2px 6px; border-radius:4px; background:var(--accent); color:#FFF; font-weight:800; cursor:pointer;" onclick="openChangelogModal()" title="ดูบันทึกการเปลี่ยนแปลง v1.2.0">v1.2.0</span></div>
+      <div><strong>ER-PED Workstation</strong> — Braun Clinical Instrument <span style="font-size:11px; padding:2px 6px; border-radius:4px; background:var(--accent); color:#FFF; font-weight:800; cursor:pointer;" onclick="openChangelogModal()" title="ดูบันทึกการเปลี่ยนแปลง v1.3.0">v1.3.0</span></div>
       <div style="font-size:11px; margin-top:6px; display:flex; justify-content:center; gap:14px;">
         <span style="cursor:pointer; color:var(--accent);" onclick="openDatasetEditor()">⚙️ Dataset Editor</span>
         <span style="cursor:pointer; color:var(--accent);" onclick="openChangelogModal()">📋 Changelog</span>
@@ -1285,22 +1285,26 @@
   <div id="changelogBackdrop" class="drawer-backdrop hidden" onclick="if(event.target.id==='changelogBackdrop') closeChangelogModal()">
     <div class="drawer" onclick="event.stopPropagation()">
       <div class="drawer-header">
-        <strong style="font-size:16px;">📋 ER-PED Version 1.2.0 Changelog</strong>
+        <strong style="font-size:16px;">📋 ER-PED Version 1.3.0 Changelog</strong>
         <button class="btn" style="padding:4px 10px; font-size:12px;" onclick="closeChangelogModal()">Close ✖ (Esc)</button>
       </div>
       <div class="drawer-body" style="font-size:13px; line-height:1.6;">
-        <h3 style="color:var(--accent); margin-top:4px;">🎉 What's New in v1.2.0:</h3>
+        <h3 style="color:var(--accent); margin-top:4px;">🎉 What's New in v1.3.0:</h3>
+        <ul>
+          <li><strong>💉 Methylprednisolone Dosing Split</strong>: แยกโครงสร้างขนาดยา Methylprednisolone ชัดเจนระหว่าง Loading Dose (1–2 mg/kg, cap 60 mg) และ Maintenance Dose (0.5–1 mg/kg/dose q6h, cap 60 mg/dose, 240 mg/day) ป้องกันความสับสนในการสั่งยา</li>
+          <li><strong>🧪 Deterministic JSDOM Clinical Test Suite</strong>: เพิ่มระบบทดสอบ Unit Test อัตโนมัติด้วย JSDOM โหลด HTML จริง เพื่อทดสอบฟังก์ชันคำนวณและข้อความก๊อปปี้เวชระเบียน <code>copyEHROrder()</code> ทุกโมดูล ป้องกัน False Positive และ Element ID Drift</li>
+          <li><strong>🌐 Universal App Engine & CI Pipeline</strong>: ปรับปรุง <code>app.js</code> ให้รองรับ Node.js CommonJS Import และอัปเดต GitHub Actions CI Runner เป็น Node 22 + <code>npm ci</code></li>
+        </ul>
+        <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;" />
+        <h4 style="color:var(--ink); margin-top:4px;">📜 Version 1.2.0 Highlights:</h4>
         <ul>
           <li><strong>🫀 Continuous Infusion Drip Calculator</strong>: คำนวณ Drip Rate (mcg/kg/min → mL/hr) สำหรับ Epinephrine, Norepinephrine, Dopamine, Dobutamine, Midazolam, Milrinone</li>
-          <li><strong>⚡ Status Epilepticus Resuscitation Protocol</strong>: แนวทางการรักษาชักแยกตามช่วงเวลา 4 สเต็ป คำนวณขนาดยา ยาอันดับ 1 และ 2 อัตโนมัติ</li>
+          <li><strong>⚡ Status Epilepticus Resuscitation Protocol</strong>: แนวทางการรักษาชัก 4 สเต็ป คำนวณขนาดยาอันดับ 1 และ 2 อัตโนมัติ</li>
           <li><strong>🧪 Toxicology & Antidote Dosing</strong>: ขนาดยาต้านพิษ (Naloxone, Flumazenil, Atropine OP, Activated Charcoal, NAC 3-Bag)</li>
           <li><strong>💉 Procedural Sedation & Analgesia (PSA)</strong>: คำนวณ Ketamine, Fentanyl, Midazolam สำหรับหัตถการ</li>
-          <li><strong>📊 Vital Signs by Age & Inline Badge</strong>: แสดงสัญญาณชีพปกติของเด็กตามวัยและปุ่มลัดสัญญาณชีพบนแถบ Topbar</li>
-          <li><strong>🩺 DKA Protocol Module</strong>: สารน้ำทดแทน 48 ชม. + Regular Insulin drip 0.05–0.1 U/kg/hr + สวิตช์ D5W เมื่อ BG &lt; 250</li>
-          <li><strong>🌐 Thai / English UI Toggle</strong>: สลับป้ายภาษาไทย/อังกฤษ สองภาษา</li>
-          <li><strong>🖨️ Print-Friendly Reference Card</strong>: จัดหน้าพิมพ์การ์ดสรุปยาฉุกเฉิน 1 หน้ากระดาษ</li>
-          <li><strong>⚙️ Lightweight Dataset Editor</strong>: ฟอร์มแก้ไขขนาดยา/ขีดจำกัดความปลอดภัย</li>
-          <li><strong>⚙️ GitHub Actions CI & Unit Tests</strong>: ทดสอบระบบอัตโนมัติตรวจจับ Regression</li>
+          <li><strong>📊 Vital Signs by Age & Inline Badge</strong>: แสดงสัญญาณชีพปกติของเด็กตามวัย</li>
+          <li><strong>🩺 DKA Protocol Module</strong>: สารน้ำทดแทน 48 ชม. + Regular Insulin drip 0.05–0.1 U/kg/hr</li>
+          <li><strong>🌐 Thai / English UI Toggle</strong>: สลับป้ายภาษาไทย/อังกฤษ</li>
         </ul>
       </div>
     </div>
