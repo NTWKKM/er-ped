@@ -3812,9 +3812,9 @@ window.ER_PED_DATASET = {
       "spo2Normal": "95–100%"
     },
     {
-      "ageBracket": "≥ 12 years (Adolescent)",
+      "ageBracket": "12–15 years (Adolescent)",
       "minAgeYr": 12,
-      "maxAgeYr": 18,
+      "maxAgeYr": 15,
       "hrNormal": "60–100 bpm",
       "hrMin": 60,
       "hrMax": 100,

@@ -199,7 +199,10 @@ function toggleAgeUnit(){
   const btn = document.getElementById('ageUnitBtn');
   const input = document.getElementById('age');
   if (btn) btn.textContent = (gAgeUnit === 'yr') ? 'Yr' : 'Mo';
-  if (input) input.placeholder = (gAgeUnit === 'yr') ? '0 (yr)' : '0 (mo)';
+  if (input) {
+    input.placeholder = (gAgeUnit === 'yr') ? '0 (yr)' : '0 (mo)';
+    input.max = (gAgeUnit === 'yr') ? '15' : '180';
+  }
 
   // Convert the raw numeric value into the new unit so the age it represents
   // doesn't silently change (e.g. "12" months becoming "12" years).
@@ -236,6 +239,12 @@ function estimateWeightFromAge(ageVal, unit) {
     ageYr = ageMo / 12;
   } else {
     ageMo = ageYr * 12;
+  }
+
+  // Cap pediatric estimation at 15 years max
+  if (ageYr > 15) {
+    ageYr = 15;
+    ageMo = 180;
   }
 
   // < 1 yr: Weech formula = (mo + 9) / 2
@@ -306,7 +315,8 @@ function getAgeInYears(){
   const input = document.getElementById('age');
   const val = input ? parseFloat(input.value) : NaN;
   if (!isFinite(val) || val <= 0) return null;
-  return (gAgeUnit === 'mo') ? (val / 12) : val;
+  const ageYr = (gAgeUnit === 'mo') ? (val / 12) : val;
+  return Math.min(ageYr, 15);
 }
 
 // Holliday–Segar Maintenance Fluid Calculator (mL/hr)
@@ -430,9 +440,27 @@ function estimateFromAge(fromPAge = false) {
   const lenInput = document.getElementById('length');
 
   if (fromPAge && pAgeInput && ageInput) {
-    ageInput.value = pAgeInput.value;
+    let pVal = parseFloat(pAgeInput.value);
+    if (isFinite(pVal) && pVal > 15) {
+      pVal = 15;
+      pAgeInput.value = 15;
+      showToast('จำกัดอายุสูงสุดไม่เกิน 15 ปี (Pediatric Limit 15 Years)');
+    }
+    if (gAgeUnit === 'mo') {
+      ageInput.value = isFinite(pVal) && pVal > 0 ? Math.round(pVal * 12) : '';
+    } else {
+      ageInput.value = isFinite(pVal) && pVal > 0 ? pVal : '';
+    }
   } else if (!fromPAge && ageInput && pAgeInput) {
-    pAgeInput.value = ageInput.value;
+    let rawAge = parseFloat(ageInput.value);
+    const maxVal = (gAgeUnit === 'mo') ? 180 : 15;
+    if (isFinite(rawAge) && rawAge > maxVal) {
+      rawAge = maxVal;
+      ageInput.value = maxVal;
+      showToast('จำกัดอายุสูงสุดไม่เกิน 15 ปี (Pediatric Limit 15 Years)');
+    }
+    const ageYrVal = (gAgeUnit === 'mo') ? rawAge / 12 : rawAge;
+    pAgeInput.value = isFinite(ageYrVal) && ageYrVal > 0 ? Math.round(ageYrVal * 10) / 10 : '';
   }
 
   // Entering age takes the dose engine off IBW, but the measured height is
@@ -2185,6 +2213,8 @@ if (typeof module !== 'undefined' && module.exports) {
     calcVitals,
     calcDKA,
     getWeight,
-    calculateIBW
+    calculateIBW,
+    getAgeInYears,
+    estimateFromAge
   };
 }

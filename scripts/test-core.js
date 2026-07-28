@@ -109,6 +109,17 @@ test('Weech Formula: 8 years child', () => {
   assert.strictEqual(appExports.estimateWeightFromAge(8, 'yr'), 26);
 });
 
+test('Weech Formula: 20 years patient capped at 15 years max (Weech 15 yr = 50 kg)', () => {
+  assert.strictEqual(appExports.estimateWeightFromAge(20, 'yr'), 50);
+});
+
+test('getAgeInYears: caps input exceeding 15 years to 15 years max', () => {
+  const ageInput = document.getElementById('age');
+  ageInput.value = '18';
+  assert.strictEqual(appExports.getAgeInYears(), 15);
+  ageInput.value = '';
+});
+
 // 2. Test Holliday-Segar Maintenance Fluid (calcMaintenanceMlPerHr exported from app.js)
 test('Holliday-Segar Maintenance Fluid: 8 kg infant (800 mL/day -> 33.3 mL/hr)', () => {
   assert.strictEqual(appExports.calcMaintenanceMlPerHr(8), 33.3);
