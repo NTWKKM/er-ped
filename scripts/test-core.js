@@ -202,6 +202,72 @@ test('General Pediatric Dose: Methylprednisolone maintenance dose (0.5–1 mg/kg
   assert.strictEqual(item.maxPerDayMg, 240);
 });
 
+test('General Pediatric Dose: Alum milk 20 kg child (0.5–1 mL/kg/dose -> 10–20 mL)', () => {
+  const item = dataset.pediatricDose.find(d => d.key === 'aluminium-magnesium-hydroxide-susp');
+  const w = 20;
+  const minDose = item.doseMinMgPerKg * w;
+  const maxDose = Math.min(item.doseMaxMgPerKg * w, item.maxPerDoseMg);
+  assert.strictEqual(minDose, 10);
+  assert.strictEqual(maxDose, 20);
+  assert.strictEqual(item.unit, 'mL/kg');
+});
+
+test('General Pediatric Dose: Alum milk 40 kg child (0.5–1 mL/kg/dose -> capped at 30 mL/dose)', () => {
+  const item = dataset.pediatricDose.find(d => d.key === 'aluminium-magnesium-hydroxide-susp');
+  const w = 40;
+  let minDose = item.doseMinMgPerKg * w;
+  let maxDose = item.doseMaxMgPerKg * w;
+  if (item.maxPerDoseMg) {
+    minDose = Math.min(minDose, item.maxPerDoseMg);
+    maxDose = Math.min(maxDose, item.maxPerDoseMg);
+  }
+  assert.strictEqual(minDose, 20);
+  assert.strictEqual(maxDose, 30);
+});
+
+test('General Pediatric Dose: Lactulose 15 kg child (1–3 mL/kg/day -> 15–45 mL/day)', () => {
+  const item = dataset.pediatricDose.find(d => d.key === 'lactulose-10g-5ml');
+  const w = 15;
+  const minDose = item.doseMinMgPerKg * w;
+  const maxDose = Math.min(item.doseMaxMgPerKg * w, item.maxPerDayMg);
+  assert.strictEqual(minDose, 15);
+  assert.strictEqual(maxDose, 45);
+  assert.strictEqual(item.unit, 'mL/kg');
+});
+
+test('General Pediatric Dose: Lactulose 25 kg child (1–3 mL/kg/day -> capped at 60 mL/day)', () => {
+  const item = dataset.pediatricDose.find(d => d.key === 'lactulose-10g-5ml');
+  const w = 25;
+  let minDose = item.doseMinMgPerKg * w;
+  let maxDose = item.doseMaxMgPerKg * w;
+  if (item.maxPerDayMg) {
+    minDose = Math.min(minDose, item.maxPerDayMg);
+    maxDose = Math.min(maxDose, item.maxPerDayMg);
+  }
+  assert.strictEqual(minDose, 25);
+  assert.strictEqual(maxDose, 60);
+});
+
+test('General Pediatric Dose: PEG Disimpaction 10 kg child (1 g/kg/day -> 10 g/day)', () => {
+  const item = dataset.pediatricDose.find(d => d.key === 'peg-forlax-10g-sachet-disimpaction');
+  const w = 10;
+  const minDose = item.doseMinMgPerKg * w;
+  const maxDose = item.doseMaxMgPerKg * w;
+  assert.strictEqual(minDose, 10);
+  assert.strictEqual(maxDose, 10);
+  assert.strictEqual(item.unit, 'g/kg');
+});
+
+test('General Pediatric Dose: PEG Maintenance 10 kg child (0.5–1 g/kg/day -> 5–10 g/day)', () => {
+  const item = dataset.pediatricDose.find(d => d.key === 'peg-forlax-10g-sachet-maint');
+  const w = 10;
+  const minDose = item.doseMinMgPerKg * w;
+  const maxDose = item.doseMaxMgPerKg * w;
+  assert.strictEqual(minDose, 5);
+  assert.strictEqual(maxDose, 10);
+  assert.strictEqual(item.unit, 'g/kg');
+});
+
 // 10. Test Seizure Protocol Dosing
 test('Seizure Protocol Stage 1: IN Midazolam 10 kg child (0.2 mg/kg = 2.0 mg)', () => {
   const stage1 = dataset.seizureProtocol.find(s => s.stage === '5–10 min');
