@@ -89,9 +89,9 @@ function setTheme(t) {
   localStorage.setItem('er_ped_theme', t);
   const btn = document.getElementById('themeToggleBtn');
   if (btn) {
-    if (t === 'mono') btn.innerHTML = '☀️ Light';
-    else if (t === 'dark') btn.innerHTML = '🔲 Mono';
-    else btn.innerHTML = '🌙 Dark';
+    if (t === 'mono') btn.innerHTML = 'Mono';
+    else if (t === 'dark') btn.innerHTML = 'Dark';
+    else btn.innerHTML = 'Light';
   }
   if (typeof refreshBroselowChip === 'function') refreshBroselowChip();
 }
