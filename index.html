@@ -37,7 +37,7 @@
       --t-med: 240ms cubic-bezier(.2,.7,.2,1);
     }
 
-    @media (prefers-color-scheme: dark), (monochrome) {
+    @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) {
         --bg: #171613; --card: #26241F; --panel: #1E1C19;
         --ink: #EAE5DB; --muted: #A39C8E;
@@ -992,7 +992,7 @@
           
           <label class="chip-label" style="margin-left:4px;">Age</label>
           <input type="number" id="age" min="0" step="0.1" placeholder="0" oninput="estimateFromAge()"/>
-          <button id="ageUnitBtn" class="unit-toggle-btn" onclick="toggleAgeUnit()" title="คลิกเพื่อสลับหน่วยปี/เดือน">Yr</button>
+          <button type="button" id="ageUnitBtn" class="unit-toggle-btn" onclick="toggleAgeUnit()" title="คลิกเพื่อสลับหน่วยปี/เดือน">Yr</button>
           
           <label class="chip-label" style="margin-left:4px;">HT</label>
           <input type="number" id="length" min="0" step="0.1" placeholder="cm" oninput="updateIBW()"/>
@@ -1014,15 +1014,15 @@
       <div class="topbar-row-2" style="display:flex; align-items:center; gap:8px; width:100%;">
         <!-- Reference ▾ Popover Trigger -->
         <div class="popover-wrapper">
-          <button id="refPopoverBtn" class="btn" style="padding:6px 12px; font-size:12px; display:inline-flex; align-items:center; gap:6px;" onclick="toggleRefPopover(event)" title="เมนูข้อมูลอ้างอิง (Reference Tools)">
+          <button type="button" id="refPopoverBtn" class="btn" style="padding:6px 12px; font-size:12px; display:inline-flex; align-items:center; gap:6px;" onclick="toggleRefPopover(event)" title="เมนูข้อมูลอ้างอิง (Reference Tools)" aria-haspopup="true" aria-expanded="false">
             <span>Reference ▾</span>
             <span id="broselow" class="mono" style="padding:2px 8px; border-radius:var(--r-sm); font-weight:800; background:var(--panel); color:var(--ink); border:1px solid var(--border);">—</span>
           </button>
           <div id="refPopoverMenu" class="popover-menu" role="menu">
-            <button class="popover-item" onclick="showTab('vitals'); closeAllPopovers();" role="menuitem">
+            <button type="button" class="popover-item" onclick="showTab('vitals'); closeAllPopovers();" role="menuitem">
               <span>📊 Vital Signs by Age</span>
             </button>
-            <button class="popover-item" onclick="toggleBroselowPanel(); closeAllPopovers();" role="menuitem">
+            <button type="button" class="popover-item" onclick="toggleBroselowPanel(); closeAllPopovers();" role="menuitem">
               <span>🎨 Broselow Color Tape Reference</span>
             </button>
           </div>
@@ -1031,16 +1031,16 @@
         <!-- Right-Aligned Action Cluster -->
         <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
           <!-- ◐ Theme Toggle Button -->
-          <button id="themeToggleBtn" class="btn" style="padding:6px 12px; font-size:12px;" onclick="toggleTheme()" title="สลับ Dark / Light / Mono Mode">🌙 Dark</button>
+          <button type="button" id="themeToggleBtn" class="btn" style="padding:6px 12px; font-size:12px;" onclick="toggleTheme()" title="สลับ Dark / Light / Mono Mode">🌙 Dark</button>
 
           <!-- ⋯ Overflow Menu Popover Trigger -->
           <div class="popover-wrapper">
-            <button id="overflowBtn" class="btn" style="padding:6px 10px; font-size:14px; font-weight:800;" onclick="toggleOverflowMenu(event)" title="เมนูเพิ่มเติม (More Options)" aria-label="More actions">⋯</button>
+            <button type="button" id="overflowBtn" class="btn" style="padding:6px 10px; font-size:14px; font-weight:800;" onclick="toggleOverflowMenu(event)" title="เมนูเพิ่มเติม (More Options)" aria-label="More actions" aria-haspopup="true" aria-expanded="false">⋯</button>
             <div id="overflowMenu" class="popover-menu" role="menu">
-              <button id="printBtn" class="popover-item" onclick="triggerPrintCard(); closeAllPopovers();" role="menuitem">
+              <button type="button" id="printBtn" class="popover-item" onclick="triggerPrintCard(); closeAllPopovers();" role="menuitem">
                 <span>🖨️ Print Reference Card</span>
               </button>
-              <button id="langToggleBtn" class="popover-item" onclick="toggleLanguage(); closeAllPopovers();" role="menuitem">
+              <button type="button" id="langToggleBtn" class="popover-item" onclick="toggleLanguage(); closeAllPopovers();" role="menuitem">
                 <span>🌐 TH / EN Language Switch</span>
               </button>
             </div>
@@ -1058,22 +1058,22 @@
       <!-- Row 1: Primary Calculators -->
       <div class="tabs" role="tablist" aria-label="Primary Calculators" style="overflow-x:auto;">
         <span style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); padding:0 8px; align-self:center; white-space:nowrap;">Primary</span>
-        <button class="tab tab-btn active" data-tab="dose" onclick="showTab('dose', this)" title="Pediatric Dose Calculator [Alt+1]" aria-keyshortcuts="Alt+1">💊 Dose</button>
-        <button class="tab tab-btn" data-tab="atb" onclick="showTab('atb', this)" title="Antibiotic Dosing Calculator [Alt+2]" aria-keyshortcuts="Alt+2">🦠 ATB</button>
-        <button class="tab tab-btn" data-tab="fluids" onclick="showTab('fluids', this)" title="IV Maintenance & Deficit Calculator [Alt+3]" aria-keyshortcuts="Alt+3">💧 IV Fluids</button>
-        <button class="tab tab-btn" data-tab="pals" onclick="showTab('pals', this)" title="Pediatric Advanced Life Support Protocol [Alt+4]" aria-keyshortcuts="Alt+4">🧒🏻 PALS</button>
-        <button class="tab tab-btn" data-tab="ncpr" onclick="showTab('ncpr', this)" title="Neonatal Resuscitation Program Protocol [Alt+5]" aria-keyshortcuts="Alt+5">👶🏻 NCPR</button>
-        <button class="tab tab-btn" data-tab="drip" onclick="showTab('drip', this)" title="Continuous Vasoactive Infusion Calculator [Alt+6]" aria-keyshortcuts="Alt+6">🫀 Drip Rate</button>
+        <button type="button" class="tab tab-btn active" data-tab="dose" onclick="showTab('dose', this)" title="Pediatric Dose Calculator [Alt+1]" aria-keyshortcuts="Alt+1" role="tab" aria-selected="true">💊 Dose</button>
+        <button type="button" class="tab tab-btn" data-tab="atb" onclick="showTab('atb', this)" title="Antibiotic Dosing Calculator [Alt+2]" aria-keyshortcuts="Alt+2" role="tab" aria-selected="false">🦠 ATB</button>
+        <button type="button" class="tab tab-btn" data-tab="fluids" onclick="showTab('fluids', this)" title="IV Maintenance & Deficit Calculator [Alt+3]" aria-keyshortcuts="Alt+3" role="tab" aria-selected="false">💧 IV Fluids</button>
+        <button type="button" class="tab tab-btn" data-tab="pals" onclick="showTab('pals', this)" title="Pediatric Advanced Life Support Protocol [Alt+4]" aria-keyshortcuts="Alt+4" role="tab" aria-selected="false">🧒🏻 PALS</button>
+        <button type="button" class="tab tab-btn" data-tab="ncpr" onclick="showTab('ncpr', this)" title="Neonatal Resuscitation Program Protocol [Alt+5]" aria-keyshortcuts="Alt+5" role="tab" aria-selected="false">👶🏻 NCPR</button>
+        <button type="button" class="tab tab-btn" data-tab="drip" onclick="showTab('drip', this)" title="Continuous Vasoactive Infusion Calculator [Alt+6]" aria-keyshortcuts="Alt+6" role="tab" aria-selected="false">🫀 Drip Rate</button>
       </div>
 
       <!-- Row 2: Specialty Protocols & Vitals -->
       <div class="tabs" role="tablist" aria-label="Specialty Protocols" style="overflow-x:auto;">
         <span style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); padding:0 8px; align-self:center; white-space:nowrap;">Specialty</span>
-        <button class="tab tab-btn" data-tab="seizure" onclick="showTab('seizure', this)" title="Status Epilepticus Resuscitation Protocol [Alt+7]" aria-keyshortcuts="Alt+7">⚡ Seizure</button>
-        <button class="tab tab-btn" data-tab="tox" onclick="showTab('tox', this)" title="Antidotes & Overdose Protocol [Alt+8]" aria-keyshortcuts="Alt+8">🧪 Toxicology</button>
-        <button class="tab tab-btn" data-tab="psa" onclick="showTab('psa', this)" title="Procedural Sedation & Analgesia [Alt+9]" aria-keyshortcuts="Alt+9">💉 Sedation</button>
-        <button class="tab tab-btn" data-tab="vitals" onclick="showTab('vitals', this)" title="Age-Banded Physiological Normal Ranges [Alt+0]" aria-keyshortcuts="Alt+0">📊 Vitals</button>
-        <button class="tab tab-btn" data-tab="dka" onclick="showTab('dka', this)" title="Pediatric DKA Protocol Engine [Alt+K]" aria-keyshortcuts="Alt+K">🩺 DKA</button>
+        <button type="button" class="tab tab-btn" data-tab="seizure" onclick="showTab('seizure', this)" title="Status Epilepticus Resuscitation Protocol [Alt+7]" aria-keyshortcuts="Alt+7" role="tab" aria-selected="false">⚡ Seizure</button>
+        <button type="button" class="tab tab-btn" data-tab="tox" onclick="showTab('tox', this)" title="Antidotes & Overdose Protocol [Alt+8]" aria-keyshortcuts="Alt+8" role="tab" aria-selected="false">🧪 Toxicology</button>
+        <button type="button" class="tab tab-btn" data-tab="psa" onclick="showTab('psa', this)" title="Procedural Sedation & Analgesia [Alt+9]" aria-keyshortcuts="Alt+9" role="tab" aria-selected="false">💉 Sedation</button>
+        <button type="button" class="tab tab-btn" data-tab="vitals" onclick="showTab('vitals', this)" title="Age-Banded Physiological Normal Ranges [Alt+0]" aria-keyshortcuts="Alt+0" role="tab" aria-selected="false">📊 Vitals</button>
+        <button type="button" class="tab tab-btn" data-tab="dka" onclick="showTab('dka', this)" title="Pediatric DKA Protocol Engine [Alt+K]" aria-keyshortcuts="Alt+K" role="tab" aria-selected="false">🩺 DKA</button>
       </div>
     </div>
 

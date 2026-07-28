@@ -76,15 +76,6 @@ function loadDataset() {
   }
 }
 
-function initTheme() {
-  const saved = localStorage.getItem('er_ped_theme');
-  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    setTheme('dark');
-  } else {
-    setTheme('light');
-  }
-}
-
 const THEMES = ['light', 'dark', 'mono'];
 
 function initTheme() {
@@ -112,25 +103,41 @@ function toggleTheme() {
 
 function toggleRefPopover(e) {
   if (e) e.stopPropagation();
+  const btn = document.getElementById('refPopoverBtn');
   const menu = document.getElementById('refPopoverMenu');
+  const overflowBtn = document.getElementById('overflowBtn');
   const overflowMenu = document.getElementById('overflowMenu');
   if (overflowMenu) overflowMenu.classList.remove('open');
-  if (menu) menu.classList.toggle('open');
+  if (overflowBtn) overflowBtn.setAttribute('aria-expanded', 'false');
+  if (menu) {
+    const isOpen = menu.classList.toggle('open');
+    if (btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  }
 }
 
 function toggleOverflowMenu(e) {
   if (e) e.stopPropagation();
+  const btn = document.getElementById('overflowBtn');
   const menu = document.getElementById('overflowMenu');
+  const refBtn = document.getElementById('refPopoverBtn');
   const refMenu = document.getElementById('refPopoverMenu');
   if (refMenu) refMenu.classList.remove('open');
-  if (menu) menu.classList.toggle('open');
+  if (refBtn) refBtn.setAttribute('aria-expanded', 'false');
+  if (menu) {
+    const isOpen = menu.classList.toggle('open');
+    if (btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  }
 }
 
 function closeAllPopovers() {
   const refMenu = document.getElementById('refPopoverMenu');
   const overflowMenu = document.getElementById('overflowMenu');
+  const refBtn = document.getElementById('refPopoverBtn');
+  const overflowBtn = document.getElementById('overflowBtn');
   if (refMenu) refMenu.classList.remove('open');
   if (overflowMenu) overflowMenu.classList.remove('open');
+  if (refBtn) refBtn.setAttribute('aria-expanded', 'false');
+  if (overflowBtn) overflowBtn.setAttribute('aria-expanded', 'false');
 }
 
 if (typeof window !== 'undefined') {
@@ -482,9 +489,15 @@ function syncNCPRWithABW(){
 
 function showTab(id, btn) {
   activeTab = id;
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-selected', 'false');
+  });
   const targetBtn = btn || document.querySelector(`.tab-btn[data-tab="${id}"]`);
-  if (targetBtn) targetBtn.classList.add('active');
+  if (targetBtn) {
+    targetBtn.classList.add('active');
+    targetBtn.setAttribute('aria-selected', 'true');
+  }
   
   ['dose','atb','fluids','pals','ncpr','drip','seizure','tox','psa','vitals','dka'].forEach(x => {
     const el = document.getElementById(x);
@@ -540,6 +553,18 @@ function setupKeyboardShortcuts(){
 
 // --------- Broselow Tape Reference Panel ---------
 
+const BROSELOW_COLOR_MAP = {
+  'Grey':   { bg: '#E5E7EB', fg: '#374151' },
+  'Pink':   { bg: '#FCE7F3', fg: '#9D174D' },
+  'Red':    { bg: '#FEE2E2', fg: '#991B1B' },
+  'Purple': { bg: '#F3E8FF', fg: '#6B21A8' },
+  'Yellow': { bg: '#FEF3C7', fg: '#92400E' },
+  'White':  { bg: '#FFFFFF', fg: '#1F2937' },
+  'Blue':   { bg: '#DBEAFE', fg: '#1E40AF' },
+  'Orange': { bg: '#FFEDD5', fg: '#9A3412' },
+  'Green':  { bg: '#DCFCE7', fg: '#166534' }
+};
+
 function broselowColor(w){
   if (!w || !DS || !DS.broselow) return '—';
   for (const b of DS.broselow){ if (w>=b.min && w<=b.max) return b.color; }
@@ -548,11 +573,7 @@ function broselowColor(w){
 
 function colorSwatch(colorLabel){
   const base = (colorLabel || '').toString().trim().split(/\s+/).pop();
-  const m = {
-    'Grey':'#e5e7eb','Pink':'#ffd1dc','Red':'#fecaca','Purple':'#e9d5ff','Yellow':'#fef3c7',
-    'White':'#ffffff','Blue':'#dbeafe','Orange':'#ffedd5','Green':'#dcfce7'
-  };
-  return m[base] || '#f3f4f6';
+  return (BROSELOW_COLOR_MAP[base] && BROSELOW_COLOR_MAP[base].bg) || '#f3f4f6';
 }
 
 function refreshBroselowChip(){
@@ -569,16 +590,9 @@ function refreshBroselowChip(){
       chip.style.color = 'var(--ink)';
       chip.style.border = '1px solid var(--border-strong)';
     } else {
-      const bgMap = {
-        'Grey':'#E5E7EB','Pink':'#FCE7F3','Red':'#FEE2E2','Purple':'#F3E8FF','Yellow':'#FEF3C7',
-        'White':'#FFFFFF','Blue':'#DBEAFE','Orange':'#FFEDD5','Green':'#DCFCE7'
-      };
-      const fgMap = {
-        'Grey':'#374151','Pink':'#9D174D','Red':'#991B1B','Purple':'#6B21A8','Yellow':'#92400E',
-        'White':'#1F2937','Blue':'#1E40AF','Orange':'#9A3412','Green':'#166534'
-      };
-      chip.style.background = bgMap[base] || 'var(--panel)';
-      chip.style.color = fgMap[base] || 'var(--ink)';
+      const palette = BROSELOW_COLOR_MAP[base];
+      chip.style.background = palette ? palette.bg : 'var(--panel)';
+      chip.style.color = palette ? palette.fg : 'var(--ink)';
       chip.style.border = '1px solid var(--border)';
     }
   } else {
