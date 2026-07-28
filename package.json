@@ -17,5 +17,8 @@
     "broselow"
   ],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "jsdom": "^30.0.0"
+  }
 }

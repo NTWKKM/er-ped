@@ -1,5 +1,5 @@
 // --- PWA: register service worker & A2HS prompt ---
-if ('serviceWorker' in navigator && (location.protocol === 'http:' || location.protocol === 'https:')) {
+if (typeof window !== 'undefined' && typeof navigator !== 'undefined' && 'serviceWorker' in navigator && (location.protocol === 'http:' || location.protocol === 'https:')) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js').then(reg => {
       // Check for updates every 30 minutes
@@ -19,12 +19,14 @@ if ('serviceWorker' in navigator && (location.protocol === 'http:' || location.p
 }
 
 let deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  const btn = document.getElementById('a2hsBtn');
-  if (btn) btn.style.display = 'inline-flex';
-});
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const btn = document.getElementById('a2hsBtn');
+    if (btn) btn.style.display = 'inline-flex';
+  });
+}
 
 async function triggerA2HS(){
   if (!deferredPrompt) return;
@@ -36,7 +38,8 @@ async function triggerA2HS(){
 }
 
 // --- Global State ---
-let DS = null;
+var DS = (typeof window !== 'undefined' && window.DS) ? window.DS : null;
+if (typeof window !== 'undefined') window.DS = DS;
 let gIBW = null;
 let gUserABW = null;
 let gIBWSource = null; // 'length', 'age', 'bw', or null
@@ -49,15 +52,21 @@ let activeTab = 'dose';
 function loadDataset() {
   if (window.ER_PED_DATASET) {
     DS = window.ER_PED_DATASET;
+    if (typeof window !== 'undefined') window.DS = DS;
     initUI();
   } else {
     fetch('dataset.json')
       .then(r => r.json())
-      .then(j => { DS = j; initUI(); })
+      .then(j => {
+        DS = j;
+        if (typeof window !== 'undefined') window.DS = DS;
+        initUI();
+      })
       .catch(err => {
         console.error('Failed to load dataset.json via fetch:', err);
         if (window.ER_PED_DATASET) {
           DS = window.ER_PED_DATASET;
+          if (typeof window !== 'undefined') window.DS = DS;
           initUI();
         } else {
           const app = document.getElementById('app');
@@ -88,10 +97,12 @@ function toggleTheme() {
   setTheme(current === 'dark' ? 'light' : 'dark');
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  initTheme();
-  loadDataset();
-});
+if (typeof window !== 'undefined') {
+  window.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+    loadDataset();
+  });
+}
 
 function initUI(){
   initTheme();
@@ -1522,7 +1533,7 @@ function copyEHROrder(module){
   }
 
   if (orderStr) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
+    if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(orderStr).then(() => {
         showToast('📋 Order copied to clipboard!');
       }).catch(() => {
@@ -1532,14 +1543,18 @@ function copyEHROrder(module){
       fallbackCopyText(orderStr);
     }
   }
+  return orderStr;
 }
 
 function fallbackCopyText(text){
+  if (typeof document === 'undefined' || !document.createElement) return;
   const textarea = document.createElement('textarea');
   textarea.value = text;
   document.body.appendChild(textarea);
   textarea.select();
-  document.execCommand('copy');
+  if (typeof document.execCommand === 'function') {
+    document.execCommand('copy');
+  }
   document.body.removeChild(textarea);
   showToast('📋 Order copied to clipboard!');
 }
@@ -1958,7 +1973,7 @@ function calcDKA() {
 }
 
 // --------- 🌐 Dual-Language (TH / EN) Engine ---------
-let gLang = localStorage.getItem('er_ped_lang') || 'TH';
+let gLang = (typeof localStorage !== 'undefined' ? localStorage.getItem('er_ped_lang') : null) || 'TH';
 
 function initLanguage() {
   const btn = document.getElementById('langToggleBtn');
@@ -2045,4 +2060,28 @@ function openChangelogModal() {
 function closeChangelogModal() {
   const backdrop = document.getElementById('changelogBackdrop');
   if (backdrop) backdrop.classList.add('hidden');
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    estimateWeightFromAge,
+    estimateWeightFromLength,
+    calcMaintenanceMlPerHr,
+    calcWeech: estimateWeightFromAge,
+    calcHollidaySegar: calcMaintenanceMlPerHr,
+    copyEHROrder,
+    calcDose,
+    calcATB,
+    calcFluids,
+    calcPALS,
+    calcNCPR,
+    calcDrip,
+    calcSeizure,
+    calcTox,
+    calcPSA,
+    calcVitals,
+    calcDKA,
+    getWeight,
+    calculateIBW
+  };
 }
