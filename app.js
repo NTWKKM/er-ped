@@ -1,7 +1,20 @@
 // --- PWA: register service worker & A2HS prompt ---
 if ('serviceWorker' in navigator && (location.protocol === 'http:' || location.protocol === 'https:')) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW reg skipped/failed:', err));
+    navigator.serviceWorker.register('./sw.js').then(reg => {
+      // Check for updates every 30 minutes
+      setInterval(() => reg.update(), 30 * 60 * 1000);
+      // Show banner on controller change (new SW detected)
+      reg.addEventListener('updatefound', () => {
+        const newSW = reg.installing;
+        newSW.addEventListener('statechange', () => {
+          if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+            const banner = document.getElementById('pwaUpdateBanner');
+            if (banner) banner.style.display = 'flex';
+          }
+        });
+      });
+    }).catch(err => console.log('SW reg skipped/failed:', err));
   });
 }
 

@@ -178,6 +178,55 @@ test('Sub-milligram fmtMg: 0.01 mg (Flumazenil/Terbutaline 1 kg) formats as 0.01
   assert.strictEqual(fmtMgTest(150), '150');
 });
 
+// 7. Test PALS Epinephrine Dosing
+test('PALS Epinephrine: 10 kg child (0.01 mg/kg = 0.1 mg)', () => {
+  const pals = dataset.pals; // object, not array
+  const doseMg = pals.epiArrest.dose_mgPerKg * 10;
+  assert.strictEqual(doseMg, 0.1);
+});
+
+// 8. Test PALS Defibrillation (J/kg)
+test('PALS Defibrillation: 10 kg child (2-4 J/kg initial, max 4 J/kg)', () => {
+  const pals = dataset.pals;
+  const minJ = pals.defib.first_JPerKg * 10;
+  const maxJ = pals.defib.next_JPerKg * 10;
+  assert.strictEqual(minJ, 20);
+  assert.strictEqual(maxJ, 40);
+});
+
+// 9. Test Antibiotic (ATB) Dosing
+test('ATB Ampicillin: 10 kg child, 25 mg/kg/day div q6h = 62.5 mg/dose', () => {
+  const item = dataset.pediatricATB.find(d => d.key === 'ampicillin-iv-im-unasyn');
+  const w = 10;
+  const dailyMg = item.doseMinMgPerKg * w;
+  const dosesPerDay = 4; // q6h = 4x/day
+  const perDose = dailyMg / dosesPerDay;
+  assert.strictEqual(dailyMg, 250);  // 25 * 10 = 250 mg/day
+  assert.strictEqual(perDose, 62.5); // 250 / 4 = 62.5 mg/dose
+});
+
+// 10. Test Vital Signs Age Bands
+test('Vitals: 5 year old HR normal 80-140', () => {
+  const vs = dataset.vitalSignsRef.find(v => v.maxAgeYr >= 5 && v.minAgeYr <= 5);
+  assert.strictEqual(vs.hrMin, 80);
+  assert.strictEqual(vs.hrMax, 140);
+});
+
+// 11. Test Toxicology Naloxone
+test('Toxicology Naloxone: 10 kg child (0.1 mg/kg = 1 mg)', () => {
+  const item = dataset.toxicologyAntidotes.find(d => d.key === 'naloxone-antidote');
+  const w = 10;
+  const doseMg = item.doseMgPerKg * w;
+  assert.strictEqual(doseMg, 1);
+});
+
+// 12. Test Broselow Zone Matching
+test('Broselow: 18 kg child -> White zone', () => {
+  const weight = 18;
+  const band = dataset.broselow.find(b => weight >= b.min && weight <= b.max);
+  assert.strictEqual(band.color, '🤍 White');
+});
+
 console.log(`\n----------------------------------------`);
 console.log(`Test Results: ${passed} Passed, ${failed} Failed`);
 console.log(`----------------------------------------\n`);
