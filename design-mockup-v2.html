@@ -339,11 +339,12 @@ body{
 .tag.warn{background:var(--warning-soft); color:var(--warning)}
 .tag.danger{background:var(--danger-soft); color:var(--danger)}
 [data-theme="mono"] .tag{background:transparent; color:var(--ink); border:1px solid var(--ink)}
-[data-theme="mono"] .tag.good::before{content:"✓ "}
+[data-theme="mono"] .tag.good::before{content:"\2713\FE0E "}
 [data-theme="mono"] .tag.warn{border:2px double var(--ink); font-weight:800}
-[data-theme="mono"] .tag.warn::before{content:"⚠ "}
+[data-theme="mono"] .tag.warn::before{content:"\25B2\FE0E "}
 [data-theme="mono"] .tag.danger{color:#FFFFFF; border-color:#FFFFFF; font-weight:800}
-[data-theme="mono"] .tag.danger::before{content:"🚨 "}
+[data-theme="mono"] .tag.danger::before{content:"\2716\FE0E "}
+
 
 /* ====== ATB table ====== */
 table.atb{width:100%; border-collapse:separate; border-spacing:0; font-size:13px}
