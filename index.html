@@ -188,11 +188,23 @@
     }
     :root[data-theme="dark"] input, 
     :root[data-theme="dark"] select,
+    :root[data-theme="dark"] .combobox-input,
     :root[data-theme="dark"] .bio-fields input[type="number"],
     :root[data-theme="dark"] .chip input[type="number"] {
       background: #2E2B26;
       color: #EAE5DB;
       border-color: #3A3733;
+    }
+    :root[data-theme="dark"] input:focus,
+    :root[data-theme="dark"] select:focus,
+    :root[data-theme="dark"] .combobox-input:focus {
+      background: #2E2B26;
+      color: #FFFFFF;
+      border-color: var(--accent);
+    }
+    :root[data-theme="dark"] option {
+      background: #26241F;
+      color: #EAE5DB;
     }
     :root[data-theme="dark"] .summary {
       background: #1E1C19;
@@ -205,9 +217,35 @@
     :root[data-theme="dark"] .combobox-item:hover,
     :root[data-theme="dark"] .combobox-item.kb-active {
       background: #2E2B26;
+      color: #FFFFFF;
     }
 
     /* Monochrome High-Contrast Overrides for Hospital Panels */
+    :root[data-theme="mono"] input, 
+    :root[data-theme="mono"] select,
+    :root[data-theme="mono"] .combobox-input,
+    :root[data-theme="mono"] .bio-fields input[type="number"],
+    :root[data-theme="mono"] .chip input[type="number"] {
+      background: #222220;
+      color: #F2F2F0;
+      border-color: #4A4A47;
+    }
+    :root[data-theme="mono"] input:focus,
+    :root[data-theme="mono"] select:focus,
+    :root[data-theme="mono"] .combobox-input:focus {
+      background: #2A2A28;
+      color: #FFFFFF;
+      border-color: #EAEAE6;
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.4);
+    }
+    :root[data-theme="mono"] option {
+      background: #222220;
+      color: #F2F2F0;
+    }
+    :root[data-theme="mono"] .combobox-dropdown {
+      background: #222220;
+      border-color: #7A7A77;
+    }
     :root[data-theme="mono"] .tab-btn.active,
     :root[data-theme="mono"] .pill.active,
     :root[data-theme="mono"] .btn-primary {
@@ -642,7 +680,7 @@
       border: 1px solid var(--border); 
       border-radius: 6px; 
       outline: none; 
-      background: #FAFAFA; 
+      background: var(--card); 
       color: var(--ink);
       font-size: 14px;
       font-family: inherit;
@@ -651,7 +689,7 @@
 
     input:focus, select:focus {
       border-color: var(--accent);
-      background: #FFFFFF;
+      background: var(--card);
       box-shadow: 0 0 0 2px var(--ring);
     }
 
@@ -826,7 +864,8 @@
       border: 1px solid var(--border);
       border-radius: 6px;
       outline: none;
-      background: #FAFAFA;
+      background: var(--card);
+      color: var(--ink);
       font-size: 14px;
       font-family: inherit;
       font-weight: 600;
@@ -834,7 +873,7 @@
 
     .combobox-input:focus {
       border-color: var(--accent);
-      background: #FFFFFF;
+      background: var(--card);
       box-shadow: 0 0 0 2px var(--ring);
     }
 
@@ -844,10 +883,10 @@
       left: 0;
       right: 0;
       z-index: 100;
-      background: #FFFFFF;
+      background: var(--card);
       border: 1px solid var(--border-dark);
       border-radius: 8px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      box-shadow: var(--shadow-2);
       max-height: 280px;
       overflow-y: auto;
       display: none;
