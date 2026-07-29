@@ -186,6 +186,11 @@
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     }
+    :root:not([data-theme="dark"]):not([data-theme="mono"]) option {
+      background: #FBFAF7;
+      color: #191919;
+    }
+
     :root[data-theme="dark"] input, 
     :root[data-theme="dark"] select,
     :root[data-theme="dark"] .combobox-input,
