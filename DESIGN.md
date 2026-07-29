@@ -17,7 +17,7 @@
 - `--good`: `#0E7A38` (Clinical safe green)
 - `--warning`: `#A85B05` (Amber warning / Broselow indicator)
 - `--danger`: `#B91C1C` (Emergency PALS critical red)
-- `--blue`: `#2563EB` (Dosing directive blue)
+- `--blue`: `#0B6BCB` (Dosing directive blue / informational accent)
 
 ### Dark Theme Palette (`data-theme="dark"`)
 
@@ -32,11 +32,12 @@
 - `--accent-hover`: `#EFA98C` (Lightened clay for hover)
 - `--accent-soft` / `--accent-subtle`: `#2C201A` (Subtle dark clay tint)
 - `--dark-btn`: `#322F2A` (Tactile dark action button)
-- `--blue`: `#7FA0B8` (L≈0.19 — calmest, informational)
-- `--good`: `#8FB07A` (L≈0.26 — safe green)
-- `--warning`: `#D9A94A` (L≈0.38 — amber caution)
-- `--danger`: `#F0705A` (L≈0.41 — highest luminance urgent red)
-*(Note: Semantic colors are ordered by escalating relative luminance `blue < good < warning < danger` so urgency maps strictly to visual brightness even on monochrome/grayscale clinical displays).*
+- `--blue`: `#7FA0B8` (Informational blue / accent2)
+- `--good`: `#8FB07A` (Safe green)
+- `--warning`: `#D9A94A` (Amber caution)
+- `--danger`: `#F0705A` (Urgent red)
+*(Note: Semantic colors use distinct clinical hues tuned for high contrast, legibility, and visual hierarchy on dark displays).*
+
 
 ### Typography
 

@@ -23,7 +23,7 @@
       --ink: #191919;          --muted: #6B6862;
       --border: #DDD9CD;       --border-strong: #A8A399; --border-dark: #A8A399;
       --accent: #A8452A;       --accent-hover: #7F321D; --accent-soft: #F3E3DA; --accent-subtle: #F7EDE6;
-      --accent2: #0B6BCB;      --accent2-soft: #E4ECF8;
+      --accent2: #0B6BCB;      --accent2-soft: #E4ECF8; --blue: var(--accent2);
       --good: #0E7A38;         --good-soft: #E2F2E8;
       --warning: #A85B05;      --warning-soft: #FCEEDB;
       --danger: #B91C1C;       --danger-soft: #FBE3E3;
@@ -1201,9 +1201,9 @@
   <div class="container" id="app">
     
     <!-- Braun Radio-Style Segmented Navigation Tabs (Grouped 2-Row Layout) -->
-    <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;">
+    <div role="tablist" aria-label="Clinical Calculators & Protocols" style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;">
       <!-- Row 1: Clinical Calculators -->
-      <div class="tabs" role="tablist" style="overflow-x:auto;">
+      <div class="tabs" style="overflow-x:auto;">
         <button type="button" class="tab tab-btn active" data-tab="dose" onclick="showTab('dose', this)" title="Pediatric Dose Calculator [Alt+1]" aria-keyshortcuts="Alt+1" role="tab" aria-selected="true" aria-controls="dose" aria-label="Pediatric Dose Calculator">💊<span class="tab-label"> Dose</span></button>
         <button type="button" class="tab tab-btn" data-tab="atb" onclick="showTab('atb', this)" title="Antibiotic Dosing Calculator [Alt+2]" aria-keyshortcuts="Alt+2" role="tab" aria-selected="false" aria-controls="atb" aria-label="Antibiotic Dosing Calculator">🦠<span class="tab-label"> ATB</span></button>
         <button type="button" class="tab tab-btn" data-tab="fluids" onclick="showTab('fluids', this)" title="IV Maintenance & Deficit Calculator [Alt+3]" aria-keyshortcuts="Alt+3" role="tab" aria-selected="false" aria-controls="fluids" aria-label="IV Maintenance & Deficit Calculator">💧<span class="tab-label"> IV Fluids</span></button>
@@ -1213,7 +1213,7 @@
       </div>
 
       <!-- Row 2: Protocols & Vitals -->
-      <div class="tabs" role="tablist" style="overflow-x:auto;">
+      <div class="tabs" style="overflow-x:auto;">
         <button type="button" class="tab tab-btn" data-tab="seizure" onclick="showTab('seizure', this)" title="Status Epilepticus Resuscitation Protocol [Alt+7]" aria-keyshortcuts="Alt+7" role="tab" aria-selected="false" aria-controls="seizure" aria-label="Status Epilepticus Resuscitation Protocol">⚡<span class="tab-label"> Seizure</span></button>
         <button type="button" class="tab tab-btn" data-tab="tox" onclick="showTab('tox', this)" title="Antidotes & Overdose Protocol [Alt+8]" aria-keyshortcuts="Alt+8" role="tab" aria-selected="false" aria-controls="tox" aria-label="Antidotes & Overdose Protocol">🧪<span class="tab-label"> Toxicology</span></button>
         <button type="button" class="tab tab-btn" data-tab="psa" onclick="showTab('psa', this)" title="Procedural Sedation & Analgesia [Alt+9]" aria-keyshortcuts="Alt+9" role="tab" aria-selected="false" aria-controls="psa" aria-label="Procedural Sedation & Analgesia">💉<span class="tab-label"> Sedation</span></button>
