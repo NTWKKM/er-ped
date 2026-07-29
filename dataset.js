@@ -2668,7 +2668,7 @@ window.ER_PED_DATASET = {
     {
       "color": "🩶 Grey",
       "min": 3,
-      "max": 5,
+      "max": 5.9,
       "approxKg": 5,
       "drugs": {
         "resuscitation": {
@@ -2754,7 +2754,7 @@ window.ER_PED_DATASET = {
     {
       "color": "🩷 Pink",
       "min": 6,
-      "max": 7,
+      "max": 7.9,
       "approxKg": 6.5,
       "drugs": {
         "resuscitation": {
@@ -2840,7 +2840,7 @@ window.ER_PED_DATASET = {
     {
       "color": "❤️ Red",
       "min": 8,
-      "max": 9,
+      "max": 9.9,
       "approxKg": 8.5,
       "drugs": {
         "resuscitation": {
@@ -2926,7 +2926,7 @@ window.ER_PED_DATASET = {
     {
       "color": "💜 Purple",
       "min": 10,
-      "max": 11,
+      "max": 11.9,
       "approxKg": 10.5,
       "drugs": {
         "resuscitation": {
@@ -3012,7 +3012,7 @@ window.ER_PED_DATASET = {
     {
       "color": "💛 Yellow",
       "min": 12,
-      "max": 14,
+      "max": 14.9,
       "approxKg": 13,
       "drugs": {
         "resuscitation": {
@@ -3098,7 +3098,7 @@ window.ER_PED_DATASET = {
     {
       "color": "🤍 White",
       "min": 15,
-      "max": 18,
+      "max": 18.9,
       "approxKg": 16.5,
       "drugs": {
         "resuscitation": {
@@ -3184,7 +3184,7 @@ window.ER_PED_DATASET = {
     {
       "color": "💙 Blue",
       "min": 19,
-      "max": 23,
+      "max": 23.9,
       "approxKg": 21,
       "drugs": {
         "resuscitation": {
@@ -3270,7 +3270,7 @@ window.ER_PED_DATASET = {
     {
       "color": "🧡 Orange",
       "min": 24,
-      "max": 29,
+      "max": 29.9,
       "approxKg": 26.5,
       "drugs": {
         "resuscitation": {

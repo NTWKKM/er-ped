@@ -201,6 +201,13 @@ test('Broselow: 18 kg child -> White zone', () => {
   assert.strictEqual(band.color, '🤍 White');
 });
 
+test('Broselow: 9.1 kg and 9.9 kg child -> Red zone', () => {
+  const b91 = dataset.broselow.find(b => 9.1 >= b.min && 9.1 <= b.max);
+  assert.strictEqual(b91.color, '❤️ Red');
+  const b99 = dataset.broselow.find(b => 9.9 >= b.min && 9.9 <= b.max);
+  assert.strictEqual(b99.color, '❤️ Red');
+});
+
 // 9. Test General Pediatric Dosing Dataset Capping
 test('General Pediatric Dose: Paracetamol 80 kg max per dose capping (capped at 1000 mg)', () => {
   const item = dataset.pediatricDose.find(d => d.key === 'paracetamol-syrup-120-mg-5-ml');
