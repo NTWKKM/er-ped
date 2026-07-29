@@ -38,6 +38,20 @@
 - `--danger`: `#F0705A` (Urgent red)
 *(Note: Semantic colors use distinct clinical hues tuned for high contrast, legibility, and visual hierarchy on dark displays).*
 
+### Monochrome Theme Palette (`data-theme="mono"`)
+
+- `--bg`: `#1C1C1A` (Grayscale matte dark chassis for JVC/ED hospital display panels)
+- `--card`: `#222220` (Elevated dark container surface)
+- `--panel`: `#161614` (Inset dark surface panel)
+- `--ink`: `#F2F2F0` (High-contrast neutral white text)
+- `--muted`: `#A8A8A4` (Grayscale secondary label text)
+- `--border`: `#4A4A47` (Precision 1px grayscale border)
+- `--border-strong`: `#7A7A77` (High-visibility border)
+- `--accent`: `#EAEAE6` (Off-white accent for primary actions and active control backgrounds)
+- `--accent-soft` / `--accent-subtle`: `#333330` (Subtle grayscale container highlight tint)
+- **Active Controls & Combobox Highlight**: Employs **Tonal Inversion** (`#EAEAE6` background with `#121210` dark graphite text and `#FFFFFF` 2px outline for active tabs, pills, and dropdown selections), guaranteeing > 14:1 contrast ratio without color dependencies (Key Decision #36).
+
+
 
 ### Typography
 

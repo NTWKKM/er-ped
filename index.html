@@ -82,7 +82,7 @@
       --bg: #1C1C1A; --card: #222220; --panel: #161614;
       --ink: #F2F2F0; --muted: #A8A8A4;
       --border: #4A4A47; --border-strong: #7A7A77; --border-dark: #7A7A77;
-      --accent: #EAEAE6; --accent-hover: #FFFFFF; --accent-soft: #2A2A28; --accent-subtle: #2A2A28;
+      --accent: #EAEAE6; --accent-hover: #FFFFFF; --accent-soft: #333330; --accent-subtle: #333330;
       --accent2: #C8C8C4; --accent2-soft: #222220;
       --good: #BDBDB8; --good-soft: #222220;
       --warning: #D8D8D2; --warning-soft: #222220;
@@ -205,6 +205,42 @@
     :root[data-theme="dark"] .combobox-item:hover,
     :root[data-theme="dark"] .combobox-item.kb-active {
       background: #2E2B26;
+    }
+
+    /* Monochrome High-Contrast Overrides for Hospital Panels */
+    :root[data-theme="mono"] .tab-btn.active,
+    :root[data-theme="mono"] .pill.active,
+    :root[data-theme="mono"] .btn-primary {
+      background: #EAEAE6;
+      color: #121210;
+      font-weight: 800;
+      border-color: #FFFFFF;
+    }
+    :root[data-theme="mono"] .combobox-item:hover,
+    :root[data-theme="mono"] .combobox-item.selected,
+    :root[data-theme="mono"] .combobox-item.kb-active {
+      background: #EAEAE6;
+      color: #121210;
+      font-weight: 800;
+      outline: 2px solid #FFFFFF;
+      outline-offset: -2px;
+    }
+    :root[data-theme="mono"] .combobox-item:hover .item-tag,
+    :root[data-theme="mono"] .combobox-item.selected .item-tag,
+    :root[data-theme="mono"] .combobox-item.kb-active .item-tag {
+      background: #121210;
+      color: #EAEAE6;
+    }
+    :root[data-theme="mono"] ::selection {
+      background: #EAEAE6;
+      color: #121210;
+    }
+    :root[data-theme="mono"] mark {
+      background: #EAEAE6;
+      color: #121210;
+      font-weight: 700;
+      padding: 0 2px;
+      border-radius: 2px;
     }
 
     * { box-sizing: border-box; }
@@ -408,6 +444,11 @@
       border-color: var(--accent);
       background: #FFF7ED;
       box-shadow: 0 0 0 2px var(--ring);
+    }
+    :root[data-theme="dark"] .chip input[type="number"].highlight-input,
+    :root[data-theme="mono"] .chip input[type="number"].highlight-input {
+      background: #3A3228;
+      color: var(--ink);
     }
 
     .unit-toggle-btn {
@@ -1554,11 +1595,16 @@
   <div id="changelogBackdrop" class="drawer-backdrop hidden" onclick="if(event.target.id==='changelogBackdrop') closeChangelogModal()">
     <div class="drawer" onclick="event.stopPropagation()">
       <div class="drawer-header">
-        <strong style="font-size:16px;">📋 ER-PED Version 1.4.0 Changelog</strong>
+        <strong style="font-size:16px;">📋 ER-PED Version 1.4.1 Changelog</strong>
         <button type="button" class="btn" style="padding:4px 10px; font-size:12px;" onclick="closeChangelogModal()">Close ✖ (Esc)</button>
       </div>
       <div class="drawer-body" style="font-size:13px; line-height:1.6;">
-        <h3 style="color:var(--accent); margin-top:4px;">🎉 What's New in v1.4.0:</h3>
+        <h3 style="color:var(--accent); margin-top:4px;">🎉 What's New in v1.4.1:</h3>
+        <ul>
+          <li><strong>🖥️ Monochrome High-Contrast Tonal Inversion Engine</strong>: ปรับแต่งคอนทราสต์ใน Mono Theme (<code>data-theme="mono"</code>) สำหรับจอภาพ ED/JVC Hospital Displays ด้วยสีข้อความแบบสลับโทนสูง (<code>#121210</code> ตัวหนังสือเข้มบน <code>#EAEAE6</code> พื้นหลังสว่างพร้อมขอบขาว <code>#FFFFFF</code> 2px) บน active tabs, active pills, combobox search dropdown, inputs, mark tags และ text selection (contrast ratio > 14:1)</li>
+        </ul>
+        <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;" />
+        <h4 style="color:var(--ink); margin-top:4px;">📜 Version 1.4.0 Highlights:</h4>
         <ul>
           <li><strong>🎨 Anthropic-Derived Reading-First Redesign</strong>: เปลี่ยนพาเลตต์เป็นโทน warm ivory / muted clay accent พร้อม serif display font (Newsreader) สำหรับหัวข้อโมดูล เพิ่มความหนาแน่นของข้อมูลต่อหน้าจอสำหรับใช้งานข้างเตียงผู้ป่วย</li>
           <li><strong>📏 Wt for Ht Terminology & Layout</strong>: เปลี่ยนชื่อ "IBW" เป็น "Wt for Ht" ทั้งระบบให้ตรงกับการคำนวณจริง (ประมาณน้ำหนักจากส่วนสูงแบบ Broselow ไม่ใช่สูตร ideal body weight) และย้ายช่อง HT มาไว้กลุ่มเดียวกับค่าที่คำนวณได้</li>
@@ -1568,7 +1614,7 @@
           <li><strong>🌐 Bicultural Language Toggle & Monochrome ED Display Optimization</strong>: สลับป้ายไทย/อังกฤษ และปรับ layout ให้เหมาะกับจอ ED แบบ portrait/monochrome</li>
           <li><strong>💊 Structured Laxative & Antacid Dosing</strong>: แยกรายการ Alum milk, Lactulose, PEG (Forlax) เป็น dose entry เฉพาะพร้อม safety cap ทั้งต่อโดสและต่อวัน</li>
           <li><strong>♿ Global WCAG 2.5.8 Touch Targets</strong>: ปรับ toggle switch ให้มี hit area ขั้นต่ำ 24px สำหรับการใช้งานขณะสวมถุงมือ</li>
-          <li><strong>🔧 PWA Cache Fix</strong>: bump service worker cache version เพื่อให้เครื่องที่ install PWA ไว้แล้วได้รับอัปเดตโค้ดล่าสุดจริง (ก่อนหน้านี้ cache ค้างมาตั้งแต่ v1.0.0)</li>
+          <li><strong>🔧 PWA Cache Fix</strong>: bump service worker cache version เพื่อให้เครื่องที่ install PWA ไว้แล้วได้รับอัปเดตโค้ดล่าสุดจริง</li>
         </ul>
         <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;" />
         <h4 style="color:var(--ink); margin-top:4px;">📜 Version 1.3.0 Highlights:</h4>
