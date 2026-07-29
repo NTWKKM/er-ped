@@ -7,7 +7,7 @@
 // stale-while-revalidate. Bump this on every release, not just dataset-only changes.
 // Format: er-ped-v{major}.{minor}.{patch}-{YYYYMMDD}
 // Example: er-ped-v1.4.0-20260729
-const CACHE_NAME = 'er-ped-v1.5.1-20260729';
+const CACHE_NAME = 'er-ped-v1.5.2-20260729';
 
 const ASSETS = [
   './',

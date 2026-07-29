@@ -1601,7 +1601,7 @@
 
     <!-- Standalone Footer -->
     <footer class="app-footer">
-      <div><strong>ER-PED Workstation</strong> — Braun Clinical Instrument <span class="version-chip" onclick="openChangelogModal()" title="ดูบันทึกการเปลี่ยนแปลง v1.5.1">v1.5.1</span></div>
+      <div><strong>ER-PED Workstation</strong> — Braun Clinical Instrument <span class="version-chip" onclick="openChangelogModal()" title="ดูบันทึกการเปลี่ยนแปลง v1.5.2">v1.5.2</span></div>
       <div style="font-size:11px; margin-top:6px; display:flex; justify-content:center; gap:14px;">
         <span style="cursor:pointer; color:var(--accent); display:inline-flex; align-items:center;" onclick="openDatasetEditor()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>Dataset Editor</span>
         <span style="cursor:pointer; color:var(--accent); display:inline-flex; align-items:center;" onclick="openChangelogModal()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>Changelog</span>
@@ -1643,11 +1643,16 @@
   <div id="changelogBackdrop" class="drawer-backdrop hidden" onclick="if(event.target.id==='changelogBackdrop') closeChangelogModal()">
     <div class="drawer" onclick="event.stopPropagation()">
       <div class="drawer-header">
-        <strong style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg> ER-PED Version 1.5.1 Changelog</strong>
+        <strong style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg> ER-PED Version 1.5.2 Changelog</strong>
         <button type="button" class="btn" style="padding:4px 10px; font-size:12px; display:inline-flex; align-items:center; gap:4px;" onclick="closeChangelogModal()">Close <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> (Esc)</button>
       </div>
       <div class="drawer-body" style="font-size:13px; line-height:1.6;">
-        <h3 style="color:var(--accent); margin-top:4px;">What's New in v1.5.1:</h3>
+        <h3 style="color:var(--accent); margin-top:4px;">What's New in v1.5.2:</h3>
+        <ul>
+          <li><strong>📊 High-Density Compact Clinical Table Layout</strong>: ปรับปรุงการแสดงผลยาทั้งหมดในแท็บ <code>Seizure</code>, <code>Toxicology</code> และ <code>Sedation (PSA)</code> จากการ์ดกล่องทรงสูง ให้เป็นตารางข้อมูลตารางเรียบกระชับ (Compact Protocol Tables) ลดความสูงการเลื่อนหน้าจอลงกว่า 65% ให้แพทย์มองเห็นขั้นตอนและสั่งยาฉุกเฉินได้ครบถ้วนโดยไม่ต้อง Scroll หน้าจอ</li>
+        </ul>
+        <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;" />
+        <h4 style="color:var(--ink); margin-top:4px;">📜 Version 1.5.1 Highlights:</h4>
         <ul>
           <li><strong>✨ Compact Resuscitation Protocol UI & De-nested Layout</strong>: ปรับปรุงการแสดงผลในแท็บ <code>Seizure</code>, <code>Drip Rate</code>, <code>Toxicology</code>, <code>Sedation (PSA)</code> และ <code>DKA</code> ให้กระชับขึ้นด้วยเส้นแบ่งสเตจสะอาดเรียบ และย้ายแถบคำแนะนำสำคัญ (Callout Note Banners) ไว้ด้านบนสุด เพื่อการตัดสินใจและสั่งยาข้างเตียงผู้ป่วยที่รวดเร็วยิ่งขึ้น</li>
         </ul>

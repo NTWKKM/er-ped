@@ -1814,17 +1814,30 @@ function calcSeizure() {
   DS.seizureProtocol.forEach((stage, idx) => {
     const isFirst = idx === 0;
     html += `
-      <div class="seizure-stage" style="${!isFirst ? 'border-top:1px solid var(--border); margin-top:16px; padding-top:16px;' : 'padding-top:2px;'}">
-        <div style="font-size:15px; font-weight:700; color:var(--accent); margin-bottom:6px; display:flex; align-items:center;">
-          ⏱️ Stage ${stage.stage}: ${stage.name}
+      <div class="seizure-stage-block" style="${!isFirst ? 'margin-top:12px; padding-top:10px; border-top:1px solid var(--border);' : ''}">
+        <div style="font-size:14px; font-weight:700; color:var(--accent); margin-bottom:4px; display:flex; justify-content:space-between; align-items:center;">
+          <span>⏱️ Stage ${stage.stage}: ${stage.name}</span>
         </div>
-        <div style="font-size:13px; color:var(--ink); margin-bottom:10px; line-height:1.4;">
+        <div style="font-size:12px; color:var(--ink); margin-bottom:6px; line-height:1.4; background:var(--panel); padding:6px 10px; border-radius:4px; border-left:3px solid var(--accent);">
           📌 <strong>Action:</strong> ${stage.actions}
         </div>
     `;
 
     if (stage.drugs && stage.drugs.length > 0) {
-      html += '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:10px; margin-top:8px;">';
+      html += `
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:12px; border:1px solid var(--border); margin-bottom:4px;">
+            <thead>
+              <tr style="background:var(--panel); border-bottom:1px solid var(--border); text-align:left;">
+                <th style="padding:6px 8px; width:26%;">Medication</th>
+                <th style="padding:6px 8px; width:24%;">Dose (${w.toFixed(1)} kg)</th>
+                <th style="padding:6px 8px; width:24%;">Prep Concentration</th>
+                <th style="padding:6px 8px; width:26%;">Clinical Note</th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
+
       stage.drugs.forEach(d => {
         let rawDose = (d.doseMgPerKg || 0) * w;
         let finalDose = rawDose;
@@ -1835,20 +1848,24 @@ function calcSeizure() {
         }
 
         html += `
-          <div style="background:var(--panel); border:1px solid var(--border); border-radius:6px; padding:10px 12px;">
-            <div style="font-weight:700; font-size:14px; color:var(--ink); margin-bottom:4px;">${d.name}</div>
-            <div style="font-size:13px; color:var(--ink); margin-bottom:3px; line-height:1.4;">
-              <strong>Dose:</strong> <span style="font-size:15px; font-weight:700; color:var(--accent);">${fmtMg(finalDose)} mg</span> <span style="font-size:12px; color:var(--muted);">(${d.route})</span>
-              ${isCapped ? `<span class="badge-cap" style="font-size:10px; padding:1px 5px; margin-left:4px;">Max ${d.maxDoseMg} mg</span>` : ''}
-            </div>
-            <div style="font-size:12px; color:var(--muted); margin-bottom:2px; line-height:1.3;">
-              <strong>Prep:</strong> ${d.prep}
-            </div>
-            ${d.note ? `<div style="font-size:12px; color:var(--muted); line-height:1.3;"><strong>Note:</strong> ${d.note}</div>` : ''}
-          </div>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:6px 8px; font-weight:700; color:var(--ink); vertical-align:top;">${d.name}</td>
+            <td style="padding:6px 8px; vertical-align:top;">
+              <strong style="color:var(--accent); font-size:14px;">${fmtMg(finalDose)} mg</strong>
+              <span style="font-size:11px; color:var(--muted);">(${d.route})</span>
+              ${isCapped ? `<div class="badge-cap" style="font-size:10px; padding:1px 4px; display:inline-block; margin-top:2px;">Max ${d.maxDoseMg} mg</div>` : ''}
+            </td>
+            <td style="padding:6px 8px; color:var(--muted); vertical-align:top;">${d.prep}</td>
+            <td style="padding:6px 8px; color:var(--muted); vertical-align:top;">${d.note || '—'}</td>
+          </tr>
         `;
       });
-      html += '</div>';
+
+      html += `
+            </tbody>
+          </table>
+        </div>
+      `;
     }
 
     html += '</div>';
@@ -1869,7 +1886,20 @@ function calcTox() {
     return;
   }
 
-  let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:10px;">';
+  let html = `
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; font-size:12px; border:1px solid var(--border);">
+        <thead>
+          <tr style="background:var(--panel); border-bottom:1px solid var(--border); text-align:left;">
+            <th style="padding:6px 8px; width:22%;">Antidote Name</th>
+            <th style="padding:6px 8px; width:22%;">Indication</th>
+            <th style="padding:6px 8px; width:22%;">Dose (${w.toFixed(1)} kg)</th>
+            <th style="padding:6px 8px; width:18%;">Preparation</th>
+            <th style="padding:6px 8px; width:16%;">Note</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
 
   DS.toxicologyAntidotes.forEach(item => {
     let rawDose = (item.doseMgPerKg || 0) * w;
@@ -1883,22 +1913,21 @@ function calcTox() {
     const unitStr = item.unit || 'mg';
 
     html += `
-      <div style="background:var(--panel); border:1px solid var(--border); border-radius:6px; padding:10px 12px;">
-        <div style="font-weight:700; font-size:14px; color:var(--ink); margin-bottom:2px;">${item.name}</div>
-        <div style="font-size:12px; color:var(--muted); margin-bottom:4px;">Indication: ${item.indication}</div>
-        <div style="font-size:13px; color:var(--ink); margin-bottom:3px; line-height:1.4;">
-          <strong>Dose:</strong> <span style="font-size:15px; font-weight:700; color:var(--accent);">${fmtMg(finalDose)} ${unitStr}</span> <span style="font-size:12px; color:var(--muted);">(${item.route})</span>
-          ${isCapped ? `<span class="badge-cap" style="font-size:10px; padding:1px 5px; margin-left:4px;">Max ${item.maxDoseMg} ${unitStr}</span>` : ''}
-        </div>
-        <div style="font-size:12px; color:var(--muted); margin-bottom:2px; line-height:1.3;">
-          <strong>Prep:</strong> ${item.prep}
-        </div>
-        ${item.note ? `<div style="font-size:12px; color:var(--muted); line-height:1.3;"><strong>Note:</strong> ${item.note}</div>` : ''}
-      </div>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 8px; font-weight:700; color:var(--ink); vertical-align:top;">${item.name}</td>
+        <td style="padding:6px 8px; color:var(--muted); vertical-align:top;">${item.indication}</td>
+        <td style="padding:6px 8px; vertical-align:top;">
+          <strong style="color:var(--accent); font-size:14px;">${fmtMg(finalDose)} ${unitStr}</strong>
+          <span style="font-size:11px; color:var(--muted);">(${item.route})</span>
+          ${isCapped ? `<div class="badge-cap" style="font-size:10px; padding:1px 4px; display:inline-block; margin-top:2px;">Max ${item.maxDoseMg} ${unitStr}</div>` : ''}
+        </td>
+        <td style="padding:6px 8px; color:var(--muted); vertical-align:top;">${item.prep}</td>
+        <td style="padding:6px 8px; color:var(--muted); vertical-align:top;">${item.note || '—'}</td>
+      </tr>
     `;
   });
 
-  html += '</div>';
+  html += '</tbody></table></div>';
   outEl.innerHTML = html;
 }
 
@@ -1914,7 +1943,19 @@ function calcPSA() {
     return;
   }
 
-  let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:10px;">';
+  let html = `
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; font-size:12px; border:1px solid var(--border);">
+        <thead>
+          <tr style="background:var(--panel); border-bottom:1px solid var(--border); text-align:left;">
+            <th style="padding:6px 8px; width:26%;">Medication</th>
+            <th style="padding:6px 8px; width:24%;">Calculated Dose (${w.toFixed(1)} kg)</th>
+            <th style="padding:6px 8px; width:24%;">Preparation</th>
+            <th style="padding:6px 8px; width:26%;">Clinical Note</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
 
   DS.proceduralSedation.forEach(item => {
     const isMcg = item.unit === 'mcg' || item.doseMinMcgPerKg != null;
@@ -1944,21 +1985,20 @@ function calcPSA() {
     const doseStr = minDose === maxDose ? formatValue(minDose) : `${formatValue(minDose)}–${formatValue(maxDose)}`;
 
     html += `
-      <div style="background:var(--panel); border:1px solid var(--border); border-radius:6px; padding:10px 12px;">
-        <div style="font-weight:700; font-size:14px; color:var(--ink); margin-bottom:4px;">${item.name}</div>
-        <div style="font-size:13px; color:var(--ink); margin-bottom:3px; line-height:1.4;">
-          <strong>Dose:</strong> <span style="font-size:15px; font-weight:700; color:var(--accent);">${doseStr} ${unitStr}</span> <span style="font-size:12px; color:var(--muted);">(${item.route})</span>
-          ${isCapped ? `<span class="badge-cap danger" style="font-size:10px; padding:1px 5px; margin-left:4px;">Max ${maxCap} ${unitStr}</span>` : ''}
-        </div>
-        <div style="font-size:12px; color:var(--muted); margin-bottom:2px; line-height:1.3;">
-          <strong>Prep:</strong> ${item.prep}
-        </div>
-        ${item.note ? `<div style="font-size:12px; color:var(--muted); line-height:1.3;"><strong>Note:</strong> ${item.note}</div>` : ''}
-      </div>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:6px 8px; font-weight:700; color:var(--ink); vertical-align:top;">${item.name}</td>
+        <td style="padding:6px 8px; vertical-align:top;">
+          <strong style="color:var(--accent); font-size:14px;">${doseStr} ${unitStr}</strong>
+          <span style="font-size:11px; color:var(--muted);">(${item.route})</span>
+          ${isCapped ? `<div class="badge-cap danger" style="font-size:10px; padding:1px 4px; display:inline-block; margin-top:2px;">Max ${maxCap} ${unitStr}</div>` : ''}
+        </td>
+        <td style="padding:6px 8px; color:var(--muted); vertical-align:top;">${item.prep}</td>
+        <td style="padding:6px 8px; color:var(--muted); vertical-align:top;">${item.note || '—'}</td>
+      </tr>
     `;
   });
 
-  html += '</div>';
+  html += '</tbody></table></div>';
   outEl.innerHTML = html;
 }
 
