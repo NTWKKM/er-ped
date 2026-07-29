@@ -1159,12 +1159,9 @@
 
       <!-- Row 2: Reference & Action Cluster (Decluttered with Popover & Overflow Menu) -->
       <div class="topbar-row-2" style="display:flex; align-items:center; gap:8px; width:100%;">
-        <!-- Reference ▾ Popover Trigger -->
+        <!-- Reference ▾ Popover Trigger (Icon Only) -->
         <div class="popover-wrapper">
-          <button type="button" id="refPopoverBtn" class="btn" style="padding:6px 12px; font-size:12px; display:inline-flex; align-items:center; gap:6px;" onclick="toggleRefPopover(event)" title="เมนูข้อมูลอ้างอิง (Reference Tools)" aria-label="Reference menu" aria-haspopup="true" aria-expanded="false">
-            <span aria-hidden="true">📖▾</span>
-            <span id="broselow" class="mono" style="padding:2px 8px; border-radius:var(--r-sm); font-weight:800; background:var(--panel); color:var(--ink); border:1px solid var(--border);">—</span>
-          </button>
+          <button type="button" id="refPopoverBtn" class="btn" style="padding:6px 12px; font-size:12px; display:inline-flex; align-items:center; gap:6px;" onclick="toggleRefPopover(event)" title="เมนูข้อมูลอ้างอิง (Reference Tools)" aria-label="Reference menu" aria-haspopup="true" aria-expanded="false">📖▾</button>
           <div id="refPopoverMenu" class="popover-menu" role="menu">
             <button type="button" class="popover-item" onclick="showTab('vitals'); closeAllPopovers();" role="menuitem">
               <span>📊 Vital Signs by Age</span>
@@ -1174,6 +1171,9 @@
             </button>
           </div>
         </div>
+
+        <!-- Broselow Color Tape Chip -->
+        <button type="button" id="broselow" class="broselow-chip mono" style="padding:2px 8px; border-radius:var(--r-sm); font-weight:800; background:var(--panel); color:var(--ink); border:1px solid var(--border);" onclick="toggleBroselowPanel()" title="คลิกเพื่อดู Broselow Color Tape Reference">—</button>
 
         <!-- Right-Aligned Action Cluster -->
         <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
@@ -1202,8 +1202,8 @@
     
     <!-- Braun Radio-Style Segmented Navigation Tabs (Grouped 2-Row Layout) -->
     <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;">
-      <!-- Row 1: Primary Calculators -->
-      <div class="tabs" role="tablist" aria-label="Primary Calculators" style="overflow-x:auto;">
+      <!-- Row 1: Clinical Calculators -->
+      <div class="tabs" role="tablist" aria-label="Clinical Calculators" style="overflow-x:auto;">
         <button type="button" class="tab tab-btn active" data-tab="dose" onclick="showTab('dose', this)" title="Pediatric Dose Calculator [Alt+1]" aria-keyshortcuts="Alt+1" role="tab" aria-selected="true" aria-controls="dose" aria-label="Pediatric Dose Calculator">💊<span class="tab-label"> Dose</span></button>
         <button type="button" class="tab tab-btn" data-tab="atb" onclick="showTab('atb', this)" title="Antibiotic Dosing Calculator [Alt+2]" aria-keyshortcuts="Alt+2" role="tab" aria-selected="false" aria-controls="atb" aria-label="Antibiotic Dosing Calculator">🦠<span class="tab-label"> ATB</span></button>
         <button type="button" class="tab tab-btn" data-tab="fluids" onclick="showTab('fluids', this)" title="IV Maintenance & Deficit Calculator [Alt+3]" aria-keyshortcuts="Alt+3" role="tab" aria-selected="false" aria-controls="fluids" aria-label="IV Maintenance & Deficit Calculator">💧<span class="tab-label"> IV Fluids</span></button>
@@ -1213,7 +1213,7 @@
       </div>
 
       <!-- Row 2: Specialty Protocols & Vitals -->
-      <div class="tabs" role="tablist" aria-label="Specialty Protocols" style="overflow-x:auto;">
+      <div class="tabs" role="tablist" aria-label="Specialty Protocols & Vitals" style="overflow-x:auto;">
         <button type="button" class="tab tab-btn" data-tab="seizure" onclick="showTab('seizure', this)" title="Status Epilepticus Resuscitation Protocol [Alt+7]" aria-keyshortcuts="Alt+7" role="tab" aria-selected="false" aria-controls="seizure" aria-label="Status Epilepticus Resuscitation Protocol">⚡<span class="tab-label"> Seizure</span></button>
         <button type="button" class="tab tab-btn" data-tab="tox" onclick="showTab('tox', this)" title="Antidotes & Overdose Protocol [Alt+8]" aria-keyshortcuts="Alt+8" role="tab" aria-selected="false" aria-controls="tox" aria-label="Antidotes & Overdose Protocol">🧪<span class="tab-label"> Toxicology</span></button>
         <button type="button" class="tab tab-btn" data-tab="psa" onclick="showTab('psa', this)" title="Procedural Sedation & Analgesia [Alt+9]" aria-keyshortcuts="Alt+9" role="tab" aria-selected="false" aria-controls="psa" aria-label="Procedural Sedation & Analgesia">💉<span class="tab-label"> Sedation</span></button>
