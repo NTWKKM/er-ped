@@ -198,9 +198,9 @@ function toggleAgeUnit(){
   gAgeUnit = (gAgeUnit === 'yr') ? 'mo' : 'yr';
   const btn = document.getElementById('ageUnitBtn');
   const input = document.getElementById('age');
-  if (btn) btn.textContent = (gAgeUnit === 'yr') ? 'Yr' : 'Mo';
+  if (btn) btn.textContent = (gAgeUnit === 'yr') ? 'yr' : 'mo';
   if (input) {
-    input.placeholder = (gAgeUnit === 'yr') ? '0 (yr)' : '0 (mo)';
+    input.placeholder = (gAgeUnit === 'yr') ? 'Age (yr)' : 'Age (mo)';
     input.max = (gAgeUnit === 'yr') ? '15' : '180';
   }
 
@@ -308,7 +308,7 @@ function updateIBWChipUI() {
     return;
   }
   if (el) el.textContent = `${Number(gIBW).toFixed(1)} kg`;
-  if (src) src.textContent = (gIBWSource === 'length') ? 'Wt-for-Ht' : '';
+  if (src) src.textContent = '';
 }
 
 function getAgeInYears(){
@@ -365,7 +365,7 @@ function getWeightSourceLabel() {
       const age = (isFinite(ageVal) && ageVal > 0) ? ` ${ageVal} ${unit}` : '';
       return { value: gUserABW, label: 'est', detail: `estimated · Weech${age}` };
     }
-    return { value: gUserABW, label: '', detail: 'measured BW' };
+    return { value: gUserABW, label: '', detail: '' };
   }
   return { value: null, label: '', detail: 'enter BW or age' };
 }

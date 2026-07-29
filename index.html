@@ -1226,20 +1226,17 @@
 
         <!-- MEASURED: clinician input only, never overwritten by the app -->
         <div class="bio-group">
-          <span class="bio-group-title">Measured</span>
           <div class="bio-fields">
             <label class="chip-label" for="weight">BW</label>
             <input type="number" id="weight" min="0" step="0.1" placeholder="kg" oninput="onWeightChange()"/>
 
-            <label class="chip-label" for="age">Age</label>
-            <input type="number" id="age" min="0" max="15" step="0.1" placeholder="0" oninput="estimateFromAge()"/>
-            <button type="button" id="ageUnitBtn" class="unit-toggle-btn" onclick="toggleAgeUnit()" title="คลิกเพื่อสลับหน่วยปี/เดือน">Yr</button>
+            <input type="number" id="age" min="0" max="15" step="0.1" placeholder="Age (yr)" oninput="estimateFromAge()"/>
+            <button type="button" id="ageUnitBtn" class="unit-toggle-btn" onclick="toggleAgeUnit()" title="คลิกเพื่อสลับหน่วยปี/เดือน">yr</button>
           </div>
         </div>
 
         <!-- DERIVED: computed, read-only, with the explicit dosing opt-in -->
         <div class="bio-group">
-          <span class="bio-group-title">Derived</span>
           <div class="bio-fields">
             <label class="chip-label" for="length">HT</label>
             <input type="number" id="length" min="0" step="0.1" placeholder="cm" oninput="updateIBW()"/>
@@ -1249,7 +1246,7 @@
             <span id="ibwSource" class="bio-derived-src"></span>
             <label class="bio-use-toggle" title="ใช้น้ำหนักประมาณจากส่วนสูงแทนน้ำหนักจริงในการคำนวณยา">
               <input type="checkbox" id="useIBW" class="switch" onchange="applyIBWToBW()"/>
-              <span>use for dosing</span>
+              <span>Use Wt-for-Ht</span>
             </label>
           </div>
         </div>
@@ -1272,7 +1269,7 @@
               <span>📊 Vital Signs by Age</span>
             </button>
             <button type="button" class="popover-item" onclick="toggleBroselowPanel(); closeAllPopovers();" role="menuitem">
-              <span>🎨 Broselow Color Tape Reference</span>
+              <span>🎨 Broselow Tape</span>
             </button>
           </div>
         </div>
@@ -1293,7 +1290,7 @@
                 <span>🖨️ Print Reference Card</span>
               </button>
               <button type="button" id="langToggleBtn" class="popover-item" onclick="toggleLanguage(); closeAllPopovers();" role="menuitem">
-                <span>🌐 TH / EN Language Switch</span>
+                <span>🌐 TH / EN</span>
               </button>
             </div>
           </div>
@@ -1343,7 +1340,7 @@
           <div class="weight-lock-chip">
             <span>Weight in use:</span>
             <strong id="doseWBadge">— kg</strong>
-            <span style="font-size:11px; color:var(--muted); margin-left:auto;">🔒 Topbar Sync</span>
+            <span style="font-size:11px; color:var(--muted); margin-left:auto;" title="Synced from topbar" aria-label="Synced from topbar">🔒</span>
           </div>
         </div>
         <div class="col-6">
@@ -1373,7 +1370,7 @@
           <div class="weight-lock-chip">
             <span>Weight in use:</span>
             <strong id="atbWBadge">— kg</strong>
-            <span style="font-size:11px; color:var(--muted); margin-left:auto;">🔒 Topbar Sync</span>
+            <span style="font-size:11px; color:var(--muted); margin-left:auto;" title="Synced from topbar" aria-label="Synced from topbar">🔒</span>
           </div>
         </div>
         <div class="col-6">
@@ -1439,7 +1436,7 @@
           <div class="weight-lock-chip">
             <span>BW:</span>
             <strong id="pWBadge">— kg</strong>
-            <span style="font-size:11px; color:var(--muted); margin-left:auto;">🔒 Topbar Sync</span>
+            <span style="font-size:11px; color:var(--muted); margin-left:auto;" title="Synced from topbar" aria-label="Synced from topbar">🔒</span>
           </div>
         </div>
         <div class="col-6">
@@ -1490,7 +1487,7 @@
           <div class="weight-lock-chip">
             <span>Weight in use:</span>
             <strong id="dripWBadge">— kg</strong>
-            <span style="font-size:11px; color:var(--muted); margin-left:auto;">🔒 Topbar Sync</span>
+            <span style="font-size:11px; color:var(--muted); margin-left:auto;" title="Synced from topbar" aria-label="Synced from topbar">🔒</span>
           </div>
         </div>
         <div class="col-6">
