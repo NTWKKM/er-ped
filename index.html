@@ -253,11 +253,17 @@
     }
     :root[data-theme="mono"] .tab-btn.active,
     :root[data-theme="mono"] .pill.active,
-    :root[data-theme="mono"] .btn-primary {
+    :root[data-theme="mono"] .btn-primary,
+    :root[data-theme="mono"] .fab button.pals-fab {
       background: #EAEAE6;
       color: #121210;
       font-weight: 800;
-      border-color: #FFFFFF;
+      border: 2px solid #FFFFFF;
+    }
+    :root[data-theme="mono"] .fab button.pals-fab:hover {
+      background: #FFFFFF;
+      color: #000000;
+      border-color: #EAEAE6;
     }
     :root[data-theme="mono"] .combobox-item:hover,
     :root[data-theme="mono"] .combobox-item.selected,
