@@ -1,8 +1,13 @@
 // ER-PED Service Worker
-// ⚠️ IMPORTANT: Bump CACHE_NAME when dataset.json changes to push updates to users
+// ⚠️ IMPORTANT: Bump CACHE_NAME on EVERY release that changes app.js/index.html/dataset.js —
+// app.js, index.html, and dataset.js are served cache-first (see fetch handler below), so the
+// browser's native update check (reg.update() -> 'updatefound') only fires when THIS FILE's
+// bytes change. If CACHE_NAME is left unchanged, deployed PWA clients silently keep running the
+// old cached app.js/index.html indefinitely, even though dataset.json itself refreshes via
+// stale-while-revalidate. Bump this on every release, not just dataset-only changes.
 // Format: er-ped-v{major}.{minor}.{patch}-{YYYYMMDD}
-// Example: er-ped-v1.0.0-20250728
-const CACHE_NAME = 'er-ped-v1.0.0-20250728';
+// Example: er-ped-v1.4.0-20260729
+const CACHE_NAME = 'er-ped-v1.4.0-20260729';
 
 const ASSETS = [
   './',
