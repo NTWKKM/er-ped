@@ -1764,13 +1764,14 @@ function calcDrip() {
   const isCapped = item.maxRateMcgKgMin && doseVal > item.maxRateMcgKgMin;
 
   outEl.innerHTML = `
-    <div style="background:var(--panel); padding:14px; border-radius:8px; border:1px solid var(--border); margin-bottom:12px;">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <strong style="font-size:16px; color:var(--accent);">${item.drug}</strong>
+    <div style="margin-bottom:12px; padding:8px 12px; background:var(--panel); border-radius:6px; border:1px solid var(--border);">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px;">
+        <strong style="font-size:15px; color:var(--accent);">${item.drug}</strong>
         <span class="mono" style="font-size:12px; color:var(--muted);">${item.route}</span>
       </div>
-      <div style="font-size:13px; color:var(--muted); margin-top:4px;">${item.note || ''}</div>
-      <div style="font-size:12px; color:var(--muted); margin-top:4px;">Standard Dilution: <strong>${item.standardPrep}</strong></div>
+      <div style="font-size:12px; color:var(--muted); margin-top:2px;">
+        Standard Dilution: <strong>${item.standardPrep}</strong> ${item.note ? `• ${item.note}` : ''}
+      </div>
     </div>
 
     <div class="hero-metric-grid">
@@ -1791,7 +1792,7 @@ function calcDrip() {
       </div>
     </div>
 
-    ${isCapped ? `<div class="badge-cap" style="margin-top:10px;">⚠️ Warning: Target dose (${doseVal} mcg/kg/min) exceeds maximum recommended rate (${item.maxRateMcgKgMin} mcg/kg/min)</div>` : ''}
+    ${isCapped ? `<div class="badge-cap danger" style="margin-top:10px;">⚠️ Warning: Target dose (${doseVal} mcg/kg/min) exceeds maximum recommended rate (${item.maxRateMcgKgMin} mcg/kg/min)</div>` : ''}
 
   `;
 }
@@ -1810,17 +1811,20 @@ function calcSeizure() {
 
   let html = '';
 
-  DS.seizureProtocol.forEach(stage => {
+  DS.seizureProtocol.forEach((stage, idx) => {
+    const isFirst = idx === 0;
     html += `
-      <div style="background:var(--card); border:1px solid var(--border); border-radius:8px; padding:14px; margin-bottom:14px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:8px; margin-bottom:10px;">
-          <strong style="font-size:15px; color:var(--accent);">⏱️ Stage ${stage.stage}: ${stage.name}</strong>
+      <div class="seizure-stage" style="${!isFirst ? 'border-top:1px solid var(--border); margin-top:16px; padding-top:16px;' : 'padding-top:2px;'}">
+        <div style="font-size:15px; font-weight:700; color:var(--accent); margin-bottom:6px; display:flex; align-items:center;">
+          ⏱️ Stage ${stage.stage}: ${stage.name}
         </div>
-        <div style="font-size:13px; color:var(--muted); margin-bottom:10px;">📌 ${stage.actions}</div>
+        <div style="font-size:13px; color:var(--ink); margin-bottom:10px; line-height:1.4;">
+          📌 <strong>Action:</strong> ${stage.actions}
+        </div>
     `;
 
     if (stage.drugs && stage.drugs.length > 0) {
-      html += '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:10px;">';
+      html += '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:10px; margin-top:8px;">';
       stage.drugs.forEach(d => {
         let rawDose = (d.doseMgPerKg || 0) * w;
         let finalDose = rawDose;
@@ -1831,14 +1835,16 @@ function calcSeizure() {
         }
 
         html += `
-          <div style="background:var(--panel); border:1px solid var(--border); border-radius:6px; padding:10px;">
-            <div style="font-weight:700; font-size:14px; color:var(--ink);">${d.name}</div>
-            <div style="font-size:18px; font-weight:800; color:var(--accent); margin:4px 0;">
-              ${fmtMg(finalDose)} <span style="font-size:12px; color:var(--muted);">mg (${d.route})</span>
+          <div style="background:var(--panel); border:1px solid var(--border); border-radius:6px; padding:10px 12px;">
+            <div style="font-weight:700; font-size:14px; color:var(--ink); margin-bottom:4px;">${d.name}</div>
+            <div style="font-size:13px; color:var(--ink); margin-bottom:3px; line-height:1.4;">
+              <strong>Dose:</strong> <span style="font-size:15px; font-weight:700; color:var(--accent);">${fmtMg(finalDose)} mg</span> <span style="font-size:12px; color:var(--muted);">(${d.route})</span>
+              ${isCapped ? `<span class="badge-cap" style="font-size:10px; padding:1px 5px; margin-left:4px;">Max ${d.maxDoseMg} mg</span>` : ''}
             </div>
-            <div style="font-size:11px; color:var(--muted);">Prep: ${d.prep}</div>
-            <div style="font-size:11px; color:var(--muted); margin-top:2px;">${d.note}</div>
-            ${isCapped ? `<div class="badge-cap" style="font-size:10px; padding:2px 6px; margin-top:4px;">Max Cap Applied: ${d.maxDoseMg} mg</div>` : ''}
+            <div style="font-size:12px; color:var(--muted); margin-bottom:2px; line-height:1.3;">
+              <strong>Prep:</strong> ${d.prep}
+            </div>
+            ${d.note ? `<div style="font-size:12px; color:var(--muted); line-height:1.3;"><strong>Note:</strong> ${d.note}</div>` : ''}
           </div>
         `;
       });
@@ -1863,7 +1869,7 @@ function calcTox() {
     return;
   }
 
-  let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:12px;">';
+  let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:10px;">';
 
   DS.toxicologyAntidotes.forEach(item => {
     let rawDose = (item.doseMgPerKg || 0) * w;
@@ -1877,15 +1883,17 @@ function calcTox() {
     const unitStr = item.unit || 'mg';
 
     html += `
-      <div style="background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:12px;">
-        <div style="font-weight:700; font-size:15px; color:var(--accent);">${item.name}</div>
-        <div style="font-size:12px; color:var(--muted); margin:2px 0 6px;">Indication: ${item.indication}</div>
-        <div style="font-size:20px; font-weight:800; color:var(--ink);">
-          ${fmtMg(finalDose)} <span style="font-size:13px; color:var(--muted);">${unitStr} (${item.route})</span>
+      <div style="background:var(--panel); border:1px solid var(--border); border-radius:6px; padding:10px 12px;">
+        <div style="font-weight:700; font-size:14px; color:var(--ink); margin-bottom:2px;">${item.name}</div>
+        <div style="font-size:12px; color:var(--muted); margin-bottom:4px;">Indication: ${item.indication}</div>
+        <div style="font-size:13px; color:var(--ink); margin-bottom:3px; line-height:1.4;">
+          <strong>Dose:</strong> <span style="font-size:15px; font-weight:700; color:var(--accent);">${fmtMg(finalDose)} ${unitStr}</span> <span style="font-size:12px; color:var(--muted);">(${item.route})</span>
+          ${isCapped ? `<span class="badge-cap" style="font-size:10px; padding:1px 5px; margin-left:4px;">Max ${item.maxDoseMg} ${unitStr}</span>` : ''}
         </div>
-        <div style="font-size:12px; color:var(--muted); margin-top:4px;">Prep: <strong>${item.prep}</strong></div>
-        <div style="font-size:11px; color:var(--muted); margin-top:4px;">${item.note}</div>
-        ${isCapped ? `<div class="badge-cap" style="font-size:10px; padding:2px 6px; margin-top:4px;">Capped at Max: ${item.maxDoseMg} ${unitStr}</div>` : ''}
+        <div style="font-size:12px; color:var(--muted); margin-bottom:2px; line-height:1.3;">
+          <strong>Prep:</strong> ${item.prep}
+        </div>
+        ${item.note ? `<div style="font-size:12px; color:var(--muted); line-height:1.3;"><strong>Note:</strong> ${item.note}</div>` : ''}
       </div>
     `;
   });
@@ -1906,7 +1914,7 @@ function calcPSA() {
     return;
   }
 
-  let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:12px;">';
+  let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:10px;">';
 
   DS.proceduralSedation.forEach(item => {
     const isMcg = item.unit === 'mcg' || item.doseMinMcgPerKg != null;
@@ -1936,14 +1944,16 @@ function calcPSA() {
     const doseStr = minDose === maxDose ? formatValue(minDose) : `${formatValue(minDose)}–${formatValue(maxDose)}`;
 
     html += `
-      <div style="background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:12px;">
-        <div style="font-weight:700; font-size:15px; color:var(--accent);">${item.name}</div>
-        <div style="font-size:18px; font-weight:800; color:var(--ink); margin:6px 0;">
-          ${doseStr} <span style="font-size:13px; color:var(--muted);">${unitStr} (${item.route})</span>
+      <div style="background:var(--panel); border:1px solid var(--border); border-radius:6px; padding:10px 12px;">
+        <div style="font-weight:700; font-size:14px; color:var(--ink); margin-bottom:4px;">${item.name}</div>
+        <div style="font-size:13px; color:var(--ink); margin-bottom:3px; line-height:1.4;">
+          <strong>Dose:</strong> <span style="font-size:15px; font-weight:700; color:var(--accent);">${doseStr} ${unitStr}</span> <span style="font-size:12px; color:var(--muted);">(${item.route})</span>
+          ${isCapped ? `<span class="badge-cap danger" style="font-size:10px; padding:1px 5px; margin-left:4px;">Max ${maxCap} ${unitStr}</span>` : ''}
         </div>
-        <div style="font-size:12px; color:var(--muted);">Prep: <strong>${item.prep}</strong></div>
-        <div style="font-size:11px; color:var(--muted); margin-top:4px;">${item.note}</div>
-        ${isCapped ? `<div class="badge-cap danger" style="font-size:10px; padding:2px 6px; margin-top:4px;">Capped at Max: ${maxCap} ${unitStr}</div>` : ''}
+        <div style="font-size:12px; color:var(--muted); margin-bottom:2px; line-height:1.3;">
+          <strong>Prep:</strong> ${item.prep}
+        </div>
+        ${item.note ? `<div style="font-size:12px; color:var(--muted); line-height:1.3;"><strong>Note:</strong> ${item.note}</div>` : ''}
       </div>
     `;
   });
@@ -2065,7 +2075,7 @@ function calcDKA() {
   const isDextroseNeeded = currentBG !== null && currentBG < 250;
 
   let html = `
-    <div class="hero-metric-grid" style="margin-bottom:14px;">
+    <div class="hero-metric-grid" style="margin-bottom:12px;">
       <div class="hero-metric danger">
         <div class="hero-label">IV FLUID RATE (MNT + 48H DEFICIT)</div>
         <div class="hero-val">${totalFluidRate}<span class="unit">mL/hr</span></div>
@@ -2084,20 +2094,19 @@ function calcDKA() {
     </div>
 
     ${isDextroseNeeded ? `
-      <div class="badge-cap warning" style="margin-bottom:12px; display:block;">
+      <div class="badge-cap warning" style="margin-bottom:12px; display:block; padding:8px 12px; line-height:1.4;">
         ⚠️ Bedside BG = ${currentBG} mg/dL (&lt; 250 mg/dL): Switch IV fluid to D5 0.45% NS + 20 mEq/L KCl immediately to maintain BG 150–250 mg/dL while continuing insulin drip!
       </div>
     ` : ''}
 
-    <div style="background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:12px; margin-bottom:12px;">
-      <strong style="font-size:14px; color:var(--accent);">🩸 Potassium (K+) Correction Rules:</strong>
-      <ul style="margin:6px 0 0 18px; padding:0; font-size:12px; line-height:1.6;">
+    <div style="background:var(--panel); border:1px solid var(--border); border-radius:6px; padding:10px 12px;">
+      <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:4px;">🩸 Potassium (K+) Correction Rules:</div>
+      <ul style="margin:0; padding-left:18px; font-size:12px; line-height:1.5; color:var(--ink);">
         <li><strong style="color:var(--danger);">&lt; 3.3 mEq/L:</strong> 🚫 <strong>HOLD INSULIN!</strong> Add 40 mEq/L KCl to IV fluid. Give 0.5 mEq/kg/hr until K+ &gt; 3.3 mEq/L.</li>
         <li><strong>3.3–5.5 mEq/L:</strong> Add 20–40 mEq/L KCl to IV fluid once urine output is established.</li>
         <li><strong>&gt; 5.5 mEq/L:</strong> Do NOT add KCl to IV fluid. Recheck K+ every 2 hours.</li>
       </ul>
     </div>
-
   `;
 
   outEl.innerHTML = html;
