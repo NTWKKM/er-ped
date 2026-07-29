@@ -69,4 +69,6 @@
 5. **EHR Order Engine (background, no in-card UI surface)**: `copyEHROrder()`/`copyCustomOrder()` format standardized medical English prescription lines; per Key Decision #4 the in-card `📋 Copy` buttons were removed from the workstation view, but the formatter remains implemented and covered by JSDOM tests.
 6. **Emergency PALS Floating Button**: Instant-access emergency action button (`🚨 PALS CODE`, `Alt+P`) anchored at bottom-right in dark graphite & clay accents.
 7. **Broselow Drawer Panel**: Precision bottom drawer with color-coded band headings and equipment grids sliding over content for quick reference.
+8. **Universal Input & Selection Box State System**: Standardized Theme-Aware Focus & Dropdown System across all input, select, option, and combobox elements. Replaces static background fills with dynamic theme custom properties (`var(--card)`, `var(--ink)`, `var(--border)`), preventing white-on-white text collisions in focused state and guaranteeing high-contrast option dropdown lists in Light, Dark, and Mono modes (Key Decision #37).
+
 
