@@ -1043,6 +1043,20 @@
       color: var(--muted);
       font-size: 13px;
     }
+    .version-chip {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--accent);
+      color: #FFFFFF;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    :root[data-theme="mono"] .version-chip {
+      background: #EAEAE6;
+      color: #121210;
+      border: 1px solid #FFFFFF;
+    }
 
     /* Responsive Mobile Tweaks */
     @media (max-width: 768px) {
@@ -1553,7 +1567,7 @@
 
     <!-- Standalone Footer -->
     <footer class="app-footer">
-      <div><strong>ER-PED Workstation</strong> — Braun Clinical Instrument <span style="font-size:11px; padding:2px 6px; border-radius:4px; background:var(--accent); color:#FFF; font-weight:800; cursor:pointer;" onclick="openChangelogModal()" title="ดูบันทึกการเปลี่ยนแปลง v1.4.0">v1.4.0</span></div>
+      <div><strong>ER-PED Workstation</strong> — Braun Clinical Instrument <span class="version-chip" onclick="openChangelogModal()" title="ดูบันทึกการเปลี่ยนแปลง v1.4.1">v1.4.1</span></div>
       <div style="font-size:11px; margin-top:6px; display:flex; justify-content:center; gap:14px;">
         <span style="cursor:pointer; color:var(--accent);" onclick="openDatasetEditor()">⚙️ Dataset Editor</span>
         <span style="cursor:pointer; color:var(--accent);" onclick="openChangelogModal()">📋 Changelog</span>
