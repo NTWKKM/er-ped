@@ -218,10 +218,6 @@
       background: #26241F;
       color: #EAE5DB;
     }
-    :root[data-theme="dark"] .summary {
-      background: #1E1C19;
-      border-color: #3A3733;
-    }
     :root[data-theme="dark"] .combobox-dropdown {
       background: #26241F;
       border-color: #3A3733;
@@ -706,13 +702,13 @@
 
     /* Output Summary & Braun LCD Digital Readout Blocks */
     .summary { 
-      background: var(--card); 
-      border: 1px solid var(--border); 
-      padding: 12px 14px; 
-      border-radius: 8px; 
-      white-space: pre-wrap; 
-      line-height: 1.6; 
-      font-size: 14px;
+      background: transparent; 
+      border: none; 
+      padding: 0; 
+      border-radius: 0; 
+      white-space: normal; 
+      line-height: 1.35; 
+      font-size: 13px;
     }
 
     .hero-metric-grid {
@@ -1601,7 +1597,7 @@
 
     <!-- Standalone Footer -->
     <footer class="app-footer">
-      <div><strong>ER-PED Workstation</strong> — Braun Clinical Instrument <span class="version-chip" onclick="openChangelogModal()" title="ดูบันทึกการเปลี่ยนแปลง v1.5.3">v1.5.3</span></div>
+      <div><strong>ER-PED Workstation</strong> — Braun Clinical Instrument <span class="version-chip" onclick="openChangelogModal()" title="ดูบันทึกการเปลี่ยนแปลง v1.5.4">v1.5.4</span></div>
       <div style="font-size:11px; margin-top:4px; color:var(--muted);">
         พัฒนาและอ้างอิงจาก <a href="https://ped-tsh.web.app/" target="_blank" rel="noopener" style="color:var(--accent); font-weight:700; text-decoration:underline;">Pediatric Emergency Workstation (ped-tsh.web.app)</a> 
         <span style="cursor:pointer; color:var(--accent); margin-left:4px; font-weight:600;" onclick="openAttributionModal()">[ℹ️ เครดิตการพัฒนา]</span>
@@ -1678,11 +1674,16 @@
   <div id="changelogBackdrop" class="drawer-backdrop hidden" onclick="if(event.target.id==='changelogBackdrop') closeChangelogModal()">
     <div class="drawer" onclick="event.stopPropagation()">
       <div class="drawer-header">
-        <strong style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg> ER-PED Version 1.5.3 Changelog</strong>
+        <strong style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg> ER-PED Version 1.5.4 Changelog</strong>
         <button type="button" class="btn" style="padding:4px 10px; font-size:12px; display:inline-flex; align-items:center; gap:4px;" onclick="closeChangelogModal()">Close <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> (Esc)</button>
       </div>
       <div class="drawer-body" style="font-size:13px; line-height:1.6;">
-        <h3 style="color:var(--accent); margin-top:4px;">What's New in v1.5.3:</h3>
+        <h3 style="color:var(--accent); margin-top:4px;">What's New in v1.5.4:</h3>
+        <ul>
+          <li><strong>✨ Elimination of Unnecessary Whitespace & Redundant Containers</strong>: ตัดกล่องซ้ำซ้อนสองชั้น (Nested Card Borders) ออกจาก <code>.summary</code> ทำให้พื้นที่ตารางขยายเต็มขอบการ์ด ตัดช่องว่างแนวตั้งส่วนเกินลงกว่า 50% ทุกโมดูล และลดระยะ Cell Padding ในตารางให้แสดงผลกระชับ สบายตา และอ่านง่ายสูงสุด</li>
+        </ul>
+        <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;" />
+        <h4 style="color:var(--ink); margin-top:4px;">📜 Version 1.5.3 Highlights:</h4>
         <ul>
           <li><strong>📊 Universal High-Density Protocol Tables</strong>: ปรับปรุงโครงสร้างตารางข้อมูลความหนาแน่นสูงครอบคลุมทั้ง 5 โมดูลสำคัญ (<code>Seizure Protocol</code>, <code>Drip Rate</code>, <code>Toxicology</code>, <code>Sedation (PSA)</code> และ <code>DKA Protocol</code>) ขจัดความสูงส่วนเกินจากการเลื่อนหน้าจอ และเพิ่มความแม่นยำในการสั่งยาฉุกเฉินข้างเตียง</li>
           <li><strong>🏥 Project Origination & Attribution Credit Modal</strong>: เพิ่มป้ายประกาศและป๊อปอัพ <code>ped-tsh.web.app Credit</code> เพื่อแสดงความขอบคุณและระบุที่มาอย่างชัดเจนว่าระบบพัฒนาและอ้างอิงจาก <a href="https://ped-tsh.web.app/" target="_blank" rel="noopener" style="color:var(--accent); font-weight:700;">Pediatric Emergency Workstation (ped-tsh.web.app)</a></li>

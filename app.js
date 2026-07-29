@@ -1764,35 +1764,35 @@ function calcDrip() {
   const isCapped = item.maxRateMcgKgMin && doseVal > item.maxRateMcgKgMin;
 
   outEl.innerHTML = `
-    <div style="overflow-x:auto; margin-top:4px;">
-      <table style="width:100%; border-collapse:collapse; font-size:12px; border:1px solid var(--border);">
+    <div style="overflow-x:auto; margin-top:2px;">
+      <table style="width:100%; border-collapse:collapse; font-size:11.5px; line-height:1.3; border:1px solid var(--border);">
         <thead>
           <tr style="background:var(--panel); border-bottom:1px solid var(--border); text-align:left;">
-            <th style="padding:6px 8px; width:25%;">Drug & Route</th>
-            <th style="padding:6px 8px; width:20%;">Target Dose</th>
-            <th style="padding:6px 8px; width:20%;">Infusion Pump Rate</th>
-            <th style="padding:6px 8px; width:20%;">Concentration & Prep</th>
-            <th style="padding:6px 8px; width:15%;">Dosing Range</th>
+            <th style="padding:4px 6px; width:25%;">Drug & Route</th>
+            <th style="padding:4px 6px; width:20%;">Target Dose</th>
+            <th style="padding:4px 6px; width:20%;">Infusion Pump Rate</th>
+            <th style="padding:4px 6px; width:20%;">Concentration & Prep</th>
+            <th style="padding:4px 6px; width:15%;">Dosing Range</th>
           </tr>
         </thead>
         <tbody>
           <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:8px; font-weight:700; color:var(--ink); vertical-align:top;">
+            <td style="padding:4px 6px; font-weight:700; color:var(--ink); vertical-align:top;">
               ${item.drug}
-              <div style="font-size:11px; font-weight:normal; color:var(--muted); margin-top:2px;">${item.route} ${item.note ? `• ${item.note}` : ''}</div>
+              <div style="font-size:10.5px; font-weight:normal; color:var(--muted); margin-top:1px;">${item.route} ${item.note ? `• ${item.note}` : ''}</div>
             </td>
-            <td style="padding:8px; vertical-align:top;">
-              <strong style="color:var(--accent); font-size:14px;">${doseVal.toFixed(2)} mcg/kg/min</strong>
-              <div style="font-size:11px; color:var(--muted);">${(mcgPerHour / 1000).toFixed(2)} mg/hr</div>
+            <td style="padding:4px 6px; vertical-align:top;">
+              <strong style="color:var(--accent); font-size:13px;">${doseVal.toFixed(2)} mcg/kg/min</strong>
+              <div style="font-size:10.5px; color:var(--muted);">${(mcgPerHour / 1000).toFixed(2)} mg/hr</div>
             </td>
-            <td style="padding:8px; vertical-align:top;">
-              <strong style="color:var(--danger); font-size:16px;">${rateMlHr.toFixed(1)} mL/hr</strong>
+            <td style="padding:4px 6px; vertical-align:top;">
+              <strong style="color:var(--danger); font-size:14px;">${rateMlHr.toFixed(1)} mL/hr</strong>
             </td>
-            <td style="padding:8px; color:var(--muted); vertical-align:top;">
+            <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">
               <strong style="color:var(--ink);">${concMgPerMl.toFixed(3)} mg/mL</strong>
-              <div style="font-size:11px;">${mgVal} mg in ${volVal} mL (${concMcgPerMl.toFixed(0)} mcg/mL)</div>
+              <div style="font-size:10.5px;">${mgVal} mg in ${volVal} mL (${concMcgPerMl.toFixed(0)} mcg/mL)</div>
             </td>
-            <td style="padding:8px; color:var(--muted); vertical-align:top;">
+            <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">
               ${item.doseMinMcgKgMin}–${item.doseMaxMcgKgMin} mcg/kg/min
             </td>
           </tr>
@@ -1800,7 +1800,7 @@ function calcDrip() {
       </table>
     </div>
 
-    ${isCapped ? `<div class="badge-cap danger" style="margin-top:8px;">⚠️ Warning: Target dose (${doseVal} mcg/kg/min) exceeds maximum recommended rate (${item.maxRateMcgKgMin} mcg/kg/min)</div>` : ''}
+    ${isCapped ? `<div class="badge-cap danger" style="margin-top:6px; padding:4px 8px; font-size:11px;">⚠️ Warning: Target dose (${doseVal} mcg/kg/min) exceeds maximum recommended rate (${item.maxRateMcgKgMin} mcg/kg/min)</div>` : ''}
   `;
 }
 
@@ -1821,11 +1821,11 @@ function calcSeizure() {
   DS.seizureProtocol.forEach((stage, idx) => {
     const isFirst = idx === 0;
     html += `
-      <div class="seizure-stage-block" style="${!isFirst ? 'margin-top:12px; padding-top:10px; border-top:1px solid var(--border);' : ''}">
-        <div style="font-size:14px; font-weight:700; color:var(--accent); margin-bottom:4px; display:flex; justify-content:space-between; align-items:center;">
+      <div class="seizure-stage-block" style="${!isFirst ? 'margin-top:6px; padding-top:4px; border-top:1px solid var(--border);' : ''}">
+        <div style="font-size:12.5px; font-weight:700; color:var(--accent); margin-bottom:2px; display:flex; justify-content:space-between; align-items:center;">
           <span>⏱️ Stage ${stage.stage}: ${stage.name}</span>
         </div>
-        <div style="font-size:12px; color:var(--ink); margin-bottom:6px; line-height:1.4; background:var(--panel); padding:6px 10px; border-radius:4px; border-left:3px solid var(--accent);">
+        <div style="font-size:11.5px; color:var(--ink); margin-bottom:4px; line-height:1.3; background:var(--panel); padding:4px 8px; border-radius:4px; border-left:3px solid var(--accent);">
           📌 <strong>Action:</strong> ${stage.actions}
         </div>
     `;
@@ -1833,13 +1833,13 @@ function calcSeizure() {
     if (stage.drugs && stage.drugs.length > 0) {
       html += `
         <div style="overflow-x:auto;">
-          <table style="width:100%; border-collapse:collapse; font-size:12px; border:1px solid var(--border); margin-bottom:4px;">
+          <table style="width:100%; border-collapse:collapse; font-size:11.5px; line-height:1.3; border:1px solid var(--border); margin-bottom:2px;">
             <thead>
               <tr style="background:var(--panel); border-bottom:1px solid var(--border); text-align:left;">
-                <th style="padding:6px 8px; width:26%;">Medication</th>
-                <th style="padding:6px 8px; width:24%;">Dose (${w.toFixed(1)} kg)</th>
-                <th style="padding:6px 8px; width:24%;">Prep Concentration</th>
-                <th style="padding:6px 8px; width:26%;">Clinical Note</th>
+                <th style="padding:4px 6px; width:26%;">Medication</th>
+                <th style="padding:4px 6px; width:24%;">Dose (${w.toFixed(1)} kg)</th>
+                <th style="padding:4px 6px; width:24%;">Prep Concentration</th>
+                <th style="padding:4px 6px; width:26%;">Clinical Note</th>
               </tr>
             </thead>
             <tbody>
@@ -1856,14 +1856,14 @@ function calcSeizure() {
 
         html += `
           <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:6px 8px; font-weight:700; color:var(--ink); vertical-align:top;">${d.name}</td>
-            <td style="padding:6px 8px; vertical-align:top;">
-              <strong style="color:var(--accent); font-size:14px;">${fmtMg(finalDose)} mg</strong>
-              <span style="font-size:11px; color:var(--muted);">(${d.route})</span>
-              ${isCapped ? `<div class="badge-cap" style="font-size:10px; padding:1px 4px; display:inline-block; margin-top:2px;">Max ${d.maxDoseMg} mg</div>` : ''}
+            <td style="padding:4px 6px; font-weight:700; color:var(--ink); vertical-align:top;">${d.name}</td>
+            <td style="padding:4px 6px; vertical-align:top;">
+              <strong style="color:var(--accent); font-size:13px;">${fmtMg(finalDose)} mg</strong>
+              <span style="font-size:10.5px; color:var(--muted);">(${d.route})</span>
+              ${isCapped ? `<div class="badge-cap" style="font-size:9.5px; padding:0 4px; display:inline-block; margin-top:1px;">Max ${d.maxDoseMg} mg</div>` : ''}
             </td>
-            <td style="padding:6px 8px; color:var(--muted); vertical-align:top;">${d.prep}</td>
-            <td style="padding:6px 8px; color:var(--muted); vertical-align:top;">${d.note || '—'}</td>
+            <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">${d.prep}</td>
+            <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">${d.note || '—'}</td>
           </tr>
         `;
       });
@@ -1895,14 +1895,14 @@ function calcTox() {
 
   let html = `
     <div style="overflow-x:auto;">
-      <table style="width:100%; border-collapse:collapse; font-size:12px; border:1px solid var(--border);">
+      <table style="width:100%; border-collapse:collapse; font-size:11.5px; line-height:1.3; border:1px solid var(--border);">
         <thead>
           <tr style="background:var(--panel); border-bottom:1px solid var(--border); text-align:left;">
-            <th style="padding:6px 8px; width:22%;">Antidote Name</th>
-            <th style="padding:6px 8px; width:22%;">Indication</th>
-            <th style="padding:6px 8px; width:22%;">Dose (${w.toFixed(1)} kg)</th>
-            <th style="padding:6px 8px; width:18%;">Preparation</th>
-            <th style="padding:6px 8px; width:16%;">Note</th>
+            <th style="padding:4px 6px; width:22%;">Antidote Name</th>
+            <th style="padding:4px 6px; width:22%;">Indication</th>
+            <th style="padding:4px 6px; width:22%;">Dose (${w.toFixed(1)} kg)</th>
+            <th style="padding:4px 6px; width:18%;">Preparation</th>
+            <th style="padding:4px 6px; width:16%;">Note</th>
           </tr>
         </thead>
         <tbody>
@@ -1921,15 +1921,15 @@ function calcTox() {
 
     html += `
       <tr style="border-bottom:1px solid var(--border);">
-        <td style="padding:6px 8px; font-weight:700; color:var(--ink); vertical-align:top;">${item.name}</td>
-        <td style="padding:6px 8px; color:var(--muted); vertical-align:top;">${item.indication}</td>
-        <td style="padding:6px 8px; vertical-align:top;">
-          <strong style="color:var(--accent); font-size:14px;">${fmtMg(finalDose)} ${unitStr}</strong>
-          <span style="font-size:11px; color:var(--muted);">(${item.route})</span>
-          ${isCapped ? `<div class="badge-cap" style="font-size:10px; padding:1px 4px; display:inline-block; margin-top:2px;">Max ${item.maxDoseMg} ${unitStr}</div>` : ''}
+        <td style="padding:4px 6px; font-weight:700; color:var(--ink); vertical-align:top;">${item.name}</td>
+        <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">${item.indication}</td>
+        <td style="padding:4px 6px; vertical-align:top;">
+          <strong style="color:var(--accent); font-size:13px;">${fmtMg(finalDose)} ${unitStr}</strong>
+          <span style="font-size:10.5px; color:var(--muted);">(${item.route})</span>
+          ${isCapped ? `<div class="badge-cap" style="font-size:9.5px; padding:0 4px; display:inline-block; margin-top:1px;">Max ${item.maxDoseMg} ${unitStr}</div>` : ''}
         </td>
-        <td style="padding:6px 8px; color:var(--muted); vertical-align:top;">${item.prep}</td>
-        <td style="padding:6px 8px; color:var(--muted); vertical-align:top;">${item.note || '—'}</td>
+        <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">${item.prep}</td>
+        <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">${item.note || '—'}</td>
       </tr>
     `;
   });
@@ -1952,13 +1952,13 @@ function calcPSA() {
 
   let html = `
     <div style="overflow-x:auto;">
-      <table style="width:100%; border-collapse:collapse; font-size:12px; border:1px solid var(--border);">
+      <table style="width:100%; border-collapse:collapse; font-size:11.5px; line-height:1.3; border:1px solid var(--border);">
         <thead>
           <tr style="background:var(--panel); border-bottom:1px solid var(--border); text-align:left;">
-            <th style="padding:6px 8px; width:26%;">Medication</th>
-            <th style="padding:6px 8px; width:24%;">Calculated Dose (${w.toFixed(1)} kg)</th>
-            <th style="padding:6px 8px; width:24%;">Preparation</th>
-            <th style="padding:6px 8px; width:26%;">Clinical Note</th>
+            <th style="padding:4px 6px; width:26%;">Medication</th>
+            <th style="padding:4px 6px; width:24%;">Calculated Dose (${w.toFixed(1)} kg)</th>
+            <th style="padding:4px 6px; width:24%;">Preparation</th>
+            <th style="padding:4px 6px; width:26%;">Clinical Note</th>
           </tr>
         </thead>
         <tbody>
@@ -1993,14 +1993,14 @@ function calcPSA() {
 
     html += `
       <tr style="border-bottom:1px solid var(--border);">
-        <td style="padding:6px 8px; font-weight:700; color:var(--ink); vertical-align:top;">${item.name}</td>
-        <td style="padding:6px 8px; vertical-align:top;">
-          <strong style="color:var(--accent); font-size:14px;">${doseStr} ${unitStr}</strong>
-          <span style="font-size:11px; color:var(--muted);">(${item.route})</span>
-          ${isCapped ? `<div class="badge-cap danger" style="font-size:10px; padding:1px 4px; display:inline-block; margin-top:2px;">Max ${maxCap} ${unitStr}</div>` : ''}
+        <td style="padding:4px 6px; font-weight:700; color:var(--ink); vertical-align:top;">${item.name}</td>
+        <td style="padding:4px 6px; vertical-align:top;">
+          <strong style="color:var(--accent); font-size:13px;">${doseStr} ${unitStr}</strong>
+          <span style="font-size:10.5px; color:var(--muted);">(${item.route})</span>
+          ${isCapped ? `<div class="badge-cap danger" style="font-size:9.5px; padding:0 4px; display:inline-block; margin-top:1px;">Max ${maxCap} ${unitStr}</div>` : ''}
         </td>
-        <td style="padding:6px 8px; color:var(--muted); vertical-align:top;">${item.prep}</td>
-        <td style="padding:6px 8px; color:var(--muted); vertical-align:top;">${item.note || '—'}</td>
+        <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">${item.prep}</td>
+        <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">${item.note || '—'}</td>
       </tr>
     `;
   });
@@ -2122,40 +2122,40 @@ function calcDKA() {
   const isDextroseNeeded = currentBG !== null && currentBG < 250;
 
   let html = `
-    <div style="overflow-x:auto; margin-top:4px;">
-      <table style="width:100%; border-collapse:collapse; font-size:12px; border:1px solid var(--border); margin-bottom:10px;">
+    <div style="overflow-x:auto; margin-top:2px;">
+      <table style="width:100%; border-collapse:collapse; font-size:11.5px; line-height:1.3; border:1px solid var(--border); margin-bottom:6px;">
         <thead>
           <tr style="background:var(--panel); border-bottom:1px solid var(--border); text-align:left;">
-            <th style="padding:6px 8px; width:30%;">DKA Protocol Target</th>
-            <th style="padding:6px 8px; width:25%;">Calculated Rate / Volume</th>
-            <th style="padding:6px 8px; width:45%;">Clinical Breakdown & Instructions</th>
+            <th style="padding:4px 6px; width:30%;">DKA Protocol Target</th>
+            <th style="padding:4px 6px; width:25%;">Calculated Rate / Volume</th>
+            <th style="padding:4px 6px; width:45%;">Clinical Breakdown & Instructions</th>
           </tr>
         </thead>
         <tbody>
           <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:6px 8px; font-weight:700; color:var(--ink); vertical-align:top;">IV Fluid Rate (Mnt + 48h Deficit)</td>
-            <td style="padding:6px 8px; vertical-align:top;">
-              <strong style="color:var(--danger); font-size:15px;">${totalFluidRate} mL/hr</strong>
+            <td style="padding:4px 6px; font-weight:700; color:var(--ink); vertical-align:top;">IV Fluid Rate (Mnt + 48h Deficit)</td>
+            <td style="padding:4px 6px; vertical-align:top;">
+              <strong style="color:var(--danger); font-size:14px;">${totalFluidRate} mL/hr</strong>
             </td>
-            <td style="padding:6px 8px; color:var(--muted); vertical-align:top;">
+            <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">
               Mnt: ${mntRate.toFixed(1)} mL/hr + Deficit: ${deficitRate48h.toFixed(1)} mL/hr (Net Deficit: ${netDeficitMl.toFixed(0)} mL over 48h)
             </td>
           </tr>
           <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:6px 8px; font-weight:700; color:var(--ink); vertical-align:top;">Regular Insulin Drip</td>
-            <td style="padding:6px 8px; vertical-align:top;">
-              <strong style="color:var(--accent); font-size:15px;">${insulinPumpMlHr} mL/hr</strong>
+            <td style="padding:4px 6px; font-weight:700; color:var(--ink); vertical-align:top;">Regular Insulin Drip</td>
+            <td style="padding:4px 6px; vertical-align:top;">
+              <strong style="color:var(--accent); font-size:14px;">${insulinPumpMlHr} mL/hr</strong>
             </td>
-            <td style="padding:6px 8px; color:var(--muted); vertical-align:top;">
+            <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">
               Dose: ${insulinDoseUnitsHr} U/hr (0.1 U/kg/hr) [Prep: 50 U in 50 mL NS = 1 U/mL]
             </td>
           </tr>
           <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:6px 8px; font-weight:700; color:var(--ink); vertical-align:top;">Initial NS Resus Bolus</td>
-            <td style="padding:6px 8px; vertical-align:top;">
-              <strong style="color:var(--ink); font-size:14px;">${initialBolusMl.toFixed(0)} mL</strong>
+            <td style="padding:4px 6px; font-weight:700; color:var(--ink); vertical-align:top;">Initial NS Resus Bolus</td>
+            <td style="padding:4px 6px; vertical-align:top;">
+              <strong style="color:var(--ink); font-size:13px;">${initialBolusMl.toFixed(0)} mL</strong>
             </td>
-            <td style="padding:6px 8px; color:var(--muted); vertical-align:top;">
+            <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">
               10 mL/kg 0.9% NS over 1 hour
             </td>
           </tr>
@@ -2164,14 +2164,14 @@ function calcDKA() {
     </div>
 
     ${isDextroseNeeded ? `
-      <div class="badge-cap warning" style="margin-bottom:10px; display:block; padding:6px 10px; line-height:1.4;">
+      <div class="badge-cap warning" style="margin-bottom:6px; display:block; padding:4px 8px; line-height:1.3; font-size:11.5px;">
         ⚠️ Bedside BG = ${currentBG} mg/dL (&lt; 250 mg/dL): Switch IV fluid to D5 0.45% NS + 20 mEq/L KCl immediately to maintain BG 150–250 mg/dL while continuing insulin drip!
       </div>
     ` : ''}
 
-    <div style="background:var(--panel); border:1px solid var(--border); border-radius:6px; padding:8px 10px;">
-      <div style="font-size:12px; font-weight:700; color:var(--accent); margin-bottom:2px;">🩸 Potassium (K+) Correction Rules:</div>
-      <ul style="margin:0; padding-left:16px; font-size:11px; line-height:1.4; color:var(--ink);">
+    <div style="background:var(--panel); border:1px solid var(--border); border-radius:6px; padding:6px 8px;">
+      <div style="font-size:11.5px; font-weight:700; color:var(--accent); margin-bottom:2px;">🩸 Potassium (K+) Correction Rules:</div>
+      <ul style="margin:0; padding-left:14px; font-size:11px; line-height:1.35; color:var(--ink);">
         <li><strong style="color:var(--danger);">&lt; 3.3 mEq/L:</strong> 🚫 <strong>HOLD INSULIN!</strong> Add 40 mEq/L KCl to IV fluid. Give 0.5 mEq/kg/hr until K+ &gt; 3.3 mEq/L.</li>
         <li><strong>3.3–5.5 mEq/L:</strong> Add 20–40 mEq/L KCl to IV fluid once urine output is established.</li>
         <li><strong>&gt; 5.5 mEq/L:</strong> Do NOT add KCl to IV fluid. Recheck K+ every 2 hours.</li>
