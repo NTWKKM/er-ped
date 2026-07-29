@@ -1764,36 +1764,43 @@ function calcDrip() {
   const isCapped = item.maxRateMcgKgMin && doseVal > item.maxRateMcgKgMin;
 
   outEl.innerHTML = `
-    <div style="margin-bottom:12px; padding:8px 12px; background:var(--panel); border-radius:6px; border:1px solid var(--border);">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px;">
-        <strong style="font-size:15px; color:var(--accent);">${item.drug}</strong>
-        <span class="mono" style="font-size:12px; color:var(--muted);">${item.route}</span>
-      </div>
-      <div style="font-size:12px; color:var(--muted); margin-top:2px;">
-        Standard Dilution: <strong>${item.standardPrep}</strong> ${item.note ? `• ${item.note}` : ''}
-      </div>
+    <div style="overflow-x:auto; margin-top:4px;">
+      <table style="width:100%; border-collapse:collapse; font-size:12px; border:1px solid var(--border);">
+        <thead>
+          <tr style="background:var(--panel); border-bottom:1px solid var(--border); text-align:left;">
+            <th style="padding:6px 8px; width:25%;">Drug & Route</th>
+            <th style="padding:6px 8px; width:20%;">Target Dose</th>
+            <th style="padding:6px 8px; width:20%;">Infusion Pump Rate</th>
+            <th style="padding:6px 8px; width:20%;">Concentration & Prep</th>
+            <th style="padding:6px 8px; width:15%;">Dosing Range</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:8px; font-weight:700; color:var(--ink); vertical-align:top;">
+              ${item.drug}
+              <div style="font-size:11px; font-weight:normal; color:var(--muted); margin-top:2px;">${item.route} ${item.note ? `• ${item.note}` : ''}</div>
+            </td>
+            <td style="padding:8px; vertical-align:top;">
+              <strong style="color:var(--accent); font-size:14px;">${doseVal.toFixed(2)} mcg/kg/min</strong>
+              <div style="font-size:11px; color:var(--muted);">${(mcgPerHour / 1000).toFixed(2)} mg/hr</div>
+            </td>
+            <td style="padding:8px; vertical-align:top;">
+              <strong style="color:var(--danger); font-size:16px;">${rateMlHr.toFixed(1)} mL/hr</strong>
+            </td>
+            <td style="padding:8px; color:var(--muted); vertical-align:top;">
+              <strong style="color:var(--ink);">${concMgPerMl.toFixed(3)} mg/mL</strong>
+              <div style="font-size:11px;">${mgVal} mg in ${volVal} mL (${concMcgPerMl.toFixed(0)} mcg/mL)</div>
+            </td>
+            <td style="padding:8px; color:var(--muted); vertical-align:top;">
+              ${item.doseMinMcgKgMin}–${item.doseMaxMcgKgMin} mcg/kg/min
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
-    <div class="hero-metric-grid">
-      <div class="hero-metric danger">
-        <div class="hero-label">INFUSION PUMP RATE</div>
-        <div class="hero-val">${rateMlHr.toFixed(1)}<span class="unit">mL/hr</span></div>
-        <div class="hero-sub">Dose: ${doseVal.toFixed(2)} mcg/kg/min (${(mcgPerHour / 1000).toFixed(2)} mg/hr)</div>
-      </div>
-      <div class="hero-metric blue">
-        <div class="hero-label">CONCENTRATION</div>
-        <div class="hero-val">${concMgPerMl.toFixed(3)}<span class="unit">mg/mL</span></div>
-        <div class="hero-sub">${mgVal} mg in ${volVal} mL diluent (${concMcgPerMl.toFixed(0)} mcg/mL)</div>
-      </div>
-      <div class="hero-metric good">
-        <div class="hero-label">PATIENT WEIGHT</div>
-        <div class="hero-val">${w.toFixed(1)}<span class="unit">kg</span></div>
-        <div class="hero-sub">Range: ${item.doseMinMcgKgMin}–${item.doseMaxMcgKgMin} mcg/kg/min</div>
-      </div>
-    </div>
-
-    ${isCapped ? `<div class="badge-cap danger" style="margin-top:10px;">⚠️ Warning: Target dose (${doseVal} mcg/kg/min) exceeds maximum recommended rate (${item.maxRateMcgKgMin} mcg/kg/min)</div>` : ''}
-
+    ${isCapped ? `<div class="badge-cap danger" style="margin-top:8px;">⚠️ Warning: Target dose (${doseVal} mcg/kg/min) exceeds maximum recommended rate (${item.maxRateMcgKgMin} mcg/kg/min)</div>` : ''}
   `;
 }
 
@@ -2115,33 +2122,56 @@ function calcDKA() {
   const isDextroseNeeded = currentBG !== null && currentBG < 250;
 
   let html = `
-    <div class="hero-metric-grid" style="margin-bottom:12px;">
-      <div class="hero-metric danger">
-        <div class="hero-label">IV FLUID RATE (MNT + 48H DEFICIT)</div>
-        <div class="hero-val">${totalFluidRate}<span class="unit">mL/hr</span></div>
-        <div class="hero-sub">Mnt: ${mntRate.toFixed(1)} + Deficit: ${deficitRate48h.toFixed(1)} mL/hr (Net Deficit: ${netDeficitMl.toFixed(0)} mL)</div>
-      </div>
-      <div class="hero-metric blue">
-        <div class="hero-label">REGULAR INSULIN DRIP</div>
-        <div class="hero-val">${insulinPumpMlHr}<span class="unit">mL/hr</span></div>
-        <div class="hero-sub">Dose: ${insulinDoseUnitsHr} U/hr (0.1 U/kg/hr) [Prep: 50 U in 50 mL NS = 1 U/mL]</div>
-      </div>
-      <div class="hero-metric good">
-        <div class="hero-label">INITIAL NS RESUS BOLUS</div>
-        <div class="hero-val">${initialBolusMl.toFixed(0)}<span class="unit">mL</span></div>
-        <div class="hero-sub">10 mL/kg 0.9% NS over 1 hour</div>
-      </div>
+    <div style="overflow-x:auto; margin-top:4px;">
+      <table style="width:100%; border-collapse:collapse; font-size:12px; border:1px solid var(--border); margin-bottom:10px;">
+        <thead>
+          <tr style="background:var(--panel); border-bottom:1px solid var(--border); text-align:left;">
+            <th style="padding:6px 8px; width:30%;">DKA Protocol Target</th>
+            <th style="padding:6px 8px; width:25%;">Calculated Rate / Volume</th>
+            <th style="padding:6px 8px; width:45%;">Clinical Breakdown & Instructions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:6px 8px; font-weight:700; color:var(--ink); vertical-align:top;">IV Fluid Rate (Mnt + 48h Deficit)</td>
+            <td style="padding:6px 8px; vertical-align:top;">
+              <strong style="color:var(--danger); font-size:15px;">${totalFluidRate} mL/hr</strong>
+            </td>
+            <td style="padding:6px 8px; color:var(--muted); vertical-align:top;">
+              Mnt: ${mntRate.toFixed(1)} mL/hr + Deficit: ${deficitRate48h.toFixed(1)} mL/hr (Net Deficit: ${netDeficitMl.toFixed(0)} mL over 48h)
+            </td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:6px 8px; font-weight:700; color:var(--ink); vertical-align:top;">Regular Insulin Drip</td>
+            <td style="padding:6px 8px; vertical-align:top;">
+              <strong style="color:var(--accent); font-size:15px;">${insulinPumpMlHr} mL/hr</strong>
+            </td>
+            <td style="padding:6px 8px; color:var(--muted); vertical-align:top;">
+              Dose: ${insulinDoseUnitsHr} U/hr (0.1 U/kg/hr) [Prep: 50 U in 50 mL NS = 1 U/mL]
+            </td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:6px 8px; font-weight:700; color:var(--ink); vertical-align:top;">Initial NS Resus Bolus</td>
+            <td style="padding:6px 8px; vertical-align:top;">
+              <strong style="color:var(--ink); font-size:14px;">${initialBolusMl.toFixed(0)} mL</strong>
+            </td>
+            <td style="padding:6px 8px; color:var(--muted); vertical-align:top;">
+              10 mL/kg 0.9% NS over 1 hour
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     ${isDextroseNeeded ? `
-      <div class="badge-cap warning" style="margin-bottom:12px; display:block; padding:8px 12px; line-height:1.4;">
+      <div class="badge-cap warning" style="margin-bottom:10px; display:block; padding:6px 10px; line-height:1.4;">
         ⚠️ Bedside BG = ${currentBG} mg/dL (&lt; 250 mg/dL): Switch IV fluid to D5 0.45% NS + 20 mEq/L KCl immediately to maintain BG 150–250 mg/dL while continuing insulin drip!
       </div>
     ` : ''}
 
-    <div style="background:var(--panel); border:1px solid var(--border); border-radius:6px; padding:10px 12px;">
-      <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:4px;">🩸 Potassium (K+) Correction Rules:</div>
-      <ul style="margin:0; padding-left:18px; font-size:12px; line-height:1.5; color:var(--ink);">
+    <div style="background:var(--panel); border:1px solid var(--border); border-radius:6px; padding:8px 10px;">
+      <div style="font-size:12px; font-weight:700; color:var(--accent); margin-bottom:2px;">🩸 Potassium (K+) Correction Rules:</div>
+      <ul style="margin:0; padding-left:16px; font-size:11px; line-height:1.4; color:var(--ink);">
         <li><strong style="color:var(--danger);">&lt; 3.3 mEq/L:</strong> 🚫 <strong>HOLD INSULIN!</strong> Add 40 mEq/L KCl to IV fluid. Give 0.5 mEq/kg/hr until K+ &gt; 3.3 mEq/L.</li>
         <li><strong>3.3–5.5 mEq/L:</strong> Add 20–40 mEq/L KCl to IV fluid once urine output is established.</li>
         <li><strong>&gt; 5.5 mEq/L:</strong> Do NOT add KCl to IV fluid. Recheck K+ every 2 hours.</li>
@@ -2239,6 +2269,17 @@ function openChangelogModal() {
 
 function closeChangelogModal() {
   const backdrop = document.getElementById('changelogBackdrop');
+  if (backdrop) backdrop.classList.add('hidden');
+}
+
+// --------- 🌐 Origination & Attribution Modal ---------
+function openAttributionModal() {
+  const backdrop = document.getElementById('attributionBackdrop');
+  if (backdrop) backdrop.classList.remove('hidden');
+}
+
+function closeAttributionModal() {
+  const backdrop = document.getElementById('attributionBackdrop');
   if (backdrop) backdrop.classList.add('hidden');
 }
 
