@@ -1173,7 +1173,7 @@
         </div>
 
         <!-- Broselow Color Tape Chip -->
-        <button type="button" id="broselow" class="broselow-chip mono" style="padding:2px 8px; border-radius:var(--r-sm); font-weight:800; background:var(--panel); color:var(--ink); border:1px solid var(--border);" onclick="toggleBroselowPanel()" title="คลิกเพื่อดู Broselow Color Tape Reference">—</button>
+        <button type="button" id="broselow" class="broselow-chip mono" style="padding:2px 8px; border-radius:var(--r-sm); font-weight:800; background:var(--panel); color:var(--ink); border:1px solid var(--border);" onclick="toggleBroselowPanel()" aria-label="Broselow Color Tape Reference" title="คลิกเพื่อดู Broselow Color Tape Reference">—</button>
 
         <!-- Right-Aligned Action Cluster -->
         <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
@@ -1534,7 +1534,7 @@
     <div class="drawer" onclick="event.stopPropagation()">
       <div class="drawer-header">
         <strong style="font-size:16px;">⚙️ Lightweight Dataset Editor (Local Overrides)</strong>
-        <button class="btn" style="padding:4px 10px; font-size:12px;" onclick="closeDatasetEditor()">Close ✖ (Esc)</button>
+        <button type="button" class="btn" style="padding:4px 10px; font-size:12px;" onclick="closeDatasetEditor()">Close ✖ (Esc)</button>
       </div>
       <div style="font-size:12px; color:var(--muted); flex-shrink:0;">ปรับแต่งข้อมูลยา / Safety Caps สำหรับใช้งานใน รพ. (บันทึกใน localStorage)</div>
       <div class="drawer-body">
@@ -1555,7 +1555,7 @@
     <div class="drawer" onclick="event.stopPropagation()">
       <div class="drawer-header">
         <strong style="font-size:16px;">📋 ER-PED Version 1.4.0 Changelog</strong>
-        <button class="btn" style="padding:4px 10px; font-size:12px;" onclick="closeChangelogModal()">Close ✖ (Esc)</button>
+        <button type="button" class="btn" style="padding:4px 10px; font-size:12px;" onclick="closeChangelogModal()">Close ✖ (Esc)</button>
       </div>
       <div class="drawer-body" style="font-size:13px; line-height:1.6;">
         <h3 style="color:var(--accent); margin-top:4px;">🎉 What's New in v1.4.0:</h3>
@@ -1597,7 +1597,7 @@
     <div id="broselowPanel" class="drawer" onclick="event.stopPropagation()">
       <div class="drawer-header">
         <strong style="font-size:16px;">📏 Broselow Tape Reference</strong>
-        <button class="btn" style="padding:4px 10px; font-size:12px;" onclick="toggleBroselowPanel()">Close ✖ (Esc)</button>
+        <button type="button" class="btn" style="padding:4px 10px; font-size:12px;" onclick="toggleBroselowPanel()">Close ✖ (Esc)</button>
       </div>
       <div style="font-size:12px; color:var(--muted); flex-shrink:0;">คำนวณตามน้ำหนัก ABW / Wt for Ht ปัจจุบัน</div>
       <div class="drawer-body">
