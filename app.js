@@ -357,7 +357,7 @@ function getWeightSourceLabel() {
 
   if (isIBWChecked && gIBW && gIBW > 0) {
     const ht = (isFinite(lenVal) && lenVal > 0) ? ` ${lenVal} cm` : '';
-    return { value: gIBW, label: 'IBW', detail: `IBW · Wt-for-Ht${ht}` };
+    return { value: gIBW, label: 'Wt for Ht', detail: `Wt-for-Ht${ht}` };
   }
   if (gUserABW && gUserABW > 0) {
     if (gWeightSource === 'estimated') {

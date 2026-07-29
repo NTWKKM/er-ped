@@ -1011,6 +1011,8 @@
       .col-3 { grid-column: span 3; }
       .segmented-control { flex-wrap: wrap; }
       .tab-btn { min-width: 30%; font-size: 12px; padding: 6px 8px; }
+      .tab-btn .tab-label { display: none; }
+      .tab-btn.active .tab-label { display: inline; }
       .topbar-inner { padding: 6px 10px; gap: 6px; justify-content: space-between; }
       .topbar-row-1 { flex-wrap: wrap; }
       .bio-group { flex: 1 1 auto; padding: 5px 9px 6px; }
@@ -1127,9 +1129,6 @@
             <label class="chip-label" for="age">Age</label>
             <input type="number" id="age" min="0" max="15" step="0.1" placeholder="0" oninput="estimateFromAge()"/>
             <button type="button" id="ageUnitBtn" class="unit-toggle-btn" onclick="toggleAgeUnit()" title="คลิกเพื่อสลับหน่วยปี/เดือน">Yr</button>
-
-            <label class="chip-label" for="length">HT</label>
-            <input type="number" id="length" min="0" step="0.1" placeholder="cm" oninput="updateIBW()"/>
           </div>
         </div>
 
@@ -1137,10 +1136,13 @@
         <div class="bio-group">
           <span class="bio-group-title">Derived</span>
           <div class="bio-fields">
-            <label class="chip-label">IBW</label>
+            <label class="chip-label" for="length">HT</label>
+            <input type="number" id="length" min="0" step="0.1" placeholder="cm" oninput="updateIBW()"/>
+
+            <label class="chip-label">Wt for Ht</label>
             <strong id="ibwVal" class="mono bio-derived-val">—</strong>
             <span id="ibwSource" class="bio-derived-src"></span>
-            <label class="bio-use-toggle" title="ใช้ IBW แทนน้ำหนักจริงในการคำนวณยา">
+            <label class="bio-use-toggle" title="ใช้น้ำหนักประมาณจากส่วนสูงแทนน้ำหนักจริงในการคำนวณยา">
               <input type="checkbox" id="useIBW" class="switch" onchange="applyIBWToBW()"/>
               <span>use for dosing</span>
             </label>
@@ -1159,8 +1161,8 @@
       <div class="topbar-row-2" style="display:flex; align-items:center; gap:8px; width:100%;">
         <!-- Reference ▾ Popover Trigger -->
         <div class="popover-wrapper">
-          <button type="button" id="refPopoverBtn" class="btn" style="padding:6px 12px; font-size:12px; display:inline-flex; align-items:center; gap:6px;" onclick="toggleRefPopover(event)" title="เมนูข้อมูลอ้างอิง (Reference Tools)" aria-haspopup="true" aria-expanded="false">
-            <span>Reference ▾</span>
+          <button type="button" id="refPopoverBtn" class="btn" style="padding:6px 12px; font-size:12px; display:inline-flex; align-items:center; gap:6px;" onclick="toggleRefPopover(event)" title="เมนูข้อมูลอ้างอิง (Reference Tools)" aria-label="Reference menu" aria-haspopup="true" aria-expanded="false">
+            <span aria-hidden="true">📖▾</span>
             <span id="broselow" class="mono" style="padding:2px 8px; border-radius:var(--r-sm); font-weight:800; background:var(--panel); color:var(--ink); border:1px solid var(--border);">—</span>
           </button>
           <div id="refPopoverMenu" class="popover-menu" role="menu">
@@ -1202,23 +1204,21 @@
     <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;">
       <!-- Row 1: Primary Calculators -->
       <div class="tabs" role="tablist" aria-label="Primary Calculators" style="overflow-x:auto;">
-        <span style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); padding:0 8px; align-self:center; white-space:nowrap;">Primary</span>
-        <button type="button" class="tab tab-btn active" data-tab="dose" onclick="showTab('dose', this)" title="Pediatric Dose Calculator [Alt+1]" aria-keyshortcuts="Alt+1" role="tab" aria-selected="true" aria-controls="dose">💊 Dose</button>
-        <button type="button" class="tab tab-btn" data-tab="atb" onclick="showTab('atb', this)" title="Antibiotic Dosing Calculator [Alt+2]" aria-keyshortcuts="Alt+2" role="tab" aria-selected="false" aria-controls="atb">🦠 ATB</button>
-        <button type="button" class="tab tab-btn" data-tab="fluids" onclick="showTab('fluids', this)" title="IV Maintenance & Deficit Calculator [Alt+3]" aria-keyshortcuts="Alt+3" role="tab" aria-selected="false" aria-controls="fluids">💧 IV Fluids</button>
-        <button type="button" class="tab tab-btn" data-tab="pals" onclick="showTab('pals', this)" title="Pediatric Advanced Life Support Protocol [Alt+4]" aria-keyshortcuts="Alt+4" role="tab" aria-selected="false" aria-controls="pals">🧒🏻 PALS</button>
-        <button type="button" class="tab tab-btn" data-tab="ncpr" onclick="showTab('ncpr', this)" title="Neonatal Resuscitation Program Protocol [Alt+5]" aria-keyshortcuts="Alt+5" role="tab" aria-selected="false" aria-controls="ncpr">👶🏻 NCPR</button>
-        <button type="button" class="tab tab-btn" data-tab="drip" onclick="showTab('drip', this)" title="Continuous Vasoactive Infusion Calculator [Alt+6]" aria-keyshortcuts="Alt+6" role="tab" aria-selected="false" aria-controls="drip">🫀 Drip Rate</button>
+        <button type="button" class="tab tab-btn active" data-tab="dose" onclick="showTab('dose', this)" title="Pediatric Dose Calculator [Alt+1]" aria-keyshortcuts="Alt+1" role="tab" aria-selected="true" aria-controls="dose" aria-label="Pediatric Dose Calculator">💊<span class="tab-label"> Dose</span></button>
+        <button type="button" class="tab tab-btn" data-tab="atb" onclick="showTab('atb', this)" title="Antibiotic Dosing Calculator [Alt+2]" aria-keyshortcuts="Alt+2" role="tab" aria-selected="false" aria-controls="atb" aria-label="Antibiotic Dosing Calculator">🦠<span class="tab-label"> ATB</span></button>
+        <button type="button" class="tab tab-btn" data-tab="fluids" onclick="showTab('fluids', this)" title="IV Maintenance & Deficit Calculator [Alt+3]" aria-keyshortcuts="Alt+3" role="tab" aria-selected="false" aria-controls="fluids" aria-label="IV Maintenance & Deficit Calculator">💧<span class="tab-label"> IV Fluids</span></button>
+        <button type="button" class="tab tab-btn" data-tab="pals" onclick="showTab('pals', this)" title="Pediatric Advanced Life Support Protocol [Alt+4]" aria-keyshortcuts="Alt+4" role="tab" aria-selected="false" aria-controls="pals" aria-label="Pediatric Advanced Life Support Protocol">🧒🏻<span class="tab-label"> PALS</span></button>
+        <button type="button" class="tab tab-btn" data-tab="ncpr" onclick="showTab('ncpr', this)" title="Neonatal Resuscitation Program Protocol [Alt+5]" aria-keyshortcuts="Alt+5" role="tab" aria-selected="false" aria-controls="ncpr" aria-label="Neonatal Resuscitation Program Protocol">👶🏻<span class="tab-label"> NCPR</span></button>
+        <button type="button" class="tab tab-btn" data-tab="drip" onclick="showTab('drip', this)" title="Continuous Vasoactive Infusion Calculator [Alt+6]" aria-keyshortcuts="Alt+6" role="tab" aria-selected="false" aria-controls="drip" aria-label="Continuous Vasoactive Infusion Calculator">🫀<span class="tab-label"> Drip Rate</span></button>
       </div>
 
       <!-- Row 2: Specialty Protocols & Vitals -->
       <div class="tabs" role="tablist" aria-label="Specialty Protocols" style="overflow-x:auto;">
-        <span style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); padding:0 8px; align-self:center; white-space:nowrap;">Specialty</span>
-        <button type="button" class="tab tab-btn" data-tab="seizure" onclick="showTab('seizure', this)" title="Status Epilepticus Resuscitation Protocol [Alt+7]" aria-keyshortcuts="Alt+7" role="tab" aria-selected="false" aria-controls="seizure">⚡ Seizure</button>
-        <button type="button" class="tab tab-btn" data-tab="tox" onclick="showTab('tox', this)" title="Antidotes & Overdose Protocol [Alt+8]" aria-keyshortcuts="Alt+8" role="tab" aria-selected="false" aria-controls="tox">🧪 Toxicology</button>
-        <button type="button" class="tab tab-btn" data-tab="psa" onclick="showTab('psa', this)" title="Procedural Sedation & Analgesia [Alt+9]" aria-keyshortcuts="Alt+9" role="tab" aria-selected="false" aria-controls="psa">💉 Sedation</button>
-        <button type="button" class="tab tab-btn" data-tab="vitals" onclick="showTab('vitals', this)" title="Age-Banded Physiological Normal Ranges [Alt+0]" aria-keyshortcuts="Alt+0" role="tab" aria-selected="false" aria-controls="vitals">📊 Vitals</button>
-        <button type="button" class="tab tab-btn" data-tab="dka" onclick="showTab('dka', this)" title="Pediatric DKA Protocol Engine [Alt+K]" aria-keyshortcuts="Alt+K" role="tab" aria-selected="false" aria-controls="dka">🩺 DKA</button>
+        <button type="button" class="tab tab-btn" data-tab="seizure" onclick="showTab('seizure', this)" title="Status Epilepticus Resuscitation Protocol [Alt+7]" aria-keyshortcuts="Alt+7" role="tab" aria-selected="false" aria-controls="seizure" aria-label="Status Epilepticus Resuscitation Protocol">⚡<span class="tab-label"> Seizure</span></button>
+        <button type="button" class="tab tab-btn" data-tab="tox" onclick="showTab('tox', this)" title="Antidotes & Overdose Protocol [Alt+8]" aria-keyshortcuts="Alt+8" role="tab" aria-selected="false" aria-controls="tox" aria-label="Antidotes & Overdose Protocol">🧪<span class="tab-label"> Toxicology</span></button>
+        <button type="button" class="tab tab-btn" data-tab="psa" onclick="showTab('psa', this)" title="Procedural Sedation & Analgesia [Alt+9]" aria-keyshortcuts="Alt+9" role="tab" aria-selected="false" aria-controls="psa" aria-label="Procedural Sedation & Analgesia">💉<span class="tab-label"> Sedation</span></button>
+        <button type="button" class="tab tab-btn" data-tab="vitals" onclick="showTab('vitals', this)" title="Age-Banded Physiological Normal Ranges [Alt+0]" aria-keyshortcuts="Alt+0" role="tab" aria-selected="false" aria-controls="vitals" aria-label="Age-Banded Physiological Normal Ranges">📊<span class="tab-label"> Vitals</span></button>
+        <button type="button" class="tab tab-btn" data-tab="dka" onclick="showTab('dka', this)" title="Pediatric DKA Protocol Engine [Alt+K]" aria-keyshortcuts="Alt+K" role="tab" aria-selected="false" aria-controls="dka" aria-label="Pediatric DKA Protocol Engine">🩺<span class="tab-label"> DKA</span></button>
       </div>
     </div>
 
