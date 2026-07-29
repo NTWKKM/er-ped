@@ -200,7 +200,7 @@ function toggleAgeUnit(){
   const input = document.getElementById('age');
   if (btn) btn.textContent = (gAgeUnit === 'yr') ? 'yr' : 'mo';
   if (input) {
-    input.placeholder = (gAgeUnit === 'yr') ? 'Age (yr)' : 'Age (mo)';
+    input.placeholder = 'Age';
     input.max = (gAgeUnit === 'yr') ? '15' : '180';
   }
 
