@@ -699,7 +699,7 @@ function fillBroselowContent(){
 
   out.innerHTML = `
 <div style="background:${bgSwatch}; padding:12px; border-radius:8px; border:1px solid var(--border-dark); margin-bottom:12px;">
-  <strong style="font-size:16px; color:#1E1E1E;">🎨 Broselow Zone: ${color} (${entry.min}–${entry.max} kg)</strong>
+  <strong style="font-size:16px; color:#1E1E1E;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0l12.6 12.6z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></svg> Broselow Zone: ${color} (${entry.min}–${entry.max} kg)</strong>
   <div style="font-size:13px; margin-top:4px;">Patient Weight: <strong>${w.toFixed(1)} kg</strong></div>
 </div>
 
@@ -904,7 +904,7 @@ function renderDoseComboboxDropdown(filterTxt){
     const recentKeys = getRecentDrugs('dose');
     const recentItems = recentKeys.map(k => list.find(d => d.key === k)).filter(Boolean);
     if (recentItems.length > 0) {
-      html += `<div style="padding:6px 10px; font-size:11px; font-weight:800; color:var(--accent); background:var(--accent-subtle); letter-spacing:0.05em;">⭐️ RECENTLY USED</div>`;
+      html += `<div style="padding:6px 10px; font-size:11px; font-weight:800; color:var(--accent); background:var(--accent-subtle); letter-spacing:0.05em;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> RECENTLY USED</div>`;
       html += recentItems.map(d => {
         const selectedClass = (d.key === currentKey) ? 'selected' : '';
         const cat = getDrugCategory(d.name);
@@ -962,7 +962,7 @@ function renderATBComboboxDropdown(filterTxt){
     const recentKeys = getRecentDrugs('atb');
     const recentItems = recentKeys.map(k => list.find(d => d.key === k)).filter(Boolean);
     if (recentItems.length > 0) {
-      html += `<div style="padding:6px 10px; font-size:11px; font-weight:800; color:var(--accent); background:var(--accent-subtle); letter-spacing:0.05em;">⭐️ RECENTLY USED</div>`;
+      html += `<div style="padding:6px 10px; font-size:11px; font-weight:800; color:var(--accent); background:var(--accent-subtle); letter-spacing:0.05em;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> RECENTLY USED</div>`;
       html += recentItems.map(d => {
         const selectedClass = (d.key === currentKey) ? 'selected' : '';
         return `
@@ -1494,7 +1494,7 @@ function calcPALS(){
 
   const heroCardHtml = `
 <div style="margin-bottom:10px;">
-  <strong style="font-size:16px;">🚨 AHA PALS Emergency Directives</strong>
+  <strong style="font-size:16px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px; margin-right:4px;"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg> AHA PALS Emergency Directives</strong>
 </div>
 <div class="hero-metric-grid">
   <div class="hero-metric danger">
@@ -1546,7 +1546,7 @@ function calcNCPR(){
 
   const heroCardHtml = `
 <div style="margin-bottom:10px;">
-  <strong style="font-size:16px;">👶🏻 NRP Neonatal Resuscitation Directives</strong>
+  <strong style="font-size:16px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px; margin-right:4px;"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 5 6.3"/><path d="M12 2a4 4 0 0 0-4 4c0 .7.2 1.4.5 2"/><path d="M12 2a4 4 0 0 1 4 4c0 .7-.2 1.4-.5 2"/></svg> NRP Neonatal Resuscitation Directives</strong>
 </div>
 <div class="hero-metric-grid">
   <div class="hero-metric danger">

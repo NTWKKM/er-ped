@@ -21,9 +21,8 @@
       /* Light — Anthropic ivory chassis + clay accent */
       --bg: #F0EEE6;           --card: #FBFAF7;         --panel: #E8E5DA;
       --ink: #191919;          --muted: #6B6862;
-      --border: #DDD9CD;       --border-strong: #A8A399; --border-dark: #A8A399;
-      --accent: #A8452A;       --accent-hover: #7F321D; --accent-soft: #F3E3DA; --accent-subtle: #F7EDE6;
-      --accent2: #0B6BCB;      --accent2-soft: #E4ECF8; --blue: var(--accent2);
+      --border: #DDD9CD;       --border-strong: #DDD9CD; --border-dark: #DDD9CD;
+      --accent: #A8452A;       --accent-hover: #7F321D; --accent-soft: #F3E3DA; --accent-subtle: #F3E3DA;
       --good: #0E7A38;         --good-soft: #E2F2E8;
       --warning: #A85B05;      --warning-soft: #FCEEDB;
       --danger: #B91C1C;       --danger-soft: #FBE3E3;
@@ -33,9 +32,9 @@
       --warning-subtle: rgba(168, 91, 5, 0.12);
       --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 20px; --s6: 24px; --s8: 32px;
       --r-sm: 6px; --r-md: 10px; --r-lg: 14px;
-      /* Anthropic: flat surfaces, borders carry hierarchy — no drop shadows */
+      /* Flat surfaces: lower-decoration UI, shadows reserved for floating popovers */
       --shadow-1: none;
-      --shadow-2: 0 1px 3px rgba(0,0,0,.07);
+      --shadow-2: 0 1px 2px rgba(0,0,0,.05);
       --font-display: 'Newsreader', Georgia, serif;
       --t-fast: 120ms cubic-bezier(.2,.7,.2,1);
       --t-med: 240ms cubic-bezier(.2,.7,.2,1);
@@ -45,9 +44,8 @@
       :root:not([data-theme="light"]) {
         --bg: #171613; --card: #26241F; --panel: #1E1C19;
         --ink: #EAE5DB; --muted: #A39C8E;
-        --border: #3A3733; --border-strong: #59554D; --border-dark: #59554D;
+        --border: #3A3733; --border-strong: #3A3733; --border-dark: #3A3733;
         --accent: #DE9070; --accent-hover: #EFA98C; --accent-soft: #2C201A; --accent-subtle: #2C201A;
-        --accent2: #7FA0B8; --accent2-soft: #1E2A33;
         --good: #8FB07A; --good-soft: #1F2A1A;
         --warning: #D9A94A; --warning-soft: #2E2519;
         --danger: #F0705A; --danger-soft: #2E1C18;
@@ -55,17 +53,16 @@
         --ring: rgba(232, 134, 61, 0.4);
         --danger-subtle: rgba(240, 112, 90, 0.18);
         --warning-subtle: rgba(217, 169, 74, 0.18);
-        --shadow-1: 0 1px 0 rgba(0,0,0,.4), 0 2px 8px rgba(0,0,0,.5);
-        --shadow-2: 0 4px 18px rgba(0,0,0,.6);
+        --shadow-1: none;
+        --shadow-2: 0 1px 2px rgba(0,0,0,.25);
       }
     }
 
     :root[data-theme="dark"] {
       --bg: #171613; --card: #26241F; --panel: #1E1C19;
       --ink: #EAE5DB; --muted: #A39C8E;
-      --border: #3A3733; --border-strong: #59554D; --border-dark: #59554D;
+      --border: #3A3733; --border-strong: #3A3733; --border-dark: #3A3733;
       --accent: #DE9070; --accent-hover: #EFA98C; --accent-soft: #2C201A; --accent-subtle: #2C201A;
-      --accent2: #7FA0B8; --accent2-soft: #1E2A33;
       --good: #8FB07A; --good-soft: #1F2A1A;
       --warning: #D9A94A; --warning-soft: #2E2519;
       --danger: #F0705A; --danger-soft: #2E1C18;
@@ -73,8 +70,8 @@
       --ring: rgba(232, 134, 61, 0.4);
       --danger-subtle: rgba(240, 112, 90, 0.18);
       --warning-subtle: rgba(217, 169, 74, 0.18);
-      --shadow-1: 0 1px 0 rgba(0,0,0,.4), 0 2px 8px rgba(0,0,0,.5);
-      --shadow-2: 0 4px 18px rgba(0,0,0,.6);
+      --shadow-1: none;
+      --shadow-2: 0 1px 2px rgba(0,0,0,.25);
     }
 
     /* Monochrome / Grayscale Theme (JVC Hospital Displays) */
@@ -83,7 +80,6 @@
       --ink: #F2F2F0; --muted: #A8A8A4;
       --border: #4A4A47; --border-strong: #7A7A77; --border-dark: #7A7A77;
       --accent: #EAEAE6; --accent-hover: #FFFFFF; --accent-soft: #333330; --accent-subtle: #333330;
-      --accent2: #C8C8C4; --accent2-soft: #222220;
       --good: #BDBDB8; --good-soft: #222220;
       --warning: #D8D8D2; --warning-soft: #222220;
       --danger: #FFFFFF; --danger-soft: #222220;
@@ -136,55 +132,66 @@
       background: var(--panel);
     }
 
-    /* Tab Group Containers */
-    .tabs {
+    /* Tab Group Containers — Flat Underline Tabs */
+    .tabs, .segmented-control {
       display: flex;
-      gap: var(--s1);
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: var(--r-md);
-      padding: var(--s1);
-      box-shadow: var(--shadow-1);
+      flex-wrap: wrap;
+      gap: 4px;
+      background: transparent;
+      border: 0;
+      border-bottom: 1px solid var(--border);
+      border-radius: 0;
+      padding: 0 0 4px 0;
+      box-shadow: none;
+      margin-bottom: 20px;
     }
     .tab, .tab-btn {
-      flex: 1;
+      flex: 1 1 auto;
+      min-width: 80px;
       border: 0;
+      border-bottom: 2px solid transparent;
       background: transparent;
       cursor: pointer;
-      padding: 10px 12px;
-      border-radius: var(--r-sm);
+      padding: 8px 12px;
+      border-radius: 0;
       font: 600 13px 'Sarabun', sans-serif;
       color: var(--muted);
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
       min-height: 44px;
       text-decoration: none;
       white-space: nowrap;
+      transition: color 0.15s ease, border-color 0.15s ease;
     }
     .tab:hover, .tab-btn:hover {
-      background: var(--card);
+      background: transparent;
       color: var(--ink);
+      border-bottom-color: var(--border);
     }
     .tab.active, .tab-btn.active {
-      background: var(--card);
-      color: var(--ink);
-      box-shadow: 0 1px 0 var(--border), 0 4px 10px rgba(0,0,0,.06);
-      border: 1px solid var(--border);
-      padding: 9px 11px;
+      background: transparent;
+      color: var(--accent);
+      border: 0;
+      border-bottom: 2px solid var(--accent);
+      font-weight: 700;
+      box-shadow: none;
+      padding: 8px 12px;
+      border-radius: 0;
     }
 
-    :root[data-theme="dark"] .segmented-control {
-      background: #23211D;
-      border-color: #3A3733;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+    :root[data-theme="dark"] .segmented-control,
+    :root[data-theme="dark"] .tabs {
+      background: transparent;
+      border-color: var(--border);
+      box-shadow: none;
     }
 
     :root[data-theme="dark"] .topbar {
-      background: rgba(24, 22, 19, 0.92);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      background: rgba(23, 22, 19, 0.95);
+      border-bottom: 1px solid var(--border);
+      box-shadow: none;
     }
     :root:not([data-theme="dark"]):not([data-theme="mono"]) option {
       background: #FBFAF7;
@@ -609,53 +616,10 @@
       padding: 16px; 
     }
 
-    /* Braun Segmented Controls (Radio-style Tabs) */
-    .segmented-control { 
-      display: flex; 
-      flex-wrap: wrap;
-      gap: 5px; 
-      background: #FFFFFF; 
-      padding: 6px; 
-      border-radius: 10px; 
-      border: 1px solid var(--border); 
-      margin-bottom: 24px; 
-      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-    }
-
     .nav-break {
       flex-basis: 100%;
       height: 0;
       margin: 0;
-    }
-
-    .tab-btn { 
-      flex: 1 1 auto; 
-      min-width: 90px;
-      padding: 10px 12px; 
-      border-radius: 6px; 
-      border: none; 
-      background: transparent; 
-      color: var(--muted); 
-      font-weight: 700; 
-      font-size: 13px; 
-      cursor: pointer; 
-      transition: all 0.15s ease;
-      text-align: center;
-      white-space: nowrap;
-    }
-
-    .tab-btn:hover {
-      color: var(--ink);
-      background: rgba(0, 0, 0, 0.05);
-    }
-    :root[data-theme="dark"] .tab-btn:hover {
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .tab-btn.active { 
-      background: var(--accent); 
-      color: #FFFFFF; 
-      box-shadow: 0 2px 6px rgba(217, 72, 15, 0.3); 
     }
 
     /* Braun Cards & Chassis Modules */
@@ -761,12 +725,12 @@
     }
 
     .hero-metric {
-      background: #1F1E1C;
-      color: #FFFFFF;
-      border: 1px solid #000;
-      border-left: 5px solid var(--accent);
-      border-radius: 8px;
-      padding: 9px 12px;
+      background: var(--card);
+      color: var(--ink);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 6px;
+      padding: 8px 12px;
       font-family: 'JetBrains Mono', monospace;
       display: flex;
       flex-direction: column;
@@ -778,7 +742,7 @@
     .hero-metric.good { border-left-color: var(--good); }
     .hero-metric.warning { border-left-color: var(--warning); }
     .hero-metric.danger { border-left-color: var(--danger); }
-    .hero-metric.blue { border-left-color: var(--blue); }
+    .hero-metric.blue { border-left-color: var(--ink); }
 
     /* Shape-coded prefixes: severity must read on a 1-bit/grayscale panel
        even if the border-left color difference disappears at a distance.
@@ -792,7 +756,7 @@
       font-size: 11px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: #A3A19C;
+      color: var(--muted);
       font-family: 'Sarabun', sans-serif;
       font-weight: 700;
     }
@@ -800,7 +764,7 @@
     .hero-metric .hero-val {
       font-size: 22px;
       font-weight: 800;
-      color: #FFFFFF;
+      color: var(--ink);
       line-height: 1.2;
     }
 
@@ -869,9 +833,21 @@
       width: 100%;
     }
 
+    .combobox-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      z-index: 2;
+    }
+
     .combobox-input {
       width: 100%;
-      padding: 10px 36px 10px 12px;
+      padding: 10px 12px 10px 32px;
       border: 1px solid var(--border);
       border-radius: 6px;
       outline: none;
@@ -964,28 +940,27 @@
     .fab button { 
       border: none; 
       border-radius: 8px; 
-      padding: 12px 18px; 
-      box-shadow: 0 6px 18px rgba(0,0,0,0.22); 
+      padding: 10px 16px; 
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15); 
       background: var(--dark-btn); 
       color: #FFFFFF; 
       font-weight: 800; 
       font-size: 14px;
       cursor: pointer; 
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 8px;
-      transition: transform 0.15s, background 0.15s;
+      transition: background 0.15s;
     }
 
     .fab button:hover {
       background: #111110;
-      transform: translateY(-2px);
     }
 
     .fab button.pals-fab {
       background: var(--danger);
       color: #FFFFFF;
-      border: 1px solid #B91C1C;
+      border: none;
     }
 
     .fab button.pals-fab:hover {
@@ -1263,13 +1238,13 @@
       <div class="topbar-row-2" style="display:flex; align-items:center; gap:8px; width:100%;">
         <!-- Reference ▾ Popover Trigger (Icon Only) -->
         <div class="popover-wrapper">
-          <button type="button" id="refPopoverBtn" class="btn" style="padding:6px 12px; font-size:12px; display:inline-flex; align-items:center; gap:6px;" onclick="toggleRefPopover(event)" title="เมนูข้อมูลอ้างอิง (Reference Tools)" aria-label="Reference menu" aria-haspopup="true" aria-expanded="false">📖▾</button>
+          <button type="button" id="refPopoverBtn" class="btn" style="padding:6px 12px; font-size:12px; display:inline-flex; align-items:center; gap:4px;" onclick="toggleRefPopover(event)" title="เมนูข้อมูลอ้างอิง (Reference Tools)" aria-label="Reference menu" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
           <div id="refPopoverMenu" class="popover-menu" role="menu">
             <button type="button" class="popover-item" onclick="showTab('vitals'); closeAllPopovers();" role="menuitem">
-              <span>📊 Vital Signs by Age</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M17 12h-2l-2 5-3-10-2 5H7"/></svg> <span>Vital Signs by Age</span>
             </button>
             <button type="button" class="popover-item" onclick="toggleBroselowPanel(); closeAllPopovers();" role="menuitem">
-              <span>🎨 Broselow Tape</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0l12.6 12.6z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></svg> <span>Broselow Tape</span>
             </button>
           </div>
         </div>
@@ -1287,10 +1262,10 @@
             <button type="button" id="overflowBtn" class="btn" style="padding:6px 10px; font-size:14px; font-weight:800;" onclick="toggleOverflowMenu(event)" title="เมนูเพิ่มเติม (More Options)" aria-label="More actions" aria-haspopup="true" aria-expanded="false">⋯</button>
             <div id="overflowMenu" class="popover-menu" role="menu">
               <button type="button" id="printBtn" class="popover-item" onclick="triggerPrintCard(); closeAllPopovers();" role="menuitem">
-                <span>🖨️ Print Reference Card</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3h12v6"/><rect width="12" height="8" x="6" y="14" rx="1"/></svg> <span>Print Reference Card</span>
               </button>
               <button type="button" id="langToggleBtn" class="popover-item" onclick="toggleLanguage(); closeAllPopovers();" role="menuitem">
-                <span>🌐 TH / EN</span>
+                <span>TH / EN</span>
               </button>
             </div>
           </div>
@@ -1302,25 +1277,25 @@
   <!-- MAIN APP CONTAINER -->
   <div class="container" id="app">
     
-    <!-- Braun Radio-Style Segmented Navigation Tabs (Grouped 2-Row Layout) -->
+    <!-- Flat Underline Navigation Tabs (Grouped 2-Row Layout) -->
     <div role="tablist" aria-label="Clinical Calculators & Protocols" style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;">
       <!-- Row 1: Clinical Calculators -->
       <div class="tabs" style="overflow-x:auto;">
-        <button type="button" class="tab tab-btn active" data-tab="dose" onclick="showTab('dose', this)" title="Pediatric Dose Calculator [Alt+1]" aria-keyshortcuts="Alt+1" role="tab" aria-selected="true" aria-controls="dose" aria-label="Pediatric Dose Calculator">💊<span class="tab-label"> Dose</span></button>
-        <button type="button" class="tab tab-btn" data-tab="atb" onclick="showTab('atb', this)" title="Antibiotic Dosing Calculator [Alt+2]" aria-keyshortcuts="Alt+2" role="tab" aria-selected="false" aria-controls="atb" aria-label="Antibiotic Dosing Calculator">🦠<span class="tab-label"> ATB</span></button>
-        <button type="button" class="tab tab-btn" data-tab="fluids" onclick="showTab('fluids', this)" title="IV Maintenance & Deficit Calculator [Alt+3]" aria-keyshortcuts="Alt+3" role="tab" aria-selected="false" aria-controls="fluids" aria-label="IV Maintenance & Deficit Calculator">💧<span class="tab-label"> IV Fluids</span></button>
-        <button type="button" class="tab tab-btn" data-tab="pals" onclick="showTab('pals', this)" title="Pediatric Advanced Life Support Protocol [Alt+4]" aria-keyshortcuts="Alt+4" role="tab" aria-selected="false" aria-controls="pals" aria-label="Pediatric Advanced Life Support Protocol">🧒🏻<span class="tab-label"> PALS</span></button>
-        <button type="button" class="tab tab-btn" data-tab="ncpr" onclick="showTab('ncpr', this)" title="Neonatal Resuscitation Program Protocol [Alt+5]" aria-keyshortcuts="Alt+5" role="tab" aria-selected="false" aria-controls="ncpr" aria-label="Neonatal Resuscitation Program Protocol">👶🏻<span class="tab-label"> NCPR</span></button>
-        <button type="button" class="tab tab-btn" data-tab="drip" onclick="showTab('drip', this)" title="Continuous Vasoactive Infusion Calculator [Alt+6]" aria-keyshortcuts="Alt+6" role="tab" aria-selected="false" aria-controls="drip" aria-label="Continuous Vasoactive Infusion Calculator">🫀<span class="tab-label"> Drip Rate</span></button>
+        <button type="button" class="tab tab-btn active" data-tab="dose" onclick="showTab('dose', this)" title="Pediatric Dose Calculator [Alt+1]" aria-keyshortcuts="Alt+1" role="tab" aria-selected="true" aria-controls="dose" aria-label="Pediatric Dose Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg><span class="tab-label"> Dose</span></button>
+        <button type="button" class="tab tab-btn" data-tab="atb" onclick="showTab('atb', this)" title="Antibiotic Dosing Calculator [Alt+2]" aria-keyshortcuts="Alt+2" role="tab" aria-selected="false" aria-controls="atb" aria-label="Antibiotic Dosing Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3 3 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6Z"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 9.8 3 11.4 3 14"/><path d="M6 17H2"/><path d="M17.47 9c1.93.8 3.53 2.4 3.53 5"/><path d="M18 17h4"/></svg><span class="tab-label"> ATB</span></button>
+        <button type="button" class="tab tab-btn" data-tab="fluids" onclick="showTab('fluids', this)" title="IV Maintenance & Deficit Calculator [Alt+3]" aria-keyshortcuts="Alt+3" role="tab" aria-selected="false" aria-controls="fluids" aria-label="IV Maintenance & Deficit Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg><span class="tab-label"> IV Fluids</span></button>
+        <button type="button" class="tab tab-btn" data-tab="pals" onclick="showTab('pals', this)" title="Pediatric Advanced Life Support Protocol [Alt+4]" aria-keyshortcuts="Alt+4" role="tab" aria-selected="false" aria-controls="pals" aria-label="Pediatric Advanced Life Support Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg><span class="tab-label"> PALS</span></button>
+        <button type="button" class="tab tab-btn" data-tab="ncpr" onclick="showTab('ncpr', this)" title="Neonatal Resuscitation Program Protocol [Alt+5]" aria-keyshortcuts="Alt+5" role="tab" aria-selected="false" aria-controls="ncpr" aria-label="Neonatal Resuscitation Program Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 5 6.3"/><path d="M12 2a4 4 0 0 0-4 4c0 .7.2 1.4.5 2"/><path d="M12 2a4 4 0 0 1 4 4c0 .7-.2 1.4-.5 2"/></svg><span class="tab-label"> NCPR</span></button>
+        <button type="button" class="tab tab-btn" data-tab="drip" onclick="showTab('drip', this)" title="Continuous Vasoactive Infusion Calculator [Alt+6]" aria-keyshortcuts="Alt+6" role="tab" aria-selected="false" aria-controls="drip" aria-label="Continuous Vasoactive Infusion Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span class="tab-label"> Drip Rate</span></button>
       </div>
 
       <!-- Row 2: Protocols & Vitals -->
       <div class="tabs" style="overflow-x:auto;">
-        <button type="button" class="tab tab-btn" data-tab="seizure" onclick="showTab('seizure', this)" title="Status Epilepticus Resuscitation Protocol [Alt+7]" aria-keyshortcuts="Alt+7" role="tab" aria-selected="false" aria-controls="seizure" aria-label="Status Epilepticus Resuscitation Protocol">⚡<span class="tab-label"> Seizure</span></button>
-        <button type="button" class="tab tab-btn" data-tab="tox" onclick="showTab('tox', this)" title="Antidotes & Overdose Protocol [Alt+8]" aria-keyshortcuts="Alt+8" role="tab" aria-selected="false" aria-controls="tox" aria-label="Antidotes & Overdose Protocol">🧪<span class="tab-label"> Toxicology</span></button>
-        <button type="button" class="tab tab-btn" data-tab="psa" onclick="showTab('psa', this)" title="Procedural Sedation & Analgesia [Alt+9]" aria-keyshortcuts="Alt+9" role="tab" aria-selected="false" aria-controls="psa" aria-label="Procedural Sedation & Analgesia">💉<span class="tab-label"> Sedation</span></button>
-        <button type="button" class="tab tab-btn" data-tab="vitals" onclick="showTab('vitals', this)" title="Age-Banded Physiological Normal Ranges [Alt+0]" aria-keyshortcuts="Alt+0" role="tab" aria-selected="false" aria-controls="vitals" aria-label="Age-Banded Physiological Normal Ranges">📊<span class="tab-label"> Vitals</span></button>
-        <button type="button" class="tab tab-btn" data-tab="dka" onclick="showTab('dka', this)" title="Pediatric DKA Protocol Engine [Alt+K]" aria-keyshortcuts="Alt+K" role="tab" aria-selected="false" aria-controls="dka" aria-label="Pediatric DKA Protocol Engine">🩺<span class="tab-label"> DKA</span></button>
+        <button type="button" class="tab tab-btn" data-tab="seizure" onclick="showTab('seizure', this)" title="Status Epilepticus Resuscitation Protocol [Alt+7]" aria-keyshortcuts="Alt+7" role="tab" aria-selected="false" aria-controls="seizure" aria-label="Status Epilepticus Resuscitation Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg><span class="tab-label"> Seizure</span></button>
+        <button type="button" class="tab tab-btn" data-tab="tox" onclick="showTab('tox', this)" title="Antidotes & Overdose Protocol [Alt+8]" aria-keyshortcuts="Alt+8" role="tab" aria-selected="false" aria-controls="tox" aria-label="Antidotes & Overdose Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v7.31L4.75 18.1A2 2 0 0 0 6.47 21h11.06a2 2 0 0 0 1.72-2.9L14 9.31V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg><span class="tab-label"> Toxicology</span></button>
+        <button type="button" class="tab tab-btn" data-tab="psa" onclick="showTab('psa', this)" title="Procedural Sedation & Analgesia [Alt+9]" aria-keyshortcuts="Alt+9" role="tab" aria-selected="false" aria-controls="psa" aria-label="Procedural Sedation & Analgesia"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"/><path d="m9 11 4 4"/><path d="m5 19-3 3"/><path d="m14 4 6 6"/></svg><span class="tab-label"> Sedation</span></button>
+        <button type="button" class="tab tab-btn" data-tab="vitals" onclick="showTab('vitals', this)" title="Age-Banded Physiological Normal Ranges [Alt+0]" aria-keyshortcuts="Alt+0" role="tab" aria-selected="false" aria-controls="vitals" aria-label="Age-Banded Physiological Normal Ranges"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M17 12h-2l-2 5-3-10-2 5H7"/></svg><span class="tab-label"> Vitals</span></button>
+        <button type="button" class="tab tab-btn" data-tab="dka" onclick="showTab('dka', this)" title="Pediatric DKA Protocol Engine [Alt+K]" aria-keyshortcuts="Alt+K" role="tab" aria-selected="false" aria-controls="dka" aria-label="Pediatric DKA Protocol Engine"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.8 2.3A.3.3 0 0 0 4.5 2H3.5a.3.3 0 0 0-.3.3v7.4a6.8 6.8 0 0 0 13.6 0V2.3a.3.3 0 0 0-.3-.3h-1a.3.3 0 0 0-.3.3v7.4a4.8 4.8 0 0 1-9.6 0z"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg><span class="tab-label"> DKA</span></button>
       </div>
     </div>
 
@@ -1330,7 +1305,8 @@
         <div class="col-12">
           <label>Drug Selection & Search (Combobox)</label>
           <div class="combobox-wrapper">
-            <input type="text" id="doseSearch" class="combobox-input" placeholder="🔍 พิมพ์ชื่อยาเพื่อค้นหา (e.g. Paracetamol, Ibuprofen, Diazepam)..." oninput="onDoseSearchInput()" onfocus="openDoseCombobox()" onkeydown="onComboboxKeydown(event,'dose')" role="combobox" aria-expanded="false" aria-controls="doseComboboxDropdown" aria-autocomplete="list" aria-label="ค้นหายา (Search medication)" />
+            <span class="combobox-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+            <input type="text" id="doseSearch" class="combobox-input" placeholder="พิมพ์ชื่อยาเพื่อค้นหา (e.g. Paracetamol, Ibuprofen, Diazepam)..." oninput="onDoseSearchInput()" onfocus="openDoseCombobox()" onkeydown="onComboboxKeydown(event,'dose')" role="combobox" aria-expanded="false" aria-controls="doseComboboxDropdown" aria-autocomplete="list" aria-label="ค้นหายา (Search medication)" />
             <div id="doseComboboxDropdown" class="combobox-dropdown" role="listbox"></div>
           </div>
           <select id="doseDrug" style="display:none;" onchange="calcDose()"></select>
@@ -1340,7 +1316,7 @@
           <div class="weight-lock-chip">
             <span>Weight in use:</span>
             <strong id="doseWBadge">— kg</strong>
-            <span style="font-size:11px; color:var(--muted); margin-left:auto;" title="Synced from topbar" aria-label="Synced from topbar">🔒</span>
+            <span style="font-size:11px; color:var(--muted); margin-left:auto; display:inline-flex; align-items:center;" title="Synced from topbar" aria-label="Synced from topbar"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
           </div>
         </div>
         <div class="col-6">
@@ -1351,7 +1327,7 @@
           <div id="doseOut" class="summary"></div>
         </div>
       </div>
-      <div class="note">⚠️ เครื่องมือช่วยคำนวณเบื้องต้น — กรุณาตรวจสอบซ้ำตามข้อบ่งชี้ทางคลินิกก่อนสั่งการรักษาเสมอ</div>
+      <div class="note"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>เครื่องมือช่วยคำนวณเบื้องต้น — กรุณาตรวจสอบซ้ำตามข้อบ่งชี้ทางคลินิกก่อนสั่งการรักษาเสมอ</div>
     </section>
 
     <!-- Pediatric ATB Calculator -->
@@ -1360,7 +1336,8 @@
         <div class="col-12">
           <label>Antibiotic Selection & Search (Combobox)</label>
           <div class="combobox-wrapper">
-            <input type="text" id="atbSearch" class="combobox-input" placeholder="🔍 พิมพ์ชื่อยาปฏิชีวนะเพื่อค้นหา (e.g. Amoxicillin, Augmentin, Ceftriaxone)..." oninput="onATBSearchInput()" onfocus="openATBCombobox()" onkeydown="onComboboxKeydown(event,'atb')" role="combobox" aria-expanded="false" aria-controls="atbComboboxDropdown" aria-autocomplete="list" aria-label="ค้นหายาปฏิชีวนะ (Search antibiotic)" />
+            <span class="combobox-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+            <input type="text" id="atbSearch" class="combobox-input" placeholder="พิมพ์ชื่อยาปฏิชีวนะเพื่อค้นหา (e.g. Amoxicillin, Augmentin, Ceftriaxone)..." oninput="onATBSearchInput()" onfocus="openATBCombobox()" onkeydown="onComboboxKeydown(event,'atb')" role="combobox" aria-expanded="false" aria-controls="atbComboboxDropdown" aria-autocomplete="list" aria-label="ค้นหายาปฏิชีวนะ (Search antibiotic)" />
             <div id="atbComboboxDropdown" class="combobox-dropdown" role="listbox"></div>
           </div>
           <select id="atbDrug" style="display:none;" onchange="calcATB()"></select>
@@ -1370,7 +1347,7 @@
           <div class="weight-lock-chip">
             <span>Weight in use:</span>
             <strong id="atbWBadge">— kg</strong>
-            <span style="font-size:11px; color:var(--muted); margin-left:auto;" title="Synced from topbar" aria-label="Synced from topbar">🔒</span>
+            <span style="font-size:11px; color:var(--muted); margin-left:auto; display:inline-flex; align-items:center;" title="Synced from topbar" aria-label="Synced from topbar"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
           </div>
         </div>
         <div class="col-6">
@@ -1381,7 +1358,7 @@
           <div id="atbOut" class="summary"></div>
         </div>
       </div>
-      <div class="note">⚠️ เครื่องมือช่วยคำนวณเบื้องต้น — กรุณาตรวจสอบซ้ำตามข้อบ่งชี้ทางคลินิกก่อนสั่งการรักษาเสมอ</div>
+      <div class="note"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>เครื่องมือช่วยคำนวณเบื้องต้น — กรุณาตรวจสอบซ้ำตามข้อบ่งชี้ทางคลินิกก่อนสั่งการรักษาเสมอ</div>
     </section>
 
     <!-- IV Fluids -->
@@ -1425,7 +1402,7 @@
           <div id="fOut" class="summary"></div>
         </div>
       </div>
-      <div class="note">⚠️ คำนวณ Holliday–Segar สำหรับ Maintenance; Deficit = %×BW×10 mL; Shock Bolus 20 mL/kg</div>
+      <div class="note"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>คำนวณ Holliday–Segar สำหรับ Maintenance; Deficit = %×BW×10 mL; Shock Bolus 20 mL/kg</div>
     </section>
 
     <!-- PALS Resuscitation -->
@@ -1436,7 +1413,7 @@
           <div class="weight-lock-chip">
             <span>BW:</span>
             <strong id="pWBadge">— kg</strong>
-            <span style="font-size:11px; color:var(--muted); margin-left:auto;" title="Synced from topbar" aria-label="Synced from topbar">🔒</span>
+            <span style="font-size:11px; color:var(--muted); margin-left:auto; display:inline-flex; align-items:center;" title="Synced from topbar" aria-label="Synced from topbar"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
           </div>
         </div>
         <div class="col-6">
@@ -1447,7 +1424,7 @@
           <div id="pOut" class="summary"></div>
         </div>
       </div>
-      <div class="note">⚠️ แนวทาง AHA PALS Resuscitation Guideline — กรุณายืนยันขนาดยาก่อนสั่งการรักษา</div>
+      <div class="note"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>แนวทาง AHA PALS Resuscitation Guideline — กรุณายืนยันขนาดยาก่อนสั่งการรักษา</div>
     </section>
 
     <!-- NCPR Resuscitation -->
@@ -1472,10 +1449,10 @@
           <div id="nOut" class="summary"></div>
         </div>
       </div>
-      <div class="note">⚠️ แนวทาง NRP Resuscitation Guideline — ตรวจสอบซ้ำก่อนใช้จริง</div>
+      <div class="note"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>แนวทาง NRP Resuscitation Guideline — ตรวจสอบซ้ำก่อนใช้จริง</div>
     </section>
 
-    <!-- 🫀 Continuous Infusion Drip Calculator -->
+    <!-- Continuous Infusion Drip Calculator -->
     <section id="drip" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
@@ -1487,7 +1464,7 @@
           <div class="weight-lock-chip">
             <span>Weight in use:</span>
             <strong id="dripWBadge">— kg</strong>
-            <span style="font-size:11px; color:var(--muted); margin-left:auto;" title="Synced from topbar" aria-label="Synced from topbar">🔒</span>
+            <span style="font-size:11px; color:var(--muted); margin-left:auto; display:inline-flex; align-items:center;" title="Synced from topbar" aria-label="Synced from topbar"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
           </div>
         </div>
         <div class="col-6">
@@ -1506,15 +1483,15 @@
           <div id="dripOut" class="summary"></div>
         </div>
       </div>
-      <div class="note">⚠️ เครื่องมือช่วยคำนวณอัตราหยดยา — ตรวจสอบสาย IV / Central Line และตั้งค่า Syringe Pump / Infusion Pump อย่างระมัดระวัง</div>
+      <div class="note"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>เครื่องมือช่วยคำนวณอัตราหยดยา — ตรวจสอบสาย IV / Central Line และตั้งค่า Syringe Pump / Infusion Pump อย่างระมัดระวัง</div>
     </section>
 
-    <!-- ⚡ Status Epilepticus / Seizure Protocol -->
+    <!-- Status Epilepticus / Seizure Protocol -->
     <section id="seizure" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <h2>⚡ Status Epilepticus Resuscitation Protocol</h2>
+            <h2>Status Epilepticus Resuscitation Protocol</h2>
             <div class="weight-lock-chip" style="width:auto; padding:4px 10px;">
               <span>BW:</span>
               <strong id="seizureWBadge">— kg</strong>
@@ -1523,15 +1500,15 @@
           <div id="seizureOut" class="summary"></div>
         </div>
       </div>
-      <div class="note">⚠️ ลำดับการรักษาชักในเด็ก — เริ่มยา Benzodiazepine ทันทีที่ชัก >5 นาที และเตรียมยา 2nd Line ล่วงหน้า</div>
+      <div class="note"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>ลำดับการรักษาชักในเด็ก — เริ่มยา Benzodiazepine ทันทีที่ชัก >5 นาที และเตรียมยา 2nd Line ล่วงหน้า</div>
     </section>
 
-    <!-- 🧪 Toxicology & Antidote Module -->
+    <!-- Toxicology & Antidote Module -->
     <section id="tox" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <h2>🧪 Toxicology & Antidote Dosing</h2>
+            <h2>Toxicology & Antidote Dosing</h2>
             <div class="weight-lock-chip" style="width:auto; padding:4px 10px;">
               <span>BW:</span>
               <strong id="toxWBadge">— kg</strong>
@@ -1540,15 +1517,15 @@
           <div id="toxOut" class="summary"></div>
         </div>
       </div>
-      <div class="note">⚠️ การดูแลเคสได้รับสารพิษ — ตรวจสอบสิทธิและปรึกษาศูนย์พิษวิทยา (Poison Center) เพิ่มเติมในเคสซับซ้อน</div>
+      <div class="note"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>การดูแลเคสได้รับสารพิษ — ตรวจสอบสิทธิและปรึกษาศูนย์พิษวิทยา (Poison Center) เพิ่มเติมในเคสซับซ้อน</div>
     </section>
 
-    <!-- 💉 Procedural Sedation & Analgesia (PSA) -->
+    <!-- Procedural Sedation & Analgesia (PSA) -->
     <section id="psa" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <h2>💉 Procedural Sedation & Analgesia (PSA)</h2>
+            <h2>Procedural Sedation & Analgesia (PSA)</h2>
             <div class="weight-lock-chip" style="width:auto; padding:4px 10px;">
               <span>BW:</span>
               <strong id="psaWBadge">— kg</strong>
@@ -1557,15 +1534,15 @@
           <div id="psaOut" class="summary"></div>
         </div>
       </div>
-      <div class="note">⚠️ เตรียมอุปกรณ์ Suction, Bag-Valve-Mask และ Suction พร้อมก่อนเริ่ม Procedural Sedation เสมอ</div>
+      <div class="note"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>เตรียมอุปกรณ์ Suction, Bag-Valve-Mask และ Suction พร้อมก่อนเริ่ม Procedural Sedation เสมอ</div>
     </section>
 
-    <!-- 📊 Vital Signs by Age Reference -->
+    <!-- Vital Signs by Age Reference -->
     <section id="vitals" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <h2>📊 Pediatric Vital Signs by Age Reference</h2>
+            <h2>Pediatric Vital Signs by Age Reference</h2>
             <div class="weight-lock-chip" style="width:auto; padding:4px 10px;">
               <span>BW:</span>
               <strong id="vitalsWBadge">— kg</strong>
@@ -1574,15 +1551,15 @@
           <div id="vitalsOut" class="summary"></div>
         </div>
       </div>
-      <div class="note">⚠️ เกณฑ์สัญญาณชีพตามช่วงอายุ (AHA PALS Reference) — ภาวะความดันโลหิตต่ำ (Hypotension) นิยามจาก Systolic BP < 70 + (2 × อายุปี)</div>
+      <div class="note"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>เกณฑ์สัญญาณชีพตามช่วงอายุ (AHA PALS Reference) — ภาวะความดันโลหิตต่ำ (Hypotension) นิยามจาก Systolic BP < 70 + (2 × อายุปี)</div>
     </section>
 
-    <!-- 🩺 Pediatric DKA Protocol Calculator -->
+    <!-- Pediatric DKA Protocol Calculator -->
     <section id="dka" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <h2>🩺 Pediatric DKA Protocol & Fluid Management</h2>
+            <h2>Pediatric DKA Protocol & Fluid Management</h2>
             <div class="weight-lock-chip" style="width:auto; padding:4px 10px;">
               <span>BW:</span>
               <strong id="dkaWBadge">— kg</strong>
@@ -1609,16 +1586,16 @@
           <div id="dkaOut" class="summary"></div>
         </div>
       </div>
-      <div class="note">⚠️ โปรโตคอลการรักษา DKA ในเด็ก — ให้ Regular Insulin หลังเริ่มสารน้ำแล้ว 1–2 ชม. และห้ามเริ่ม Insulin หาก K+ &lt; 3.3 mEq/L</div>
+      <div class="note"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>โปรโตคอลการรักษา DKA ในเด็ก — ให้ Regular Insulin หลังเริ่มสารน้ำแล้ว 1–2 ชม. และห้ามเริ่ม Insulin หาก K+ &lt; 3.3 mEq/L</div>
     </section>
 
     <!-- Standalone Footer -->
     <footer class="app-footer">
-      <div><strong>ER-PED Workstation</strong> — Braun Clinical Instrument <span class="version-chip" onclick="openChangelogModal()" title="ดูบันทึกการเปลี่ยนแปลง v1.4.2">v1.4.2</span></div>
+      <div><strong>ER-PED Workstation</strong> — Braun Clinical Instrument <span class="version-chip" onclick="openChangelogModal()" title="ดูบันทึกการเปลี่ยนแปลง v1.5.0">v1.5.0</span></div>
       <div style="font-size:11px; margin-top:6px; display:flex; justify-content:center; gap:14px;">
-        <span style="cursor:pointer; color:var(--accent);" onclick="openDatasetEditor()">⚙️ Dataset Editor</span>
-        <span style="cursor:pointer; color:var(--accent);" onclick="openChangelogModal()">📋 Changelog</span>
-        <span style="cursor:pointer; color:var(--accent);" onclick="triggerPrintCard()">🖨️ Printable Card</span>
+        <span style="cursor:pointer; color:var(--accent); display:inline-flex; align-items:center;" onclick="openDatasetEditor()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>Dataset Editor</span>
+        <span style="cursor:pointer; color:var(--accent); display:inline-flex; align-items:center;" onclick="openChangelogModal()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>Changelog</span>
+        <span style="cursor:pointer; color:var(--accent); display:inline-flex; align-items:center;" onclick="triggerPrintCard()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3h12v6"/><rect width="12" height="8" x="6" y="14" rx="1"/></svg>Printable Card</span>
       </div>
       <div style="font-size:11px; margin-top:4px; opacity:0.8;">Hotkeys: <code>Alt+1..5</code> Tabs | <code>Alt+P</code> Emergency PALS | <code>Esc</code> Close Drawer</div>
     </footer>
@@ -1627,25 +1604,25 @@
 
   <!-- PWA Floating Update Banner -->
   <div id="pwaUpdateBanner" class="pwa-update-banner">
-    <span>🎉 มีการอัปเดตเวอร์ชันใหม่ของ ER-PED!</span>
-    <button class="btn" style="background:#FFFFFF; color:var(--accent); font-weight:800; padding:4px 10px; font-size:12px;" onclick="hardReload()">Reload App 🔄</button>
+    <span>มีการอัปเดตเวอร์ชันใหม่ของ ER-PED!</span>
+    <button class="btn" style="background:#FFFFFF; color:var(--accent); font-weight:800; padding:4px 10px; font-size:12px; display:inline-flex; align-items:center; gap:4px;" onclick="hardReload()">Reload App <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg></button>
   </div>
 
   <!-- Dataset Editor Drawer Overlay Modal -->
   <div id="datasetEditorBackdrop" class="drawer-backdrop hidden" onclick="if(event.target.id==='datasetEditorBackdrop') closeDatasetEditor()">
     <div class="drawer" onclick="event.stopPropagation()">
       <div class="drawer-header">
-        <strong style="font-size:16px;">⚙️ Lightweight Dataset Editor (Local Overrides)</strong>
-        <button type="button" class="btn" style="padding:4px 10px; font-size:12px;" onclick="closeDatasetEditor()">Close ✖ (Esc)</button>
+        <strong style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg> Lightweight Dataset Editor (Local Overrides)</strong>
+        <button type="button" class="btn" style="padding:4px 10px; font-size:12px; display:inline-flex; align-items:center; gap:4px;" onclick="closeDatasetEditor()">Close <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> (Esc)</button>
       </div>
       <div style="font-size:12px; color:var(--muted); flex-shrink:0;">ปรับแต่งข้อมูลยา / Safety Caps สำหรับใช้งานใน รพ. (บันทึกใน localStorage)</div>
       <div class="drawer-body">
         <div id="datasetEditorForm" style="display:flex; flex-direction:column; gap:10px;"></div>
         <div style="margin-top:14px; display:flex; justify-content:space-between; gap:10px;">
-          <button class="btn" style="background:var(--danger); color:#FFF;" onclick="resetDatasetEditor()">🔄 Reset to Master</button>
+          <button class="btn" style="background:var(--danger); color:#FFF; display:inline-flex; align-items:center; gap:4px;" onclick="resetDatasetEditor()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg> Reset to Master</button>
           <div style="display:flex; gap:10px;">
-            <button class="btn" onclick="exportDatasetJSON()">📥 Export JSON</button>
-            <button class="btn" style="background:var(--accent); color:#FFF; font-weight:700;" onclick="saveDatasetEditor()">💾 Save Changes</button>
+            <button class="btn" style="display:inline-flex; align-items:center; gap:4px;" onclick="exportDatasetJSON()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg> Export JSON</button>
+            <button class="btn" style="background:var(--accent); color:#FFF; font-weight:700; display:inline-flex; align-items:center; gap:4px;" onclick="saveDatasetEditor()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save Changes</button>
           </div>
         </div>
       </div>
@@ -1656,11 +1633,19 @@
   <div id="changelogBackdrop" class="drawer-backdrop hidden" onclick="if(event.target.id==='changelogBackdrop') closeChangelogModal()">
     <div class="drawer" onclick="event.stopPropagation()">
       <div class="drawer-header">
-        <strong style="font-size:16px;">📋 ER-PED Version 1.4.1 Changelog</strong>
-        <button type="button" class="btn" style="padding:4px 10px; font-size:12px;" onclick="closeChangelogModal()">Close ✖ (Esc)</button>
+        <strong style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg> ER-PED Version 1.5.0 Changelog</strong>
+        <button type="button" class="btn" style="padding:4px 10px; font-size:12px; display:inline-flex; align-items:center; gap:4px;" onclick="closeChangelogModal()">Close <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> (Esc)</button>
       </div>
       <div class="drawer-body" style="font-size:13px; line-height:1.6;">
-        <h3 style="color:var(--accent); margin-top:4px;">🎉 What's New in v1.4.1:</h3>
+        <h3 style="color:var(--accent); margin-top:4px;">What's New in v1.5.0:</h3>
+        <ul>
+          <li><strong>🎨 Minimal Design Refactor & Low-Decoration UI</strong>: ปรับแต่งรูปแบบหน้าจอให้อ่านง่าย สะอาดตาด้วยระบบ Minimal Design ยุบชุดสีทวนสอบ ปรับ Shadows เป็นแบบเรียบ และใช้ 1px border system ทั่วทั้งแอป</li>
+          <li><strong>⚡ Lucide SVG Icon System</strong>: เปลี่ยนไอคอนข้อความ Emoji ทั้งหมดบน Live UI เป็น Lucide SVG Icons ที่สืบทอดสีตามธีมผ่าน <code>currentColor</code> เพิ่มความเร็วในการกวาดสายตาข้างเตียงผู้ป่วย</li>
+          <li><strong>📐 Flat Underline Navigation Tabs</strong>: เปลี่ยนแท็บปุ่มนูนเป็นแบบขีดเส้นใต้แบน (Flat Underline) ลดมิติที่ไม่จำเป็นและคงคีย์บอร์ดลัด <code>Alt+1..0</code> / <code>Alt+K</code> ไว้อย่างสมบูรณ์</li>
+          <li><strong>📊 Flatter Hero Metric Display</strong>: ปรับการแสดงผลตัวเลขสำคัญ (Hero Metrics) ให้อยู่บนพื้นหลังเรียบ ชัดเจน ปราศจากกรอบการ์ดซ้ำซ้อน</li>
+        </ul>
+        <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;" />
+        <h4 style="color:var(--ink); margin-top:4px;">📜 Version 1.4.1 Highlights:</h4>
         <ul>
           <li><strong>🖥️ Monochrome High-Contrast Tonal Inversion Engine</strong>: ปรับแต่งคอนทราสต์ใน Mono Theme (<code>data-theme="mono"</code>) สำหรับจอภาพ ED/JVC Hospital Displays ด้วยสีข้อความแบบสลับโทนสูง (<code>#121210</code> ตัวหนังสือเข้มบน <code>#EAEAE6</code> พื้นหลังสว่างพร้อมขอบขาว <code>#FFFFFF</code> 2px) บน active tabs, active pills, combobox search dropdown, inputs, mark tags และ text selection (contrast ratio > 14:1)</li>
           <li><strong>🎛️ Universal Input & Selection Box Contrast Engine</strong>: ปรับปรุงสีพื้นหลังและสีตัวหนังสือในช่องกรอกข้อมูล (<code>input</code>), ช่องเลือกดรอปดาวน์ (<code>select</code>, <code>&lt;option&gt;</code>) และช่องค้นหายา (<code>.combobox-input</code>) ทุกช่องในทุกธีม (Light, Dark, Mono) ทั้งตอนเปิดปกติและตอนคลิกพิมพ์ (Focus) ขจัดปัญหาตัวหนังสือสว่างกลืนกับพื้นหลังขาวอย่างสมบูรณ์ (Key Decision #37)</li>
@@ -1704,8 +1689,8 @@
   <div id="broselowBackdrop" class="drawer-backdrop hidden" onclick="handleBroselowBackdropClick(event)">
     <div id="broselowPanel" class="drawer" onclick="event.stopPropagation()">
       <div class="drawer-header">
-        <strong style="font-size:16px;">📏 Broselow Tape Reference</strong>
-        <button type="button" class="btn" style="padding:4px 10px; font-size:12px;" onclick="toggleBroselowPanel()">Close ✖ (Esc)</button>
+        <strong style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0l12.6 12.6z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></svg> Broselow Tape Reference</strong>
+        <button type="button" class="btn" style="padding:4px 10px; font-size:12px; display:inline-flex; align-items:center; gap:4px;" onclick="toggleBroselowPanel()">Close <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> (Esc)</button>
       </div>
       <div style="font-size:12px; color:var(--muted); flex-shrink:0;">คำนวณตามน้ำหนัก ABW / Wt for Ht ปัจจุบัน</div>
       <div class="drawer-body">
@@ -1717,10 +1702,10 @@
   <!-- Emergency Floating Action Buttons -->
   <div class="fab">
     <button class="pals-fab" onclick="showTab('pals')" title="เข้าถึง PALS Resuscitation ทันที (Alt+P)">
-      🚨 PALS CODE
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg> PALS CODE
     </button>
     <button onclick="hardReload()" title="โหลดแอปใหม่">
-      🔄 Reload
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg> Reload
     </button>
   </div>
 
