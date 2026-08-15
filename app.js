@@ -553,6 +553,9 @@ function showTab(id, btn) {
   if (targetBtn) {
     targetBtn.classList.add('active');
     targetBtn.setAttribute('aria-selected', 'true');
+    if (typeof targetBtn.scrollIntoView === 'function') {
+      targetBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
   }
   
   ['dose','atb','fluids','pals','ncpr','drip','seizure','tox','psa','vitals','dka'].forEach(x => {
@@ -698,9 +701,9 @@ function fillBroselowContent(){
   const fluidBolus = Math.round(20 * w);
 
   out.innerHTML = `
-<div style="background:${bgSwatch}; padding:12px; border-radius:8px; border:1px solid var(--border-dark); margin-bottom:12px;">
+<div style="background:${bgSwatch}; padding:12px 14px; border-radius:8px; border:1px solid var(--border-dark); margin-bottom:12px;">
   <strong style="font-size:16px; color:#1E1E1E;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0l12.6 12.6z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></svg> Broselow Zone: ${color} (${entry.min}–${entry.max} kg)</strong>
-  <div style="font-size:13px; margin-top:4px;">Patient Weight: <strong>${w.toFixed(1)} kg</strong></div>
+  <div style="font-size:13px; margin-top:4px; color:#1E1E1E;">Patient Weight: <strong>${w.toFixed(1)} kg</strong></div>
 </div>
 
 <div class="hero-metric-grid">
@@ -721,15 +724,37 @@ function fillBroselowContent(){
   </div>
 </div>
 
-<div style="background:#FFFFFF; padding:14px; border-radius:8px; border:1px solid var(--border); margin-top:10px;">
-  <strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0l12.6 12.6z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></svg> Equipment & Resuscitation Specs:</strong>
-  <ul style="margin:6px 0 0 18px; padding:0; line-height:1.7;">
-    <li>ETT Size (Cuffed): <strong>${weightToETTCuffed(w)} mm</strong> | Uncuffed: <strong>${weightToETTUncuffed(w)} mm</strong></li>
-    <li>ETT Insertion Depth: <strong>${weightToDepth(w)} cm</strong> at upper lip</li>
-    <li>Laryngoscope Blade: <strong>${suggestBlade(null, w)}</strong></li>
-    <li>OPA: <strong>${suggestOPA(w)} mm</strong> | NPA: <strong>${suggestNPA(w)} Fr</strong> | Suction: <strong>${suggestSuction(w)} Fr</strong></li>
-    <li>NG Tube: <strong>${suggestNG(w)} Fr</strong> | Foley Catheter: <strong>${suggestFoley(w)} Fr</strong></li>
-  </ul>
+<div class="protocol-table-wrapper" style="margin-top:12px;">
+  <table class="protocol-table">
+    <thead>
+      <tr>
+        <th style="width:50%;">Equipment / Parameter</th>
+        <th style="width:50%;">Recommended Size & Setting</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>ETT Size (Cuffed / Uncuffed)</strong></td>
+        <td><span class="dose-badge">${weightToETTCuffed(w)} mm</span> (Cuffed) | <strong>${weightToETTUncuffed(w)} mm</strong> (Uncuffed)</td>
+      </tr>
+      <tr>
+        <td><strong>ETT Insertion Depth</strong></td>
+        <td><strong>${weightToDepth(w)} cm</strong> at upper lip</td>
+      </tr>
+      <tr>
+        <td><strong>Laryngoscope Blade</strong></td>
+        <td><strong>${suggestBlade(null, w)}</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Airway (OPA / NPA / Suction)</strong></td>
+        <td>OPA: <strong>${suggestOPA(w)} mm</strong> | NPA: <strong>${suggestNPA(w)} Fr</strong> | Suction: <strong>${suggestSuction(w)} Fr</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Tubes (NG / Foley)</strong></td>
+        <td>NG Tube: <strong>${suggestNG(w)} Fr</strong> | Foley Catheter: <strong>${suggestFoley(w)} Fr</strong></td>
+      </tr>
+    </tbody>
+  </table>
 </div>
   `;
 }
@@ -819,15 +844,51 @@ function closeAllComboboxes(){
 }
 
 function onDoseSearchInput(){
-  const val = document.getElementById('doseSearch').value;
+  const input = document.getElementById('doseSearch');
+  const val = input ? input.value : '';
+  const clearBtn = document.getElementById('doseSearchClear');
+  if (clearBtn) {
+    if (val && val.length > 0) clearBtn.classList.add('visible');
+    else clearBtn.classList.remove('visible');
+  }
   openDoseCombobox();
   renderDoseComboboxDropdown(val);
 }
 
 function onATBSearchInput(){
-  const val = document.getElementById('atbSearch').value;
+  const input = document.getElementById('atbSearch');
+  const val = input ? input.value : '';
+  const clearBtn = document.getElementById('atbSearchClear');
+  if (clearBtn) {
+    if (val && val.length > 0) clearBtn.classList.add('visible');
+    else clearBtn.classList.remove('visible');
+  }
   openATBCombobox();
   renderATBComboboxDropdown(val);
+}
+
+function clearDoseSearch(){
+  const input = document.getElementById('doseSearch');
+  const clearBtn = document.getElementById('doseSearchClear');
+  if (input) {
+    input.value = '';
+    input.focus();
+  }
+  if (clearBtn) clearBtn.classList.remove('visible');
+  renderDoseComboboxDropdown('');
+  openDoseCombobox();
+}
+
+function clearATBSearch(){
+  const input = document.getElementById('atbSearch');
+  const clearBtn = document.getElementById('atbSearchClear');
+  if (input) {
+    input.value = '';
+    input.focus();
+  }
+  if (clearBtn) clearBtn.classList.remove('visible');
+  renderATBComboboxDropdown('');
+  openATBCombobox();
 }
 
 function getRecentDrugs(kind) {
@@ -853,8 +914,10 @@ function selectDoseItem(key, name){
   saveRecentDrug('dose', key);
   const sel = document.getElementById('doseDrug');
   const input = document.getElementById('doseSearch');
+  const clearBtn = document.getElementById('doseSearchClear');
   if (sel) sel.value = key;
   if (input) input.value = name;
+  if (clearBtn) clearBtn.classList.add('visible');
   closeAllComboboxes();
   calcDose();
 }
@@ -863,8 +926,10 @@ function selectATBItem(key, name){
   saveRecentDrug('atb', key);
   const sel = document.getElementById('atbDrug');
   const input = document.getElementById('atbSearch');
+  const clearBtn = document.getElementById('atbSearchClear');
   if (sel) sel.value = key;
   if (input) input.value = name;
+  if (clearBtn) clearBtn.classList.add('visible');
   closeAllComboboxes();
   calcATB();
 }
@@ -1764,35 +1829,35 @@ function calcDrip() {
   const isCapped = item.maxRateMcgKgMin && doseVal > item.maxRateMcgKgMin;
 
   outEl.innerHTML = `
-    <div style="overflow-x:auto; margin-top:2px;">
-      <table style="width:100%; border-collapse:collapse; font-size:11.5px; line-height:1.3; border:1px solid var(--border);">
+    <div class="protocol-table-wrapper">
+      <table class="protocol-table">
         <thead>
-          <tr style="background:var(--panel); border-bottom:1px solid var(--border); text-align:left;">
-            <th style="padding:4px 6px; width:25%;">Drug & Route</th>
-            <th style="padding:4px 6px; width:20%;">Target Dose</th>
-            <th style="padding:4px 6px; width:20%;">Infusion Pump Rate</th>
-            <th style="padding:4px 6px; width:20%;">Concentration & Prep</th>
-            <th style="padding:4px 6px; width:15%;">Dosing Range</th>
+          <tr>
+            <th style="width:25%;">Drug & Route</th>
+            <th style="width:20%;">Target Dose</th>
+            <th style="width:20%;">Infusion Pump Rate</th>
+            <th style="width:20%;">Concentration & Prep</th>
+            <th style="width:15%;">Dosing Range</th>
           </tr>
         </thead>
         <tbody>
-          <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:4px 6px; font-weight:700; color:var(--ink); vertical-align:top;">
-              ${item.drug}
-              <div style="font-size:10.5px; font-weight:normal; color:var(--muted); margin-top:1px;">${item.route} ${item.note ? `• ${item.note}` : ''}</div>
+          <tr>
+            <td>
+              <strong style="color:var(--ink); font-size:13px;">${item.drug}</strong>
+              <div style="font-size:11px; color:var(--muted); margin-top:2px;">${item.route} ${item.note ? `• ${item.note}` : ''}</div>
             </td>
-            <td style="padding:4px 6px; vertical-align:top;">
-              <strong style="color:var(--accent); font-size:13px;">${doseVal.toFixed(2)} mcg/kg/min</strong>
-              <div style="font-size:10.5px; color:var(--muted);">${(mcgPerHour / 1000).toFixed(2)} mg/hr</div>
+            <td>
+              <span class="dose-badge">${doseVal.toFixed(2)} mcg/kg/min</span>
+              <div style="font-size:11px; color:var(--muted); margin-top:2px;">${(mcgPerHour / 1000).toFixed(2)} mg/hr</div>
             </td>
-            <td style="padding:4px 6px; vertical-align:top;">
-              <strong style="color:var(--danger); font-size:14px;">${rateMlHr.toFixed(1)} mL/hr</strong>
+            <td>
+              <strong style="color:var(--danger); font-size:15px; font-family:'JetBrains Mono',monospace;">${rateMlHr.toFixed(1)} mL/hr</strong>
             </td>
-            <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">
+            <td style="color:var(--muted);">
               <strong style="color:var(--ink);">${concMgPerMl.toFixed(3)} mg/mL</strong>
-              <div style="font-size:10.5px;">${mgVal} mg in ${volVal} mL (${concMcgPerMl.toFixed(0)} mcg/mL)</div>
+              <div style="font-size:11px;">${mgVal} mg in ${volVal} mL (${concMcgPerMl.toFixed(0)} mcg/mL)</div>
             </td>
-            <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">
+            <td style="color:var(--muted);">
               ${item.doseMinMcgKgMin}–${item.doseMaxMcgKgMin} mcg/kg/min
             </td>
           </tr>
@@ -1800,7 +1865,7 @@ function calcDrip() {
       </table>
     </div>
 
-    ${isCapped ? `<div class="badge-cap danger" style="margin-top:6px; padding:4px 8px; font-size:11px;">⚠️ Warning: Target dose (${doseVal} mcg/kg/min) exceeds maximum recommended rate (${item.maxRateMcgKgMin} mcg/kg/min)</div>` : ''}
+    ${isCapped ? `<div class="badge-cap danger" style="margin-top:8px;">⚠️ Warning: Target dose (${doseVal} mcg/kg/min) exceeds maximum recommended rate (${item.maxRateMcgKgMin} mcg/kg/min)</div>` : ''}
   `;
 }
 
@@ -1821,25 +1886,25 @@ function calcSeizure() {
   DS.seizureProtocol.forEach((stage, idx) => {
     const isFirst = idx === 0;
     html += `
-      <div class="seizure-stage-block" style="${!isFirst ? 'margin-top:6px; padding-top:4px; border-top:1px solid var(--border);' : ''}">
-        <div style="font-size:12.5px; font-weight:700; color:var(--accent); margin-bottom:2px; display:flex; justify-content:space-between; align-items:center;">
+      <div class="stage-card" style="${!isFirst ? 'margin-top:8px;' : ''}">
+        <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:4px; display:flex; justify-content:space-between; align-items:center;">
           <span>⏱️ Stage ${stage.stage}: ${stage.name}</span>
         </div>
-        <div style="font-size:11.5px; color:var(--ink); margin-bottom:4px; line-height:1.3; background:var(--panel); padding:4px 8px; border-radius:4px; border-left:3px solid var(--accent);">
+        <div style="font-size:12px; color:var(--ink); margin-bottom:6px; line-height:1.35; background:var(--panel); padding:6px 10px; border-radius:6px; border-left:3px solid var(--accent);">
           📌 <strong>Action:</strong> ${stage.actions}
         </div>
     `;
 
     if (stage.drugs && stage.drugs.length > 0) {
       html += `
-        <div style="overflow-x:auto;">
-          <table style="width:100%; border-collapse:collapse; font-size:11.5px; line-height:1.3; border:1px solid var(--border); margin-bottom:2px;">
+        <div class="protocol-table-wrapper">
+          <table class="protocol-table">
             <thead>
-              <tr style="background:var(--panel); border-bottom:1px solid var(--border); text-align:left;">
-                <th style="padding:4px 6px; width:26%;">Medication</th>
-                <th style="padding:4px 6px; width:24%;">Dose (${w.toFixed(1)} kg)</th>
-                <th style="padding:4px 6px; width:24%;">Prep Concentration</th>
-                <th style="padding:4px 6px; width:26%;">Clinical Note</th>
+              <tr>
+                <th style="width:26%;">Medication</th>
+                <th style="width:24%;">Dose (${w.toFixed(1)} kg)</th>
+                <th style="width:24%;">Prep Concentration</th>
+                <th style="width:26%;">Clinical Note</th>
               </tr>
             </thead>
             <tbody>
@@ -1855,15 +1920,15 @@ function calcSeizure() {
         }
 
         html += `
-          <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:4px 6px; font-weight:700; color:var(--ink); vertical-align:top;">${d.name}</td>
-            <td style="padding:4px 6px; vertical-align:top;">
-              <strong style="color:var(--accent); font-size:13px;">${fmtMg(finalDose)} mg</strong>
-              <span style="font-size:10.5px; color:var(--muted);">(${d.route})</span>
-              ${isCapped ? `<div class="badge-cap" style="font-size:9.5px; padding:0 4px; display:inline-block; margin-top:1px;">Max ${d.maxDoseMg} mg</div>` : ''}
+          <tr>
+            <td><strong>${d.name}</strong></td>
+            <td>
+              <span class="dose-badge">${fmtMg(finalDose)} mg</span>
+              <span style="font-size:11px; color:var(--muted);">(${d.route})</span>
+              ${isCapped ? `<div class="badge-cap warning" style="font-size:10px; padding:1px 4px; display:inline-block; margin-top:2px;">Max ${d.maxDoseMg} mg</div>` : ''}
             </td>
-            <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">${d.prep}</td>
-            <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">${d.note || '—'}</td>
+            <td style="color:var(--muted);">${d.prep}</td>
+            <td style="color:var(--muted);">${d.note || '—'}</td>
           </tr>
         `;
       });
@@ -1894,15 +1959,15 @@ function calcTox() {
   }
 
   let html = `
-    <div style="overflow-x:auto;">
-      <table style="width:100%; border-collapse:collapse; font-size:11.5px; line-height:1.3; border:1px solid var(--border);">
+    <div class="protocol-table-wrapper">
+      <table class="protocol-table">
         <thead>
-          <tr style="background:var(--panel); border-bottom:1px solid var(--border); text-align:left;">
-            <th style="padding:4px 6px; width:22%;">Antidote Name</th>
-            <th style="padding:4px 6px; width:22%;">Indication</th>
-            <th style="padding:4px 6px; width:22%;">Dose (${w.toFixed(1)} kg)</th>
-            <th style="padding:4px 6px; width:18%;">Preparation</th>
-            <th style="padding:4px 6px; width:16%;">Note</th>
+          <tr>
+            <th style="width:22%;">Antidote Name</th>
+            <th style="width:22%;">Indication</th>
+            <th style="width:22%;">Dose (${w.toFixed(1)} kg)</th>
+            <th style="width:18%;">Preparation</th>
+            <th style="width:16%;">Note</th>
           </tr>
         </thead>
         <tbody>
@@ -1920,16 +1985,16 @@ function calcTox() {
     const unitStr = item.unit || 'mg';
 
     html += `
-      <tr style="border-bottom:1px solid var(--border);">
-        <td style="padding:4px 6px; font-weight:700; color:var(--ink); vertical-align:top;">${item.name}</td>
-        <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">${item.indication}</td>
-        <td style="padding:4px 6px; vertical-align:top;">
-          <strong style="color:var(--accent); font-size:13px;">${fmtMg(finalDose)} ${unitStr}</strong>
-          <span style="font-size:10.5px; color:var(--muted);">(${item.route})</span>
-          ${isCapped ? `<div class="badge-cap" style="font-size:9.5px; padding:0 4px; display:inline-block; margin-top:1px;">Max ${item.maxDoseMg} ${unitStr}</div>` : ''}
+      <tr>
+        <td><strong>${item.name}</strong></td>
+        <td style="color:var(--muted);">${item.indication}</td>
+        <td>
+          <span class="dose-badge">${fmtMg(finalDose)} ${unitStr}</span>
+          <span style="font-size:11px; color:var(--muted);">(${item.route})</span>
+          ${isCapped ? `<div class="badge-cap warning" style="font-size:10px; padding:1px 4px; display:inline-block; margin-top:2px;">Max ${item.maxDoseMg} ${unitStr}</div>` : ''}
         </td>
-        <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">${item.prep}</td>
-        <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">${item.note || '—'}</td>
+        <td style="color:var(--muted);">${item.prep}</td>
+        <td style="color:var(--muted);">${item.note || '—'}</td>
       </tr>
     `;
   });
@@ -1951,14 +2016,14 @@ function calcPSA() {
   }
 
   let html = `
-    <div style="overflow-x:auto;">
-      <table style="width:100%; border-collapse:collapse; font-size:11.5px; line-height:1.3; border:1px solid var(--border);">
+    <div class="protocol-table-wrapper">
+      <table class="protocol-table">
         <thead>
-          <tr style="background:var(--panel); border-bottom:1px solid var(--border); text-align:left;">
-            <th style="padding:4px 6px; width:26%;">Medication</th>
-            <th style="padding:4px 6px; width:24%;">Calculated Dose (${w.toFixed(1)} kg)</th>
-            <th style="padding:4px 6px; width:24%;">Preparation</th>
-            <th style="padding:4px 6px; width:26%;">Clinical Note</th>
+          <tr>
+            <th style="width:26%;">Medication</th>
+            <th style="width:24%;">Calculated Dose (${w.toFixed(1)} kg)</th>
+            <th style="width:24%;">Preparation</th>
+            <th style="width:26%;">Clinical Note</th>
           </tr>
         </thead>
         <tbody>
@@ -1992,15 +2057,15 @@ function calcPSA() {
     const doseStr = minDose === maxDose ? formatValue(minDose) : `${formatValue(minDose)}–${formatValue(maxDose)}`;
 
     html += `
-      <tr style="border-bottom:1px solid var(--border);">
-        <td style="padding:4px 6px; font-weight:700; color:var(--ink); vertical-align:top;">${item.name}</td>
-        <td style="padding:4px 6px; vertical-align:top;">
-          <strong style="color:var(--accent); font-size:13px;">${doseStr} ${unitStr}</strong>
-          <span style="font-size:10.5px; color:var(--muted);">(${item.route})</span>
-          ${isCapped ? `<div class="badge-cap danger" style="font-size:9.5px; padding:0 4px; display:inline-block; margin-top:1px;">Max ${maxCap} ${unitStr}</div>` : ''}
+      <tr>
+        <td><strong>${item.name}</strong></td>
+        <td>
+          <span class="dose-badge">${doseStr} ${unitStr}</span>
+          <span style="font-size:11px; color:var(--muted);">(${item.route})</span>
+          ${isCapped ? `<div class="badge-cap danger" style="font-size:10px; padding:1px 4px; display:inline-block; margin-top:2px;">Max ${maxCap} ${unitStr}</div>` : ''}
         </td>
-        <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">${item.prep}</td>
-        <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">${item.note || '—'}</td>
+        <td style="color:var(--muted);">${item.prep}</td>
+        <td style="color:var(--muted);">${item.note || '—'}</td>
       </tr>
     `;
   });
@@ -2026,9 +2091,9 @@ function calcVitals() {
   }
 
   let html = `
-    <div style="background:var(--card); border:1px solid var(--border); border-radius:8px; padding:14px; margin-bottom:14px;">
-      <strong style="font-size:16px; color:var(--accent);">Current Patient Age Bracket: ${currentBracket.ageBracket}</strong>
-      <div class="hero-metric-grid" style="margin-top:10px;">
+    <div style="background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:12px; margin-bottom:12px;">
+      <strong style="font-size:15px; color:var(--accent);">Current Patient Age Bracket: ${currentBracket.ageBracket}</strong>
+      <div class="hero-metric-grid" style="margin-top:8px;">
         <div class="hero-metric danger">
           <div class="hero-label">HEART RATE (HR)</div>
           <div class="hero-val">${currentBracket.hrNormal}</div>
@@ -2047,35 +2112,36 @@ function calcVitals() {
       </div>
     </div>
 
-    <table style="width:100%; border-collapse:collapse; font-size:13px; border:1px solid var(--border);">
-      <thead>
-        <tr style="background:var(--panel); border-bottom:2px solid var(--border); text-align:left;">
-          <th style="padding:8px 10px;">Age Bracket</th>
-          <th style="padding:8px 10px;">HR Range</th>
-          <th style="padding:8px 10px;">RR Range</th>
-          <th style="padding:8px 10px;">Systolic BP</th>
-          <th style="padding:8px 10px;">Diastolic BP</th>
-          <th style="padding:8px 10px;">Hypotension Cutoff</th>
-        </tr>
-      </thead>
-      <tbody>
+    <div class="protocol-table-wrapper">
+      <table class="protocol-table">
+        <thead>
+          <tr>
+            <th>Age Bracket</th>
+            <th>HR Range</th>
+            <th>RR Range</th>
+            <th>Systolic BP</th>
+            <th>Diastolic BP</th>
+            <th>Hypotension Cutoff</th>
+          </tr>
+        </thead>
+        <tbody>
   `;
 
   DS.vitalSignsRef.forEach(v => {
     const isCurrent = v.ageBracket === currentBracket.ageBracket;
     html += `
-      <tr style="${isCurrent ? 'background:var(--accent-subtle); font-weight:700;' : ''} border-bottom:1px solid var(--border);">
-        <td style="padding:8px 10px;">${v.ageBracket} ${isCurrent ? '👈 Active' : ''}</td>
-        <td style="padding:8px 10px;">${v.hrNormal}</td>
-        <td style="padding:8px 10px;">${v.rrNormal}</td>
-        <td style="padding:8px 10px;">${v.sysBpNormal}</td>
-        <td style="padding:8px 10px;">${v.diaBpNormal}</td>
-        <td style="padding:8px 10px; color:var(--danger);">${v.hypotensionSysBp}</td>
+      <tr style="${isCurrent ? 'background:var(--accent-soft); font-weight:700;' : ''}">
+        <td><strong>${v.ageBracket}</strong> ${isCurrent ? '👈 Active' : ''}</td>
+        <td>${v.hrNormal}</td>
+        <td>${v.rrNormal}</td>
+        <td>${v.sysBpNormal}</td>
+        <td>${v.diaBpNormal}</td>
+        <td style="color:var(--danger); font-weight:700;">${v.hypotensionSysBp}</td>
       </tr>
     `;
   });
 
-  html += '</tbody></table>';
+  html += '</tbody></table></div>';
   outEl.innerHTML = html;
 }
 
@@ -2122,40 +2188,40 @@ function calcDKA() {
   const isDextroseNeeded = currentBG !== null && currentBG < 250;
 
   let html = `
-    <div style="overflow-x:auto; margin-top:2px;">
-      <table style="width:100%; border-collapse:collapse; font-size:11.5px; line-height:1.3; border:1px solid var(--border); margin-bottom:6px;">
+    <div class="protocol-table-wrapper">
+      <table class="protocol-table">
         <thead>
-          <tr style="background:var(--panel); border-bottom:1px solid var(--border); text-align:left;">
-            <th style="padding:4px 6px; width:30%;">DKA Protocol Target</th>
-            <th style="padding:4px 6px; width:25%;">Calculated Rate / Volume</th>
-            <th style="padding:4px 6px; width:45%;">Clinical Breakdown & Instructions</th>
+          <tr>
+            <th style="width:30%;">DKA Protocol Target</th>
+            <th style="width:25%;">Calculated Rate / Volume</th>
+            <th style="width:45%;">Clinical Breakdown & Instructions</th>
           </tr>
         </thead>
         <tbody>
-          <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:4px 6px; font-weight:700; color:var(--ink); vertical-align:top;">IV Fluid Rate (Mnt + 48h Deficit)</td>
-            <td style="padding:4px 6px; vertical-align:top;">
-              <strong style="color:var(--danger); font-size:14px;">${totalFluidRate} mL/hr</strong>
+          <tr>
+            <td><strong>IV Fluid Rate (Mnt + 48h Deficit)</strong></td>
+            <td>
+              <strong style="color:var(--danger); font-size:15px; font-family:'JetBrains Mono',monospace;">${totalFluidRate} mL/hr</strong>
             </td>
-            <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">
+            <td style="color:var(--muted);">
               Mnt: ${mntRate.toFixed(1)} mL/hr + Deficit: ${deficitRate48h.toFixed(1)} mL/hr (Net Deficit: ${netDeficitMl.toFixed(0)} mL over 48h)
             </td>
           </tr>
-          <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:4px 6px; font-weight:700; color:var(--ink); vertical-align:top;">Regular Insulin Drip</td>
-            <td style="padding:4px 6px; vertical-align:top;">
-              <strong style="color:var(--accent); font-size:14px;">${insulinPumpMlHr} mL/hr</strong>
+          <tr>
+            <td><strong>Regular Insulin Drip</strong></td>
+            <td>
+              <span class="dose-badge">${insulinPumpMlHr} mL/hr</span>
             </td>
-            <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">
+            <td style="color:var(--muted);">
               Dose: ${insulinDoseUnitsHr} U/hr (0.1 U/kg/hr) [Prep: 50 U in 50 mL NS = 1 U/mL]
             </td>
           </tr>
-          <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:4px 6px; font-weight:700; color:var(--ink); vertical-align:top;">Initial NS Resus Bolus</td>
-            <td style="padding:4px 6px; vertical-align:top;">
-              <strong style="color:var(--ink); font-size:13px;">${initialBolusMl.toFixed(0)} mL</strong>
+          <tr>
+            <td><strong>Initial NS Resus Bolus</strong></td>
+            <td>
+              <strong style="color:var(--ink); font-size:14px; font-family:'JetBrains Mono',monospace;">${initialBolusMl.toFixed(0)} mL</strong>
             </td>
-            <td style="padding:4px 6px; color:var(--muted); vertical-align:top;">
+            <td style="color:var(--muted);">
               10 mL/kg 0.9% NS over 1 hour
             </td>
           </tr>
