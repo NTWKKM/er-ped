@@ -454,20 +454,22 @@
       display: flex; 
       align-items: center; 
       justify-content: space-between;
-      gap: 10px; 
+      gap: 8px; 
       padding: 6px 12px; 
     }
     .topbar-biometrics {
       display: flex;
       align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
+      gap: 6px;
+      flex-wrap: nowrap;
+      flex-shrink: 0;
     }
     .topbar-actions {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       margin-left: auto;
+      flex-shrink: 0;
     }
 
     .brand-badge {
@@ -497,11 +499,12 @@
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--r-md);
-      padding: 4px 10px 5px;
+      padding: 4px 8px 5px;
       display: flex;
       flex-direction: column;
       gap: 2px;
       justify-content: center;
+      flex-shrink: 0;
     }
     .bio-group-title {
       font-size: 9px;
@@ -514,14 +517,15 @@
     .bio-fields {
       display: flex;
       align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
+      gap: 5px;
+      flex-wrap: nowrap;
+      white-space: nowrap;
     }
     .bio-derived-val {
       font-size: 14px;
       font-weight: 700;
       color: var(--ink);
-      min-width: 50px;
+      min-width: 44px;
     }
     .bio-derived-src {
       font-size: 10px;
@@ -531,8 +535,8 @@
     .bio-use-toggle {
       display: flex;
       align-items: center;
-      gap: 5px;
-      margin: 0 0 0 4px;
+      gap: 4px;
+      margin: 0 0 0 2px;
       cursor: pointer;
       font-size: 11px;
       font-weight: 600;
@@ -545,8 +549,9 @@
     .active-weight {
       border-left: 3px solid var(--accent);
       background: var(--accent-subtle);
-      min-width: 155px;
-      padding: 4px 10px 5px;
+      min-width: 145px;
+      padding: 4px 8px 5px;
+      flex-shrink: 0;
     }
     .active-weight #activeWeightVal {
       font-size: 19px;
@@ -1385,10 +1390,49 @@
       border: 1px solid #FFFFFF;
     }
 
-    /* Responsive Mobile Layout — Zero CLS & Compact Touch Optimization */
+    /* Responsive Layout — Desktop vs Tablet vs Mobile */
+    @media (max-width: 960px) {
+      .topbar-inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+        padding: 6px 8px;
+      }
+      .topbar-biometrics {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        width: 100%;
+      }
+      .topbar-biometrics .bio-group {
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .topbar-biometrics .bio-fields {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex-wrap: nowrap;
+        white-space: nowrap;
+      }
+      .topbar-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+        width: 100%;
+        margin-left: 0;
+      }
+      .topbar-actions .active-weight {
+        flex: 1 1 auto;
+        min-width: 120px;
+        padding: 4px 8px;
+      }
+    }
+
     @media (max-width: 768px) {
       .container {
-        margin-top: calc(var(--topbar-h, 140px) + 8px);
+        margin-top: calc(var(--topbar-h, 130px) + 8px);
         padding: 8px;
         padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
       }
@@ -1397,38 +1441,15 @@
       .col-3 { grid-column: span 3; }
       .card { padding: 12px 10px; border-radius: 8px; }
       
-      .topbar-inner { padding: 6px 8px; gap: 6px; }
-      
-      /* Mobile Adaptive 2-Column Topbar Grid: BW & In-Use side by side */
-      .topbar-row-1 {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 6px;
-        width: 100%;
-        overflow-x: visible;
+      .topbar-biometrics {
+        grid-template-columns: 1fr;
+        gap: 5px;
       }
-      .topbar-row-1 .bio-group:nth-child(1) {
-        grid-column: span 1;
-        padding: 4px 6px 5px;
-      }
-      .topbar-row-1 .bio-group.active-weight {
-        grid-column: span 1;
-        margin-left: 0;
-        min-width: auto;
-        padding: 4px 8px 5px;
-      }
-      .topbar-row-1 .bio-group:nth-child(2) {
-        grid-column: span 2;
-        padding: 4px 6px 5px;
-      }
-      
-      .topbar-row-2 { gap: 6px; }
-      .bio-fields { gap: 4px; flex-wrap: wrap; }
-      
+
       /* iOS Non-Zoom inputs: font-size: 16px prevents Safari auto-zooming */
       .bio-fields input[type="number"],
       .chip input[type="number"] {
-        width: 54px;
+        width: 52px;
         min-height: 32px;
         font-size: 16px;
         padding: 3px 5px;
@@ -1463,7 +1484,8 @@
     }
 
     @media (max-width: 480px) {
-      .topbar-row-1 .bio-fields input[type="number"] { width: 48px; font-size: 16px; }
+      .bio-fields input[type="number"] { width: 46px; font-size: 16px; padding: 2px 4px; }
+      .bio-derived-val { min-width: 36px; font-size: 13px; }
     }
 
     /* ============================================================
@@ -1476,15 +1498,13 @@
        viewing distance in an ED is usually greater than a handheld.
        ============================================================ */
     @media (orientation: portrait) and (min-width: 700px) and (max-width: 900px) {
-      .container { max-width: 760px; margin: calc(var(--topbar-h, 140px) + 12px) auto 100px; padding: 16px; }
+      .container { max-width: 760px; margin: calc(var(--topbar-h, 130px) + 12px) auto 100px; padding: 16px; }
 
       .topbar-inner { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px 14px; }
       .chip { justify-content: space-between; }
-      /* 2-up instead of one group per row: three stacked rows made the fixed
-         topbar 285px = 24% of an 800x1200 ED panel. */
-      .topbar-row-1 { flex-wrap: wrap; gap: 8px; }
+      .topbar-biometrics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
       .bio-group { flex: 1 1 auto; padding: 5px 10px 6px; }
-      .active-weight { margin-left: 0; min-width: 160px; }
+      .active-weight { margin-left: 0; min-width: 150px; }
       .bio-group-title { font-size: 8.5px; }
 
       html, body { font-size: 16px; }
