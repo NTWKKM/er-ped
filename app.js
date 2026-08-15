@@ -680,18 +680,52 @@ function handleBroselowBackdropClick(e){
   }
 }
 
-function fillBroselowContent(){
-  const w = getWeight() || gIBW || 0;
+function previewBroselowZone(colorName) {
+  const bands = (DS && DS.broselow) || [];
+  const entry = bands.find(b => b.color && b.color.toLowerCase() === colorName.toLowerCase());
+  if (!entry) return;
+  const midWeight = ((entry.min + entry.max) / 2);
+  fillBroselowContent(midWeight, entry.color);
+}
+
+function fillBroselowContent(overrideW, overrideColor){
+  const currentW = getWeight() || gIBW || 0;
+  const w = overrideW || currentW || 10;
   const out = document.getElementById('broselowContent');
-  if(!w){ if(out) out.textContent = 'กรอกน้ำหนักหรือ IBW ก่อนดูข้อมูล Broselow'; return; }
+  if(!out) return;
 
   const bands = (DS && DS.broselow) || [];
-  const color = broselowColor(w);
+  const color = overrideColor || (w > 0 ? broselowColor(w) : 'Grey');
   const entry = bands.find(b => typeof b.min==='number' && typeof b.max==='number' && w>=b.min && w<=b.max)
              || bands.find(b => b.color === color)
-             || null;
+             || bands[0];
 
-  if (!entry){ if(out) out.textContent = 'ไม่พบช่วง Broselow ใน dataset'; return; }
+  const BROSELOW_SPECTRUM = [
+    { color: 'Grey', label: 'Grey', range: '3–5.9 kg', bg: '#BDBDBD', text: '#000' },
+    { color: 'Pink', label: 'Pink', range: '6–7.9 kg', bg: '#F48FB1', text: '#000' },
+    { color: 'Red', label: 'Red', range: '8–9.9 kg', bg: '#EF5350', text: '#FFF' },
+    { color: 'Purple', label: 'Purple', range: '10–11.9 kg', bg: '#AB47BC', text: '#FFF' },
+    { color: 'Yellow', label: 'Yellow', range: '12–14.9 kg', bg: '#FFEE58', text: '#000' },
+    { color: 'White', label: 'White', range: '15–18.9 kg', bg: '#FFFFFF', text: '#000' },
+    { color: 'Blue', label: 'Blue', range: '19–23.9 kg', bg: '#42A5F5', text: '#FFF' },
+    { color: 'Orange', label: 'Orange', range: '24–29.9 kg', bg: '#FFA726', text: '#000' },
+    { color: 'Green', label: 'Green', range: '30–36 kg', bg: '#66BB6A', text: '#FFF' }
+  ];
+
+  const spectrumHtml = `
+    <div class="broselow-spectrum-bar" role="group" aria-label="Broselow Color Bands">
+      ${BROSELOW_SPECTRUM.map(s => {
+        const isActive = s.color.toLowerCase() === color.toLowerCase();
+        return `
+          <div class="broselow-spectrum-seg ${isActive ? 'active' : ''}" style="background:${s.bg}; color:${s.text};" onclick="previewBroselowZone('${s.color}')" title="Broselow ${s.label} (${s.range})">
+            <span>${s.label}</span>
+            <span style="font-size:8px; opacity:0.85;">${s.range}</span>
+            ${isActive ? '<span style="font-size:8px;">▼</span>' : ''}
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
 
   const bgSwatch = colorSwatch(color);
   const epiMg = (0.01 * w).toFixed(2);
@@ -701,9 +735,13 @@ function fillBroselowContent(){
   const fluidBolus = Math.round(20 * w);
 
   out.innerHTML = `
-<div style="background:${bgSwatch}; padding:12px 14px; border-radius:8px; border:1px solid var(--border-dark); margin-bottom:12px;">
-  <strong style="font-size:16px; color:#1E1E1E;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0l12.6 12.6z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></svg> Broselow Zone: ${color} (${entry.min}–${entry.max} kg)</strong>
-  <div style="font-size:13px; margin-top:4px; color:#1E1E1E;">Patient Weight: <strong>${w.toFixed(1)} kg</strong></div>
+${spectrumHtml}
+<div style="background:${bgSwatch}; padding:10px 14px; border-radius:8px; border:1px solid var(--border-dark); margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+  <div>
+    <strong style="font-size:16px; color:#1E1E1E;">Broselow Zone: ${color} (${entry.min}–${entry.max} kg)</strong>
+    <div style="font-size:12px; margin-top:2px; color:#1E1E1E;">Reference Weight for Zone: <strong>${w.toFixed(1)} kg</strong> ${overrideW ? '(Previewing Zone)' : '(Current Patient Weight)'}</div>
+  </div>
+  ${overrideW ? `<button class="btn" style="padding:4px 8px; font-size:11px;" onclick="fillBroselowContent()">Reset to Patient BW</button>` : ''}
 </div>
 
 <div class="hero-metric-grid">
@@ -724,12 +762,12 @@ function fillBroselowContent(){
   </div>
 </div>
 
-<div class="protocol-table-wrapper" style="margin-top:12px;">
+<div class="protocol-table-wrapper" style="margin-top:10px;">
   <table class="protocol-table">
     <thead>
       <tr>
-        <th style="width:50%;">Equipment / Parameter</th>
-        <th style="width:50%;">Recommended Size & Setting</th>
+        <th style="width:45%;">Equipment / Parameter</th>
+        <th style="width:55%;">Recommended Sizing & Clinical Setting</th>
       </tr>
     </thead>
     <tbody>
@@ -934,12 +972,104 @@ function selectATBItem(key, name){
   calcATB();
 }
 
+let gDoseCategoryFilter = 'all';
+let gATBCategoryFilter = 'all';
+let gNavCategory = 'all';
+
+function setDoseCategoryFilter(cat, btn) {
+  gDoseCategoryFilter = cat;
+  const container = document.getElementById('doseCategoryFilter');
+  if (container) {
+    container.querySelectorAll('.drug-filter-pill').forEach(p => p.classList.remove('active'));
+  }
+  if (btn) btn.classList.add('active');
+  const input = document.getElementById('doseSearch');
+  renderDoseComboboxDropdown(input ? input.value : '');
+  openDoseCombobox();
+}
+
+function setATBCategoryFilter(cat, btn) {
+  gATBCategoryFilter = cat;
+  const container = document.getElementById('atbCategoryFilter');
+  if (container) {
+    container.querySelectorAll('.drug-filter-pill').forEach(p => p.classList.remove('active'));
+  }
+  if (btn) btn.classList.add('active');
+  const input = document.getElementById('atbSearch');
+  renderATBComboboxDropdown(input ? input.value : '');
+  openATBCombobox();
+}
+
+function filterNavCategory(cat, btn) {
+  gNavCategory = cat;
+  document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  
+  const tabs = document.querySelectorAll('.tab-btn');
+  if (cat === 'all') {
+    tabs.forEach(t => { t.style.opacity = '1'; });
+  } else {
+    tabs.forEach(t => {
+      const match = t.getAttribute('data-category') === cat;
+      t.style.opacity = match ? '1' : '0.45';
+    });
+    const activeBtn = document.querySelector('.tab-btn.active');
+    if (!activeBtn || activeBtn.getAttribute('data-category') !== cat) {
+      const firstInCat = document.querySelector(`.tab-btn[data-category="${cat}"]`);
+      if (firstInCat) {
+        const tabId = firstInCat.getAttribute('data-tab');
+        if (tabId) showTab(tabId, firstInCat);
+      }
+    }
+  }
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function highlightMatch(text, query) {
+  if (!text) return '';
+  if (!query) return escapeHtml(text);
+  const q = query.trim();
+  if (!q) return escapeHtml(text);
+  const escaped = escapeRegex(q);
+  const re = new RegExp(`(${escaped})`, 'gi');
+  return escapeHtml(text).replace(re, '<mark class="search-match">$1</mark>');
+}
+
+function matchesDoseCategory(d, cat) {
+  if (!cat || cat === 'all') return true;
+  const n = ((d.name || '') + ' ' + (d.key || '') + ' ' + (d.drug || '')).toLowerCase();
+  if (cat === 'antipyretic') return n.includes('paracetamol') || n.includes('ibuprofen') || n.includes('mefenamic') || n.includes('aspirin');
+  if (cat === 'respiratory') return n.includes('salbutamol') || n.includes('budesonide') || n.includes('ipratropium') || n.includes('cetirizine') || n.includes('chlorpheniramine') || n.includes('loratadine') || n.includes('berodual');
+  if (cat === 'gi') return n.includes('domperidone') || n.includes('ondansetron') || n.includes('ors') || n.includes('alum') || n.includes('lactulose') || n.includes('forlax') || n.includes('peg') || n.includes('hyoscine');
+  if (cat === 'steroid') return n.includes('prednisolone') || n.includes('dexamethasone') || n.includes('hydrocortisone') || n.includes('methylprednisolone');
+  if (cat === 'anticonvulsant') return n.includes('diazepam') || n.includes('midazolam') || n.includes('phenobarbital') || n.includes('phenytoin') || n.includes('valproate') || n.includes('levetiracetam');
+  return true;
+}
+
+function matchesATBCategory(d, cat) {
+  if (!cat || cat === 'all') return true;
+  const n = ((d.name || '') + ' ' + (d.key || '') + ' ' + (d.drug || '')).toLowerCase();
+  if (cat === 'penicillin') return n.includes('amoxicillin') || n.includes('augmentin') || n.includes('ampicillin') || n.includes('cloxacillin') || n.includes('cephalexin') || n.includes('cefdinir');
+  if (cat === 'resus') return n.includes('ceftriaxone') || n.includes('cefotaxime') || n.includes('ceftazidime') || n.includes('meropenem') || n.includes('ertapenem') || n.includes('vancomycin');
+  if (cat === 'macrolide') return n.includes('azithromycin') || n.includes('clarithromycin') || n.includes('erythromycin') || n.includes('roxithromycin');
+  if (cat === 'amino') return n.includes('gentamicin') || n.includes('amikacin') || n.includes('vancomycin');
+  return true;
+}
+
 function getDrugCategory(name){
   const n = (name || '').toLowerCase();
   if (n.includes('paracetamol') || n.includes('ibuprofen')) return 'Antipyretic / Analgesic';
   if (n.includes('diazepam') || n.includes('midazolam') || n.includes('phenobarbital') || n.includes('phenytoin')) return 'Anticonvulsant';
-  if (n.includes('salbutamol') || n.includes('budesonide') || n.includes('prednisolone') || n.includes('dexamethasone')) return 'Respiratory';
-  if (n.includes('domperidone') || n.includes('ondansetron') || n.includes('ors')) return 'GI / Anti-emetic';
+  if (n.includes('salbutamol') || n.includes('budesonide') || n.includes('prednisolone') || n.includes('dexamethasone')) return 'Respiratory / Steroid';
+  if (n.includes('domperidone') || n.includes('ondansetron') || n.includes('ors') || n.includes('alum') || n.includes('lactulose') || n.includes('forlax')) return 'GI / Anti-emetic';
   if (n.includes('cetirizine') || n.includes('chlorpheniramine') || n.includes('loratadine')) return 'Antihistamine';
   if (n.includes('amoxicillin') || n.includes('ceftriaxone') || n.includes('azithromycin') || n.includes('ampicillin')) return 'Antibiotic';
   return 'Medication';
@@ -953,19 +1083,20 @@ function renderDoseComboboxDropdown(filterTxt){
   const currentKey = document.getElementById('doseDrug')?.value;
 
   const filtered = list.filter(d => {
+    if (!matchesDoseCategory(d, gDoseCategoryFilter)) return false;
     const name = (d.name || '').toLowerCase();
     const aliases = (d.aliases || []).join(' ').toLowerCase();
     return !q || name.includes(q) || aliases.includes(q);
   });
 
   if (!filtered.length) {
-    dropdown.innerHTML = '<div class="combobox-item" style="color:var(--muted);">No matching medications</div>';
+    dropdown.innerHTML = '<div class="combobox-item" style="color:var(--muted);">No matching medications in category</div>';
     return;
   }
 
   let html = '';
   // Show RECENTLY USED if filter is empty and there are saved recent items
-  if (!q) {
+  if (!q && gDoseCategoryFilter === 'all') {
     const recentKeys = getRecentDrugs('dose');
     const recentItems = recentKeys.map(k => list.find(d => d.key === k)).filter(Boolean);
     if (recentItems.length > 0) {
@@ -974,10 +1105,10 @@ function renderDoseComboboxDropdown(filterTxt){
         const selectedClass = (d.key === currentKey) ? 'selected' : '';
         const cat = getDrugCategory(d.name);
         return `
-          <div class="combobox-item ${selectedClass}" role="option" data-key="${d.key}" data-name="${d.name.replace(/"/g, '&quot;')}" onclick="selectDoseItem('${d.key}', '${d.name.replace(/'/g, "\\'")}')">
+          <div class="combobox-item ${selectedClass}" role="option" data-key="${d.key}" data-name="${escapeHtml(d.name)}" onclick="selectDoseItem('${d.key}', '${d.name.replace(/'/g, "\\'")}')">
             <div>
-              <strong>${d.name}</strong>
-              <div style="font-size:11px; color:var(--muted);">${d.preparation || ''}</div>
+              <strong>${escapeHtml(d.name)}</strong>
+              <div style="font-size:11px; color:var(--muted);">${escapeHtml(d.preparation || '')}</div>
             </div>
             <span class="item-tag" style="background:var(--accent-subtle); color:var(--accent); border-color:var(--accent);">${cat}</span>
           </div>
@@ -990,11 +1121,12 @@ function renderDoseComboboxDropdown(filterTxt){
   html += filtered.map(d => {
     const selectedClass = (d.key === currentKey) ? 'selected' : '';
     const cat = getDrugCategory(d.name);
+    const highlightedName = highlightMatch(d.name, q);
     return `
-      <div class="combobox-item ${selectedClass}" role="option" data-key="${d.key}" data-name="${d.name.replace(/"/g, '&quot;')}" onclick="selectDoseItem('${d.key}', '${d.name.replace(/'/g, "\\'")}')">
+      <div class="combobox-item ${selectedClass}" role="option" data-key="${d.key}" data-name="${escapeHtml(d.name)}" onclick="selectDoseItem('${d.key}', '${d.name.replace(/'/g, "\\'")}')">
         <div>
-          <strong>${d.name}</strong>
-          <div style="font-size:11px; color:var(--muted);">${d.preparation || ''}</div>
+          <strong>${highlightedName}</strong>
+          <div style="font-size:11px; color:var(--muted);">${escapeHtml(d.preparation || '')}</div>
         </div>
         <span class="item-tag">${cat}</span>
       </div>
@@ -1012,18 +1144,19 @@ function renderATBComboboxDropdown(filterTxt){
   const currentKey = document.getElementById('atbDrug')?.value;
 
   const filtered = list.filter(d => {
+    if (!matchesATBCategory(d, gATBCategoryFilter)) return false;
     const name = (d.name || '').toLowerCase();
     const aliases = (d.aliases || []).join(' ').toLowerCase();
     return !q || name.includes(q) || aliases.includes(q);
   });
 
   if (!filtered.length) {
-    dropdown.innerHTML = '<div class="combobox-item" style="color:var(--muted);">No matching antibiotics</div>';
+    dropdown.innerHTML = '<div class="combobox-item" style="color:var(--muted);">No matching antibiotics in category</div>';
     return;
   }
 
   let html = '';
-  if (!q) {
+  if (!q && gATBCategoryFilter === 'all') {
     const recentKeys = getRecentDrugs('atb');
     const recentItems = recentKeys.map(k => list.find(d => d.key === k)).filter(Boolean);
     if (recentItems.length > 0) {
@@ -1031,10 +1164,10 @@ function renderATBComboboxDropdown(filterTxt){
       html += recentItems.map(d => {
         const selectedClass = (d.key === currentKey) ? 'selected' : '';
         return `
-          <div class="combobox-item ${selectedClass}" role="option" data-key="${d.key}" data-name="${d.name.replace(/"/g, '&quot;')}" onclick="selectATBItem('${d.key}', '${d.name.replace(/'/g, "\\'")}')">
+          <div class="combobox-item ${selectedClass}" role="option" data-key="${d.key}" data-name="${escapeHtml(d.name)}" onclick="selectATBItem('${d.key}', '${d.name.replace(/'/g, "\\'")}')">
             <div>
-              <strong>${d.name}</strong>
-              <div style="font-size:11px; color:var(--muted);">${d.preparation || ''}</div>
+              <strong>${escapeHtml(d.name)}</strong>
+              <div style="font-size:11px; color:var(--muted);">${escapeHtml(d.preparation || '')}</div>
             </div>
             <span class="item-tag" style="background:var(--accent-subtle); color:var(--accent); border-color:var(--accent);">Antibiotic</span>
           </div>
@@ -1046,11 +1179,12 @@ function renderATBComboboxDropdown(filterTxt){
 
   html += filtered.map(d => {
     const selectedClass = (d.key === currentKey) ? 'selected' : '';
+    const highlightedName = highlightMatch(d.name, q);
     return `
-      <div class="combobox-item ${selectedClass}" role="option" data-key="${d.key}" data-name="${d.name.replace(/"/g, '&quot;')}" onclick="selectATBItem('${d.key}', '${d.name.replace(/'/g, "\\'")}')">
+      <div class="combobox-item ${selectedClass}" role="option" data-key="${d.key}" data-name="${escapeHtml(d.name)}" onclick="selectATBItem('${d.key}', '${d.name.replace(/'/g, "\\'")}')">
         <div>
-          <strong>${d.name}</strong>
-          <div style="font-size:11px; color:var(--muted);">${d.preparation || ''}</div>
+          <strong>${highlightedName}</strong>
+          <div style="font-size:11px; color:var(--muted);">${escapeHtml(d.preparation || '')}</div>
         </div>
         <span class="item-tag">Antibiotic</span>
       </div>

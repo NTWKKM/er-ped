@@ -91,6 +91,119 @@
       --shadow-2: none;
     }
 
+    /* Micro-Interactions & Accessible Focus States */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    button, .btn, .tab, .tab-btn, .pill, .chip, .category-pill, .drug-filter-pill, .unit-toggle-btn, .broselow-chip {
+      touch-action: manipulation;
+    }
+    button:active, .btn:active, .tab-btn:active, .pill:active, .category-pill:active, .drug-filter-pill:active {
+      transform: scale(0.97);
+    }
+    .search-match {
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 800;
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+    :root[data-theme="dark"] .search-match {
+      background: #3A2518;
+      color: #EFA98C;
+    }
+    :root[data-theme="mono"] .search-match {
+      background: #FFFFFF;
+      color: #000000;
+    }
+
+    /* Category Jump Navigation Bar */
+    .category-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      margin-bottom: 8px;
+      padding: 2px 0;
+    }
+    .category-bar::-webkit-scrollbar { display: none; }
+    .category-pill {
+      flex: 0 0 auto;
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--muted);
+      font: 700 12px 'Sarabun', sans-serif;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .category-pill:hover {
+      background: var(--panel);
+      color: var(--ink);
+      border-color: var(--border-strong);
+    }
+    .category-pill.active {
+      background: var(--accent);
+      color: #FFFFFF;
+      border-color: var(--accent);
+    }
+    :root[data-theme="mono"] .category-pill.active {
+      background: #EAEAE6;
+      color: #121210;
+      border: 2px solid #FFFFFF;
+      font-weight: 800;
+    }
+
+    /* Drug Category Filter in Combobox */
+    .drug-category-filter {
+      display: flex;
+      gap: 5px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      margin-bottom: 8px;
+      padding: 2px 0;
+    }
+    .drug-category-filter::-webkit-scrollbar { display: none; }
+    .drug-filter-pill {
+      flex: 0 0 auto;
+      padding: 4px 9px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--muted);
+      font: 600 11.5px 'Sarabun', sans-serif;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.12s;
+      user-select: none;
+    }
+    .drug-filter-pill:hover {
+      background: var(--card);
+      color: var(--ink);
+      border-color: var(--accent);
+    }
+    .drug-filter-pill.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-color: var(--accent);
+      font-weight: 700;
+    }
+    :root[data-theme="mono"] .drug-filter-pill.active {
+      background: #EAEAE6;
+      color: #121210;
+      font-weight: 800;
+    }
+
     /* Popover Menu Components */
     .popover-wrapper {
       position: relative;
@@ -868,6 +981,37 @@
     .protocol-table tr:last-child td {
       border-bottom: none;
     }
+
+    /* Sticky First Column & Subtle Alternating Zebra Striping */
+    .protocol-table th:first-child,
+    .protocol-table td:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background: var(--card);
+      box-shadow: 1px 0 0 var(--border);
+    }
+    .protocol-table th:first-child {
+      background: var(--panel);
+      z-index: 3;
+    }
+    .protocol-table tbody tr:nth-child(even) td {
+      background-color: color-mix(in srgb, var(--panel) 40%, var(--card));
+    }
+    .protocol-table tbody tr:nth-child(even) td:first-child {
+      background-color: color-mix(in srgb, var(--panel) 40%, var(--card));
+    }
+    .protocol-table tbody tr:hover td,
+    .protocol-table tbody tr:hover td:first-child {
+      background-color: var(--accent-soft);
+    }
+    :root[data-theme="mono"] .protocol-table tbody tr:nth-child(even) td {
+      background-color: #1A1A18;
+    }
+    :root[data-theme="mono"] .protocol-table tbody tr:nth-child(even) td:first-child {
+      background-color: #1A1A18;
+    }
+
     .dose-badge {
       display: inline-flex;
       align-items: baseline;
@@ -884,6 +1028,62 @@
       background: var(--accent-soft);
       color: var(--ink);
       border: 1px solid var(--border);
+    }
+
+    /* Broselow Visual Spectrum Bar */
+    .broselow-spectrum-bar {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 4px;
+      margin: 8px 0 12px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--panel);
+      padding: 4px;
+      border: 1px solid var(--border);
+    }
+    .broselow-spectrum-seg {
+      padding: 6px 2px;
+      text-align: center;
+      font-size: 10px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: transform 0.12s, box-shadow 0.12s;
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1px;
+      line-height: 1.15;
+      color: #1E1E1E;
+      border: 2px solid transparent;
+    }
+    .broselow-spectrum-seg:hover {
+      transform: translateY(-1px);
+    }
+    .broselow-spectrum-seg.active {
+      border-color: #000000;
+      box-shadow: 0 0 0 2px var(--accent), 0 2px 8px rgba(0,0,0,0.25);
+      transform: scale(1.04);
+      z-index: 2;
+    }
+    :root[data-theme="dark"] .broselow-spectrum-seg.active {
+      border-color: #FFFFFF;
+      box-shadow: 0 0 0 2px #EFA98C, 0 2px 8px rgba(0,0,0,0.5);
+    }
+    :root[data-theme="mono"] .broselow-spectrum-seg {
+      background: #2A2A28 !important;
+      color: #FFFFFF !important;
+      border: 1px solid #7A7A77;
+    }
+    :root[data-theme="mono"] .broselow-spectrum-seg.active {
+      background: #FFFFFF !important;
+      color: #000000 !important;
+      border: 2px solid #FFFFFF;
+      box-shadow: 0 0 0 2px #000000;
     }
 
     /* Braun Integrated Combobox */
@@ -1175,25 +1375,51 @@
 
     /* Responsive Mobile Layout — Zero CLS & Compact Touch Optimization */
     @media (max-width: 768px) {
-      .container { margin-top: calc(var(--topbar-h, 140px) + 8px); padding: 8px; }
+      .container {
+        margin-top: calc(var(--topbar-h, 140px) + 8px);
+        padding: 8px;
+        padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+      }
       .grid { grid-template-columns: repeat(6, 1fr); gap: 8px; }
       .col-12, .col-9, .col-8, .col-6, .col-4 { grid-column: span 6; }
       .col-3 { grid-column: span 3; }
       .card { padding: 12px 10px; border-radius: 8px; }
       
       .topbar-inner { padding: 6px 8px; gap: 6px; }
-      .topbar-row-1 { gap: 6px; }
+      
+      /* Mobile Adaptive 2-Column Topbar Grid: BW & In-Use side by side */
+      .topbar-row-1 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        width: 100%;
+        overflow-x: visible;
+      }
+      .topbar-row-1 .bio-group:nth-child(1) {
+        grid-column: span 1;
+        padding: 4px 6px 5px;
+      }
+      .topbar-row-1 .bio-group.active-weight {
+        grid-column: span 1;
+        margin-left: 0;
+        min-width: auto;
+        padding: 4px 8px 5px;
+      }
+      .topbar-row-1 .bio-group:nth-child(2) {
+        grid-column: span 2;
+        padding: 4px 6px 5px;
+      }
+      
       .topbar-row-2 { gap: 6px; }
-      .bio-group { flex: 1 1 auto; padding: 4px 8px 5px; }
-      .bio-fields { gap: 4px; }
+      .bio-fields { gap: 4px; flex-wrap: wrap; }
       
       /* iOS Non-Zoom inputs: font-size: 16px prevents Safari auto-zooming */
       .bio-fields input[type="number"],
       .chip input[type="number"] {
-        width: 60px;
-        min-height: 34px;
+        width: 54px;
+        min-height: 32px;
         font-size: 16px;
-        padding: 4px 6px;
+        padding: 3px 5px;
       }
       .combobox-input {
         font-size: 16px;
@@ -1204,9 +1430,8 @@
       .switch:before { width: 12px; height: 12px; top: 3px; }
       .switch:checked:before { transform: translateX(12px); }
 
-      .active-weight { margin-left: 0; min-width: 140px; }
-      .active-weight #activeWeightVal { font-size: 18px; }
-      .active-weight-src { font-size: 10px; }
+      .active-weight #activeWeightVal { font-size: 17px; }
+      .active-weight-src { font-size: 9.5px; }
 
       /* Zero CLS on tab navigation: full labels always visible */
       .tab-btn { min-width: auto; min-height: 38px; font-size: 12.5px; padding: 6px 10px; }
@@ -1220,13 +1445,13 @@
 
       .drawer-backdrop { padding: 0; align-items: flex-end; }
       .drawer { max-height: 90dvh; padding: 14px 12px; border-radius: 12px 12px 0 0; }
+
+      .broselow-spectrum-bar { grid-template-columns: repeat(5, 1fr); gap: 2px; }
+      .broselow-spectrum-seg { font-size: 9px; padding: 4px 1px; }
     }
 
     @media (max-width: 480px) {
-      .topbar-row-1 { flex-direction: row; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-      .bio-group { flex: 0 0 auto; }
-      .active-weight { flex: 0 0 auto; min-width: 135px; }
-      .bio-fields input[type="number"] { width: 52px; font-size: 16px; }
+      .topbar-row-1 .bio-fields input[type="number"] { width: 48px; font-size: 16px; }
     }
 
     /* ============================================================
@@ -1399,25 +1624,33 @@
   <!-- MAIN APP CONTAINER -->
   <div class="container" id="app">
     
+    <!-- Category Jump Bar & Smooth-Rail Navigation -->
+    <div class="category-bar" role="group" aria-label="Module categories">
+      <button type="button" class="category-pill active" data-cat="all" onclick="filterNavCategory('all', this)">🌟 All Modules</button>
+      <button type="button" class="category-pill" data-cat="resus" onclick="filterNavCategory('resus', this)">⚡ Emergency Resus</button>
+      <button type="button" class="category-pill" data-cat="meds" onclick="filterNavCategory('meds', this)">💊 Meds & Fluids</button>
+      <button type="button" class="category-pill" data-cat="protocols" onclick="filterNavCategory('protocols', this)">🩺 Protocols & Vitals</button>
+    </div>
+
     <!-- Flat Underline Navigation Tabs (Grouped 2-Row Layout) -->
     <div role="tablist" aria-label="Clinical Calculators & Protocols" style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;">
       <!-- Row 1: Clinical Calculators -->
       <div class="tabs" style="overflow-x:auto;">
-        <button type="button" class="tab tab-btn active" data-tab="dose" onclick="showTab('dose', this)" title="Pediatric Dose Calculator [Alt+1]" aria-keyshortcuts="Alt+1" role="tab" aria-selected="true" aria-controls="dose" aria-label="Pediatric Dose Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg><span class="tab-label"> Dose</span></button>
-        <button type="button" class="tab tab-btn" data-tab="atb" onclick="showTab('atb', this)" title="Antibiotic Dosing Calculator [Alt+2]" aria-keyshortcuts="Alt+2" role="tab" aria-selected="false" aria-controls="atb" aria-label="Antibiotic Dosing Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3 3 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6Z"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 9.8 3 11.4 3 14"/><path d="M6 17H2"/><path d="M17.47 9c1.93.8 3.53 2.4 3.53 5"/><path d="M18 17h4"/></svg><span class="tab-label"> ATB</span></button>
-        <button type="button" class="tab tab-btn" data-tab="fluids" onclick="showTab('fluids', this)" title="IV Maintenance & Deficit Calculator [Alt+3]" aria-keyshortcuts="Alt+3" role="tab" aria-selected="false" aria-controls="fluids" aria-label="IV Maintenance & Deficit Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg><span class="tab-label"> IV Fluids</span></button>
-        <button type="button" class="tab tab-btn" data-tab="pals" onclick="showTab('pals', this)" title="Pediatric Advanced Life Support Protocol [Alt+4]" aria-keyshortcuts="Alt+4" role="tab" aria-selected="false" aria-controls="pals" aria-label="Pediatric Advanced Life Support Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg><span class="tab-label"> PALS</span></button>
-        <button type="button" class="tab tab-btn" data-tab="ncpr" onclick="showTab('ncpr', this)" title="Neonatal Resuscitation Program Protocol [Alt+5]" aria-keyshortcuts="Alt+5" role="tab" aria-selected="false" aria-controls="ncpr" aria-label="Neonatal Resuscitation Program Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 5 6.3"/><path d="M12 2a4 4 0 0 0-4 4c0 .7.2 1.4.5 2"/><path d="M12 2a4 4 0 0 1 4 4c0 .7-.2 1.4-.5 2"/></svg><span class="tab-label"> NCPR</span></button>
-        <button type="button" class="tab tab-btn" data-tab="drip" onclick="showTab('drip', this)" title="Continuous Vasoactive Infusion Calculator [Alt+6]" aria-keyshortcuts="Alt+6" role="tab" aria-selected="false" aria-controls="drip" aria-label="Continuous Vasoactive Infusion Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span class="tab-label"> Drip Rate</span></button>
+        <button type="button" class="tab tab-btn active" data-tab="dose" data-category="meds" onclick="showTab('dose', this)" title="Pediatric Dose Calculator [Alt+1]" aria-keyshortcuts="Alt+1" role="tab" aria-selected="true" aria-controls="dose" aria-label="Pediatric Dose Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg><span class="tab-label"> Dose</span></button>
+        <button type="button" class="tab tab-btn" data-tab="atb" data-category="meds" onclick="showTab('atb', this)" title="Antibiotic Dosing Calculator [Alt+2]" aria-keyshortcuts="Alt+2" role="tab" aria-selected="false" aria-controls="atb" aria-label="Antibiotic Dosing Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3 3 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6Z"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 9.8 3 11.4 3 14"/><path d="M6 17H2"/><path d="M17.47 9c1.93.8 3.53 2.4 3.53 5"/><path d="M18 17h4"/></svg><span class="tab-label"> ATB</span></button>
+        <button type="button" class="tab tab-btn" data-tab="fluids" data-category="meds" onclick="showTab('fluids', this)" title="IV Maintenance & Deficit Calculator [Alt+3]" aria-keyshortcuts="Alt+3" role="tab" aria-selected="false" aria-controls="fluids" aria-label="IV Maintenance & Deficit Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg><span class="tab-label"> IV Fluids</span></button>
+        <button type="button" class="tab tab-btn" data-tab="pals" data-category="resus" onclick="showTab('pals', this)" title="Pediatric Advanced Life Support Protocol [Alt+4]" aria-keyshortcuts="Alt+4" role="tab" aria-selected="false" aria-controls="pals" aria-label="Pediatric Advanced Life Support Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg><span class="tab-label"> PALS</span></button>
+        <button type="button" class="tab tab-btn" data-tab="ncpr" data-category="resus" onclick="showTab('ncpr', this)" title="Neonatal Resuscitation Program Protocol [Alt+5]" aria-keyshortcuts="Alt+5" role="tab" aria-selected="false" aria-controls="ncpr" aria-label="Neonatal Resuscitation Program Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 5 6.3"/><path d="M12 2a4 4 0 0 0-4 4c0 .7.2 1.4.5 2"/><path d="M12 2a4 4 0 0 1 4 4c0 .7-.2 1.4-.5 2"/></svg><span class="tab-label"> NCPR</span></button>
+        <button type="button" class="tab tab-btn" data-tab="drip" data-category="resus" onclick="showTab('drip', this)" title="Continuous Vasoactive Infusion Calculator [Alt+6]" aria-keyshortcuts="Alt+6" role="tab" aria-selected="false" aria-controls="drip" aria-label="Continuous Vasoactive Infusion Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span class="tab-label"> Drip Rate</span></button>
       </div>
 
       <!-- Row 2: Protocols & Vitals -->
       <div class="tabs" style="overflow-x:auto;">
-        <button type="button" class="tab tab-btn" data-tab="seizure" onclick="showTab('seizure', this)" title="Status Epilepticus Resuscitation Protocol [Alt+7]" aria-keyshortcuts="Alt+7" role="tab" aria-selected="false" aria-controls="seizure" aria-label="Status Epilepticus Resuscitation Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg><span class="tab-label"> Seizure</span></button>
-        <button type="button" class="tab tab-btn" data-tab="tox" onclick="showTab('tox', this)" title="Antidotes & Overdose Protocol [Alt+8]" aria-keyshortcuts="Alt+8" role="tab" aria-selected="false" aria-controls="tox" aria-label="Antidotes & Overdose Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v7.31L4.75 18.1A2 2 0 0 0 6.47 21h11.06a2 2 0 0 0 1.72-2.9L14 9.31V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg><span class="tab-label"> Toxicology</span></button>
-        <button type="button" class="tab tab-btn" data-tab="psa" onclick="showTab('psa', this)" title="Procedural Sedation & Analgesia [Alt+9]" aria-keyshortcuts="Alt+9" role="tab" aria-selected="false" aria-controls="psa" aria-label="Procedural Sedation & Analgesia"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"/><path d="m9 11 4 4"/><path d="m5 19-3 3"/><path d="m14 4 6 6"/></svg><span class="tab-label"> Sedation</span></button>
-        <button type="button" class="tab tab-btn" data-tab="vitals" onclick="showTab('vitals', this)" title="Age-Banded Physiological Normal Ranges [Alt+0]" aria-keyshortcuts="Alt+0" role="tab" aria-selected="false" aria-controls="vitals" aria-label="Age-Banded Physiological Normal Ranges"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M17 12h-2l-2 5-3-10-2 5H7"/></svg><span class="tab-label"> Vitals</span></button>
-        <button type="button" class="tab tab-btn" data-tab="dka" onclick="showTab('dka', this)" title="Pediatric DKA Protocol Engine [Alt+K]" aria-keyshortcuts="Alt+K" role="tab" aria-selected="false" aria-controls="dka" aria-label="Pediatric DKA Protocol Engine"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.8 2.3A.3.3 0 0 0 4.5 2H3.5a.3.3 0 0 0-.3.3v4.2a6 6 0 0 0 12 0V2.3a.3.3 0 0 0-.3-.3h-1a.3.3 0 0 0-.3.3v4.2a4 4 0 0 1-8 0V2.3z"/><path d="M11 12.5v1.5a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/></svg><span class="tab-label"> DKA</span></button>
+        <button type="button" class="tab tab-btn" data-tab="seizure" data-category="resus" onclick="showTab('seizure', this)" title="Status Epilepticus Resuscitation Protocol [Alt+7]" aria-keyshortcuts="Alt+7" role="tab" aria-selected="false" aria-controls="seizure" aria-label="Status Epilepticus Resuscitation Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg><span class="tab-label"> Seizure</span></button>
+        <button type="button" class="tab tab-btn" data-tab="tox" data-category="protocols" onclick="showTab('tox', this)" title="Antidotes & Overdose Protocol [Alt+8]" aria-keyshortcuts="Alt+8" role="tab" aria-selected="false" aria-controls="tox" aria-label="Antidotes & Overdose Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v7.31L4.75 18.1A2 2 0 0 0 6.47 21h11.06a2 2 0 0 0 1.72-2.9L14 9.31V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg><span class="tab-label"> Toxicology</span></button>
+        <button type="button" class="tab tab-btn" data-tab="psa" data-category="protocols" onclick="showTab('psa', this)" title="Procedural Sedation & Analgesia [Alt+9]" aria-keyshortcuts="Alt+9" role="tab" aria-selected="false" aria-controls="psa" aria-label="Procedural Sedation & Analgesia"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"/><path d="m9 11 4 4"/><path d="m5 19-3 3"/><path d="m14 4 6 6"/></svg><span class="tab-label"> Sedation</span></button>
+        <button type="button" class="tab tab-btn" data-tab="vitals" data-category="protocols" onclick="showTab('vitals', this)" title="Age-Banded Physiological Normal Ranges [Alt+0]" aria-keyshortcuts="Alt+0" role="tab" aria-selected="false" aria-controls="vitals" aria-label="Age-Banded Physiological Normal Ranges"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M17 12h-2l-2 5-3-10-2 5H7"/></svg><span class="tab-label"> Vitals</span></button>
+        <button type="button" class="tab tab-btn" data-tab="dka" data-category="resus" onclick="showTab('dka', this)" title="Pediatric DKA Protocol Engine [Alt+K]" aria-keyshortcuts="Alt+K" role="tab" aria-selected="false" aria-controls="dka" aria-label="Pediatric DKA Protocol Engine"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.8 2.3A.3.3 0 0 0 4.5 2H3.5a.3.3 0 0 0-.3.3v4.2a6 6 0 0 0 12 0V2.3a.3.3 0 0 0-.3-.3h-1a.3.3 0 0 0-.3.3v4.2a4 4 0 0 1-8 0V2.3z"/><path d="M11 12.5v1.5a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/></svg><span class="tab-label"> DKA</span></button>
       </div>
     </div>
 
@@ -1426,6 +1659,14 @@
       <div class="grid">
         <div class="col-12">
           <label>Drug Selection & Search (Combobox)</label>
+          <div class="drug-category-filter" id="doseCategoryFilter">
+            <button type="button" class="drug-filter-pill active" onclick="setDoseCategoryFilter('all', this)">All</button>
+            <button type="button" class="drug-filter-pill" onclick="setDoseCategoryFilter('antipyretic', this)">Antipyretic / NSAID</button>
+            <button type="button" class="drug-filter-pill" onclick="setDoseCategoryFilter('respiratory', this)">Respiratory</button>
+            <button type="button" class="drug-filter-pill" onclick="setDoseCategoryFilter('gi', this)">GI / Antiemetic</button>
+            <button type="button" class="drug-filter-pill" onclick="setDoseCategoryFilter('steroid', this)">Steroid</button>
+            <button type="button" class="drug-filter-pill" onclick="setDoseCategoryFilter('anticonvulsant', this)">Anticonvulsant</button>
+          </div>
           <div class="combobox-wrapper">
             <span class="combobox-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
             <input type="text" id="doseSearch" class="combobox-input" placeholder="พิมพ์ชื่อยาเพื่อค้นหา (e.g. Paracetamol, Ibuprofen, Diazepam)..." oninput="onDoseSearchInput()" onfocus="openDoseCombobox()" onkeydown="onComboboxKeydown(event,'dose')" role="combobox" aria-expanded="false" aria-controls="doseComboboxDropdown" aria-autocomplete="list" aria-label="ค้นหายา (Search medication)" />
@@ -1458,6 +1699,13 @@
       <div class="grid">
         <div class="col-12">
           <label>Antibiotic Selection & Search (Combobox)</label>
+          <div class="drug-category-filter" id="atbCategoryFilter">
+            <button type="button" class="drug-filter-pill active" onclick="setATBCategoryFilter('all', this)">All</button>
+            <button type="button" class="drug-filter-pill" onclick="setATBCategoryFilter('penicillin', this)">Penicillins / Cephs</button>
+            <button type="button" class="drug-filter-pill" onclick="setATBCategoryFilter('resus', this)">IV Resus / 3rd Gen</button>
+            <button type="button" class="drug-filter-pill" onclick="setATBCategoryFilter('macrolide', this)">Macrolides</button>
+            <button type="button" class="drug-filter-pill" onclick="setATBCategoryFilter('amino', this)">Aminoglycosides</button>
+          </div>
           <div class="combobox-wrapper">
             <span class="combobox-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
             <input type="text" id="atbSearch" class="combobox-input" placeholder="พิมพ์ชื่อยาปฏิชีวนะเพื่อค้นหา (e.g. Amoxicillin, Augmentin, Ceftriaxone)..." oninput="onATBSearchInput()" onfocus="openATBCombobox()" onkeydown="onComboboxKeydown(event,'atb')" role="combobox" aria-expanded="false" aria-controls="atbComboboxDropdown" aria-autocomplete="list" aria-label="ค้นหายาปฏิชีวนะ (Search antibiotic)" />

@@ -94,7 +94,15 @@ flowchart TD
     - **Combobox Quick-Clear Buttons**: Added touch-friendly quick-clear buttons (`✕`) to `doseSearch` and `atbSearch` combobox inputs for rapid clearing in emergency triage.
     - **iOS Auto-Zoom Prevention**: Set font size on all form inputs and chips to `16px` on mobile viewports (< 768px), preventing iOS Safari auto-zooming on focus.
     - **Responsive Protocol Tables & Dose Badges**: Implemented `.protocol-table-wrapper` and `.dose-badge` classes across Drip, Seizure, Tox, PSA, Vitals, DKA, and Broselow equipment drawers for uniform high-density rendering on any viewport width.
-    - Service worker cache version bumped to `er-ped-v1.6.0-20260815`.
+47. **Comprehensive UI/UX Ergonomics, Sticky Data Grids & Interactive Spectrum Engine (v1.7.0)**: Complete overhaul of clinical bedside ergonomics across desktop and mobile form factors:
+    - **Adaptive 2-Column Mobile Topbar Grid**: Converted mobile patient biometric bar into an adaptive 2x2 grid layout (Measured BW col 1, In-Use Active Weight col 2, Derived Height/IBW full-width col 2). Guarantees the critical active weight box is immediately visible without horizontal scrolling on 320–480px screens.
+    - **Category Jump Rail & Quick Navigation**: Added `.category-bar` semantic jump pills (🌟 *All Modules*, ⚡ *Emergency Resus*, 💊 *Meds & Fluids*, 🩺 *Protocols & Vitals*) to instantly filter and navigate the 11 clinical tabs with zero cognitive friction.
+    - **Sticky First-Column Protocol Tables & Zebra Striping**: Implemented `position: sticky; left: 0` for table headers and first columns on all `.protocol-table` data grids with subtle alternating row striping (`color-mix`), ensuring drug names remain locked in view during horizontal scrolling on small mobile screens.
+    - **Interactive Broselow 9-Band Color Spectrum Bar**: Replaced static text drawer header with an interactive 9-band visual color spectrum bar (Grey → Pink → Red → Purple → Yellow → White → Blue → Orange → Green) showing the active patient zone, with 1-tap zone previewing (`previewBroselowZone`).
+    - **Search Query Substring Highlighting & Category Quick-Filters**: Integrated XSS-safe `<mark class="search-match">` query highlighting and Category Filter Pills (`Antipyretic`, `Respiratory`, `GI`, `Steroid`, `Anticonvulsant`, `Penicillin`, `IV Resus`, `Macrolide`, `Aminoglycoside`) for rapid bedside medication selection.
+    - **Tactile Feedback & Accessible Focus States**: Added `:focus-visible` offset rings (3px outline with 2px offset) and `:active { transform: scale(0.97); }` compression states across all interactive buttons, pills, and tabs for physical confirmation when operating under gloved ED conditions.
+    - Service worker cache version bumped to `er-ped-v1.7.0-20260815`.
+
 
 
 

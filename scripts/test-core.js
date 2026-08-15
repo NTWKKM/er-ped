@@ -411,6 +411,46 @@ test('copyEHROrder("dka"): 10 kg child DKA protocol', () => {
   assert(orderStr.includes('[BW: 10.0 kg]'), 'DKA weight check');
 });
 
+// --- UI/UX UPGRADE SUITES ---
+
+test('Category Jump Navigation: filterNavCategory filters opacity and switches tab', () => {
+  window.eval('filterNavCategory("resus")');
+  const palsBtn = document.querySelector('.tab-btn[data-tab="pals"]');
+  const doseBtn = document.querySelector('.tab-btn[data-tab="dose"]');
+  assert.strictEqual(palsBtn.style.opacity, '1', 'PALS button should be opaque in resus category');
+  assert.strictEqual(doseBtn.style.opacity, '0.45', 'Dose button should be dimmed in resus category');
+
+  // Reset to all
+  window.eval('filterNavCategory("all")');
+  assert.strictEqual(doseBtn.style.opacity, '1', 'Dose button should be fully visible in all category');
+});
+
+test('Combobox Category Filtering: Dose & ATB category filter updates dropdown options', () => {
+  window.eval('setDoseCategoryFilter("antipyretic")');
+  const dropdown = document.getElementById('doseComboboxDropdown');
+  assert(dropdown.innerHTML.includes('Paracetamol') || dropdown.innerHTML.includes('Ibuprofen'), 'Dropdown should contain antipyretics');
+  assert(!dropdown.innerHTML.includes('Salbutamol'), 'Dropdown should NOT contain Salbutamol under antipyretic category');
+
+  window.eval('setDoseCategoryFilter("all")');
+});
+
+test('Search Match Highlighting: highlightMatch escapes HTML and wraps matches with mark', () => {
+  const res = window.highlightMatch('Paracetamol Syrup', 'para');
+  assert(res.includes('<mark class="search-match">Para</mark>cetamol Syrup'), 'Match should be wrapped in mark.search-match');
+  
+  const xssTest = window.highlightMatch('<script>alert(1)</script> Paracetamol', 'para');
+  assert(!xssTest.includes('<script>'), 'HTML must be escaped to prevent XSS');
+  assert(xssTest.includes('&lt;script&gt;'), 'Raw HTML must be entity encoded');
+});
+
+test('Broselow 9-Band Spectrum: previewBroselowZone updates preview weight and color', () => {
+  window.eval('fillBroselowContent(10, "Purple")');
+  const out = document.getElementById('broselowContent');
+  assert(out.innerHTML.includes('Broselow Zone: Purple (10–11.9 kg)'), 'Broselow zone title check');
+  assert(out.innerHTML.includes('EPINEPHRINE ARREST'), 'Hero metric check');
+  assert(out.innerHTML.includes('broselow-spectrum-bar'), 'Spectrum bar check');
+});
+
 console.log(`\n----------------------------------------`);
 console.log(`Test Results: ${passed} Passed, ${failed} Failed`);
 console.log(`----------------------------------------\n`);
@@ -420,3 +460,4 @@ if (failed > 0) {
 } else {
   process.exit(0);
 }
+
