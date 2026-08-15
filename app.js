@@ -1006,20 +1006,22 @@ function filterNavCategory(cat, btn) {
   if (btn) btn.classList.add('active');
   
   const tabs = document.querySelectorAll('.tab-btn');
-  if (cat === 'all') {
-    tabs.forEach(t => { t.style.opacity = '1'; });
-  } else {
-    tabs.forEach(t => {
-      const match = t.getAttribute('data-category') === cat;
-      t.style.opacity = match ? '1' : '0.45';
-    });
-    const activeBtn = document.querySelector('.tab-btn.active');
-    if (!activeBtn || activeBtn.getAttribute('data-category') !== cat) {
-      const firstInCat = document.querySelector(`.tab-btn[data-category="${cat}"]`);
-      if (firstInCat) {
-        const tabId = firstInCat.getAttribute('data-tab');
-        if (tabId) showTab(tabId, firstInCat);
-      }
+  tabs.forEach(t => {
+    const tabCat = t.getAttribute('data-category');
+    if (cat === 'all' || tabCat === cat) {
+      t.style.display = 'inline-flex';
+      t.style.opacity = '1';
+    } else {
+      t.style.display = 'none';
+    }
+  });
+
+  const activeBtn = document.querySelector('.tab-btn.active');
+  if (!activeBtn || activeBtn.style.display === 'none' || (cat !== 'all' && activeBtn.getAttribute('data-category') !== cat)) {
+    const firstInCat = document.querySelector(`.tab-btn[data-category="${cat}"]`) || document.querySelector('.tab-btn');
+    if (firstInCat) {
+      const tabId = firstInCat.getAttribute('data-tab');
+      if (tabId) showTab(tabId, firstInCat);
     }
   }
 }
@@ -1463,18 +1465,28 @@ function calcDose(){
 </div>
   `;
 
-  const blocks = [];
-  blocks.push(heroCardHtml);
-  if (bandNotice) blocks.push(`<div style="padding:8px 12px; background:var(--accent-subtle); color:var(--accent); border-radius:6px; font-weight:700; font-size:13px;">${bandNotice}</div>`);
-  blocks.push(`<strong>📝 Prescribing Directives & Limits:</strong>`);
-  blocks.push(`• <strong>Dose Guideline:</strong> ${toRangeTxt(minPerKg, maxPerKg, n => `${n} mg/kg`)} ${drug.freq ? drug.freq : ''}`);
-  if (drug.preparation) blocks.push(`• <strong>Preparation:</strong> ${drug.preparation}`);
-  if (drug.maxPerDoseMg) blocks.push(`• <strong>Single Dose Limit:</strong> Max ${drug.maxPerDoseMg} mg`);
-  if (drug.maxPerDayMg) blocks.push(`• <strong>Daily Limit:</strong> Max ${drug.maxPerDayMg} mg`);
-  if (drug.renalAdjust) blocks.push(`• <strong>Renal Adjustment:</strong> ⚠️ ต้องปรับขนาดยาตามระดับการทำงานของไต (CrCl/eGFR)`);
-  if (drug.note) blocks.push(`• <strong>Clinical Note:</strong> ${drug.note}`);
+  const directivesHtml = `
+<div style="margin-top:12px; padding:10px 14px; background:var(--panel); border:1px solid var(--border); border-radius:8px;">
+  <div style="font-size:11px; font-weight:800; color:var(--muted); letter-spacing:0.06em; text-transform:uppercase; margin-bottom:6px; display:flex; align-items:center; gap:5px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+    Prescribing Directives & Limits
+  </div>
+  <div style="display:flex; flex-direction:column; gap:4px; font-size:12.5px; line-height:1.45; color:var(--ink);">
+    <div>• <strong>Dose Guideline:</strong> ${toRangeTxt(minPerKg, maxPerKg, n => `${n} mg/kg`)} ${drug.freq ? drug.freq : ''}</div>
+    ${drug.preparation ? `<div>• <strong>Preparation:</strong> ${drug.preparation}</div>` : ''}
+    ${drug.maxPerDoseMg ? `<div>• <strong>Single Dose Limit:</strong> Max ${drug.maxPerDoseMg} mg</div>` : ''}
+    ${drug.maxPerDayMg ? `<div>• <strong>Daily Limit:</strong> Max ${drug.maxPerDayMg} mg</div>` : ''}
+    ${drug.renalAdjust ? `<div>• <strong>Renal Adjustment:</strong> <span style="color:var(--warning); font-weight:700;">⚠️ ปรับขนาดยาตามระดับการทำงานของไต (CrCl/eGFR)</span></div>` : ''}
+    ${drug.note ? `<div>• <strong>Clinical Note:</strong> ${drug.note}</div>` : ''}
+  </div>
+</div>
+  `;
 
-  if (outEl) outEl.innerHTML = blocks.join('<br>');
+  let outHtml = heroCardHtml;
+  if (bandNotice) outHtml += `<div style="margin-top:10px; padding:8px 12px; background:var(--accent-subtle); color:var(--accent); border-radius:6px; font-weight:700; font-size:13px;">${bandNotice}</div>`;
+  outHtml += directivesHtml;
+
+  if (outEl) outEl.innerHTML = outHtml;
 }
 
 // --------- 🦠 Pediatric Antibiotic Calculator ---------
@@ -1575,18 +1587,28 @@ function calcATB(){
 </div>
   `;
 
-  const blocks = [];
-  blocks.push(heroCardHtml);
-  if (bandNotice) blocks.push(`<div style="padding:8px 12px; background:var(--accent-subtle); color:var(--accent); border-radius:6px; font-weight:700; font-size:13px;">${bandNotice}</div>`);
-  blocks.push(`<strong>📝 Prescribing Directives & Limits:</strong>`);
-  blocks.push(`• <strong>Dose Rule:</strong> ${minPerKg && maxPerKg ? `${minPerKg}–${maxPerKg}` : (drug.dose || '—')} mg/kg ${drug.split || drug.freq || ''}`);
-  if (drug.preparation) blocks.push(`• <strong>Preparation:</strong> ${drug.preparation}`);
-  if (limitMaxDose) blocks.push(`• <strong>Max Single Dose:</strong> ${limitMaxDose} mg`);
-  if (limitMaxDay) blocks.push(`• <strong>Max Daily Limit:</strong> ${limitMaxDay} mg`);
-  if (drug.renalAdjust) blocks.push(`• <strong>Renal Adjustment:</strong> ⚠️ ต้องปรับขนาดยาตามระดับการทำงานของไต (CrCl/eGFR)`);
-  if (drug.note) blocks.push(`• <strong>Clinical Note:</strong> ${drug.note}`);
+  const directivesHtml = `
+<div style="margin-top:12px; padding:10px 14px; background:var(--panel); border:1px solid var(--border); border-radius:8px;">
+  <div style="font-size:11px; font-weight:800; color:var(--muted); letter-spacing:0.06em; text-transform:uppercase; margin-bottom:6px; display:flex; align-items:center; gap:5px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+    Prescribing Directives & Limits
+  </div>
+  <div style="display:flex; flex-direction:column; gap:4px; font-size:12.5px; line-height:1.45; color:var(--ink);">
+    <div>• <strong>Dose Rule:</strong> ${minPerKg && maxPerKg ? `${minPerKg}–${maxPerKg}` : (drug.dose || '—')} mg/kg ${drug.split || drug.freq || ''}</div>
+    ${drug.preparation ? `<div>• <strong>Preparation:</strong> ${drug.preparation}</div>` : ''}
+    ${limitMaxDose ? `<div>• <strong>Max Single Dose:</strong> ${limitMaxDose} mg</div>` : ''}
+    ${limitMaxDay ? `<div>• <strong>Max Daily Limit:</strong> ${limitMaxDay} mg</div>` : ''}
+    ${drug.renalAdjust ? `<div>• <strong>Renal Adjustment:</strong> <span style="color:var(--warning); font-weight:700;">⚠️ ต้องปรับขนาดยาตามระดับการทำงานของไต (CrCl/eGFR)</span></div>` : ''}
+    ${drug.note ? `<div>• <strong>Clinical Note:</strong> ${drug.note}</div>` : ''}
+  </div>
+</div>
+  `;
 
-  if (outEl) outEl.innerHTML = blocks.join('<br>');
+  let outHtml = heroCardHtml;
+  if (bandNotice) outHtml += `<div style="margin-top:10px; padding:8px 12px; background:var(--accent-subtle); color:var(--accent); border-radius:6px; font-weight:700; font-size:13px;">${bandNotice}</div>`;
+  outHtml += directivesHtml;
+
+  if (outEl) outEl.innerHTML = outHtml;
 }
 
 // --------- 💧 IV Fluids Calculator ---------

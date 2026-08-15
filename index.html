@@ -449,13 +449,25 @@
     }
     
     .topbar-inner { 
-      max-width: 1040px; 
+      max-width: 1140px; 
       margin: 0 auto; 
       display: flex; 
       align-items: center; 
+      justify-content: space-between;
       gap: 10px; 
-      padding: 10px 14px; 
-      flex-wrap: wrap; 
+      padding: 6px 12px; 
+    }
+    .topbar-biometrics {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
     }
 
     .brand-badge {
@@ -485,10 +497,10 @@
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--r-md);
-      padding: 6px 12px 7px;
+      padding: 4px 10px 5px;
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 2px;
       justify-content: center;
     }
     .bio-group-title {
@@ -506,10 +518,10 @@
       flex-wrap: wrap;
     }
     .bio-derived-val {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--ink);
-      min-width: 62px;
+      min-width: 50px;
     }
     .bio-derived-src {
       font-size: 10px;
@@ -531,20 +543,20 @@
 
     /* IN USE — the value the dose engine runs on. Loudest element in the bar. */
     .active-weight {
-      margin-left: auto;
       border-left: 3px solid var(--accent);
       background: var(--accent-subtle);
-      min-width: 190px;
+      min-width: 155px;
+      padding: 4px 10px 5px;
     }
     .active-weight #activeWeightVal {
-      font-size: 22px;
+      font-size: 19px;
       font-weight: 800;
       line-height: 1.05;
       color: var(--ink);
       letter-spacing: -0.02em;
     }
     .active-weight-src {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
       /* Measured 4.4:1 against the tinted panel with --muted; --ink at 78%
          opacity clears 4.5:1 in all three themes. Provenance must be legible. */
@@ -1542,10 +1554,9 @@
 
   <!-- Industrial Top Bar Instrument Cluster -->
   <div class="topbar">
-    <div class="topbar-inner" style="display:flex; flex-direction:column; gap:10px; width:100%;">
-      <!-- Row 1: Patient Biometrics — Measured / Derived / In Use -->
-      <div class="topbar-row-1" style="display:flex; align-items:stretch; gap:10px; width:100%; overflow-x:auto;">
-
+    <div class="topbar-inner">
+      <!-- Left: Patient Biometrics (Measured & Derived) -->
+      <div class="topbar-biometrics">
         <!-- MEASURED: clinician input only, never overwritten by the app -->
         <div class="bio-group">
           <div class="bio-fields">
@@ -1572,20 +1583,20 @@
             </label>
           </div>
         </div>
+      </div>
 
+      <!-- Right: In-Use Active Weight & Action Cluster -->
+      <div class="topbar-actions">
         <!-- IN USE: the weight the dose engine is actually running on -->
         <div class="bio-group active-weight is-empty" id="activeWeightBox">
           <span class="bio-group-title">In use</span>
           <strong id="activeWeightVal" class="mono">— kg</strong>
           <span id="activeWeightSrc" class="active-weight-src">enter BW or age</span>
         </div>
-      </div>
 
-      <!-- Row 2: Reference & Action Cluster (Decluttered with Popover & Overflow Menu) -->
-      <div class="topbar-row-2" style="display:flex; align-items:center; gap:8px; width:100%;">
-        <!-- Reference ▾ Popover Trigger (Icon Only) -->
+        <!-- Reference ▾ Popover Trigger -->
         <div class="popover-wrapper">
-          <button type="button" id="refPopoverBtn" class="btn" style="padding:6px 12px; font-size:12px; display:inline-flex; align-items:center; gap:4px;" onclick="toggleRefPopover(event)" title="เมนูข้อมูลอ้างอิง (Reference Tools)" aria-label="Reference menu" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+          <button type="button" id="refPopoverBtn" class="btn" style="padding:6px 10px; font-size:12px; display:inline-flex; align-items:center; gap:4px;" onclick="toggleRefPopover(event)" title="เมนูข้อมูลอ้างอิง (Reference Tools)" aria-label="Reference menu" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
           <div id="refPopoverMenu" class="popover-menu" role="menu">
             <button type="button" class="popover-item" onclick="showTab('vitals'); closeAllPopovers();" role="menuitem">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M17 12h-2l-2 5-3-10-2 5H7"/></svg> <span>Vital Signs by Age</span>
@@ -1597,24 +1608,21 @@
         </div>
 
         <!-- Broselow Color Tape Chip -->
-        <button type="button" id="broselow" class="broselow-chip mono" style="padding:2px 8px; border-radius:var(--r-sm); font-weight:800; background:var(--panel); color:var(--ink); border:1px solid var(--border);" onclick="toggleBroselowPanel()" aria-label="Broselow Color Tape Reference" title="คลิกเพื่อดู Broselow Color Tape Reference">—</button>
+        <button type="button" id="broselow" class="broselow-chip mono" style="padding:4px 8px; border-radius:var(--r-sm); font-weight:800; background:var(--panel); color:var(--ink); border:1px solid var(--border); font-size:12px;" onclick="toggleBroselowPanel()" aria-label="Broselow Color Tape Reference" title="คลิกเพื่อดู Broselow Color Tape Reference">—</button>
 
-        <!-- Right-Aligned Action Cluster -->
-        <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
-          <!-- ◐ Theme Toggle Button -->
-          <button type="button" id="themeToggleBtn" class="btn" style="padding:6px 12px; font-size:12px;" onclick="toggleTheme()" title="สลับ Dark / Light / Mono Mode">Light</button>
+        <!-- ◐ Theme Toggle Button -->
+        <button type="button" id="themeToggleBtn" class="btn" style="padding:6px 10px; font-size:12px;" onclick="toggleTheme()" title="สลับ Dark / Light / Mono Mode">Light</button>
 
-          <!-- ⋯ Overflow Menu Popover Trigger -->
-          <div class="popover-wrapper">
-            <button type="button" id="overflowBtn" class="btn" style="padding:6px 10px; font-size:14px; font-weight:800;" onclick="toggleOverflowMenu(event)" title="เมนูเพิ่มเติม (More Options)" aria-label="More actions" aria-haspopup="true" aria-expanded="false">⋯</button>
-            <div id="overflowMenu" class="popover-menu" role="menu">
-              <button type="button" id="printBtn" class="popover-item" onclick="triggerPrintCard(); closeAllPopovers();" role="menuitem">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3h12v6"/><rect width="12" height="8" x="6" y="14" rx="1"/></svg> <span>Print Reference Card</span>
-              </button>
-              <button type="button" id="langToggleBtn" class="popover-item" onclick="toggleLanguage(); closeAllPopovers();" role="menuitem">
-                <span>TH / EN</span>
-              </button>
-            </div>
+        <!-- ⋯ Overflow Menu Popover Trigger -->
+        <div class="popover-wrapper">
+          <button type="button" id="overflowBtn" class="btn" style="padding:6px 9px; font-size:13px; font-weight:800;" onclick="toggleOverflowMenu(event)" title="เมนูเพิ่มเติม (More Options)" aria-label="More actions" aria-haspopup="true" aria-expanded="false">⋯</button>
+          <div id="overflowMenu" class="popover-menu" role="menu">
+            <button type="button" id="printBtn" class="popover-item" onclick="triggerPrintCard(); closeAllPopovers();" role="menuitem">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3h12v6"/><rect width="12" height="8" x="6" y="14" rx="1"/></svg> <span>Print Reference Card</span>
+            </button>
+            <button type="button" id="langToggleBtn" class="popover-item" onclick="toggleLanguage(); closeAllPopovers();" role="menuitem">
+              <span>TH / EN</span>
+            </button>
           </div>
         </div>
       </div>
@@ -1632,25 +1640,20 @@
       <button type="button" class="category-pill" data-cat="protocols" onclick="filterNavCategory('protocols', this)">🩺 Protocols & Vitals</button>
     </div>
 
-    <!-- Flat Underline Navigation Tabs (Grouped 2-Row Layout) -->
-    <div role="tablist" aria-label="Clinical Calculators & Protocols" style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;">
-      <!-- Row 1: Clinical Calculators -->
-      <div class="tabs" style="overflow-x:auto;">
-        <button type="button" class="tab tab-btn active" data-tab="dose" data-category="meds" onclick="showTab('dose', this)" title="Pediatric Dose Calculator [Alt+1]" aria-keyshortcuts="Alt+1" role="tab" aria-selected="true" aria-controls="dose" aria-label="Pediatric Dose Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg><span class="tab-label"> Dose</span></button>
-        <button type="button" class="tab tab-btn" data-tab="atb" data-category="meds" onclick="showTab('atb', this)" title="Antibiotic Dosing Calculator [Alt+2]" aria-keyshortcuts="Alt+2" role="tab" aria-selected="false" aria-controls="atb" aria-label="Antibiotic Dosing Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3 3 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6Z"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 9.8 3 11.4 3 14"/><path d="M6 17H2"/><path d="M17.47 9c1.93.8 3.53 2.4 3.53 5"/><path d="M18 17h4"/></svg><span class="tab-label"> ATB</span></button>
-        <button type="button" class="tab tab-btn" data-tab="fluids" data-category="meds" onclick="showTab('fluids', this)" title="IV Maintenance & Deficit Calculator [Alt+3]" aria-keyshortcuts="Alt+3" role="tab" aria-selected="false" aria-controls="fluids" aria-label="IV Maintenance & Deficit Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg><span class="tab-label"> IV Fluids</span></button>
-        <button type="button" class="tab tab-btn" data-tab="pals" data-category="resus" onclick="showTab('pals', this)" title="Pediatric Advanced Life Support Protocol [Alt+4]" aria-keyshortcuts="Alt+4" role="tab" aria-selected="false" aria-controls="pals" aria-label="Pediatric Advanced Life Support Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg><span class="tab-label"> PALS</span></button>
-        <button type="button" class="tab tab-btn" data-tab="ncpr" data-category="resus" onclick="showTab('ncpr', this)" title="Neonatal Resuscitation Program Protocol [Alt+5]" aria-keyshortcuts="Alt+5" role="tab" aria-selected="false" aria-controls="ncpr" aria-label="Neonatal Resuscitation Program Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 5 6.3"/><path d="M12 2a4 4 0 0 0-4 4c0 .7.2 1.4.5 2"/><path d="M12 2a4 4 0 0 1 4 4c0 .7-.2 1.4-.5 2"/></svg><span class="tab-label"> NCPR</span></button>
-        <button type="button" class="tab tab-btn" data-tab="drip" data-category="resus" onclick="showTab('drip', this)" title="Continuous Vasoactive Infusion Calculator [Alt+6]" aria-keyshortcuts="Alt+6" role="tab" aria-selected="false" aria-controls="drip" aria-label="Continuous Vasoactive Infusion Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span class="tab-label"> Drip Rate</span></button>
-      </div>
-
-      <!-- Row 2: Protocols & Vitals -->
-      <div class="tabs" style="overflow-x:auto;">
-        <button type="button" class="tab tab-btn" data-tab="seizure" data-category="resus" onclick="showTab('seizure', this)" title="Status Epilepticus Resuscitation Protocol [Alt+7]" aria-keyshortcuts="Alt+7" role="tab" aria-selected="false" aria-controls="seizure" aria-label="Status Epilepticus Resuscitation Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg><span class="tab-label"> Seizure</span></button>
-        <button type="button" class="tab tab-btn" data-tab="tox" data-category="protocols" onclick="showTab('tox', this)" title="Antidotes & Overdose Protocol [Alt+8]" aria-keyshortcuts="Alt+8" role="tab" aria-selected="false" aria-controls="tox" aria-label="Antidotes & Overdose Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v7.31L4.75 18.1A2 2 0 0 0 6.47 21h11.06a2 2 0 0 0 1.72-2.9L14 9.31V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg><span class="tab-label"> Toxicology</span></button>
-        <button type="button" class="tab tab-btn" data-tab="psa" data-category="protocols" onclick="showTab('psa', this)" title="Procedural Sedation & Analgesia [Alt+9]" aria-keyshortcuts="Alt+9" role="tab" aria-selected="false" aria-controls="psa" aria-label="Procedural Sedation & Analgesia"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"/><path d="m9 11 4 4"/><path d="m5 19-3 3"/><path d="m14 4 6 6"/></svg><span class="tab-label"> Sedation</span></button>
-        <button type="button" class="tab tab-btn" data-tab="vitals" data-category="protocols" onclick="showTab('vitals', this)" title="Age-Banded Physiological Normal Ranges [Alt+0]" aria-keyshortcuts="Alt+0" role="tab" aria-selected="false" aria-controls="vitals" aria-label="Age-Banded Physiological Normal Ranges"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M17 12h-2l-2 5-3-10-2 5H7"/></svg><span class="tab-label"> Vitals</span></button>
-        <button type="button" class="tab tab-btn" data-tab="dka" data-category="resus" onclick="showTab('dka', this)" title="Pediatric DKA Protocol Engine [Alt+K]" aria-keyshortcuts="Alt+K" role="tab" aria-selected="false" aria-controls="dka" aria-label="Pediatric DKA Protocol Engine"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.8 2.3A.3.3 0 0 0 4.5 2H3.5a.3.3 0 0 0-.3.3v4.2a6 6 0 0 0 12 0V2.3a.3.3 0 0 0-.3-.3h-1a.3.3 0 0 0-.3.3v4.2a4 4 0 0 1-8 0V2.3z"/><path d="M11 12.5v1.5a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/></svg><span class="tab-label"> DKA</span></button>
+    <!-- Flat Underline Navigation Tabs (Single Responsive Rail) -->
+    <div role="tablist" aria-label="Clinical Calculators & Protocols" style="margin-bottom:14px;">
+      <div class="tabs" id="mainTabRail" style="overflow-x:auto;">
+        <button type="button" class="tab tab-btn active" data-tab="dose" data-category="meds" onclick="showTab('dose', this)" title="Pediatric Dose Calculator [Alt+1]" aria-keyshortcuts="Alt+1" role="tab" aria-selected="true" aria-controls="dose" aria-label="Pediatric Dose Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg><span class="tab-label"> Dose</span></button>
+        <button type="button" class="tab tab-btn" data-tab="atb" data-category="meds" onclick="showTab('atb', this)" title="Antibiotic Dosing Calculator [Alt+2]" aria-keyshortcuts="Alt+2" role="tab" aria-selected="false" aria-controls="atb" aria-label="Antibiotic Dosing Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3 3 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6Z"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 9.8 3 11.4 3 14"/><path d="M6 17H2"/><path d="M17.47 9c1.93.8 3.53 2.4 3.53 5"/><path d="M18 17h4"/></svg><span class="tab-label"> ATB</span></button>
+        <button type="button" class="tab tab-btn" data-tab="fluids" data-category="meds" onclick="showTab('fluids', this)" title="IV Maintenance & Deficit Calculator [Alt+3]" aria-keyshortcuts="Alt+3" role="tab" aria-selected="false" aria-controls="fluids" aria-label="IV Maintenance & Deficit Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg><span class="tab-label"> IV Fluids</span></button>
+        <button type="button" class="tab tab-btn" data-tab="pals" data-category="resus" onclick="showTab('pals', this)" title="Pediatric Advanced Life Support Protocol [Alt+4]" aria-keyshortcuts="Alt+4" role="tab" aria-selected="false" aria-controls="pals" aria-label="Pediatric Advanced Life Support Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg><span class="tab-label"> PALS</span></button>
+        <button type="button" class="tab tab-btn" data-tab="ncpr" data-category="resus" onclick="showTab('ncpr', this)" title="Neonatal Resuscitation Program Protocol [Alt+5]" aria-keyshortcuts="Alt+5" role="tab" aria-selected="false" aria-controls="ncpr" aria-label="Neonatal Resuscitation Program Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 5 6.3"/><path d="M12 2a4 4 0 0 0-4 4c0 .7.2 1.4.5 2"/><path d="M12 2a4 4 0 0 1 4 4c0 .7-.2 1.4-.5 2"/></svg><span class="tab-label"> NCPR</span></button>
+        <button type="button" class="tab tab-btn" data-tab="drip" data-category="resus" onclick="showTab('drip', this)" title="Continuous Vasoactive Infusion Calculator [Alt+6]" aria-keyshortcuts="Alt+6" role="tab" aria-selected="false" aria-controls="drip" aria-label="Continuous Vasoactive Infusion Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span class="tab-label"> Drip Rate</span></button>
+        <button type="button" class="tab tab-btn" data-tab="seizure" data-category="resus" onclick="showTab('seizure', this)" title="Status Epilepticus Resuscitation Protocol [Alt+7]" aria-keyshortcuts="Alt+7" role="tab" aria-selected="false" aria-controls="seizure" aria-label="Status Epilepticus Resuscitation Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg><span class="tab-label"> Seizure</span></button>
+        <button type="button" class="tab tab-btn" data-tab="tox" data-category="protocols" onclick="showTab('tox', this)" title="Antidotes & Overdose Protocol [Alt+8]" aria-keyshortcuts="Alt+8" role="tab" aria-selected="false" aria-controls="tox" aria-label="Antidotes & Overdose Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v7.31L4.75 18.1A2 2 0 0 0 6.47 21h11.06a2 2 0 0 0 1.72-2.9L14 9.31V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg><span class="tab-label"> Toxicology</span></button>
+        <button type="button" class="tab tab-btn" data-tab="psa" data-category="protocols" onclick="showTab('psa', this)" title="Procedural Sedation & Analgesia [Alt+9]" aria-keyshortcuts="Alt+9" role="tab" aria-selected="false" aria-controls="psa" aria-label="Procedural Sedation & Analgesia"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"/><path d="m9 11 4 4"/><path d="m5 19-3 3"/><path d="m14 4 6 6"/></svg><span class="tab-label"> Sedation</span></button>
+        <button type="button" class="tab tab-btn" data-tab="vitals" data-category="protocols" onclick="showTab('vitals', this)" title="Age-Banded Physiological Normal Ranges [Alt+0]" aria-keyshortcuts="Alt+0" role="tab" aria-selected="false" aria-controls="vitals" aria-label="Age-Banded Physiological Normal Ranges"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M17 12h-2l-2 5-3-10-2 5H7"/></svg><span class="tab-label"> Vitals</span></button>
+        <button type="button" class="tab tab-btn" data-tab="dka" data-category="resus" onclick="showTab('dka', this)" title="Pediatric DKA Protocol Engine [Alt+K]" aria-keyshortcuts="Alt+K" role="tab" aria-selected="false" aria-controls="dka" aria-label="Pediatric DKA Protocol Engine"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.8 2.3A.3.3 0 0 0 4.5 2H3.5a.3.3 0 0 0-.3.3v4.2a6 6 0 0 0 12 0V2.3a.3.3 0 0 0-.3-.3h-1a.3.3 0 0 0-.3.3v4.2a4 4 0 0 1-8 0V2.3z"/><path d="M11 12.5v1.5a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/></svg><span class="tab-label"> DKA</span></button>
       </div>
     </div>
 

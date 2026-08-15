@@ -413,16 +413,16 @@ test('copyEHROrder("dka"): 10 kg child DKA protocol', () => {
 
 // --- UI/UX UPGRADE SUITES ---
 
-test('Category Jump Navigation: filterNavCategory filters opacity and switches tab', () => {
+test('Category Jump Navigation: filterNavCategory filters visibility and switches tab', () => {
   window.eval('filterNavCategory("resus")');
   const palsBtn = document.querySelector('.tab-btn[data-tab="pals"]');
   const doseBtn = document.querySelector('.tab-btn[data-tab="dose"]');
-  assert.strictEqual(palsBtn.style.opacity, '1', 'PALS button should be opaque in resus category');
-  assert.strictEqual(doseBtn.style.opacity, '0.45', 'Dose button should be dimmed in resus category');
+  assert.strictEqual(palsBtn.style.display, 'inline-flex', 'PALS button should be visible in resus category');
+  assert.strictEqual(doseBtn.style.display, 'none', 'Dose button should be hidden in resus category');
 
   // Reset to all
   window.eval('filterNavCategory("all")');
-  assert.strictEqual(doseBtn.style.opacity, '1', 'Dose button should be fully visible in all category');
+  assert.strictEqual(doseBtn.style.display, 'inline-flex', 'Dose button should be visible in all category');
 });
 
 test('Combobox Category Filtering: Dose & ATB category filter updates dropdown options', () => {
