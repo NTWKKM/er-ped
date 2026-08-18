@@ -2017,7 +2017,7 @@
 
     <!-- Standalone Footer -->
     <footer class="app-footer">
-      <div><strong>ER-PED Workstation</strong> — Braun Clinical Instrument <span class="version-chip" onclick="openChangelogModal()" title="ดูบันทึกการเปลี่ยนแปลง v1.8.1">v1.8.1</span></div>
+      <div><strong>ER-PED Workstation</strong> — Braun Clinical Instrument <span class="version-chip" id="footerVersionChip" onclick="openChangelogModal()" title="ดูบันทึกการเปลี่ยนแปลง v1.8.1">v1.8.1</span></div>
       <div style="font-size:11px; margin-top:4px; color:var(--muted);">
         พัฒนาและอ้างอิงจาก <a href="https://ped-tsh.web.app/" target="_blank" rel="noopener" style="color:var(--accent); font-weight:700; text-decoration:underline;">Pediatric Emergency Workstation (ped-tsh.web.app)</a>
       </div>
@@ -2099,11 +2099,11 @@
   <div id="changelogBackdrop" class="drawer-backdrop hidden" onclick="if(event.target.id==='changelogBackdrop') closeChangelogModal()">
     <div class="drawer" onclick="event.stopPropagation()">
       <div class="drawer-header">
-        <strong style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg> ER-PED Version 1.8.1 Changelog</strong>
+        <strong id="changelogHeaderTitle" style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg> ER-PED Version <span id="changelogVersionNumber">1.8.1</span> Changelog</strong>
         <button type="button" class="btn" style="padding:4px 10px; font-size:12px; display:inline-flex; align-items:center; gap:4px;" onclick="closeChangelogModal()">Close <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> (Esc)</button>
       </div>
       <div class="drawer-body" style="font-size:13px; line-height:1.6;">
-        <h3 style="color:var(--accent); margin-top:4px;">What's New in v1.8.1:</h3>
+        <h3 style="color:var(--accent); margin-top:4px;">What's New in v<span id="changelogWhatsNewVersion">1.8.1</span>:</h3>
         <ul>
           <li><strong>🛡️ Clinical Safety & Zero-Division Hardening</strong>: ป้องกันการหารด้วยศูนย์ใน Custom Dilution ของ Drip Rate ไม่ให้เกิดค่า <code>Infinity</code> หรือ <code>NaN</code></li>
           <li><strong>🖨️ Active-Panel Print Isolation</strong>: ปรับปรุงระบบพิมพ์ใบสรุปยา A4 ให้ซ่อนแท็บที่ไม่ได้เลือกอย่างสมบูรณ์แบบด้วย <code>.active-panel</code> class</li>

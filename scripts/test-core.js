@@ -617,6 +617,24 @@ test('Edge Case: Zero weight triggers prompt across all clinical modules', () =>
   assert(document.getElementById('seizureOut').innerHTML.includes('กรุณากรอกน้ำหนักตัว'), 'Seizure zero weight guard');
 });
 
+test('Version Auto-Sync: applyVersionToUI dynamically updates footer badge and changelog version targets', () => {
+  const { applyVersionToUI } = appExports;
+  
+  applyVersionToUI('1.9.5');
+  
+  const chip = document.getElementById('footerVersionChip');
+  const titleVer = document.getElementById('changelogVersionNumber');
+  const whatsNewVer = document.getElementById('changelogWhatsNewVersion');
+  
+  assert.strictEqual(chip.textContent, 'v1.9.5', 'Footer chip must reflect version v1.9.5');
+  assert.strictEqual(titleVer.textContent, '1.9.5', 'Changelog title must reflect version 1.9.5');
+  assert.strictEqual(whatsNewVer.textContent, '1.9.5', 'Whats new header must reflect version 1.9.5');
+  
+  // Revert back to 1.8.1
+  applyVersionToUI('1.8.1');
+  assert.strictEqual(chip.textContent, 'v1.8.1', 'Reverted footer chip must be v1.8.1');
+});
+
 console.log(`\n----------------------------------------`);
 console.log(`Test Results: ${passed} Passed, ${failed} Failed`);
 console.log(`----------------------------------------\n`);

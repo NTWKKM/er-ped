@@ -2,8 +2,8 @@
 if (typeof window !== 'undefined' && typeof navigator !== 'undefined' && 'serviceWorker' in navigator && (location.protocol === 'http:' || location.protocol === 'https:')) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js').then(reg => {
-      // Check for updates every 30 minutes
       setInterval(() => reg.update(), 30 * 60 * 1000);
+      syncVersionFromSW();
       // Show banner on controller change (new SW detected)
       reg.addEventListener('updatefound', () => {
         const newSW = reg.installing;
@@ -11,6 +11,7 @@ if (typeof window !== 'undefined' && typeof navigator !== 'undefined' && 'servic
           if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
             const banner = document.getElementById('pwaUpdateBanner');
             if (banner) banner.style.display = 'flex';
+            syncVersionFromSW();
           }
         });
       });
@@ -176,6 +177,7 @@ function initUI(){
   syncTopbarHeight();
   calculateIBW();
   updateBiometricUIState();
+  syncVersionFromSW();
 
   if (typeof window !== 'undefined') {
     document.addEventListener('click', (e) => {
@@ -188,6 +190,58 @@ function initUI(){
         closeAllPopovers();
       }
     });
+  }
+}
+
+// --------- 🔄 Version Auto-Sync from sw.js / Cache API ---------
+function applyVersionToUI(versionStr) {
+  if (!versionStr) return;
+  const rawVer = versionStr.toString().trim().replace(/^v/i, '');
+  const ver = `v${rawVer}`;
+
+  const chip = document.getElementById('footerVersionChip') || (typeof document !== 'undefined' ? document.querySelector('.version-chip') : null);
+  if (chip) {
+    chip.textContent = ver;
+    chip.title = `ดูบันทึกการเปลี่ยนแปลง ${ver}`;
+  }
+
+  const titleVer = typeof document !== 'undefined' ? document.getElementById('changelogVersionNumber') : null;
+  if (titleVer) titleVer.textContent = rawVer;
+
+  const whatsNewVer = typeof document !== 'undefined' ? document.getElementById('changelogWhatsNewVersion') : null;
+  if (whatsNewVer) whatsNewVer.textContent = rawVer;
+
+  if (typeof document !== 'undefined') {
+    document.querySelectorAll('.app-version-val').forEach(el => {
+      el.textContent = ver;
+    });
+  }
+}
+
+function syncVersionFromSW() {
+  // 1. Try CacheStorage keys if available (offline-instant)
+  if (typeof caches !== 'undefined' && typeof caches.keys === 'function') {
+    caches.keys().then(keys => {
+      const swCache = keys.find(k => k.startsWith('er-ped-v'));
+      if (swCache) {
+        const m = swCache.match(/er-ped-v([0-9.]+)/);
+        if (m && m[1]) applyVersionToUI(m[1]);
+      }
+    }).catch(() => {});
+  }
+
+  // 2. Fetch sw.js directly to read latest defined CACHE_NAME
+  if (typeof fetch === 'function' && typeof location !== 'undefined' && (location.protocol === 'http:' || location.protocol === 'https:')) {
+    fetch('sw.js')
+      .then(res => res.ok ? res.text() : '')
+      .then(text => {
+        if (!text) return;
+        const m = text.match(/CACHE_NAME\s*=\s*['"]er-ped-v([0-9.]+)/);
+        if (m && m[1]) {
+          applyVersionToUI(m[1]);
+        }
+      })
+      .catch(() => {});
   }
 }
 
@@ -2784,6 +2838,8 @@ if (typeof module !== 'undefined' && module.exports) {
     suggestBlade,
     weightToETTCuffed,
     weightToETTUncuffed,
-    weightToDepth
+    weightToDepth,
+    applyVersionToUI,
+    syncVersionFromSW
   };
 }
