@@ -222,7 +222,8 @@ function syncVersionFromSW() {
   // 1. Try CacheStorage keys if available (offline-instant)
   if (typeof caches !== 'undefined' && typeof caches.keys === 'function') {
     caches.keys().then(keys => {
-      const swCache = keys.find(k => k.startsWith('er-ped-v'));
+      const swCaches = keys.filter(k => k.startsWith('er-ped-v')).sort();
+      const swCache = swCaches[swCaches.length - 1];
       if (swCache) {
         const m = swCache.match(/er-ped-v([0-9.]+)/);
         if (m && m[1]) applyVersionToUI(m[1]);
@@ -232,7 +233,7 @@ function syncVersionFromSW() {
 
   // 2. Fetch sw.js directly to read latest defined CACHE_NAME
   if (typeof fetch === 'function' && typeof location !== 'undefined' && (location.protocol === 'http:' || location.protocol === 'https:')) {
-    fetch('sw.js')
+    fetch('sw.js', { cache: 'no-cache' })
       .then(res => res.ok ? res.text() : '')
       .then(text => {
         if (!text) return;

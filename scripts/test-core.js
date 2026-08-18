@@ -635,6 +635,23 @@ test('Version Auto-Sync: applyVersionToUI dynamically updates footer badge and c
   assert.strictEqual(chip.textContent, 'v1.8.1', 'Reverted footer chip must be v1.8.1');
 });
 
+test('Version Auto-Sync: syncVersionFromSW picks highest/latest version when multiple cache keys exist', () => {
+  const { syncVersionFromSW } = appExports;
+  
+  global.caches = {
+    keys: () => Promise.resolve(['er-ped-v1.7.0-20260815', 'er-ped-v1.8.1-20260818', 'er-ped-v1.8.0-20260818'])
+  };
+
+  syncVersionFromSW();
+  
+  // Test using Promise microtask resolution
+  return Promise.resolve().then(() => {
+    const chip = document.getElementById('footerVersionChip');
+    assert.strictEqual(chip.textContent, 'v1.8.1', 'Footer chip must resolve to the latest cache version v1.8.1');
+    delete global.caches;
+  });
+});
+
 console.log(`\n----------------------------------------`);
 console.log(`Test Results: ${passed} Passed, ${failed} Failed`);
 console.log(`----------------------------------------\n`);

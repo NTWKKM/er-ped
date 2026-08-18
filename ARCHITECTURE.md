@@ -120,10 +120,8 @@ flowchart TD
     - Elevated `.drawer-backdrop` Z-index to `300` to guarantee modal overlay priority over dropdowns (`z-index: 100`).
     - Expanded automated unit test suite (`scripts/test-core.js`) from 43 to 51 tests covering direct DKA, Drip, Airway sizing, and zero-weight edge cases.
     - Service worker cache version bumped to `er-ped-v1.8.1-20260818`.
-
-
-
-
-
-
-
+50. **Version Auto-Sync from `sw.js` CACHE_NAME / Cache API**:
+    - Implemented dynamic version extraction (`syncVersionFromSW()`) and DOM binding (`applyVersionToUI(versionStr)`).
+    - Offline mode: Automatically parses and sorts `caches.keys()`, matching the latest `er-ped-v*` cache partition.
+    - Online mode: Direct un-cached fetch of `sw.js` (`{ cache: 'no-cache' }`) to parse `CACHE_NAME` constant on initial boot and SW update events.
+    - Dynamically binds `#footerVersionChip` (`v1.8.1`), `#changelogVersionNumber` (`1.8.1`), `#changelogWhatsNewVersion` (`1.8.1`), and all `.app-version-val` elements.
