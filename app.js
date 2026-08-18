@@ -560,7 +560,11 @@ function showTab(id, btn) {
   
   ['dose','atb','fluids','pals','ncpr','drip','seizure','tox','psa','vitals','dka','asthma'].forEach(x => {
     const el = document.getElementById(x);
-    if (el) el.style.display = (x === id) ? 'block' : 'none';
+    if (el) {
+      const isActive = (x === id);
+      el.style.display = isActive ? 'block' : 'none';
+      el.classList.toggle('active-panel', isActive);
+    }
   });
   
   if (id === 'pals') {
@@ -784,7 +788,7 @@ ${spectrumHtml}
       </tr>
       <tr>
         <td><strong>Laryngoscope Blade</strong></td>
-        <td><strong>${suggestBlade(null, w)}</strong></td>
+        <td><strong>${suggestBlade(w)}</strong></td>
       </tr>
       <tr>
         <td><strong>Airway (OPA / NPA / Suction)</strong></td>
@@ -807,7 +811,7 @@ function weightToETTCuffed(kg){
 }
 function weightToETTUncuffed(kg){ const c = Number(weightToETTCuffed(kg)); return c ? (c+0.5).toFixed(1) : ''; }
 function weightToDepth(kg){ const c = Number(weightToETTCuffed(kg)); return c ? (c*3).toFixed(1) : ''; }
-function suggestBlade(age, kg){
+function suggestBlade(kg){
   if (kg<10) return '0–1 straight'; if (kg<12) return '1–1.5 straight';
   if (kg<24) return '2 straight/curved'; return '3';
 }
@@ -1971,16 +1975,16 @@ function calcDrip() {
     prepMgInput.setAttribute('data-key', key);
   }
 
-  const doseVal = parseFloat(doseInput?.value) || item.doseDefaultMcgKgMin || 0.1;
-  const mgVal = parseFloat(prepMgInput?.value) || 1;
-  const volVal = parseFloat(prepVolInput?.value) || 50;
+  const doseVal = parseFloat(doseInput?.value) > 0 ? parseFloat(doseInput.value) : (item.doseDefaultMcgKgMin || 0.1);
+  const mgVal = parseFloat(prepMgInput?.value) > 0 ? parseFloat(prepMgInput.value) : 1;
+  const volVal = parseFloat(prepVolInput?.value) > 0 ? parseFloat(prepVolInput.value) : 50;
 
   if (!w || w <= 0) {
     outEl.innerHTML = '<div class="badge-cap danger">⚠️ กรุณากรอกน้ำหนักตัว (ABW) ที่ส่วนบนของหน้าจอก่อนคำนวณ</div>';
     return;
   }
 
-  const concMgPerMl = mgVal / volVal;
+  const concMgPerMl = volVal > 0 ? mgVal / volVal : 0;
   const concMcgPerMl = concMgPerMl * 1000;
   const mcgPerHour = doseVal * w * 60;
   const rateMlHr = concMcgPerMl > 0 ? (mcgPerHour / concMcgPerMl) : 0;
@@ -2776,6 +2780,10 @@ if (typeof module !== 'undefined' && module.exports) {
     getWeight,
     calculateIBW,
     getAgeInYears,
-    estimateFromAge
+    estimateFromAge,
+    suggestBlade,
+    weightToETTCuffed,
+    weightToETTUncuffed,
+    weightToDepth
   };
 }

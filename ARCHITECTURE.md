@@ -111,6 +111,15 @@ flowchart TD
     - **Disposition Criteria Cards**: 3-column responsive grid (Discharge ✅, Admit Ward 🔶, PICU 🚨) with clinical criteria checklists.
     - `calcAsthma()` registered in `showTab()`, `calcAll()`, `setupKeyboardShortcuts()` (`Alt+A`), and weight badge propagation array.
     - Service worker cache version bumped to `er-ped-v1.8.0-20260818`.
+49. **DOM Synchronization, Print Isolation & Clinical Calculation Hardening (v1.8.1)**: Comprehensive audit & cleanup:
+    - Added `#a2hsBtn` inside overflow popover menu for native PWA `beforeinstallprompt` installation workflow.
+    - Added `#vitalsQuickText` in Vital Signs module header card for live HR/RR physiological readout.
+    - Removed dead CSS `.nav-break` and simplified `suggestBlade(kg)` signature by dropping unused `age` parameter.
+    - Hardened `calcDrip()` calculation against zero/negative diluent volume divisions.
+    - Upgraded `@media print` tabpanel isolation to use dynamic `.active-panel` CSS class toggling in `showTab()`, preventing inactive tab dump.
+    - Elevated `.drawer-backdrop` Z-index to `300` to guarantee modal overlay priority over dropdowns (`z-index: 100`).
+    - Expanded automated unit test suite (`scripts/test-core.js`) from 43 to 51 tests covering direct DKA, Drip, Airway sizing, and zero-weight edge cases.
+    - Service worker cache version bumped to `er-ped-v1.8.1-20260818`.
 
 
 

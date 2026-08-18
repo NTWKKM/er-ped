@@ -52,9 +52,9 @@ console.log('✅ JSDOM Environment & Dataset (DS) initialized synchronously.\n')
 
 // 4. DOM Element Smoke Tests
 const essentialIds = [
-  'doseOut', 'nOut', 'atbOut', 'pOut', 'fOut', 'dripOut', 'seizureOut', 'dkaOut',
+  'doseOut', 'nOut', 'atbOut', 'pOut', 'fOut', 'dripOut', 'seizureOut', 'dkaOut', 'psaOut', 'vitalsOut', 'asthmaOut',
   'doseDrug', 'atbDrug', 'dripDrug', 'weight', 'age', 'nW', 'fDegree', 'fPlan',
-  'dkaSeverity', 'dkaPriorBolus', 'useIBW', 'ibwVal'
+  'dkaSeverity', 'dkaPriorBolus', 'useIBW', 'ibwVal', 'vitalsQuickText', 'a2hsBtn'
 ];
 
 essentialIds.forEach(id => {
@@ -495,6 +495,126 @@ test('Standalone Footer Integrity: footer is direct child of container and not t
   assert(footer.innerHTML.includes('openChangelogModal'), 'Footer must have changelog button');
   assert(footer.innerHTML.includes('openDatasetEditor'), 'Footer must have dataset editor button');
   assert(footer.innerHTML.includes('triggerPrintCard'), 'Footer must have printable card button');
+});
+
+// --- ADVANCED CLINICAL ENGINE & EDGE CASE TEST SUITES ---
+
+test('Airway Sizing: ETT, blade, depth for various pediatric weights', () => {
+  const { suggestBlade, weightToETTCuffed, weightToETTUncuffed, weightToDepth } = appExports;
+  
+  // 3 kg neonate
+  assert.strictEqual(weightToETTCuffed(3), '3.0');
+  assert.strictEqual(weightToETTUncuffed(3), '3.5');
+  assert.strictEqual(weightToDepth(3), '9.0');
+  assert.strictEqual(suggestBlade(3), '0–1 straight');
+
+  // 10 kg toddler
+  assert.strictEqual(weightToETTCuffed(10), '4.0');
+  assert.strictEqual(weightToETTUncuffed(10), '4.5');
+  assert.strictEqual(weightToDepth(10), '12.0');
+  assert.strictEqual(suggestBlade(10), '1–1.5 straight');
+
+  // 20 kg child
+  assert.strictEqual(weightToETTCuffed(20), '5.5');
+  assert.strictEqual(suggestBlade(20), '2 straight/curved');
+
+  // 40 kg adolescent
+  assert.strictEqual(weightToETTCuffed(40), '7.0');
+  assert.strictEqual(suggestBlade(40), '3');
+});
+
+test('DKA Calculation: 10 kg child 7% dehydration, 0 prior bolus, BG 350', () => {
+  document.getElementById('weight').value = '10';
+  window.eval('onWeightChange()');
+  document.getElementById('dkaSeverity').value = '7';
+  document.getElementById('dkaPriorBolus').value = '0';
+  document.getElementById('dkaBG').value = '350';
+  
+  window.eval('calcDKA()');
+  const out = document.getElementById('dkaOut');
+  
+  // Total deficit = 10 * 7 * 10 = 700 mL / 48h = 14.58 mL/hr
+  // Mnt = 41.67 mL/hr (1000 mL/day)
+  // Total fluid = 41.67 + 14.58 = 56.3 mL/hr
+  assert(out.innerHTML.includes('56.3 mL/hr'), 'Total fluid rate check (56.3 mL/hr)');
+  assert(out.innerHTML.includes('1.0 mL/hr'), 'Regular insulin drip rate (1.0 U/hr)');
+  assert(out.innerHTML.includes('100 mL'), 'Initial NS resus bolus 10 mL/kg = 100 mL');
+  assert(!out.innerHTML.includes('Switch IV fluid to D5'), 'Should not trigger dextrose warning at BG 350');
+});
+
+test('DKA Dextrose Alert: BG 180 (<250 mg/dL) triggers D5 0.45% NS warning', () => {
+  document.getElementById('weight').value = '10';
+  window.eval('onWeightChange()');
+  document.getElementById('dkaBG').value = '180';
+  
+  window.eval('calcDKA()');
+  const out = document.getElementById('dkaOut');
+  assert(out.innerHTML.includes('Switch IV fluid to D5 0.45% NS + 20 mEq/L KCl immediately'), 'Dextrose warning must appear');
+});
+
+test('Drip Calculator: Epinephrine infusion 10 kg, dose 0.1 mcg/kg/min', () => {
+  document.getElementById('weight').value = '10';
+  window.eval('onWeightChange()');
+  document.getElementById('dripDrug').value = 'epinephrine-drip';
+  
+  window.eval('calcDrip()');
+  const out = document.getElementById('dripOut');
+  
+  // 0.1 mcg/kg/min * 10 kg = 1 mcg/min = 60 mcg/hr
+  // Standard prep: 1 mg (1000 mcg) in 50 mL = 20 mcg/mL
+  // Rate: 60 / 20 = 3.0 mL/hr
+  assert(out.innerHTML.includes('3.0 mL/hr'), 'Infusion rate check 3.0 mL/hr');
+  assert(out.innerHTML.includes('0.10 mcg/kg/min'), 'Dose readout check');
+});
+
+test('Drip Calculator: Zero or invalid volume inputs do not crash or produce Infinity', () => {
+  document.getElementById('weight').value = '10';
+  window.eval('onWeightChange()');
+  document.getElementById('dripDrug').value = 'epinephrine-drip';
+  document.getElementById('dripPrepVolMl').value = '0';
+  
+  window.eval('calcDrip()');
+  const out = document.getElementById('dripOut');
+  assert(!out.innerHTML.includes('Infinity'), 'Drip calculator must never produce Infinity');
+  assert(!out.innerHTML.includes('NaN'), 'Drip calculator must never produce NaN');
+});
+
+test('Vital Signs Quick Text & Age Bracket Summary syncs correctly', () => {
+  document.getElementById('age').value = '5';
+  window.eval('estimateFromAge()');
+  window.eval('calcVitals()');
+  
+  const quick = document.getElementById('vitalsQuickText');
+  assert(quick.textContent.includes('HR 80–140'), 'Quick text HR check');
+  assert(quick.textContent.includes('RR 22–34'), 'Quick text RR check');
+});
+
+test('Navigation showTab() toggles active-panel class on section panels for print isolation', () => {
+  window.eval('showTab("asthma")');
+  const asthmaSection = document.getElementById('asthma');
+  const doseSection = document.getElementById('dose');
+  
+  assert.strictEqual(asthmaSection.classList.contains('active-panel'), true, 'Asthma section must have .active-panel');
+  assert.strictEqual(doseSection.classList.contains('active-panel'), false, 'Dose section must NOT have .active-panel');
+  
+  // Switch back to dose
+  window.eval('showTab("dose")');
+  assert.strictEqual(doseSection.classList.contains('active-panel'), true, 'Dose section must have .active-panel');
+  assert.strictEqual(asthmaSection.classList.contains('active-panel'), false, 'Asthma section must NOT have .active-panel');
+});
+
+test('Edge Case: Zero weight triggers prompt across all clinical modules', () => {
+  document.getElementById('weight').value = '';
+  window.eval('onWeightChange()');
+  
+  ['calcDose', 'calcATB', 'calcFluids', 'calcPALS', 'calcDrip', 'calcSeizure', 'calcTox', 'calcPSA', 'calcDKA', 'calcAsthma'].forEach(fn => {
+    window.eval(`${fn}()`);
+  });
+  
+  assert(document.getElementById('dripOut').innerHTML.includes('กรุณากรอกน้ำหนักตัว'), 'Drip zero weight guard');
+  assert(document.getElementById('dkaOut').innerHTML.includes('กรุณากรอกน้ำหนักตัว'), 'DKA zero weight guard');
+  assert(document.getElementById('psaOut').innerHTML.includes('กรุณากรอกน้ำหนักตัว'), 'PSA zero weight guard');
+  assert(document.getElementById('seizureOut').innerHTML.includes('กรุณากรอกน้ำหนักตัว'), 'Seizure zero weight guard');
 });
 
 console.log(`\n----------------------------------------`);
