@@ -3864,5 +3864,216 @@ window.ER_PED_DATASET = {
         "action": "Do NOT add KCl to IV fluid. Recheck K+ in 2 hours."
       }
     ]
+  },
+  "asthmaProtocol": {
+    "severityAssessment": [
+      {
+        "feature": "Speech",
+        "mildModerate": "Talks in phrases",
+        "severe": "Words only; sits hunched forward",
+        "lifeThreatening": "Unable to speak / too dyspnoeic"
+      },
+      {
+        "feature": "SpO₂",
+        "mildModerate": "≥ 92%",
+        "severe": "< 92%",
+        "lifeThreatening": "< 90%"
+      },
+      {
+        "feature": "Alertness",
+        "mildModerate": "Not agitated",
+        "severe": "Agitated",
+        "lifeThreatening": "Drowsy / confused / exhausted"
+      },
+      {
+        "feature": "Respiratory Rate",
+        "mildModerate": "Increased (age-appropriate)",
+        "severe": "> 30/min or obvious distress",
+        "lifeThreatening": "Poor respiratory effort"
+      },
+      {
+        "feature": "Accessory Muscles",
+        "mildModerate": "Mild or none",
+        "severe": "Moderate–marked use",
+        "lifeThreatening": "Silent chest / cyanosis"
+      },
+      {
+        "feature": "PRAM Score",
+        "mildModerate": "0–3",
+        "severe": "4–7",
+        "lifeThreatening": "8–12"
+      }
+    ],
+    "hfncSettings": {
+      "flowRateLPerKgPerMin": 2,
+      "flowRateMinLPerKgPerMin": 1,
+      "flowRateMaxLPerMin": 60,
+      "startFiO2Percent": 40,
+      "targetSpO2Percent": 92,
+      "temperatureC": 37,
+      "nebFlowMaxLPerKgPerMin": 0.25,
+      "nebFlowMaxLPerMin": 10
+    },
+    "steps": [
+      {
+        "stage": "0–5 min",
+        "name": "Initial Assessment & Stabilization",
+        "actions": "Rapid assessment: ABCs, SpO₂, check for anaphylaxis features. Give O₂ ONLY if SpO₂ < 92% (GINA 2026). If anaphylaxis suspected → Epinephrine IM FIRST.",
+        "drugs": [
+          {
+            "key": "epinephrine-im-anaphy",
+            "name": "Epinephrine IM (if Anaphylaxis)",
+            "doseMgPerKg": 0.01,
+            "maxDoseMg": 0.5,
+            "route": "IM (anterolateral thigh)",
+            "prep": "1:1,000 (1 mg/mL)",
+            "note": "⚠️ GINA 2026: Give BEFORE bronchodilators if anaphylaxis features present."
+          }
+        ]
+      },
+      {
+        "stage": "5–20 min",
+        "name": "First-Line: SABA + Ipratropium + Steroid",
+        "actions": "Salbutamol q20min × 3 doses. Add Ipratropium in moderate–severe. Give systemic steroid within 1 hour. MDI + Spacer preferred over nebulizer.",
+        "drugs": [
+          {
+            "key": "salbutamol-neb",
+            "name": "Salbutamol Nebulization",
+            "doseMgPerKg": 0.15,
+            "minDoseMg": 2.5,
+            "maxDoseMg": 5,
+            "route": "NEB q20min × 3 doses",
+            "prep": "Respirator solution 5 mg/mL",
+            "note": "Conservative dosing per GINA 2026 (lactic acidosis risk). MDI + Spacer preferred."
+          },
+          {
+            "key": "salbutamol-mdi",
+            "name": "Salbutamol pMDI + Spacer",
+            "doseMgPerKg": null,
+            "maxDoseMg": null,
+            "fixedDose": "4–8 puffs (100 mcg/puff)",
+            "route": "Inhale via Spacer q20min × 3",
+            "prep": "100 mcg/puff MDI + Spacer ± Mask",
+            "note": "Preferred over nebulizer (GINA/TAC). 4 puffs mild, 8 puffs severe."
+          },
+          {
+            "key": "ipratropium-neb",
+            "name": "Ipratropium Bromide",
+            "doseMgPerKg": null,
+            "maxDoseMg": 0.5,
+            "fixedDoseLt20kg": 0.25,
+            "fixedDoseGte20kg": 0.5,
+            "route": "NEB with SABA × first 3 doses",
+            "prep": "250 mcg/mL or 500 mcg/2 mL unit dose",
+            "note": "Add in moderate–severe only. Mix with Salbutamol NEB."
+          },
+          {
+            "key": "prednisolone-po",
+            "name": "Prednisolone PO",
+            "doseMgPerKg": 1,
+            "maxDoseMg": 60,
+            "route": "PO once daily × 3–5 days",
+            "prep": "5 mg tab or 15 mg/5 mL syrup",
+            "note": "Give within 1 hour. OCS stewardship — shortest effective course."
+          },
+          {
+            "key": "dexamethasone-alt",
+            "name": "Dexamethasone (Alternative)",
+            "doseMgPerKg": 0.6,
+            "maxDoseMg": 16,
+            "route": "PO/IV × 1–2 doses",
+            "prep": "0.5 mg tab / 4 mg/mL injection",
+            "note": "Alternative to multi-day Prednisolone. Better compliance, less vomiting."
+          }
+        ]
+      },
+      {
+        "stage": "15–30 min",
+        "name": "HFNC Consideration",
+        "actions": "If SpO₂ < 92% persists or high work of breathing after initial SABA → Start HFNC. Reduce flow during nebulization for proper medication deposition.",
+        "drugs": []
+      },
+      {
+        "stage": "20–60 min",
+        "name": "Reassess Response",
+        "actions": "Evaluate after initial 3 doses SABA: Good response → wean to q1–4h SABA, plan discharge. Incomplete → continue q1h SABA, add Ipratropium if not already. Poor → escalate.",
+        "drugs": [
+          {
+            "key": "hydrocortisone-iv",
+            "name": "Hydrocortisone IV (if vomiting/NPO)",
+            "doseMgPerKg": 5,
+            "maxDoseMg": 100,
+            "route": "IV q6h",
+            "prep": "100 mg vial reconstitute with sterile water",
+            "note": "Use if unable to tolerate PO steroid."
+          }
+        ]
+      },
+      {
+        "stage": "60+ min",
+        "name": "Escalation: IV MgSO₄",
+        "actions": "Severe refractory after initial hour of intensive therapy. IV Magnesium Sulfate single dose. Nebulized MgSO₄ is NO LONGER recommended (GINA 2026).",
+        "drugs": [
+          {
+            "key": "mgso4-iv",
+            "name": "Magnesium Sulfate IV",
+            "doseMgPerKg": 50,
+            "maxDoseMg": 2000,
+            "route": "IV infusion over 20 min",
+            "prep": "50% MgSO₄ (500 mg/mL) dilute in NSS",
+            "note": "Monitor BP & HR during infusion. Single dose. Nebulized route removed per GINA 2026."
+          }
+        ]
+      },
+      {
+        "stage": "Life-threatening",
+        "name": "Life-Threatening / PICU Escalation",
+        "actions": "Silent chest, cyanosis, SpO₂ < 90%, drowsy/confused → Call PICU immediately. Consider IV bronchodilators. Prepare for intubation if deteriorating.",
+        "drugs": [
+          {
+            "key": "epinephrine-im-lt",
+            "name": "Epinephrine IM",
+            "doseMgPerKg": 0.01,
+            "maxDoseMg": 0.5,
+            "route": "IM (anterolateral thigh)",
+            "prep": "1:1,000 (1 mg/mL)",
+            "note": "For life-threatening bronchospasm or peri-arrest."
+          },
+          {
+            "key": "terbutaline-iv",
+            "name": "Terbutaline IV Load (PICU)",
+            "doseMcgPerKg": 10,
+            "maxDoseMcg": 250,
+            "route": "IV slow push over 5 min",
+            "prep": "0.5 mg/mL ampoule",
+            "note": "PICU-level only. Follow with continuous infusion 0.1–10 mcg/kg/min."
+          }
+        ]
+      }
+    ],
+    "dispositionCriteria": {
+      "discharge": [
+        "SpO₂ ≥ 94% on room air for ≥ 60 min",
+        "SABA requirement ≤ q4h",
+        "Minimal or no respiratory distress",
+        "Tolerate PO medication",
+        "Caregiver understands Asthma Action Plan",
+        "Follow-up arranged within 2–7 days"
+      ],
+      "admit": [
+        "Persistent SpO₂ < 92% despite treatment",
+        "SABA required more often than q4h",
+        "Ongoing significant respiratory distress",
+        "Poor response after 4–8 hours ED treatment",
+        "Previous ICU admission for asthma",
+        "Unable to tolerate PO / social concerns"
+      ],
+      "picu": [
+        "Life-threatening features (silent chest, cyanosis, drowsy)",
+        "SpO₂ < 90% despite high-flow O₂ / HFNC",
+        "Requiring IV bronchodilators (Terbutaline / Epinephrine infusion)",
+        "Impending respiratory failure / need for intubation"
+      ]
+    }
   }
 };

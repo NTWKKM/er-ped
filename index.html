@@ -1674,6 +1674,7 @@
         <button type="button" class="tab tab-btn" data-tab="psa" data-category="protocols" onclick="showTab('psa', this)" title="Procedural Sedation & Analgesia [Alt+9]" aria-keyshortcuts="Alt+9" role="tab" aria-selected="false" aria-controls="psa" aria-label="Procedural Sedation & Analgesia"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"/><path d="m9 11 4 4"/><path d="m5 19-3 3"/><path d="m14 4 6 6"/></svg><span class="tab-label"> Sedation</span></button>
         <button type="button" class="tab tab-btn" data-tab="vitals" data-category="protocols" onclick="showTab('vitals', this)" title="Age-Banded Physiological Normal Ranges [Alt+0]" aria-keyshortcuts="Alt+0" role="tab" aria-selected="false" aria-controls="vitals" aria-label="Age-Banded Physiological Normal Ranges"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M17 12h-2l-2 5-3-10-2 5H7"/></svg><span class="tab-label"> Vitals</span></button>
         <button type="button" class="tab tab-btn" data-tab="dka" data-category="resus" onclick="showTab('dka', this)" title="Pediatric DKA Protocol Engine [Alt+K]" aria-keyshortcuts="Alt+K" role="tab" aria-selected="false" aria-controls="dka" aria-label="Pediatric DKA Protocol Engine"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.8 2.3A.3.3 0 0 0 4.5 2H3.5a.3.3 0 0 0-.3.3v4.2a6 6 0 0 0 12 0V2.3a.3.3 0 0 0-.3-.3h-1a.3.3 0 0 0-.3.3v4.2a4 4 0 0 1-8 0V2.3z"/><path d="M11 12.5v1.5a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/></svg><span class="tab-label"> DKA</span></button>
+        <button type="button" class="tab tab-btn" data-tab="asthma" data-category="resus" onclick="showTab('asthma', this)" title="Acute Asthmatic Attack Protocol [Alt+A]" aria-keyshortcuts="Alt+A" role="tab" aria-selected="false" aria-controls="asthma" aria-label="Acute Asthmatic Attack Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg><span class="tab-label"> Asthma</span></button>
       </div>
     </div>
 
@@ -1996,9 +1997,28 @@
       </div>
     </section>
 
+    <!-- Acute Asthmatic Attack Protocol (GINA 2026) -->
+    <section id="asthma" class="card" role="tabpanel" style="display:none;">
+      <div class="grid">
+        <div class="col-12">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h2>Acute Asthmatic Attack Protocol</h2>
+            <div class="weight-lock-chip" style="width:auto; padding:4px 10px;">
+              <span>BW:</span>
+              <strong id="asthmaWBadge">— kg</strong>
+            </div>
+          </div>
+          <div class="note" style="margin-bottom:14px; font-weight:500;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>GINA 2026 + TAC 2025:</strong> ให้ SABA ทุก 20 นาที ร่วมกับ Systemic Steroid ตั้งแต่แรก — O₂ เมื่อ SpO₂ &lt; 92% เท่านั้น — ถ้ามี Anaphylaxis features ให้ Epinephrine ก่อน
+          </div>
+          <div id="asthmaOut" class="summary"></div>
+        </div>
+      </div>
+    </section>
+
     <!-- Standalone Footer -->
     <footer class="app-footer">
-      <div><strong>ER-PED Workstation</strong> — Braun Clinical Instrument <span class="version-chip" onclick="openChangelogModal()" title="ดูบันทึกการเปลี่ยนแปลง v1.7.0">v1.7.0</span></div>
+      <div><strong>ER-PED Workstation</strong> — Braun Clinical Instrument <span class="version-chip" onclick="openChangelogModal()" title="ดูบันทึกการเปลี่ยนแปลง v1.8.0">v1.8.0</span></div>
       <div style="font-size:11px; margin-top:4px; color:var(--muted);">
         พัฒนาและอ้างอิงจาก <a href="https://ped-tsh.web.app/" target="_blank" rel="noopener" style="color:var(--accent); font-weight:700; text-decoration:underline;">Pediatric Emergency Workstation (ped-tsh.web.app)</a> 
         <span style="cursor:pointer; color:var(--accent); margin-left:4px; font-weight:600; display:inline-flex; align-items:center; gap:2px;" onclick="openAttributionModal()"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>เครดิตการพัฒนา</span>
@@ -2081,11 +2101,20 @@
   <div id="changelogBackdrop" class="drawer-backdrop hidden" onclick="if(event.target.id==='changelogBackdrop') closeChangelogModal()">
     <div class="drawer" onclick="event.stopPropagation()">
       <div class="drawer-header">
-        <strong style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg> ER-PED Version 1.7.0 Changelog</strong>
+        <strong style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg> ER-PED Version 1.8.0 Changelog</strong>
         <button type="button" class="btn" style="padding:4px 10px; font-size:12px; display:inline-flex; align-items:center; gap:4px;" onclick="closeChangelogModal()">Close <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> (Esc)</button>
       </div>
       <div class="drawer-body" style="font-size:13px; line-height:1.6;">
-        <h3 style="color:var(--accent); margin-top:4px;">What's New in v1.7.0:</h3>
+        <h3 style="color:var(--accent); margin-top:4px;">What's New in v1.8.0:</h3>
+        <ul>
+          <li><strong>🫁 Acute Asthmatic Attack Protocol (GINA 2026 & TAC 2025)</strong>: เพิ่มแท็บคลินิกใหม่ที่ 12 สำหรับแนวทางรักษาโรคหอบหืดเฉียบพลันในเด็ก 6 ขั้นตอน คำนวณขนาดยาตามน้ำหนักตัวครอบคลุมทุกรูปแบบ (mg/kg, mcg/kg, fixed dose, weight-threshold)</li>
+          <li><strong>💨 HFNC Settings Calculator</strong>: ระบบคำนวณการตั้งค่า High-Flow Nasal Cannula อัตโนมัติจากน้ำหนักตัว (Flow rate 2 L/kg/min max 60, FiO₂ titration SpO₂ ≥ 92%, Temp 37°C, ลด Flow ขณะพ่นยา ≤ 0.25 L/kg/min)</li>
+          <li><strong>📊 Severity Assessment & PRAM Score</strong>: ตารางประเมินระดับความรุนแรงตาม GINA 2026 แยกสีเขียว/เหลือง/แดง (Mild–Moderate, Severe, Life-Threatening) และคะแนน PRAM Score (0–3, 4–7, 8–12)</li>
+          <li><strong>🏥 Disposition Criteria Cards</strong>: การ์ดเกณฑ์การพิจารณาจำหน่ายกลับบ้าน (Discharge), รับไว้รักษาในหอผู้ป่วย (Admit Ward) และส่งต่อหออภิบาลผู้ป่วยหนัก (PICU)</li>
+          <li><strong>⌨️ Keyboard Shortcut & Navigation</strong>: รองรับคีย์ลัด <code>Alt+A</code> สำหรับสลับมายังแท็บ Asthma โดยตรง</li>
+        </ul>
+        <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;" />
+        <h4 style="color:var(--ink); margin-top:4px;">📜 Version 1.7.0 Highlights:</h4>
         <ul>
           <li><strong>📐 Adaptive 2-Column Mobile Topbar Grid</strong>: ปรับโครงสร้างส่วนหัวข้อมูลผู้ป่วยบนจอมือถือเป็นกริด 2 คอลัมน์ที่กระชับ มองเห็นค่าน้ำหนักที่ใช้งาน (In-Use Active Weight) ได้ทันทีโดยไม่ต้องเลื่อนหน้าจอ</li>
           <li><strong>🌟 Category Jump Rail & Quick Navigation</strong>: เพิ่มแถบตัวเลือกหมวดหมู่ด่วน (🌟 All Modules, ⚡ Emergency Resus, 💊 Meds & Fluids, 🩺 Protocols & Vitals) นำทาง 11 แท็บคลินิกได้อย่างรวดเร็วและแม่นยำ</li>

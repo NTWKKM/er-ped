@@ -451,13 +451,40 @@ test('Broselow 9-Band Spectrum: previewBroselowZone updates preview weight and c
   assert(out.innerHTML.includes('broselow-spectrum-bar'), 'Spectrum bar check');
 });
 
+test('Asthma Protocol: HFNC calculations for 10 kg child', () => {
+  document.getElementById('weight').value = '10';
+  window.eval('onWeightChange()');
+  window.eval('calcAsthma()');
+  
+  const out = document.getElementById('asthmaOut');
+  assert(out.innerHTML.includes('HFNC Settings (10.0 kg)'), 'HFNC title check');
+  assert(out.innerHTML.includes('20 L/min'), 'Flow rate 2 L/kg/min = 20 L/min check');
+  assert(out.innerHTML.includes('40%'), 'FiO2 start check');
+  assert(out.innerHTML.includes('37°C'), 'Temperature 37C check');
+  assert(out.innerHTML.includes('2.5 L/min'), 'NEB during HFNC 0.25 L/kg/min = 2.5 L/min check');
+});
+
+test('Asthma Protocol: Weight-based drug dosing for 10 kg child', () => {
+  document.getElementById('weight').value = '10';
+  window.eval('onWeightChange()');
+  window.eval('calcAsthma()');
+  
+  const out = document.getElementById('asthmaOut');
+  assert(out.innerHTML.includes('Salbutamol Nebulization'), 'Salbutamol NEB check');
+  assert(out.innerHTML.includes('2.5 mg'), 'Salbutamol min floor 2.5 mg check for 10 kg');
+  assert(out.innerHTML.includes('250 mcg'), 'Ipratropium <20kg threshold check (250 mcg)');
+  assert(out.innerHTML.includes('10 mg'), 'Prednisolone 1 mg/kg = 10 mg check');
+  assert(out.innerHTML.includes('500 mg'), 'MgSO4 50 mg/kg = 500 mg check');
+  assert(out.innerHTML.includes('0.1 mg'), 'Epinephrine 0.01 mg/kg = 0.1 mg check');
+});
+
 test('Standalone Footer Integrity: footer is direct child of container and not trapped inside tab sections', () => {
   const footer = document.querySelector('footer.app-footer');
   assert(footer !== null, 'Footer element footer.app-footer must exist');
   assert.strictEqual(footer.parentElement.classList.contains('container'), true, 'Footer must be a direct child of .container');
   
   const sections = Array.from(document.querySelectorAll('section[role="tabpanel"]'));
-  assert.strictEqual(sections.length, 11, 'Must have 11 clinical tabpanel sections');
+  assert.strictEqual(sections.length, 12, 'Must have 12 clinical tabpanel sections');
   sections.forEach(section => {
     assert.strictEqual(section.contains(footer), false, `Section #${section.id} must NOT contain the footer`);
   });

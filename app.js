@@ -406,7 +406,7 @@ function updateBiometricUIState() {
     ? (srcInfo.label ? `${w.toFixed(1)} kg · ${srcInfo.label}` : `${w.toFixed(1)} kg`)
     : '— kg';
 
-  ['doseWBadge', 'atbWBadge', 'fWBadge', 'pWBadge', 'dripWBadge', 'seizureWBadge', 'toxWBadge', 'psaWBadge', 'vitalsWBadge', 'dkaWBadge'].forEach(id => {
+  ['doseWBadge', 'atbWBadge', 'fWBadge', 'pWBadge', 'dripWBadge', 'seizureWBadge', 'toxWBadge', 'psaWBadge', 'vitalsWBadge', 'dkaWBadge', 'asthmaWBadge'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.textContent = wTxt;
   });
@@ -558,7 +558,7 @@ function showTab(id, btn) {
     }
   }
   
-  ['dose','atb','fluids','pals','ncpr','drip','seizure','tox','psa','vitals','dka'].forEach(x => {
+  ['dose','atb','fluids','pals','ncpr','drip','seizure','tox','psa','vitals','dka','asthma'].forEach(x => {
     const el = document.getElementById(x);
     if (el) el.style.display = (x === id) ? 'block' : 'none';
   });
@@ -577,6 +577,8 @@ function showTab(id, btn) {
     calcVitals();
   } else if (id === 'dka') {
     calcDKA();
+  } else if (id === 'asthma') {
+    calcAsthma();
   }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -595,6 +597,7 @@ function setupKeyboardShortcuts(){
       if (e.key === '9') { e.preventDefault(); showTab('psa'); }
       if (e.key === '0') { e.preventDefault(); showTab('vitals'); }
       if (e.key.toLowerCase() === 'k') { e.preventDefault(); showTab('dka'); }
+      if (e.key.toLowerCase() === 'a') { e.preventDefault(); showTab('asthma'); }
     }
     if (e.key === 'Escape') {
       closeAllComboboxes();
@@ -1310,7 +1313,7 @@ function dosesPerDayFromFreq(freq){
   return null;
 }
 
-function calcAll(){ calcDose(); calcATB(); calcFluids(); calcPALS(); calcNCPR(); calcDrip(); calcSeizure(); calcTox(); calcPSA(); calcVitals(); calcDKA(); }
+function calcAll(){ calcDose(); calcATB(); calcFluids(); calcPALS(); calcNCPR(); calcDrip(); calcSeizure(); calcTox(); calcPSA(); calcVitals(); calcDKA(); calcAsthma(); }
 
 // --------- 💊 Pediatric Dose Calculator ---------
 
@@ -2505,6 +2508,251 @@ function closeAttributionModal() {
   if (backdrop) backdrop.classList.add('hidden');
 }
 
+// --------- 🫁 Acute Asthmatic Attack Protocol (GINA 2026) ---------
+function calcAsthma() {
+  if (!DS || !DS.asthmaProtocol) return;
+  const outEl = document.getElementById('asthmaOut');
+  const w = getWeight();
+
+  if (!outEl) return;
+  if (!w || w <= 0) {
+    outEl.innerHTML = '<div class="badge-cap danger">⚠️ กรุณากรอกน้ำหนักตัว (ABW) ที่ส่วนบนของหน้าจอก่อนคำนวณ</div>';
+    return;
+  }
+
+  const proto = DS.asthmaProtocol;
+  let html = '';
+
+  // ── HFNC Settings Card ──
+  if (proto.hfncSettings) {
+    const h = proto.hfncSettings;
+    const flowStart = Math.min(h.flowRateLPerKgPerMin * w, h.flowRateMaxLPerMin);
+    const flowMin = Math.min(h.flowRateMinLPerKgPerMin * w, h.flowRateMaxLPerMin);
+    const nebFlow = Math.min(h.nebFlowMaxLPerKgPerMin * w, h.nebFlowMaxLPerMin);
+
+    html += `
+      <div class="stage-card" style="border-left:4px solid #0ea5e9; background:var(--panel); margin-bottom:12px;">
+        <div style="font-size:13px; font-weight:700; color:#0ea5e9; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg>
+          🫁 HFNC Settings (${w.toFixed(1)} kg)
+        </div>
+        <div style="font-size:11.5px; color:var(--muted); margin-bottom:8px; font-style:italic;">
+          Supportive only — ใช้เมื่อ SpO₂ &lt; 92% หรือ WOB สูงหลังรับ SABA แล้ว
+        </div>
+        <div class="protocol-table-wrapper">
+          <table class="protocol-table">
+            <thead>
+              <tr>
+                <th style="width:30%;">Parameter</th>
+                <th style="width:35%;">Setting</th>
+                <th style="width:35%;">Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Flow Rate</strong></td>
+                <td><span class="dose-badge">${flowStart.toFixed(0)} L/min</span> <span style="font-size:11px; color:var(--muted);">(range ${flowMin.toFixed(0)}–${flowStart.toFixed(0)})</span></td>
+                <td style="color:var(--muted);">2 L/kg/min, max ${h.flowRateMaxLPerMin} L/min</td>
+              </tr>
+              <tr>
+                <td><strong>FiO₂</strong></td>
+                <td><span class="dose-badge">${h.startFiO2Percent}%</span> <span style="font-size:11px; color:var(--muted);">start</span></td>
+                <td style="color:var(--muted);">Titrate to SpO₂ ≥ ${h.targetSpO2Percent}%</td>
+              </tr>
+              <tr>
+                <td><strong>Temperature</strong></td>
+                <td><span class="dose-badge">${h.temperatureC}°C</span></td>
+                <td style="color:var(--muted);">Full humidification</td>
+              </tr>
+              <tr>
+                <td><strong>NEB during HFNC</strong></td>
+                <td><span class="dose-badge">${nebFlow.toFixed(1)} L/min</span> <span style="font-size:11px; color:var(--muted);">(max)</span></td>
+                <td style="color:var(--muted);">Reduce flow to ≤ 0.25 L/kg/min for medication deposition</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  }
+
+  // ── Severity Assessment Table ──
+  if (proto.severityAssessment && proto.severityAssessment.length > 0) {
+    html += `
+      <div class="stage-card" style="margin-bottom:12px;">
+        <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:6px;">
+          📊 Severity Assessment (GINA 2026 / PRAM)
+        </div>
+        <div class="protocol-table-wrapper">
+          <table class="protocol-table">
+            <thead>
+              <tr>
+                <th style="width:22%;">Feature</th>
+                <th style="width:26%; background:#dcfce7; color:#166534;">Mild–Moderate</th>
+                <th style="width:26%; background:#fef9c3; color:#854d0e;">Severe</th>
+                <th style="width:26%; background:#fee2e2; color:#991b1b;">Life-Threatening</th>
+              </tr>
+            </thead>
+            <tbody>
+    `;
+    proto.severityAssessment.forEach(row => {
+      html += `
+              <tr>
+                <td><strong>${row.feature}</strong></td>
+                <td>${row.mildModerate}</td>
+                <td>${row.severe}</td>
+                <td>${row.lifeThreatening}</td>
+              </tr>
+      `;
+    });
+    html += `
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  }
+
+  // ── Stepwise Protocol ──
+  if (proto.steps && proto.steps.length > 0) {
+    proto.steps.forEach((stage, idx) => {
+      html += `
+        <div class="stage-card" style="${idx > 0 ? 'margin-top:8px;' : ''}">
+          <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:4px; display:flex; justify-content:space-between; align-items:center;">
+            <span>⏱️ Stage ${stage.stage}: ${stage.name}</span>
+          </div>
+          <div style="font-size:12px; color:var(--ink); margin-bottom:6px; line-height:1.35; background:var(--panel); padding:6px 10px; border-radius:6px; border-left:3px solid var(--accent);">
+            📌 <strong>Action:</strong> ${stage.actions}
+          </div>
+      `;
+
+      if (stage.drugs && stage.drugs.length > 0) {
+        html += `
+          <div class="protocol-table-wrapper">
+            <table class="protocol-table">
+              <thead>
+                <tr>
+                  <th style="width:22%;">Medication</th>
+                  <th style="width:26%;">Dose (${w.toFixed(1)} kg)</th>
+                  <th style="width:24%;">Preparation</th>
+                  <th style="width:28%;">Clinical Note</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
+
+        stage.drugs.forEach(d => {
+          let doseDisplay = '';
+
+          if (d.fixedDose) {
+            // Fixed dose (e.g., MDI puffs)
+            doseDisplay = `<span class="dose-badge">${d.fixedDose}</span>`;
+          } else if (d.fixedDoseLt20kg !== undefined) {
+            // Weight-threshold dose (Ipratropium)
+            const ipDose = w < 20 ? d.fixedDoseLt20kg : d.fixedDoseGte20kg;
+            doseDisplay = `<span class="dose-badge">${ipDose * 1000} mcg</span>`;
+            doseDisplay += ` <span style="font-size:11px; color:var(--muted);">(${w < 20 ? '<20kg' : '≥20kg'})</span>`;
+          } else if (d.doseMcgPerKg) {
+            // mcg/kg dosing (Terbutaline)
+            let rawDose = d.doseMcgPerKg * w;
+            let finalDose = rawDose;
+            let isCapped = false;
+            if (d.maxDoseMcg && rawDose > d.maxDoseMcg) {
+              finalDose = d.maxDoseMcg;
+              isCapped = true;
+            }
+            doseDisplay = `<span class="dose-badge">${finalDose.toFixed(0)} mcg</span>`;
+            doseDisplay += ` <span style="font-size:11px; color:var(--muted);">(${d.route})</span>`;
+            if (isCapped) doseDisplay += ` <div class="badge-cap warning" style="font-size:10px; padding:1px 4px; display:inline-block; margin-top:2px;">Max ${d.maxDoseMcg} mcg</div>`;
+          } else if (d.doseMgPerKg) {
+            // Standard mg/kg dosing
+            let rawDose = d.doseMgPerKg * w;
+            let finalDose = rawDose;
+            let isCapped = false;
+            if (d.minDoseMg && rawDose < d.minDoseMg) {
+              finalDose = d.minDoseMg;
+            }
+            if (d.maxDoseMg && rawDose > d.maxDoseMg) {
+              finalDose = d.maxDoseMg;
+              isCapped = true;
+            }
+            doseDisplay = `<span class="dose-badge">${fmtMg(finalDose)} mg</span>`;
+            doseDisplay += ` <span style="font-size:11px; color:var(--muted);">(${d.route})</span>`;
+            if (isCapped) doseDisplay += ` <div class="badge-cap warning" style="font-size:10px; padding:1px 4px; display:inline-block; margin-top:2px;">Max ${d.maxDoseMg} mg</div>`;
+          }
+
+          html += `
+                <tr>
+                  <td><strong>${d.name}</strong></td>
+                  <td>${doseDisplay}</td>
+                  <td style="color:var(--muted);">${d.prep}</td>
+                  <td style="color:var(--muted);">${d.note || '—'}</td>
+                </tr>
+          `;
+        });
+
+        html += `
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      html += '</div>';
+    });
+  }
+
+  // ── Disposition Criteria ──
+  if (proto.dispositionCriteria) {
+    const dc = proto.dispositionCriteria;
+    html += `
+      <div class="stage-card" style="margin-top:12px;">
+        <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:8px;">
+          🏥 Disposition Criteria
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:10px;">
+    `;
+
+    if (dc.discharge) {
+      html += `
+          <div style="background:#dcfce7; border-radius:8px; padding:10px; border:1px solid #bbf7d0;">
+            <div style="font-size:12px; font-weight:700; color:#166534; margin-bottom:6px;">✅ Discharge</div>
+            <ul style="margin:0; padding-left:16px; font-size:11.5px; color:#166534; line-height:1.6;">
+              ${dc.discharge.map(c => `<li>${c}</li>`).join('')}
+            </ul>
+          </div>
+      `;
+    }
+    if (dc.admit) {
+      html += `
+          <div style="background:#fef9c3; border-radius:8px; padding:10px; border:1px solid #fde68a;">
+            <div style="font-size:12px; font-weight:700; color:#854d0e; margin-bottom:6px;">🔶 Admit Ward</div>
+            <ul style="margin:0; padding-left:16px; font-size:11.5px; color:#854d0e; line-height:1.6;">
+              ${dc.admit.map(c => `<li>${c}</li>`).join('')}
+            </ul>
+          </div>
+      `;
+    }
+    if (dc.picu) {
+      html += `
+          <div style="background:#fee2e2; border-radius:8px; padding:10px; border:1px solid #fecaca;">
+            <div style="font-size:12px; font-weight:700; color:#991b1b; margin-bottom:6px;">🚨 PICU</div>
+            <ul style="margin:0; padding-left:16px; font-size:11.5px; color:#991b1b; line-height:1.6;">
+              ${dc.picu.map(c => `<li>${c}</li>`).join('')}
+            </ul>
+          </div>
+      `;
+    }
+
+    html += `
+        </div>
+      </div>
+    `;
+  }
+
+  outEl.innerHTML = html;
+}
+
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     estimateWeightFromAge,
@@ -2524,6 +2772,7 @@ if (typeof module !== 'undefined' && module.exports) {
     calcPSA,
     calcVitals,
     calcDKA,
+    calcAsthma,
     getWeight,
     calculateIBW,
     getAgeInYears,

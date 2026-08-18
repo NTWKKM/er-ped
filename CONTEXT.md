@@ -14,6 +14,11 @@
 - **Broselow Color Bands**: Weight/length-based color zones (Grey, Pink, Red, Purple, Yellow, White, Blue, Orange, Green) mapping to pre-calculated resuscitation equipment and drug dosages.
 - **PALS (Pediatric Advanced Life Support)**: Emergency protocols for pediatric cardiac arrest, arrhythmias, and resuscitation.
 - **NCPR (Neonatal Resuscitation Program)**: Specialized resuscitation protocols for newborns in the immediate postnatal period.
+- **GINA (Global Initiative for Asthma)**: International evidence-based guidelines for asthma management. GINA 2026 (May 2026 release): O₂ only if SpO₂ < 92%, conservative SABA dosing (lactic acidosis risk), Epinephrine IM first if anaphylaxis, nebulized MgSO₄ removed, OCS stewardship.
+- **TAC (Thai Asthma Council)**: Thai national asthma guideline (พ.ศ. 2568 / 2025) aligned with GINA, adding Clinical Remission goal and Asthma Action Plan emphasis.
+- **PRAM (Pediatric Respiratory Assessment Measure)**: Validated 12-point scoring system for pediatric asthma severity assessment (0–3 Mild–Moderate, 4–7 Severe, 8–12 Life-Threatening).
+- **HFNC (High-Flow Nasal Cannula)**: Heated humidified oxygen delivery system providing positive airway pressure support. Pediatric acute asthma: 1–2 L/kg/min flow (max 60 L/min), FiO₂ titrated to SpO₂ ≥ 92%, temperature 37°C.
+- **SABA (Short-Acting Beta-Agonist)**: Quick-relief bronchodilator (Salbutamol/Albuterol) used as first-line rescue therapy in acute asthma.
 
 ## Architectural Decision Records (ADR)
 1. **ADR-001: Client-Side Data Rendering**: All drug calculations occur synchronously in the client browser using pre-compiled JSON rules (`dataset.json`) to eliminate network dependencies in hospital environments with poor connectivity.
@@ -24,3 +29,4 @@
 6. **ADR-006: Frequency Token Parsing & Dataset Table Disambiguation**: `dosesPerDayFromFreq` parses clinical frequency abbreviations (`bid`, `tid`, `qid`, `OD`, `qXh`). `pediatricATB` numeric fields are recognized as per-dose values to preserve clinical dosing intent without erroneous division.
 7. **ADR-007: Keyboard-First Accessible Combobox Navigation**: Dropdown drug selectors support full keyboard navigation (`ArrowUp`/`ArrowDown`/`Enter`/`Escape`) with WAI-ARIA expanded state tracking for high-speed emergency room use.
 8. **ADR-008: Zero-Dependency Inline Lucide SVG Icon System & Flat Visual Hierarchy**: Standardized live-UI icon system on inline Lucide SVGs (`currentColor`, `stroke-width="2"`, `aria-hidden="true"`). Replaced text emoji glyphs on interactive controls to prevent font/OS-dependent rendering differences on hospital workstations, while keeping the app zero-dependency for offline PWA operation. Retained text emojis inside historical release note logs.
+9. **ADR-009: GINA 2026 Asthma Protocol & Multi-Mode Drug Dosing**: Acute asthma management follows GINA 2026 + Thai TAC 2025. `asthmaProtocol` in `dataset.js` supports 4 dosing modes: standard mg/kg, mcg/kg (Terbutaline), fixed-dose (MDI puffs), and weight-threshold (Ipratropium <20kg/≥20kg). HFNC settings are auto-calculated from BW with configurable parameters. Nebulized MgSO₄ explicitly excluded per GINA 2026. Epinephrine IM prioritized before bronchodilators when anaphylaxis features present.
