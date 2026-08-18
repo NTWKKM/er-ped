@@ -451,6 +451,25 @@ test('Broselow 9-Band Spectrum: previewBroselowZone updates preview weight and c
   assert(out.innerHTML.includes('broselow-spectrum-bar'), 'Spectrum bar check');
 });
 
+test('Standalone Footer Integrity: footer is direct child of container and not trapped inside tab sections', () => {
+  const footer = document.querySelector('footer.app-footer');
+  assert(footer !== null, 'Footer element footer.app-footer must exist');
+  assert.strictEqual(footer.parentElement.classList.contains('container'), true, 'Footer must be a direct child of .container');
+  
+  const sections = Array.from(document.querySelectorAll('section[role="tabpanel"]'));
+  assert.strictEqual(sections.length, 11, 'Must have 11 clinical tabpanel sections');
+  sections.forEach(section => {
+    assert.strictEqual(section.contains(footer), false, `Section #${section.id} must NOT contain the footer`);
+  });
+  
+  // Verify footer content contains credit and attribution links
+  assert(footer.innerHTML.includes('ER-PED Workstation'), 'Footer must contain ER-PED Workstation branding');
+  assert(footer.innerHTML.includes('ped-tsh.web.app'), 'Footer must contain ped-tsh.web.app attribution');
+  assert(footer.innerHTML.includes('openChangelogModal'), 'Footer must have changelog button');
+  assert(footer.innerHTML.includes('openDatasetEditor'), 'Footer must have dataset editor button');
+  assert(footer.innerHTML.includes('triggerPrintCard'), 'Footer must have printable card button');
+});
+
 console.log(`\n----------------------------------------`);
 console.log(`Test Results: ${passed} Passed, ${failed} Failed`);
 console.log(`----------------------------------------\n`);
