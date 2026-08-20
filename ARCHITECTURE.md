@@ -126,3 +126,10 @@ flowchart TD
     - Online mode: Direct un-cached fetch of `sw.js` (`{ cache: 'no-cache' }`) to parse `CACHE_NAME` constant on initial boot and SW update events.
     - Dynamically binds `#footerVersionChip` (`v1.8.1`), `#changelogVersionNumber` (`1.8.1`), `#changelogWhatsNewVersion` (`1.8.1`), and all `.app-version-val` elements.
     - Service worker cache version bumped to `er-ped-v1.8.1-20260819`.
+51. **Simple & Elegant Visual & Design System Overhaul (v1.9.0)**:
+    - **Refined Color Tokens & Soft Micro-Elevation**: Upgraded light theme background to warm organic sand (`#F6F5F0`), elevated crisp white cards (`#FFFFFF`), warm terracotta accent (`#9E3D24`), and soft tinted container backgrounds (`#FBECE7`, `#F5DCD4`). Dark theme calibrated with deep warm obsidian chassis (`#12110F`) and slate card surfaces (`#1C1A17`). Added 3-tier micro-elevation shadow tokens (`--shadow-1`, `--shadow-2`, `--shadow-3`) and a unified border radius scale (`--r-xs` through `--r-xl`).
+    - **Dual-Channel Shape-Coded Hero Dosage Metrics**: Updated `.hero-metric` digital dosage cards with shape-coded status prefixes (`✓` safe, `▲` warning, `✕` danger, `ℹ` info) ensuring dual-channel accessibility for color-blind clinicians under high-stress ER lighting.
+    - **Universal Inline Lucide SVG Icon System**: Replaced all raw live-UI text emojis across navigation category pills, drug cards, protocol headers, dosage alerts, and modal panels with lightweight inline Lucide SVGs, guaranteeing uniform visual rendering across iOS, Android, and desktop browsers.
+    - **High-Density Protocol Tables & Modals**: Enhanced `.protocol-table` layouts with sticky first column (`position: sticky; left: 0`), subtle `color-mix` zebra striping, and refined drawer modals (`border-radius: 18px 18px 0 0` on mobile) for Broselow tape and changelog views.
+    - Service worker cache version bumped to `er-ped-v1.9.0-20260820`.
+

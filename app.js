@@ -798,9 +798,9 @@ function fillBroselowContent(overrideW, overrideColor){
 
   out.innerHTML = `
 ${spectrumHtml}
-<div style="background:${bgSwatch}; padding:10px 14px; border-radius:8px; border:1px solid var(--border-dark); margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+<div style="background:${bgSwatch}; padding:10px 14px; border-radius:var(--r-md); border:1px solid var(--border-strong); margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
   <div>
-    <strong style="font-size:16px; color:#1E1E1E;">Broselow Zone: ${color} (${entry.min}–${entry.max} kg)</strong>
+    <strong style="font-size:15.5px; color:#1E1E1E;">Broselow Zone: ${color} (${entry.min}–${entry.max} kg)</strong>
     <div style="font-size:12px; margin-top:2px; color:#1E1E1E;">Reference Weight for Zone: <strong>${w.toFixed(1)} kg</strong> ${overrideW ? '(Previewing Zone)' : '(Current Patient Weight)'}</div>
   </div>
   ${overrideW ? `<button class="btn" style="padding:4px 8px; font-size:11px;" onclick="fillBroselowContent()">Reset to Patient BW</button>` : ''}
@@ -1508,7 +1508,7 @@ function calcDose(){
   const title = (drug.name || drug.drug) || 'Medication';
   const heroCardHtml = `
 <div style="margin-bottom:10px;">
-  <strong style="font-size:16px;">💊 ${title}</strong>
+  <strong style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--accent);"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg> ${title}</strong>
 </div>
 <div class="hero-metric-grid">
   <div class="hero-metric">
@@ -1632,7 +1632,7 @@ function calcATB(){
   const title = (drug.name || drug.drug || 'Antibiotic');
   const heroCardHtml = `
 <div style="margin-bottom:10px;">
-  <strong style="font-size:16px;">🦠 ${title}</strong>
+  <strong style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--accent);"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3 3 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6Z"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 9.8 3 11.4 3 14"/><path d="M6 17H2"/><path d="M17.47 9c1.93.8 3.53 2.4 3.53 5"/><path d="M18 17h4"/></svg> ${title}</strong>
 </div>
 <div class="hero-metric-grid">
   <div class="hero-metric good">
@@ -2106,10 +2106,10 @@ function calcSeizure() {
     html += `
       <div class="stage-card" style="${!isFirst ? 'margin-top:8px;' : ''}">
         <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:4px; display:flex; justify-content:space-between; align-items:center;">
-          <span>⏱️ Stage ${stage.stage}: ${stage.name}</span>
+          <span style="display:inline-flex; align-items:center; gap:5px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Stage ${stage.stage}: ${stage.name}</span>
         </div>
         <div style="font-size:12px; color:var(--ink); margin-bottom:6px; line-height:1.35; background:var(--panel); padding:6px 10px; border-radius:6px; border-left:3px solid var(--accent);">
-          📌 <strong>Action:</strong> ${stage.actions}
+          <strong>Action:</strong> ${stage.actions}
         </div>
     `;
 
@@ -2453,10 +2453,10 @@ function calcDKA() {
       </div>
     ` : ''}
 
-    <div style="background:var(--panel); border:1px solid var(--border); border-radius:6px; padding:6px 8px;">
-      <div style="font-size:11.5px; font-weight:700; color:var(--accent); margin-bottom:2px;">🩸 Potassium (K+) Correction Rules:</div>
-      <ul style="margin:0; padding-left:14px; font-size:11px; line-height:1.35; color:var(--ink);">
-        <li><strong style="color:var(--danger);">&lt; 3.3 mEq/L:</strong> 🚫 <strong>HOLD INSULIN!</strong> Add 40 mEq/L KCl to IV fluid. Give 0.5 mEq/kg/hr until K+ &gt; 3.3 mEq/L.</li>
+    <div style="background:var(--panel); border:1px solid var(--border); border-radius:var(--r-sm); padding:8px 10px;">
+      <div style="font-size:11.5px; font-weight:700; color:var(--accent); margin-bottom:4px; display:flex; align-items:center; gap:5px;"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg> Potassium (K+) Correction Rules:</div>
+      <ul style="margin:0; padding-left:14px; font-size:11.5px; line-height:1.4; color:var(--ink);">
+        <li><strong style="color:var(--danger);">&lt; 3.3 mEq/L:</strong> <strong>HOLD INSULIN!</strong> Add 40 mEq/L KCl to IV fluid. Give 0.5 mEq/kg/hr until K+ &gt; 3.3 mEq/L.</li>
         <li><strong>3.3–5.5 mEq/L:</strong> Add 20–40 mEq/L KCl to IV fluid once urine output is established.</li>
         <li><strong>&gt; 5.5 mEq/L:</strong> Do NOT add KCl to IV fluid. Recheck K+ every 2 hours.</li>
       </ul>
@@ -2592,8 +2592,8 @@ function calcAsthma() {
     html += `
       <div class="stage-card" style="border-left:4px solid #0ea5e9; background:var(--panel); margin-bottom:12px;">
         <div style="font-size:13px; font-weight:700; color:#0ea5e9; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg>
-          🫁 HFNC Settings (${w.toFixed(1)} kg)
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg>
+          <span>HFNC Settings (${w.toFixed(1)} kg)</span>
         </div>
         <div style="font-size:11.5px; color:var(--muted); margin-bottom:8px; font-style:italic;">
           Supportive only — ใช้เมื่อ SpO₂ &lt; 92% หรือ WOB สูงหลังรับ SABA แล้ว
@@ -2639,17 +2639,18 @@ function calcAsthma() {
   if (proto.severityAssessment && proto.severityAssessment.length > 0) {
     html += `
       <div class="stage-card" style="margin-bottom:12px;">
-        <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:6px;">
-          📊 Severity Assessment (GINA 2026 / PRAM)
+        <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:6px; display:flex; align-items:center; gap:6px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M17 12h-2l-2 5-3-10-2 5H7"/></svg>
+          <span>Severity Assessment (GINA 2026 / PRAM)</span>
         </div>
         <div class="protocol-table-wrapper">
           <table class="protocol-table">
             <thead>
               <tr>
                 <th style="width:22%;">Feature</th>
-                <th style="width:26%; background:#dcfce7; color:#166534;">Mild–Moderate</th>
-                <th style="width:26%; background:#fef9c3; color:#854d0e;">Severe</th>
-                <th style="width:26%; background:#fee2e2; color:#991b1b;">Life-Threatening</th>
+                <th style="width:26%; background:var(--good-soft); color:var(--good);">Mild–Moderate</th>
+                <th style="width:26%; background:var(--warning-soft); color:var(--warning);">Severe</th>
+                <th style="width:26%; background:var(--danger-soft); color:var(--danger);">Life-Threatening</th>
               </tr>
             </thead>
             <tbody>
@@ -2678,10 +2679,10 @@ function calcAsthma() {
       html += `
         <div class="stage-card" style="${idx > 0 ? 'margin-top:8px;' : ''}">
           <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:4px; display:flex; justify-content:space-between; align-items:center;">
-            <span>⏱️ Stage ${stage.stage}: ${stage.name}</span>
+            <span style="display:inline-flex; align-items:center; gap:5px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Stage ${stage.stage}: ${stage.name}</span>
           </div>
           <div style="font-size:12px; color:var(--ink); margin-bottom:6px; line-height:1.35; background:var(--panel); padding:6px 10px; border-radius:6px; border-left:3px solid var(--accent);">
-            📌 <strong>Action:</strong> ${stage.actions}
+            <strong>Action:</strong> ${stage.actions}
           </div>
       `;
 
