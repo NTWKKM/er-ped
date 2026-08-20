@@ -2309,10 +2309,10 @@ function calcVitals() {
   }
 
   let html = `
-    <div style="background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:12px; margin-bottom:12px;">
-      <strong style="font-size:15px; color:var(--accent);">Current Patient Age Bracket: ${currentBracket.ageBracket}</strong>
+    <div style="background:var(--panel); border:1px solid var(--border); border-radius:var(--r-md); padding:12px; margin-bottom:12px;">
+      <strong style="font-size:14.5px; color:var(--ink);">Current Patient Age Bracket: ${currentBracket.ageBracket}</strong>
       <div class="hero-metric-grid" style="margin-top:8px;">
-        <div class="hero-metric danger">
+        <div class="hero-metric blue">
           <div class="hero-label">HEART RATE (HR)</div>
           <div class="hero-val">${currentBracket.hrNormal}</div>
           <div class="hero-sub">Normal resting HR</div>
@@ -2322,10 +2322,10 @@ function calcVitals() {
           <div class="hero-val">${currentBracket.rrNormal}</div>
           <div class="hero-sub">Normal resting RR</div>
         </div>
-        <div class="hero-metric good">
+        <div class="hero-metric blue">
           <div class="hero-label">SYSTOLIC BLOOD PRESSURE</div>
           <div class="hero-val">${currentBracket.sysBpNormal}</div>
-          <div class="hero-sub">Hypotension cutoff: ${currentBracket.hypotensionSysBp}</div>
+          <div class="hero-sub">Hypotension cutoff: <span style="color:var(--danger); font-weight:700;">${currentBracket.hypotensionSysBp}</span></div>
         </div>
       </div>
     </div>
