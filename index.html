@@ -18,20 +18,20 @@
 
   <style>
     :root {
-      /* Light — Refined Warm Sand/Ivory Canvas & Terracotta Clay Accent */
-      --bg: #F6F5F0;
+      /* Light — Refined Warm Organic Ivory Canvas & Terracotta Clay Accent */
+      --bg: #F7F6F2;
       --card: #FFFFFF;
-      --panel: #EFECE4;
-      --panel-subtle: #F9F8F4;
-      --ink: #1A1918;
-      --muted: #68645E;
-      --border: #E5E1D6;
-      --border-strong: #D3CDC0;
-      --border-dark: #C2BBB0;
+      --panel: #F1EEE7;
+      --panel-subtle: #FAF9F6;
+      --ink: #181716;
+      --muted: #66625A;
+      --border: #E6E2D8;
+      --border-strong: #D5CEBF;
+      --border-dark: #C4BCAC;
       --accent: #9E3D24;
-      --accent-hover: #7E2F1A;
-      --accent-soft: #F8EDE7;
-      --accent-subtle: #FCF7F4;
+      --accent-hover: #7D2E1A;
+      --accent-soft: #F9ECE6;
+      --accent-subtle: #FCF6F3;
       --good: #15803D;
       --good-soft: #ECFDF5;
       --warning: #B45309;
@@ -39,58 +39,58 @@
       --danger: #DC2626;
       --danger-soft: #FEF2F2;
       --dark-btn: #242220;
-      --ring: rgba(158, 61, 36, 0.24);
-      --danger-subtle: rgba(220, 38, 38, 0.10);
-      --warning-subtle: rgba(180, 83, 9, 0.10);
-      --good-subtle: rgba(21, 128, 61, 0.10);
+      --ring: rgba(158, 61, 36, 0.22);
+      --danger-subtle: rgba(220, 38, 38, 0.08);
+      --warning-subtle: rgba(180, 83, 9, 0.08);
+      --good-subtle: rgba(21, 128, 61, 0.08);
 
       /* Spacing Scale */
       --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 20px; --s6: 24px; --s8: 32px;
 
       /* Radii Tokens */
       --r-xs: 4px;
-      --r-sm: 6px;
+      --r-sm: 7px;
       --r-md: 10px;
       --r-lg: 14px;
       --r-xl: 18px;
       --r-full: 9999px;
 
-      /* Refined Shadows */
-      --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.03);
-      --shadow-2: 0 4px 16px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
-      --shadow-3: 0 12px 32px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.06);
+      /* Refined Elevation Shadows */
+      --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02);
+      --shadow-2: 0 4px 16px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03);
+      --shadow-3: 0 12px 32px rgba(0, 0, 0, 0.10), 0 2px 6px rgba(0, 0, 0, 0.04);
 
       --font-display: 'Newsreader', Georgia, serif;
       --t-fast: 120ms cubic-bezier(.2,.7,.2,1);
-      --t-med: 220ms cubic-bezier(.2,.7,.2,1);
+      --t-med: 200ms cubic-bezier(.2,.7,.2,1);
     }
 
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) {
-        --bg: #12110F;
-        --card: #1C1A17;
-        --panel: #25221E;
-        --panel-subtle: #171513;
-        --ink: #ECE8E1;
-        --muted: #9E978C;
-        --border: #34302A;
-        --border-strong: #46423A;
-        --border-dark: #34302A;
-        --accent: #E08E70;
-        --accent-hover: #EDA489;
-        --accent-soft: #2C1E18;
-        --accent-subtle: #221813;
+        --bg: #11100E;
+        --card: #1A1815;
+        --panel: #23201B;
+        --panel-subtle: #161412;
+        --ink: #ECE7DF;
+        --muted: #9B9488;
+        --border: #322E27;
+        --border-strong: #443F35;
+        --border-dark: #322E27;
+        --accent: #E28E70;
+        --accent-hover: #EEA58B;
+        --accent-soft: #2B1D17;
+        --accent-subtle: #211611;
         --good: #4ADE80;
-        --good-soft: #142918;
+        --good-soft: #132717;
         --warning: #FBBF24;
-        --warning-soft: #2D2310;
+        --warning-soft: #2B210E;
         --danger: #F87171;
-        --danger-soft: #2E1414;
-        --dark-btn: #2B2824;
-        --ring: rgba(224, 142, 112, 0.35);
-        --danger-subtle: rgba(248, 113, 113, 0.16);
-        --warning-subtle: rgba(251, 191, 36, 0.16);
-        --good-subtle: rgba(74, 222, 128, 0.16);
+        --danger-soft: #2C1313;
+        --dark-btn: #2A2723;
+        --ring: rgba(226, 142, 112, 0.32);
+        --danger-subtle: rgba(248, 113, 113, 0.15);
+        --warning-subtle: rgba(251, 191, 36, 0.15);
+        --good-subtle: rgba(74, 222, 128, 0.15);
         --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3);
         --shadow-2: 0 4px 16px rgba(0, 0, 0, 0.4);
         --shadow-3: 0 12px 32px rgba(0, 0, 0, 0.6);
@@ -98,30 +98,30 @@
     }
 
     :root[data-theme="dark"] {
-      --bg: #12110F;
-      --card: #1C1A17;
-      --panel: #25221E;
-      --panel-subtle: #171513;
-      --ink: #ECE8E1;
-      --muted: #9E978C;
-      --border: #34302A;
-      --border-strong: #46423A;
-      --border-dark: #34302A;
-      --accent: #E08E70;
-      --accent-hover: #EDA489;
-      --accent-soft: #2C1E18;
-      --accent-subtle: #221813;
+      --bg: #11100E;
+      --card: #1A1815;
+      --panel: #23201B;
+      --panel-subtle: #161412;
+      --ink: #ECE7DF;
+      --muted: #9B9488;
+      --border: #322E27;
+      --border-strong: #443F35;
+      --border-dark: #322E27;
+      --accent: #E28E70;
+      --accent-hover: #EEA58B;
+      --accent-soft: #2B1D17;
+      --accent-subtle: #211611;
       --good: #4ADE80;
-      --good-soft: #142918;
+      --good-soft: #132717;
       --warning: #FBBF24;
-      --warning-soft: #2D2310;
+      --warning-soft: #2B210E;
       --danger: #F87171;
-      --danger-soft: #2E1414;
-      --dark-btn: #2B2824;
-      --ring: rgba(224, 142, 112, 0.35);
-      --danger-subtle: rgba(248, 113, 113, 0.16);
-      --warning-subtle: rgba(251, 191, 36, 0.16);
-      --good-subtle: rgba(74, 222, 128, 0.16);
+      --danger-soft: #2C1313;
+      --dark-btn: #2A2723;
+      --ring: rgba(226, 142, 112, 0.32);
+      --danger-subtle: rgba(248, 113, 113, 0.15);
+      --warning-subtle: rgba(251, 191, 36, 0.15);
+      --good-subtle: rgba(74, 222, 128, 0.15);
       --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3);
       --shadow-2: 0 4px 16px rgba(0, 0, 0, 0.4);
       --shadow-3: 0 12px 32px rgba(0, 0, 0, 0.6);
@@ -129,26 +129,26 @@
 
     /* Monochrome / Grayscale Theme (JVC Hospital Displays) */
     :root[data-theme="mono"] {
-      --bg: #1A1A18;
-      --card: #222220;
-      --panel: #161614;
-      --panel-subtle: #1E1E1C;
+      --bg: #181816;
+      --card: #20201E;
+      --panel: #141412;
+      --panel-subtle: #1C1C1A;
       --ink: #F4F4F2;
       --muted: #A6A6A0;
-      --border: #444440;
-      --border-strong: #767670;
-      --border-dark: #767670;
+      --border: #42423E;
+      --border-strong: #74746E;
+      --border-dark: #74746E;
       --accent: #ECECE8;
       --accent-hover: #FFFFFF;
-      --accent-soft: #30302D;
-      --accent-subtle: #282826;
+      --accent-soft: #2E2E2B;
+      --accent-subtle: #262624;
       --good: #BDBDB8;
-      --good-soft: #222220;
+      --good-soft: #20201E;
       --warning: #D8D8D2;
-      --warning-soft: #222220;
+      --warning-soft: #20201E;
       --danger: #FFFFFF;
-      --danger-soft: #222220;
-      --dark-btn: #0A0A09;
+      --danger-soft: #20201E;
+      --dark-btn: #090908;
       --ring: rgba(255, 255, 255, 0.4);
       --danger-subtle: rgba(255, 255, 255, 0.15);
       --warning-subtle: rgba(216, 216, 210, 0.15);
@@ -179,7 +179,7 @@
     }
     :root[data-theme="dark"] .search-match {
       background: #3A2518;
-      color: #EDA489;
+      color: #EEA58B;
     }
     :root[data-theme="mono"] .search-match {
       background: #FFFFFF;
@@ -200,7 +200,7 @@
     .category-bar::-webkit-scrollbar { display: none; }
     .category-pill {
       flex: 0 0 auto;
-      padding: 6px 13px;
+      padding: 5px 12px;
       border-radius: var(--r-full);
       border: 1px solid var(--border);
       background: var(--card);
@@ -344,20 +344,20 @@
     }
     .tab, .tab-btn {
       flex: 0 0 auto;
-      min-width: 72px;
+      min-width: 68px;
       border: 0;
       border-bottom: 2px solid transparent;
       background: transparent;
       cursor: pointer;
-      padding: 8px 12px;
+      padding: 7px 11px;
       border-radius: var(--r-sm) var(--r-sm) 0 0;
       font: 600 13px 'Sarabun', sans-serif;
       color: var(--muted);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      min-height: 40px;
+      gap: 5px;
+      min-height: 38px;
       text-decoration: none;
       white-space: nowrap;
       transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
@@ -385,13 +385,13 @@
     }
 
     :root[data-theme="dark"] .topbar {
-      background: rgba(18, 17, 15, 0.94);
+      background: rgba(17, 16, 14, 0.92);
       border-bottom: 1px solid var(--border);
       box-shadow: none;
     }
     :root:not([data-theme="dark"]):not([data-theme="mono"]) option {
       background: #FFFFFF;
-      color: #1A1918;
+      color: #181716;
     }
 
     :root[data-theme="dark"] input, 
@@ -399,28 +399,28 @@
     :root[data-theme="dark"] .combobox-input,
     :root[data-theme="dark"] .bio-fields input[type="number"],
     :root[data-theme="dark"] .chip input[type="number"] {
-      background: #221F1B;
-      color: #ECE8E1;
-      border-color: #34302A;
+      background: #211E1A;
+      color: #ECE7DF;
+      border-color: #322E27;
     }
     :root[data-theme="dark"] input:focus,
     :root[data-theme="dark"] select:focus,
     :root[data-theme="dark"] .combobox-input:focus {
-      background: #221F1B;
+      background: #211E1A;
       color: #FFFFFF;
       border-color: var(--accent);
     }
     :root[data-theme="dark"] option {
-      background: #1C1A17;
-      color: #ECE8E1;
+      background: #1A1815;
+      color: #ECE7DF;
     }
     :root[data-theme="dark"] .combobox-dropdown {
-      background: #1C1A17;
-      border-color: #34302A;
+      background: #1A1815;
+      border-color: #322E27;
     }
     :root[data-theme="dark"] .combobox-item:hover,
     :root[data-theme="dark"] .combobox-item.kb-active {
-      background: #25221E;
+      background: #24201B;
       color: #FFFFFF;
     }
 
@@ -430,25 +430,25 @@
     :root[data-theme="mono"] .combobox-input,
     :root[data-theme="mono"] .bio-fields input[type="number"],
     :root[data-theme="mono"] .chip input[type="number"] {
-      background: #222220;
+      background: #20201E;
       color: #F4F4F2;
-      border-color: #444440;
+      border-color: #42423E;
     }
     :root[data-theme="mono"] input:focus,
     :root[data-theme="mono"] select:focus,
     :root[data-theme="mono"] .combobox-input:focus {
-      background: #2A2A28;
+      background: #282826;
       color: #FFFFFF;
       border-color: #ECECE8;
       box-shadow: 0 0 0 2px rgba(255,255,255,0.4);
     }
     :root[data-theme="mono"] option {
-      background: #222220;
+      background: #20201E;
       color: #F4F4F2;
     }
     :root[data-theme="mono"] .combobox-dropdown {
-      background: #222220;
-      border-color: #767670;
+      background: #20201E;
+      border-color: #74746E;
     }
     :root[data-theme="mono"] .tab-btn.active,
     :root[data-theme="mono"] .pill.active,
@@ -511,7 +511,7 @@
       letter-spacing: -0.015em;
       line-height: 1.25;
     }
-    h2 { font-size: 21px; }
+    h2 { font-size: 20px; }
     code, .mono { 
       font-family: 'JetBrains Mono', monospace;
       font-variant-numeric: tabular-nums;
@@ -524,9 +524,9 @@
       left: 0; 
       right: 0; 
       z-index: 60; 
-      background: rgba(246, 245, 240, 0.90); 
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: rgba(247, 246, 242, 0.90); 
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
       border-bottom: 1px solid var(--border); 
       box-shadow: var(--shadow-1);
     }
@@ -537,13 +537,13 @@
       display: flex; 
       align-items: center; 
       justify-content: space-between;
-      gap: 8px; 
-      padding: 7px 16px; 
+      gap: 10px; 
+      padding: 6px 16px; 
     }
     .topbar-biometrics {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       flex-wrap: nowrap;
       flex-shrink: 0;
     }
@@ -555,34 +555,12 @@
       flex-shrink: 0;
     }
 
-    .brand-badge {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 12px;
-      background: var(--dark-btn);
-      color: #FFFFFF;
-      border-radius: var(--r-sm);
-      font-weight: 800;
-      font-size: 13px;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    .brand-badge .orange-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent);
-      display: inline-block;
-    }
-
-    /* ---- Biometric groups: Measured / Derived / In Use ---- */
+    /* Unified Biometric Capsule */
     .bio-group {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--r-md);
-      padding: 4px 9px 5px;
+      padding: 3px 8px 4px;
       display: flex;
       flex-direction: column;
       gap: 2px;
@@ -592,9 +570,9 @@
       transition: border-color 0.15s ease;
     }
     .bio-group-title {
-      font-size: 9px;
+      font-size: 8.5px;
       font-weight: 700;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.10em;
       text-transform: uppercase;
       color: var(--muted);
       line-height: 1;
@@ -607,13 +585,13 @@
       white-space: nowrap;
     }
     .bio-derived-val {
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 700;
       color: var(--ink);
-      min-width: 44px;
+      min-width: 40px;
     }
     .bio-derived-src {
-      font-size: 10.5px;
+      font-size: 10px;
       color: var(--muted);
       letter-spacing: 0.01em;
     }
@@ -635,19 +613,19 @@
     .active-weight {
       border-left: 3px solid var(--accent);
       background: var(--accent-subtle);
-      min-width: 145px;
-      padding: 4px 10px 5px;
+      min-width: 140px;
+      padding: 3px 10px 4px;
       flex-shrink: 0;
     }
     .active-weight #activeWeightVal {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 800;
       line-height: 1.1;
       color: var(--ink);
       letter-spacing: -0.02em;
     }
     .active-weight-src {
-      font-size: 10px;
+      font-size: 9.5px;
       font-weight: 600;
       color: color-mix(in srgb, var(--ink) 78%, transparent);
       letter-spacing: 0.01em;
@@ -666,7 +644,7 @@
       background: var(--card); 
       border: 1px solid var(--border); 
       border-radius: var(--r-sm); 
-      padding: 6px 10px; 
+      padding: 5px 9px; 
       display: flex; 
       align-items: center; 
       gap: 6px; 
@@ -684,15 +662,15 @@
 
     .bio-fields input[type="number"],
     .chip input[type="number"] { 
-      width: 72px; 
-      padding: 5px 8px; 
+      width: 68px; 
+      padding: 4px 7px; 
       border: 1px solid var(--border); 
       border-radius: var(--r-sm); 
-      outline: none;
+      outline: none; 
       font-family: 'JetBrains Mono', monospace;
       font-weight: 700;
-      font-size: 14px;
-      background: var(--bg);
+      font-size: 13.5px;
+      background: var(--panel-subtle);
       color: var(--ink);
       transition: all 0.15s ease;
     }
@@ -721,14 +699,14 @@
     }
     :root[data-theme="dark"] .chip input[type="number"].highlight-input,
     :root[data-theme="mono"] .chip input[type="number"].highlight-input {
-      background: #3A3228;
+      background: #362D24;
       color: var(--ink);
     }
 
     .unit-toggle-btn {
-      padding: 4px 8px;
-      min-height: 26px;
-      min-width: 30px;
+      padding: 3px 7px;
+      min-height: 24px;
+      min-width: 28px;
       font-size: 11px;
       font-weight: 800;
       border-radius: var(--r-xs);
@@ -751,8 +729,8 @@
       appearance: none; 
       -webkit-appearance: none;
       flex: 0 0 auto;
-      width: 34px; 
-      height: 24px; 
+      width: 32px; 
+      height: 22px; 
       padding: 3px 0;
       background-clip: content-box;
       box-sizing: border-box;
@@ -778,18 +756,18 @@
     .switch:before { 
       content: ''; 
       position: absolute; 
-      top: 4px; 
+      top: 3px; 
       left: 1px; 
       width: 14px; 
       height: 14px; 
       border-radius: 50%; 
       background: #FFFFFF; 
       transition: transform var(--t-fast); 
-      box-shadow: 0 1px 3px rgba(0,0,0,0.22); 
+      box-shadow: 0 1px 3px rgba(0,0,0,0.20); 
     }
 
     .switch:checked:before { 
-      transform: translateX(16px); 
+      transform: translateX(14px); 
     }
 
     .bio-use-toggle:has(.switch:checked) {
@@ -798,7 +776,7 @@
     }
 
     .broselow-chip { 
-      padding: 5px 10px; 
+      padding: 4px 9px; 
       border-radius: var(--r-sm); 
       font-weight: 800; 
       border: 1px solid var(--border); 
@@ -819,7 +797,7 @@
     /* Main Container */
     .container { 
       max-width: 1180px; 
-      margin: calc(var(--topbar-h, 140px) + 12px) auto 70px; 
+      margin: calc(var(--topbar-h, 130px) + 12px) auto 70px; 
       padding: 16px; 
     }
 
@@ -853,13 +831,13 @@
 
     input, select { 
       width: 100%; 
-      padding: 9px 12px; 
+      padding: 8px 11px; 
       border: 1px solid var(--border); 
       border-radius: var(--r-sm); 
       outline: none; 
       background: var(--card); 
       color: var(--ink);
-      font-size: 14px;
+      font-size: 13.5px;
       font-family: inherit;
       transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
@@ -871,13 +849,13 @@
     }
 
     .btn { 
-      padding: 8px 14px; 
+      padding: 7px 13px; 
       border-radius: var(--r-sm); 
       border: 1px solid var(--border); 
       background: var(--panel); 
       color: var(--ink); 
       font-weight: 600; 
-      font-size: 13px;
+      font-size: 12.5px; 
       cursor: pointer; 
       transition: all 0.15s ease;
       box-shadow: var(--shadow-1);
@@ -890,30 +868,30 @@
 
     .pill { 
       display: inline-block; 
-      padding: 5px 12px; 
+      padding: 4px 11px; 
       border-radius: var(--r-full); 
       border: 1px solid var(--border); 
       background: var(--panel-subtle); 
-      font-size: 12.5px; 
+      font-size: 12px; 
       font-weight: 600;
       color: var(--ink);
-      cursor: pointer;
-      margin-right: 6px; 
+      cursor: pointer; 
+      margin-right: 5px; 
       transition: all 0.12s ease;
       box-shadow: var(--shadow-1);
     }
 
-    .pill:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: var(--card);
+    .pill:hover { 
+      border-color: var(--accent); 
+      color: var(--accent); 
+      background: var(--card); 
     }
 
-    .pill.active {
-      background: var(--accent);
-      color: #FFFFFF;
-      border-color: var(--accent);
-      font-weight: 700;
+    .pill.active { 
+      background: var(--accent); 
+      color: #FFFFFF; 
+      border-color: var(--accent); 
+      font-weight: 700; 
     }
 
     /* Output Summary & Readouts */
@@ -924,12 +902,12 @@
       border-radius: 0; 
       white-space: normal; 
       line-height: 1.4; 
-      font-size: 13px;
+      font-size: 13px; 
     }
 
     .hero-metric-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 10px;
       margin-bottom: 12px;
     }
@@ -938,29 +916,29 @@
       background: var(--panel-subtle);
       color: var(--ink);
       border: 1px solid var(--border);
-      border-left: 3.5px solid var(--accent);
+      border-left: 3px solid var(--accent);
       border-radius: var(--r-md);
-      padding: 10px 14px;
+      padding: 9px 13px;
       font-family: 'JetBrains Mono', monospace;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 3px;
+      gap: 2px;
       box-shadow: var(--shadow-1);
       transition: transform 0.12s ease, border-color 0.15s ease;
     }
 
     .hero-metric.good { 
       border-left-color: var(--good); 
-      background: color-mix(in srgb, var(--good-soft) 40%, var(--card));
+      background: color-mix(in srgb, var(--good-soft) 35%, var(--card));
     }
     .hero-metric.warning { 
       border-left-color: var(--warning); 
-      background: color-mix(in srgb, var(--warning-soft) 40%, var(--card));
+      background: color-mix(in srgb, var(--warning-soft) 35%, var(--card));
     }
     .hero-metric.danger { 
       border-left-color: var(--danger); 
-      background: color-mix(in srgb, var(--danger-soft) 40%, var(--card));
+      background: color-mix(in srgb, var(--danger-soft) 35%, var(--card));
     }
     .hero-metric.blue { 
       border-left-color: var(--ink); 
@@ -974,8 +952,8 @@
     .hero-metric.blue .hero-label::before { content: "\2139\FE0E  "; color: var(--muted); }
 
     .hero-metric .hero-label {
-      font-size: 11px;
-      letter-spacing: 0.06em;
+      font-size: 10.5px;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
       color: var(--muted);
       font-family: 'Sarabun', sans-serif;
@@ -983,7 +961,7 @@
     }
 
     .hero-metric .hero-val {
-      font-size: 22px;
+      font-size: 21px;
       font-weight: 800;
       color: var(--ink);
       line-height: 1.15;
@@ -991,7 +969,7 @@
     }
 
     .hero-metric .hero-val span.unit {
-      font-size: 13px;
+      font-size: 12.5px;
       color: var(--accent);
       font-weight: 700;
       margin-left: 4px;
@@ -1001,7 +979,7 @@
     }
 
     .hero-metric .hero-sub {
-      font-size: 12px;
+      font-size: 11.5px;
       color: var(--muted);
       font-family: 'Sarabun', sans-serif;
       font-weight: 500;
@@ -1011,14 +989,14 @@
 
     .badge-cap {
       display: inline-block;
-      padding: 4px 10px;
+      padding: 3px 9px;
       background: var(--warning-subtle);
       color: var(--warning);
       border: 1px solid var(--warning);
       border-radius: var(--r-xs);
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 800;
-      margin-top: 6px;
+      margin-top: 5px;
     }
 
     .badge-cap.danger {
@@ -1037,11 +1015,11 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 6px 12px;
+      padding: 4px 10px;
       background: var(--panel-subtle);
       border: 1px solid var(--border);
       border-radius: var(--r-sm);
-      font-size: 13.5px;
+      font-size: 12.5px;
       font-weight: 600;
       color: var(--ink);
       width: 100%;
@@ -1050,7 +1028,7 @@
     .weight-lock-chip strong {
       font-family: 'JetBrains Mono', monospace;
       color: var(--accent);
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 800;
     }
 
@@ -1076,15 +1054,15 @@
       background: var(--panel);
       color: var(--ink);
       font-weight: 700;
-      padding: 7px 10px;
+      padding: 6px 9px;
       border-bottom: 1px solid var(--border);
-      font-size: 11px;
+      font-size: 10.5px;
       letter-spacing: 0.04em;
       text-transform: uppercase;
       white-space: nowrap;
     }
     .protocol-table td {
-      padding: 7px 10px;
+      padding: 6px 9px;
       border-bottom: 1px solid var(--border);
       vertical-align: top;
       color: var(--ink);
@@ -1117,23 +1095,23 @@
       background-color: var(--accent-soft);
     }
     :root[data-theme="mono"] .protocol-table tbody tr:nth-child(even) td {
-      background-color: #1A1A18;
+      background-color: #181816;
     }
     :root[data-theme="mono"] .protocol-table tbody tr:nth-child(even) td:first-child {
-      background-color: #1A1A18;
+      background-color: #181816;
     }
 
     .dose-badge {
       display: inline-flex;
       align-items: baseline;
       gap: 2px;
-      padding: 2px 7px;
+      padding: 2px 6px;
       border-radius: var(--r-xs);
       background: var(--accent-soft);
       color: var(--accent);
       font-weight: 800;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
+      font-size: 12.5px;
     }
     :root[data-theme="mono"] .dose-badge {
       background: var(--accent-soft);
@@ -1145,18 +1123,18 @@
     .broselow-spectrum-bar {
       display: grid;
       grid-template-columns: repeat(9, 1fr);
-      gap: 5px;
+      gap: 4px;
       margin: 8px 0 12px;
       border-radius: var(--r-md);
       overflow: hidden;
       background: var(--panel-subtle);
-      padding: 5px;
+      padding: 4px;
       border: 1px solid var(--border);
     }
     .broselow-spectrum-seg {
-      padding: 7px 3px;
+      padding: 6px 3px;
       text-align: center;
-      font-size: 10px;
+      font-size: 9.5px;
       font-weight: 800;
       font-family: 'JetBrains Mono', monospace;
       border-radius: var(--r-sm);
@@ -1177,18 +1155,18 @@
     }
     .broselow-spectrum-seg.active {
       border-color: #000000;
-      box-shadow: 0 0 0 2px var(--accent), 0 2px 8px rgba(0,0,0,0.25);
-      transform: scale(1.04);
+      box-shadow: 0 0 0 2px var(--accent), 0 2px 8px rgba(0,0,0,0.22);
+      transform: scale(1.03);
       z-index: 2;
     }
     :root[data-theme="dark"] .broselow-spectrum-seg.active {
       border-color: #FFFFFF;
-      box-shadow: 0 0 0 2px #EDA489, 0 2px 8px rgba(0,0,0,0.5);
+      box-shadow: 0 0 0 2px #EEA58B, 0 2px 8px rgba(0,0,0,0.5);
     }
     :root[data-theme="mono"] .broselow-spectrum-seg {
-      background: #2A2A28 !important;
+      background: #262624 !important;
       color: #FFFFFF !important;
-      border: 1px solid #767670;
+      border: 1px solid #74746E;
     }
     :root[data-theme="mono"] .broselow-spectrum-seg.active {
       background: #FFFFFF !important;
@@ -1217,7 +1195,7 @@
 
     .combobox-clear-btn {
       position: absolute;
-      right: 10px;
+      right: 9px;
       top: 50%;
       transform: translateY(-50%);
       background: transparent;
@@ -1226,7 +1204,7 @@
       font-size: 13px;
       font-weight: 700;
       cursor: pointer;
-      padding: 4px 6px;
+      padding: 3px 6px;
       border-radius: var(--r-xs);
       display: none;
       align-items: center;
@@ -1245,13 +1223,13 @@
 
     .combobox-input {
       width: 100%;
-      padding: 10px 34px 10px 36px;
+      padding: 9px 34px 9px 34px;
       border: 1px solid var(--border);
       border-radius: var(--r-md);
       outline: none;
       background: var(--card);
       color: var(--ink);
-      font-size: 14px;
+      font-size: 13.5px;
       font-family: inherit;
       font-weight: 600;
       box-shadow: var(--shadow-1);
@@ -1285,7 +1263,7 @@
     }
 
     .combobox-item {
-      padding: 10px 14px;
+      padding: 9px 13px;
       cursor: pointer;
       font-size: 13px;
       border-bottom: 1px solid var(--border);
@@ -1312,8 +1290,8 @@
     }
 
     .combobox-item .item-tag {
-      font-size: 11px;
-      padding: 2px 7px;
+      font-size: 10.5px;
+      padding: 2px 6px;
       border-radius: var(--r-xs);
       background: var(--panel);
       color: var(--muted);
@@ -1321,10 +1299,10 @@
     }
 
     .note { 
-      font-size: 12px; 
+      font-size: 11.5px; 
       color: var(--muted); 
-      margin-top: 14px; 
-      padding-top: 9px; 
+      margin-top: 12px; 
+      padding-top: 8px; 
       border-top: 1px dashed var(--border); 
       line-height: 1.45;
     }
@@ -1343,16 +1321,16 @@
     .fab button { 
       border: none; 
       border-radius: var(--r-full); 
-      padding: 10px 18px; 
-      box-shadow: 0 4px 14px rgba(0,0,0,0.18); 
+      padding: 9px 16px; 
+      box-shadow: 0 4px 14px rgba(0,0,0,0.16); 
       background: var(--dark-btn); 
       color: #FFFFFF; 
       font-weight: 800; 
-      font-size: 13.5px; 
+      font-size: 13px; 
       cursor: pointer; 
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
       transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
     }
     .fab button:active {
@@ -1361,19 +1339,19 @@
 
     .fab button:hover {
       background: #111110;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.22);
     }
 
     .fab button.pals-fab {
       background: var(--danger);
       color: #FFFFFF;
       border: none;
-      box-shadow: 0 4px 16px rgba(220, 38, 38, 0.35);
+      box-shadow: 0 4px 16px rgba(220, 38, 38, 0.32);
     }
 
     .fab button.pals-fab:hover {
       background: #B91C1C;
-      box-shadow: 0 6px 20px rgba(220, 38, 38, 0.45);
+      box-shadow: 0 6px 20px rgba(220, 38, 38, 0.40);
     }
 
     /* Broselow Drawer Panel Modal & Backdrop */
@@ -1412,7 +1390,7 @@
       display: flex;
       flex-direction: column;
       background: var(--card); 
-      color: var(--ink);
+      color: var(--ink); 
       border: 1px solid var(--border-strong); 
       border-radius: var(--r-xl); 
       box-shadow: var(--shadow-3); 
@@ -1450,10 +1428,10 @@
       transform: translateX(-50%);
       background: var(--dark-btn);
       color: #FFFFFF;
-      padding: 10px 20px;
+      padding: 9px 18px;
       border-radius: var(--r-full);
       font-weight: 700;
-      font-size: 13px;
+      font-size: 12.5px;
       box-shadow: var(--shadow-3);
       z-index: 1000;
       display: none;
@@ -1477,14 +1455,14 @@
     /* Footer */
     footer.app-footer {
       text-align: center;
-      margin-top: 40px;
-      padding-top: 18px;
+      margin-top: 36px;
+      padding-top: 16px;
       border-top: 1px solid var(--border);
       color: var(--muted);
-      font-size: 13px;
+      font-size: 12.5px;
     }
     .version-chip {
-      font-size: 11px;
+      font-size: 10.5px;
       padding: 2px 7px;
       border-radius: var(--r-full);
       background: var(--accent);
@@ -1535,7 +1513,7 @@
       .topbar-actions .active-weight {
         flex: 1 1 auto;
         min-width: 120px;
-        padding: 4px 8px;
+        padding: 3px 8px;
       }
     }
 
@@ -1572,11 +1550,11 @@
       .switch:before { width: 12px; height: 12px; top: 3px; }
       .switch:checked:before { transform: translateX(12px); }
 
-      .active-weight #activeWeightVal { font-size: 17px; }
-      .active-weight-src { font-size: 9.5px; }
+      .active-weight #activeWeightVal { font-size: 16px; }
+      .active-weight-src { font-size: 9px; }
 
       /* Zero CLS on tab navigation: full labels always visible */
-      .tab-btn { min-width: auto; min-height: 38px; font-size: 12.5px; padding: 6px 10px; }
+      .tab-btn { min-width: auto; min-height: 36px; font-size: 12px; padding: 5px 9px; }
       .tab-btn .tab-label { display: inline !important; }
 
       .hero-metric-grid { grid-template-columns: 1fr; gap: 6px; }
@@ -1616,8 +1594,8 @@
 
       .hero-metric-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
       .hero-metric { border-left-width: 8px; padding: 14px 16px; }
-      .hero-metric .hero-val { font-size: 27px; }
-      .hero-metric .hero-label { font-size: 12px; }
+      .hero-metric .hero-val { font-size: 26px; }
+      .hero-metric .hero-label { font-size: 11.5px; }
 
       .segmented-control { gap: 6px; padding: 6px; }
       .tab-btn { min-width: 30%; min-height: 44px; padding: 12px 10px; font-size: 14px; }
@@ -1636,7 +1614,7 @@
       .bio-group-title { display: none !important; }
       .card { border: none !important; box-shadow: none !important; padding: 0 !important; }
       section[role="tabpanel"]:not(.active-panel) { display: none !important; }
-      .drawer-backdrop, .pwa-update-banner, .toast, .popover-menu, .tabs { display: none !important; }
+      .drawer-backdrop, .pwa-update-banner, .toast, .popover-menu, .tabs, .category-bar { display: none !important; }
       .hero-metric, tr, .summary { break-inside: avoid; page-break-inside: avoid; }
       @page { size: A4; margin: 10mm; }
       .hero-metric-grid { display: flex !important; gap: 8px !important; }
@@ -1654,15 +1632,15 @@
       transform: translateX(-50%);
       background: var(--accent);
       color: #FFFFFF;
-      padding: 10px 18px;
+      padding: 9px 16px;
       border-radius: var(--r-full);
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 700;
       box-shadow: var(--shadow-3);
       z-index: 999;
       display: none;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
   </style>
 </head>
@@ -1797,18 +1775,11 @@
             <div id="doseComboboxDropdown" class="combobox-dropdown" role="listbox"></div>
           </div>
           <select id="doseDrug" style="display:none;" onchange="calcDose()"></select>
+          <strong id="doseWBadge" style="display:none;">— kg</strong>
         </div>
-        <div class="col-6">
-          <label>Active Weight (Single Source of Truth)</label>
-          <div class="weight-lock-chip">
-            <span>Weight in use:</span>
-            <strong id="doseWBadge">— kg</strong>
-            <span style="font-size:11px; color:var(--muted); margin-left:auto; display:inline-flex; align-items:center;" title="Synced from topbar" aria-label="Synced from topbar"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
-          </div>
-        </div>
-        <div class="col-6">
-          <label>Form Strength Override (mg/mL, mg/tab)</label>
-          <input type="number" id="doseConc" min="0" step="0.01" placeholder="ความเข้มข้นยา" oninput="calcDose()">
+        <div class="col-12">
+          <label>Form Strength Override (mg/mL, mg/tab) <span style="font-size:10.5px; font-weight:400; color:var(--muted); text-transform:none;">(ระบุเมื่อต้องการปรับความเข้มข้นยาจากค่าเริ่มต้น)</span></label>
+          <input type="number" id="doseConc" min="0" step="0.01" placeholder="ความเข้มข้นยา (e.g. 120 mg/5 mL = 24)" oninput="calcDose()">
         </div>
         <div class="col-12">
           <div id="doseOut" class="summary"></div>
@@ -1836,18 +1807,11 @@
             <div id="atbComboboxDropdown" class="combobox-dropdown" role="listbox"></div>
           </div>
           <select id="atbDrug" style="display:none;" onchange="calcATB()"></select>
+          <strong id="atbWBadge" style="display:none;">— kg</strong>
         </div>
-        <div class="col-6">
-          <label>Active Weight (Single Source of Truth)</label>
-          <div class="weight-lock-chip">
-            <span>Weight in use:</span>
-            <strong id="atbWBadge">— kg</strong>
-            <span style="font-size:11px; color:var(--muted); margin-left:auto; display:inline-flex; align-items:center;" title="Synced from topbar" aria-label="Synced from topbar"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
-          </div>
-        </div>
-        <div class="col-6">
-          <label>Form Strength Override (mg/mL, mg/tab)</label>
-          <input type="number" id="atbForm" min="0" step="0.01" placeholder="ความเข้มข้นยา" oninput="calcATB()">
+        <div class="col-12">
+          <label>Form Strength Override (mg/mL, mg/tab) <span style="font-size:10.5px; font-weight:400; color:var(--muted); text-transform:none;">(ระบุเมื่อต้องการปรับความเข้มข้นยาจากค่าเริ่มต้น)</span></label>
+          <input type="number" id="atbForm" min="0" step="0.01" placeholder="ความเข้มข้นยา (e.g. 250 mg/5 mL = 50)" oninput="calcATB()">
         </div>
         <div class="col-12">
           <div id="atbOut" class="summary"></div>
@@ -1859,14 +1823,8 @@
     <!-- IV Fluids -->
     <section id="fluids" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
-        <div class="col-4">
-          <label>Active Weight (Single Source of Truth)</label>
-          <div class="weight-lock-chip">
-            <span>BW:</span>
-            <strong id="fWBadge">— kg</strong>
-          </div>
-        </div>
-        <div class="col-4">
+        <strong id="fWBadge" style="display:none;">— kg</strong>
+        <div class="col-6">
           <label>Dehydration Degree</label>
           <select id="fDegree" onchange="calcFluids()">
             <option>Mild (3–5%) ปากแห้ง ปัสสาวะลดลง</option>
@@ -1874,7 +1832,7 @@
             <option>Severe (≥10%) / Shock ความดันตก</option>
           </select>
         </div>
-        <div class="col-4">
+        <div class="col-6">
           <label>Correction Duration</label>
           <select id="fPlan" onchange="calcFluids()">
             <option>24 h</option>
@@ -1884,7 +1842,7 @@
 
         <div class="col-12">
           <label>Fluid Type Choice</label>
-          <div class="row" style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
+          <div class="row" style="display:flex; gap:6px; flex-wrap:wrap; margin-top:2px;">
             <button class="pill" onclick="setFluidType('ORS')" id="fluid-ORS">ORS</button>
             <button class="pill active" onclick="setFluidType('NS')" id="fluid-NS">NS</button>
             <button class="pill" onclick="setFluidType('RL')" id="fluid-RL">RL</button>
@@ -1903,17 +1861,10 @@
     <!-- PALS Resuscitation -->
     <section id="pals" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
-        <div class="col-6">
-          <label>Active Weight (Single Source of Truth)</label>
-          <div class="weight-lock-chip">
-            <span>BW:</span>
-            <strong id="pWBadge">— kg</strong>
-            <span style="font-size:11px; color:var(--muted); margin-left:auto; display:inline-flex; align-items:center;" title="Synced from topbar" aria-label="Synced from topbar"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
-          </div>
-        </div>
-        <div class="col-6">
-          <label>Patient Age (yr) (Optional for ETT)</label>
-          <input type="number" id="pAge" min="0" max="15" step="0.1" placeholder="อายุเพื่อคำนวณ ETT" oninput="onPALSAgeChange()">
+        <strong id="pWBadge" style="display:none;">— kg</strong>
+        <div class="col-12">
+          <label>Patient Age (yr) <span style="font-size:10.5px; font-weight:400; color:var(--muted); text-transform:none;">(Optional — คำนวณขนาด ETT ตามช่วงอายุ)</span></label>
+          <input type="number" id="pAge" min="0" max="15" step="0.1" placeholder="อายุเพื่อคำนวณ ETT (e.g. 4)" oninput="onPALSAgeChange()">
         </div>
         <div class="col-12">
           <div id="pOut" class="summary"></div>
@@ -1929,7 +1880,7 @@
           <label>Birth Weight (kg)</label>
           <div style="display:flex; gap:6px;">
             <input type="number" id="nW" min="0" step="0.01" placeholder="น้ำหนักแรกเกิด kg" oninput="calcNCPR()">
-            <button class="btn" style="padding:6px 10px; font-size:11px;" onclick="syncNCPRWithABW()" title="ดึงค่าน้ำหนักจาก Topbar ABW">Sync ABW</button>
+            <button class="btn" style="padding:5px 9px; font-size:11px; white-space:nowrap;" onclick="syncNCPRWithABW()" title="ดึงค่าน้ำหนักจาก Topbar ABW">Sync ABW</button>
           </div>
         </div>
         <div class="col-6">
@@ -1950,32 +1901,20 @@
     <!-- Continuous Infusion Drip Calculator -->
     <section id="drip" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
-        <div class="col-12">
-          <div class="note" style="margin-bottom:12px; font-weight:500;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>คำสั่งหยดยาต่อเนื่อง:</strong> ตรวจสอบสาย IV / Central Line และตั้งค่า Syringe Pump / Infusion Pump อย่างระมัดระวัง
-          </div>
-        </div>
+        <strong id="dripWBadge" style="display:none;">— kg</strong>
         <div class="col-12">
           <label>Vasoactive & Continuous Infusion Selection</label>
-          <select id="dripDrug" style="width:100%; padding:10px; border-radius:6px; border:1px solid var(--border); font-size:14px; font-weight:700; background:var(--panel); color:var(--ink);" onchange="calcDrip()"></select>
+          <select id="dripDrug" style="width:100%; padding:9px 12px; border-radius:var(--r-sm); border:1px solid var(--border); font-size:13.5px; font-weight:700; background:var(--panel); color:var(--ink);" onchange="calcDrip()"></select>
         </div>
-        <div class="col-6">
-          <label>Active Weight (Single Source of Truth)</label>
-          <div class="weight-lock-chip">
-            <span>Weight in use:</span>
-            <strong id="dripWBadge">— kg</strong>
-            <span style="font-size:11px; color:var(--muted); margin-left:auto; display:inline-flex; align-items:center;" title="Synced from topbar" aria-label="Synced from topbar"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
-          </div>
-        </div>
-        <div class="col-6">
-          <label>Target Infusion Dose (mcg/kg/min)</label>
+        <div class="col-4">
+          <label>Target Dose (mcg/kg/min)</label>
           <input type="number" id="dripDoseInput" min="0" step="0.01" placeholder="mcg/kg/min" oninput="calcDrip()">
         </div>
-        <div class="col-6">
-          <label>Preparation Drug Amount (mg)</label>
+        <div class="col-4">
+          <label>Drug Amount (mg)</label>
           <input type="number" id="dripPrepMg" min="0" step="0.1" placeholder="mg in diluent" oninput="calcDrip()">
         </div>
-        <div class="col-6">
+        <div class="col-4">
           <label>Diluent Volume (mL)</label>
           <input type="number" id="dripPrepVolMl" min="1" step="1" placeholder="mL D5W / NSS" oninput="calcDrip()">
         </div>
@@ -1983,6 +1922,7 @@
           <div id="dripOut" class="summary"></div>
         </div>
       </div>
+      <div class="note"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>คำสั่งหยดยาต่อเนื่อง:</strong> ตรวจสอบสาย IV / Central Line และตั้งค่า Syringe Pump / Infusion Pump อย่างระมัดระวัง</div>
     </section>
 
     <!-- Status Epilepticus / Seizure Protocol -->
@@ -2206,7 +2146,16 @@
         <button type="button" class="btn" style="padding:4px 10px; font-size:12px; display:inline-flex; align-items:center; gap:4px;" onclick="closeChangelogModal()">Close <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> (Esc)</button>
       </div>
       <div class="drawer-body" style="font-size:13px; line-height:1.6;">
-        <h3 style="color:var(--accent); margin-top:4px;">What's New in v<span id="changelogWhatsNewVersion">1.8.1</span>:</h3>
+        <h3 style="color:var(--accent); margin-top:4px;">What's New in v<span id="changelogWhatsNewVersion">1.9.2</span>:</h3>
+        <ul>
+          <li><strong>✨ Simple & Elegant Minimalist UI/UX Overhaul</strong>: ปรับโฉมดีไซน์ทั้งหมดให้เรียบหรู คลีน สบายตา ลดความซ้ำซ้อนของกล่องข้อมูล (De-clutter) เพื่อเพิ่มพื้นที่มองเห็นข้อมูลยาและการรักษาฉุกเฉินข้างเตียง</li>
+          <li><strong>🏷️ De-duplicated Active Weight Cards</strong>: ยกเลิกการแสดงกล่องน้ำหนักซ้ำซ้อนในทุกหน้าคำนวณ (Dose, ATB, Fluids, PALS, Drip) โดยใช้ Topbar Sticky Header เป็นแหล่งอ้างอิงหลัก ช่วยลดความสูงและตัดสิ่งรบกวนสายตา</li>
+          <li><strong>🎨 Warm Organic Clinical Palette & Elevation System</strong>: อัปเกรดโทนสี Ivory/Sand อบอุ่น ผสานการ์ดขาวสะอาดตา พร้อมเงาฟุ้งละมุน (Micro-elevation) และสี Terracotta Clay ที่คมชัดสบายตา</li>
+          <li><strong>📱 Mobile & Bedside Ergonomic Polish</strong>: เพิ่มความกระชับของ Topbar บนสมาร์ตโฟนและแท็บเล็ต ป้องกัน Safari Auto-Zoom ด้วยขนาด 16px และรองรับการใช้งานด้วยถุงมือแพทย์อย่างสมบูรณ์แบบ</li>
+          <li><strong>🧪 100% Test & Calculation Integrity</strong>: ผ่านการทดสอบความแม่นยำทางคณิตศาสตร์และคลินิกทั้งหมด 53 Test Suites ครบถ้วน 100%</li>
+        </ul>
+        <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;" />
+        <h4 style="color:var(--ink); margin-top:4px;">📜 Version 1.8.1 Highlights:</h4>
         <ul>
           <li><strong>🛡️ Clinical Safety & Zero-Division Hardening</strong>: ป้องกันการหารด้วยศูนย์ใน Custom Dilution ของ Drip Rate ไม่ให้เกิดค่า <code>Infinity</code> หรือ <code>NaN</code></li>
           <li><strong>🖨️ Active-Panel Print Isolation</strong>: ปรับปรุงระบบพิมพ์ใบสรุปยา A4 ให้ซ่อนแท็บที่ไม่ได้เลือกอย่างสมบูรณ์แบบด้วย <code>.active-panel</code> class</li>

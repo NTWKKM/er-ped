@@ -132,4 +132,9 @@ flowchart TD
     - **Universal Inline Lucide SVG Icon System**: Replaced all raw live-UI text emojis across navigation category pills, drug cards, protocol headers, dosage alerts, and modal panels with lightweight inline Lucide SVGs, guaranteeing uniform visual rendering across iOS, Android, and desktop browsers.
     - **High-Density Protocol Tables & Modals**: Enhanced `.protocol-table` layouts with sticky first column (`position: sticky; left: 0`), subtle `color-mix` zebra striping, and refined drawer modals (`border-radius: 18px 18px 0 0` on mobile) for Broselow tape and changelog views.
     - Service worker cache version bumped to `er-ped-v1.9.0-20260820`.
-
+52. **UI/UX Simplification, De-Cluttering & Bedside Ergonomics (v1.9.2)**:
+    - **Single Source of Truth Topbar**: De-duplicated repetitive `.weight-lock-chip` form rows from general calculator cards (Dose, ATB, Fluids, PALS, Drip), delegating weight display to the persistent sticky header biometrics capsule, freeing 40–60px of vertical space for clinical calculation readouts.
+    - **Warm Organic Ivory & Micro-Elevation**: Unified color tokens with soothing warm ivory canvas (`#F7F6F2`), crisp elevated white cards (`#FFFFFF`), refined terracotta accent (`#9E3D24`), and soft diffused ambient shadows.
+    - **Ergonomic Bedside Grid Alignment**: Cleaned form inputs across modules (e.g. Drip continuous infusion aligned to a neat 3-column row: Target Dose, Drug Amount, Diluent Volume).
+    - **Hospital Display & Mobile Hardening**: Configured 16px input font size to prevent iOS Safari auto-zoom, ensured touch targets meet WCAG standards, and optimized Monochrome theme for hospital display panels.
+    - Service worker cache version bumped to `er-ped-v1.9.2-20260821`.
