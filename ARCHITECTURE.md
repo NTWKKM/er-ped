@@ -138,3 +138,11 @@ flowchart TD
     - **Ergonomic Bedside Grid Alignment**: Cleaned form inputs across modules (e.g. Drip continuous infusion aligned to a neat 3-column row: Target Dose, Drug Amount, Diluent Volume).
     - **Hospital Display & Mobile Hardening**: Configured 16px input font size to prevent iOS Safari auto-zoom, ensured touch targets meet WCAG standards, and optimized Monochrome theme for hospital display panels.
     - Service worker cache version bumped to `er-ped-v1.9.2-20260821`.
+
+53. **Deep Audit Surgical Cleanups & NCPR Blood Glucose Integration (v1.9.2)**:
+    - **Universal Single Source of Truth**: Completed full de-cluttering across all 11 modules (removing legacy badges and placeholder nodes), anchoring weight awareness to the sticky topbar capsule.
+    - **NCPR Blood Glucose Reactivity**: Wired `#nBG` input to provide dynamic bedside hypoglycemia alerts (`< 40 mg/dL`), normoglycemia status (`≥ 40 mg/dL`), and calculated D10W bolus & infusion rates.
+    - **Dead Code & Token Pruning**: Eliminated dead `copyCustomOrder()` routine and pruned unused CSS custom properties.
+    - **Metadata & Fallback Alignment**: Synchronized `package.json` version, theme-color meta tag (`#9E3D24`), inline favicon fill, and static HTML fallbacks to `1.9.2`.
+    - **Automated Verification**: Expanded test suite in `scripts/test-core.js` to 54 passing tests.
+

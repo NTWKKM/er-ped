@@ -630,16 +630,16 @@ test('Version Auto-Sync: applyVersionToUI dynamically updates footer badge and c
   assert.strictEqual(titleVer.textContent, '1.9.5', 'Changelog title must reflect version 1.9.5');
   assert.strictEqual(whatsNewVer.textContent, '1.9.5', 'Whats new header must reflect version 1.9.5');
   
-  // Revert back to 1.8.1
-  applyVersionToUI('1.8.1');
-  assert.strictEqual(chip.textContent, 'v1.8.1', 'Reverted footer chip must be v1.8.1');
+  // Revert back to 1.9.2
+  applyVersionToUI('1.9.2');
+  assert.strictEqual(chip.textContent, 'v1.9.2', 'Reverted footer chip must be v1.9.2');
 });
 
 test('Version Auto-Sync: syncVersionFromSW picks highest/latest version when multiple cache keys exist', () => {
   const { syncVersionFromSW } = appExports;
   
   global.caches = {
-    keys: () => Promise.resolve(['er-ped-v1.7.0-20260815', 'er-ped-v1.8.1-20260818', 'er-ped-v1.8.0-20260818'])
+    keys: () => Promise.resolve(['er-ped-v1.7.0-20260815', 'er-ped-v1.9.2-20260821', 'er-ped-v1.8.0-20260818'])
   };
 
   syncVersionFromSW();
@@ -647,9 +647,34 @@ test('Version Auto-Sync: syncVersionFromSW picks highest/latest version when mul
   // Test using Promise microtask resolution
   return Promise.resolve().then(() => {
     const chip = document.getElementById('footerVersionChip');
-    assert.strictEqual(chip.textContent, 'v1.8.1', 'Footer chip must resolve to the latest cache version v1.8.1');
+    assert.strictEqual(chip.textContent, 'v1.9.2', 'Footer chip must resolve to the latest cache version v1.9.2');
     delete global.caches;
   });
+});
+
+test('NCPR Calculator: Blood Glucose (nBG) input dynamically guides hypoglycemia vs normoglycemia', () => {
+  document.getElementById('nW').value = '3.0';
+  document.getElementById('nGA').value = '38';
+  
+  // 1. Hypoglycemia (< 40 mg/dL)
+  document.getElementById('nBG').value = '28';
+  window.eval('calcNCPR()');
+  let out = document.getElementById('nOut').innerHTML;
+  assert(out.includes('🚨 Hypoglycemia Alert (BG 28 mg/dL &lt; 40 mg/dL)'), 'Hypoglycemia alert check');
+  assert(out.includes('6.0 mL D10W IV bolus over 2 min'), 'D10W bolus 2 mL/kg check');
+  assert(out.includes('10.5 mL/hr infusion'), 'D10W infusion 3.5 mL/kg/hr check');
+
+  // 2. Normoglycemia (>= 40 mg/dL)
+  document.getElementById('nBG').value = '55';
+  window.eval('calcNCPR()');
+  out = document.getElementById('nOut').innerHTML;
+  assert(out.includes('Blood Glucose (55 mg/dL):</strong> Normoglycemia (≥ 40 mg/dL)'), 'Normoglycemia check');
+
+  // 3. Unspecified (empty)
+  document.getElementById('nBG').value = '';
+  window.eval('calcNCPR()');
+  out = document.getElementById('nOut').innerHTML;
+  assert(out.includes('Hypoglycemia Protocol:</strong> 6.0 mL D10W IV bolus over 2 min, then 10.5 mL/hr infusion if BG &lt; 40 mg/dL'), 'Default protocol check');
 });
 
 console.log(`\n----------------------------------------`);

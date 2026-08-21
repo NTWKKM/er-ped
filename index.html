@@ -7,9 +7,9 @@
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.webmanifest" />
-  <meta name="theme-color" content="#A8452A" />
+  <meta name="theme-color" content="#9E3D24" />
   <!-- Inline favicon: prevents the browser's automatic /favicon.ico 404. -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23A8452A'/><text x='16' y='23' font-size='19' font-family='Georgia,serif' fill='%23F0EEE6' text-anchor='middle'>P</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%239E3D24'/><text x='16' y='23' font-size='19' font-family='Georgia,serif' fill='%23F0EEE6' text-anchor='middle'>P</text></svg>" />
 
   <!-- Fonts: Sarabun + JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,7 +27,6 @@
       --muted: #66625A;
       --border: #E6E2D8;
       --border-strong: #D5CEBF;
-      --border-dark: #C4BCAC;
       --accent: #9E3D24;
       --accent-hover: #7D2E1A;
       --accent-soft: #F9ECE6;
@@ -42,10 +41,6 @@
       --ring: rgba(158, 61, 36, 0.22);
       --danger-subtle: rgba(220, 38, 38, 0.08);
       --warning-subtle: rgba(180, 83, 9, 0.08);
-      --good-subtle: rgba(21, 128, 61, 0.08);
-
-      /* Spacing Scale */
-      --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 20px; --s6: 24px; --s8: 32px;
 
       /* Radii Tokens */
       --r-xs: 4px;
@@ -62,7 +57,6 @@
 
       --font-display: 'Newsreader', Georgia, serif;
       --t-fast: 120ms cubic-bezier(.2,.7,.2,1);
-      --t-med: 200ms cubic-bezier(.2,.7,.2,1);
     }
 
     @media (prefers-color-scheme: dark) {
@@ -75,7 +69,6 @@
         --muted: #9B9488;
         --border: #322E27;
         --border-strong: #443F35;
-        --border-dark: #322E27;
         --accent: #E28E70;
         --accent-hover: #EEA58B;
         --accent-soft: #2B1D17;
@@ -90,7 +83,6 @@
         --ring: rgba(226, 142, 112, 0.32);
         --danger-subtle: rgba(248, 113, 113, 0.15);
         --warning-subtle: rgba(251, 191, 36, 0.15);
-        --good-subtle: rgba(74, 222, 128, 0.15);
         --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3);
         --shadow-2: 0 4px 16px rgba(0, 0, 0, 0.4);
         --shadow-3: 0 12px 32px rgba(0, 0, 0, 0.6);
@@ -106,7 +98,6 @@
       --muted: #9B9488;
       --border: #322E27;
       --border-strong: #443F35;
-      --border-dark: #322E27;
       --accent: #E28E70;
       --accent-hover: #EEA58B;
       --accent-soft: #2B1D17;
@@ -121,7 +112,6 @@
       --ring: rgba(226, 142, 112, 0.32);
       --danger-subtle: rgba(248, 113, 113, 0.15);
       --warning-subtle: rgba(251, 191, 36, 0.15);
-      --good-subtle: rgba(74, 222, 128, 0.15);
       --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3);
       --shadow-2: 0 4px 16px rgba(0, 0, 0, 0.4);
       --shadow-3: 0 12px 32px rgba(0, 0, 0, 0.6);
@@ -137,7 +127,6 @@
       --muted: #A6A6A0;
       --border: #42423E;
       --border-strong: #74746E;
-      --border-dark: #74746E;
       --accent: #ECECE8;
       --accent-hover: #FFFFFF;
       --accent-soft: #2E2E2B;
@@ -152,7 +141,6 @@
       --ring: rgba(255, 255, 255, 0.4);
       --danger-subtle: rgba(255, 255, 255, 0.15);
       --warning-subtle: rgba(216, 216, 210, 0.15);
-      --good-subtle: rgba(189, 189, 184, 0.15);
       --shadow-1: none;
       --shadow-2: none;
       --shadow-3: none;
@@ -1775,7 +1763,6 @@
             <div id="doseComboboxDropdown" class="combobox-dropdown" role="listbox"></div>
           </div>
           <select id="doseDrug" style="display:none;" onchange="calcDose()"></select>
-          <strong id="doseWBadge" style="display:none;">— kg</strong>
         </div>
         <div class="col-12">
           <label>Form Strength Override (mg/mL, mg/tab) <span style="font-size:10.5px; font-weight:400; color:var(--muted); text-transform:none;">(ระบุเมื่อต้องการปรับความเข้มข้นยาจากค่าเริ่มต้น)</span></label>
@@ -1807,7 +1794,6 @@
             <div id="atbComboboxDropdown" class="combobox-dropdown" role="listbox"></div>
           </div>
           <select id="atbDrug" style="display:none;" onchange="calcATB()"></select>
-          <strong id="atbWBadge" style="display:none;">— kg</strong>
         </div>
         <div class="col-12">
           <label>Form Strength Override (mg/mL, mg/tab) <span style="font-size:10.5px; font-weight:400; color:var(--muted); text-transform:none;">(ระบุเมื่อต้องการปรับความเข้มข้นยาจากค่าเริ่มต้น)</span></label>
@@ -1823,7 +1809,6 @@
     <!-- IV Fluids -->
     <section id="fluids" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
-        <strong id="fWBadge" style="display:none;">— kg</strong>
         <div class="col-6">
           <label>Dehydration Degree</label>
           <select id="fDegree" onchange="calcFluids()">
@@ -1861,7 +1846,6 @@
     <!-- PALS Resuscitation -->
     <section id="pals" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
-        <strong id="pWBadge" style="display:none;">— kg</strong>
         <div class="col-12">
           <label>Patient Age (yr) <span style="font-size:10.5px; font-weight:400; color:var(--muted); text-transform:none;">(Optional — คำนวณขนาด ETT ตามช่วงอายุ)</span></label>
           <input type="number" id="pAge" min="0" max="15" step="0.1" placeholder="อายุเพื่อคำนวณ ETT (e.g. 4)" oninput="onPALSAgeChange()">
@@ -1901,7 +1885,6 @@
     <!-- Continuous Infusion Drip Calculator -->
     <section id="drip" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
-        <strong id="dripWBadge" style="display:none;">— kg</strong>
         <div class="col-12">
           <label>Vasoactive & Continuous Infusion Selection</label>
           <select id="dripDrug" style="width:100%; padding:9px 12px; border-radius:var(--r-sm); border:1px solid var(--border); font-size:13.5px; font-weight:700; background:var(--panel); color:var(--ink);" onchange="calcDrip()"></select>
@@ -1929,13 +1912,7 @@
     <section id="seizure" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <h2>Status Epilepticus Resuscitation Protocol</h2>
-            <div class="weight-lock-chip" style="width:auto; padding:4px 10px;">
-              <span>BW:</span>
-              <strong id="seizureWBadge">— kg</strong>
-            </div>
-          </div>
+          <h2 style="margin-bottom:8px;">Status Epilepticus Resuscitation Protocol</h2>
           <div class="note" style="margin-bottom:14px; font-weight:500;">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>สรุปลำดับการรักษาชักในเด็ก:</strong> เริ่มยา Benzodiazepine ทันทีที่ชัก &gt;5 นาที และเตรียมยา 2nd Line ล่วงหน้า
           </div>
@@ -1948,13 +1925,7 @@
     <section id="tox" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <h2>Toxicology & Antidote Dosing</h2>
-            <div class="weight-lock-chip" style="width:auto; padding:4px 10px;">
-              <span>BW:</span>
-              <strong id="toxWBadge">— kg</strong>
-            </div>
-          </div>
+          <h2 style="margin-bottom:8px;">Toxicology & Antidote Dosing</h2>
           <div class="note" style="margin-bottom:14px; font-weight:500;">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>การดูแลเคสได้รับสารพิษ:</strong> ตรวจสอบสิทธิและปรึกษาศูนย์พิษวิทยา (Poison Center) เพิ่มเติมในเคสซับซ้อน
           </div>
@@ -1967,13 +1938,7 @@
     <section id="psa" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <h2>Procedural Sedation & Analgesia (PSA)</h2>
-            <div class="weight-lock-chip" style="width:auto; padding:4px 10px;">
-              <span>BW:</span>
-              <strong id="psaWBadge">— kg</strong>
-            </div>
-          </div>
+          <h2 style="margin-bottom:8px;">Procedural Sedation & Analgesia (PSA)</h2>
           <div class="note" style="margin-bottom:14px; font-weight:500;">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>เตรียมความพร้อม:</strong> เตรียมอุปกรณ์ Suction, Bag-Valve-Mask และ Suction พร้อมก่อนเริ่ม Procedural Sedation เสมอ
           </div>
@@ -1986,15 +1951,9 @@
     <section id="vitals" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <h2 style="margin:0;">Pediatric Vital Signs by Age Reference</h2>
-              <span id="vitalsQuickText" style="font-size:12px; font-weight:600; color:var(--muted); font-family:'JetBrains Mono',monospace; background:var(--panel-subtle); padding:2px 8px; border-radius:var(--r-full); border:1px solid var(--border);"></span>
-            </div>
-            <div class="weight-lock-chip" style="width:auto; padding:4px 10px;">
-              <span>BW:</span>
-              <strong id="vitalsWBadge">— kg</strong>
-            </div>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
+            <h2 style="margin:0;">Pediatric Vital Signs by Age Reference</h2>
+            <span id="vitalsQuickText" style="font-size:12px; font-weight:600; color:var(--muted); font-family:'JetBrains Mono',monospace; background:var(--panel-subtle); padding:2px 8px; border-radius:var(--r-full); border:1px solid var(--border);"></span>
           </div>
           <div id="vitalsOut" class="summary"></div>
         </div>
@@ -2006,13 +1965,7 @@
     <section id="dka" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <h2>Pediatric DKA Protocol & Fluid Management</h2>
-            <div class="weight-lock-chip" style="width:auto; padding:4px 10px;">
-              <span>BW:</span>
-              <strong id="dkaWBadge">— kg</strong>
-            </div>
-          </div>
+          <h2 style="margin-bottom:8px;">Pediatric DKA Protocol & Fluid Management</h2>
           <div class="note" style="margin-bottom:14px; font-weight:500;">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>โปรโตคอลการรักษา DKA ในเด็ก:</strong> ให้ Regular Insulin หลังเริ่มสารน้ำแล้ว 1–2 ชม. และห้ามเริ่ม Insulin หาก K+ &lt; 3.3 mEq/L
           </div>
@@ -2043,13 +1996,7 @@
     <section id="asthma" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <h2>Acute Asthmatic Attack Protocol</h2>
-            <div class="weight-lock-chip" style="width:auto; padding:4px 10px;">
-              <span>BW:</span>
-              <strong id="asthmaWBadge">— kg</strong>
-            </div>
-          </div>
+          <h2 style="margin-bottom:8px;">Acute Asthmatic Attack Protocol</h2>
           <div class="note" style="margin-bottom:14px; font-weight:500;">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>GINA 2026 + TAC 2025:</strong> ให้ SABA ทุก 20 นาที ร่วมกับ Systemic Steroid ตั้งแต่แรก — O₂ เมื่อ SpO₂ &lt; 92% เท่านั้น — ถ้ามี Anaphylaxis features ให้ Epinephrine ก่อน
           </div>
@@ -2060,7 +2007,7 @@
 
     <!-- Standalone Footer -->
     <footer class="app-footer">
-      <div><strong>ER-PED Workstation</strong> — Braun Clinical Instrument <span class="version-chip" id="footerVersionChip" onclick="openChangelogModal()" title="ดูบันทึกการเปลี่ยนแปลง v1.8.1">v1.8.1</span></div>
+      <div><strong>ER-PED Workstation</strong> — Braun Clinical Instrument <span class="version-chip" id="footerVersionChip" onclick="openChangelogModal()" title="ดูบันทึกการเปลี่ยนแปลง v1.9.2">v1.9.2</span></div>
       <div style="font-size:11px; margin-top:4px; color:var(--muted);">
         พัฒนาและอ้างอิงจาก <a href="https://ped-tsh.web.app/" target="_blank" rel="noopener" style="color:var(--accent); font-weight:700; text-decoration:underline;">Pediatric Emergency Workstation (ped-tsh.web.app)</a>
       </div>
@@ -2142,7 +2089,7 @@
   <div id="changelogBackdrop" class="drawer-backdrop hidden" onclick="if(event.target.id==='changelogBackdrop') closeChangelogModal()">
     <div class="drawer" onclick="event.stopPropagation()">
       <div class="drawer-header">
-        <strong id="changelogHeaderTitle" style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg> ER-PED Version <span id="changelogVersionNumber">1.8.1</span> Changelog</strong>
+        <strong id="changelogHeaderTitle" style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg> ER-PED Version <span id="changelogVersionNumber">1.9.2</span> Changelog</strong>
         <button type="button" class="btn" style="padding:4px 10px; font-size:12px; display:inline-flex; align-items:center; gap:4px;" onclick="closeChangelogModal()">Close <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> (Esc)</button>
       </div>
       <div class="drawer-body" style="font-size:13px; line-height:1.6;">

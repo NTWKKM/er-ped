@@ -457,15 +457,6 @@ function updateBiometricUIState() {
     box.classList.toggle('is-derived', !!w && srcInfo.label !== '');
   }
 
-  const wTxt = w
-    ? (srcInfo.label ? `${w.toFixed(1)} kg · ${srcInfo.label}` : `${w.toFixed(1)} kg`)
-    : '— kg';
-
-  ['doseWBadge', 'atbWBadge', 'fWBadge', 'pWBadge', 'dripWBadge', 'seizureWBadge', 'toxWBadge', 'psaWBadge', 'vitalsWBadge', 'dkaWBadge', 'asthmaWBadge'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = wTxt;
-  });
-
   refreshBroselowChip();
   calcAll();
 }
@@ -1818,6 +1809,7 @@ function calcNCPR(){
   if (!DS) return;
   const w = parseFloat(document.getElementById('nW')?.value) || getWeight() || gIBW;
   const GA = parseFloat(document.getElementById('nGA')?.value);
+  const BG = parseFloat(document.getElementById('nBG')?.value);
   const out = document.getElementById('nOut');
   if (!w){ if(out) out.textContent = 'Please enter birth weight (kg)'; return; }
 
@@ -1855,7 +1847,15 @@ function calcNCPR(){
   blocks.push(`<strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg> Resuscitation Guidelines:</strong>`);
   blocks.push(`• <strong>PPV Settings:</strong> Flow 10 L/min, Rate 40–60/min, PIP 20–25 cmH₂O, PEEP 5 cmH₂O`);
   if (GA) blocks.push(`• <strong>Initial FiO₂ (${GA} wk):</strong> ${GA >= 35 ? '21% (Room Air)' : '21–30%'}`);
-  blocks.push(`• <strong>Hypoglycemia (D10W Bolus):</strong> ${(2*w).toFixed(1)} mL D10W IV bolus over 2 min, then ${(3.5*w).toFixed(1)} mL/hr infusion if BG < 40 mg/dL`);
+  if (!isNaN(BG) && BG > 0) {
+    if (BG < 40) {
+      blocks.push(`• <strong style="color:var(--danger);">🚨 Hypoglycemia Alert (BG ${BG} mg/dL < 40 mg/dL):</strong> ${(2*w).toFixed(1)} mL D10W IV bolus over 2 min, then ${(3.5*w).toFixed(1)} mL/hr infusion`);
+    } else {
+      blocks.push(`• <strong>Blood Glucose (${BG} mg/dL):</strong> Normoglycemia (≥ 40 mg/dL) — continue monitoring`);
+    }
+  } else {
+    blocks.push(`• <strong>Hypoglycemia Protocol:</strong> ${(2*w).toFixed(1)} mL D10W IV bolus over 2 min, then ${(3.5*w).toFixed(1)} mL/hr infusion if BG < 40 mg/dL`);
+  }
 
   if (out) out.innerHTML = blocks.join('<br>');
 }
@@ -2361,20 +2361,6 @@ function calcVitals() {
 
   html += '</tbody></table></div>';
   outEl.innerHTML = html;
-}
-
-function copyCustomOrder(orderStr) {
-  if (orderStr) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(orderStr).then(() => {
-        showToast('📋 Order copied to clipboard!');
-      }).catch(() => {
-        fallbackCopyText(orderStr);
-      });
-    } else {
-      fallbackCopyText(orderStr);
-    }
-  }
 }
 
 // --------- 🩺 Pediatric DKA Protocol Calculator ---------
