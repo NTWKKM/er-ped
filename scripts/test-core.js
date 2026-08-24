@@ -52,9 +52,10 @@ console.log('✅ JSDOM Environment & Dataset (DS) initialized synchronously.\n')
 
 // 4. DOM Element Smoke Tests
 const essentialIds = [
-  'doseOut', 'nOut', 'atbOut', 'pOut', 'fOut', 'dripOut', 'seizureOut', 'dkaOut', 'psaOut', 'vitalsOut', 'asthmaOut',
+  'doseOut', 'nOut', 'atbOut', 'pOut', 'fOut', 'dripOut', 'seizureOut', 'dkaOut', 'psaOut', 'vitalsOut', 'asthmaOut', 'lyteOut',
   'doseDrug', 'atbDrug', 'dripDrug', 'weight', 'age', 'nW', 'fDegree', 'fPlan',
-  'dkaSeverity', 'dkaPriorBolus', 'useIBW', 'ibwVal', 'vitalsQuickText', 'a2hsBtn'
+  'dkaSeverity', 'dkaPriorBolus', 'useIBW', 'ibwVal', 'vitalsQuickText', 'a2hsBtn',
+  'lyteNa', 'lyteGlucose', 'lyteTotalCa', 'lyteAlbumin', 'lyteK', 'lytePH'
 ];
 
 essentialIds.forEach(id => {
@@ -484,7 +485,7 @@ test('Standalone Footer Integrity: footer is direct child of container and not t
   assert.strictEqual(footer.parentElement.classList.contains('container'), true, 'Footer must be a direct child of .container');
   
   const sections = Array.from(document.querySelectorAll('section[role="tabpanel"]'));
-  assert.strictEqual(sections.length, 12, 'Must have 12 clinical tabpanel sections');
+  assert.strictEqual(sections.length, 13, 'Must have 13 clinical tabpanel sections');
   sections.forEach(section => {
     assert.strictEqual(section.contains(footer), false, `Section #${section.id} must NOT contain the footer`);
   });
@@ -647,7 +648,7 @@ test('Version Auto-Sync: syncVersionFromSW picks highest/latest version when mul
   // Test using Promise microtask resolution
   return Promise.resolve().then(() => {
     const chip = document.getElementById('footerVersionChip');
-    assert.strictEqual(chip.textContent, 'v1.9.2', 'Footer chip must resolve to the latest cache version v1.9.2');
+    assert.strictEqual(chip.textContent, 'v1.10.0', 'Footer chip must resolve to the latest cache version v1.10.0');
     delete global.caches;
   });
 });
@@ -675,6 +676,125 @@ test('NCPR Calculator: Blood Glucose (nBG) input dynamically guides hypoglycemia
   window.eval('calcNCPR()');
   out = document.getElementById('nOut').innerHTML;
   assert(out.includes('Hypoglycemia Protocol:</strong> 6.0 mL D10W IV bolus over 2 min, then 10.5 mL/hr infusion if BG &lt; 40 mg/dL'), 'Default protocol check');
+});
+
+// --- ELECTROLYTE IMBALANCE & CLINICAL CALCULATORS SUITE ---
+
+test('Electrolytes: Corrected Sodium (Katz vs ISPAD formulas)', () => {
+  const katz = appExports.calcCorrectedNa(130, 350, 'katz');
+  const ispad = appExports.calcCorrectedNa(130, 350, 'ispad');
+  assert.strictEqual(katz, 134.0, 'Katz 1.6 factor: 130 + 1.6 * (250/100) = 134.0');
+  assert.strictEqual(ispad, 135.0, 'ISPAD 2.0 factor: 130 + 2.0 * (250/100) = 135.0');
+  // Normal glucose
+  assert.strictEqual(appExports.calcCorrectedNa(135, 90), 135, 'Glucose <= 100 should not modify Na');
+});
+
+test('Electrolytes: Corrected Calcium for Hypoalbuminemia (Payne formula)', () => {
+  const corrCa = appExports.calcCorrectedCa(7.2, 2.5);
+  // 7.2 + 0.8 * (4.0 - 2.5) = 7.2 + 1.2 = 8.4 mg/dL
+  assert.strictEqual(Math.round(corrCa * 10) / 10, 8.4, 'Payne formula: 7.2 + 0.8 * 1.5 = 8.4 mg/dL');
+});
+
+test('Electrolytes: Potassium pH shift baseline estimation', () => {
+  const estK = appExports.calcKShift(4.0, 7.10);
+  // pH 7.10 -> deltaPh = 0.30 -> estK = 4.0 - (0.30 * 6.0) = 4.0 - 1.8 = 2.2 mEq/L
+  assert.strictEqual(Math.round(estK * 10) / 10, 2.2, 'pH 7.10 with K 4.0 shifts to baseline ~2.2 mEq/L at pH 7.40');
+});
+
+test('Electrolytes: Total Sodium Deficit in Hyponatremia', () => {
+  // 10 kg child (TBW 60% = 6 L), Measured Na 120, Target Na 135
+  const deficit = appExports.calcNaDeficit(10, 120, 135, 5);
+  assert.strictEqual(deficit, 90, 'Na Deficit = 6 L * 15 mEq/L = 90 mEq');
+});
+
+test('Electrolytes: Free Water Deficit in Hypernatremia', () => {
+  // 10 kg child (TBW 60% = 6 L), Measured Na 160, Target Na 140
+  const deficit = appExports.calcFreeWaterDeficit(10, 160, 140, 5);
+  // 6 * (160/140 - 1) = 6 * (20/140) = 6 * 0.142857 = 0.8571 L
+  assert(deficit > 0.85 && deficit < 0.86, 'Free water deficit should be ~0.857 L');
+});
+
+test('Electrolytes: Bicarbonate Deficit in Acidosis', () => {
+  // 10 kg child, Measured HCO3 8, Target 15
+  const deficit = appExports.calcBicarbonateDeficit(10, 8, 15);
+  // 10 * 0.3 * (15 - 8) = 3 * 7 = 21 mEq
+  assert.strictEqual(deficit, 21, 'HCO3 Deficit = 10 * 0.3 * 7 = 21 mEq');
+});
+
+test('Electrolytes: Anion Gap, Albumin-Corrected AG, and Delta Ratio', () => {
+  // Na 140, Cl 100, HCO3 15 -> AG = 25
+  const ag = appExports.calcAnionGap(140, 100, 15);
+  assert.strictEqual(ag, 25, 'AG = 140 - (100 + 15) = 25 mEq/L');
+
+  // Albumin 2.0 g/dL -> Corr AG = 25 + 2.5 * (4.0 - 2.0) = 30.0
+  const corrAG = appExports.calcCorrectedAnionGap(ag, 2.0);
+  assert.strictEqual(corrAG, 30.0, 'Corrected AG = 25 + 5.0 = 30.0 mEq/L');
+
+  // Delta Ratio: (25 - 12) / (24 - 15) = 13 / 9 = 1.44 (Pure High AG)
+  const deltaRatio = appExports.calcDeltaRatio(ag, 15);
+  assert(deltaRatio > 1.43 && deltaRatio < 1.45, 'Delta ratio should be ~1.44');
+});
+
+test('Electrolytes: Osmolality, Effective Tonicity & Osmolar Gap', () => {
+  // Na 140, Glucose 180, BUN 28 -> Calc Osm = 280 + 10 + 10 = 300
+  const osm = appExports.calcOsmolality(140, 180, 28);
+  assert.strictEqual(osm, 300, 'Calculated Osm = 280 + 10 + 10 = 300 mOsm/kg');
+
+  const effTonicity = appExports.calcEffectiveTonicity(140, 180);
+  assert.strictEqual(effTonicity, 290, 'Effective Tonicity = 280 + 10 = 290 mOsm/kg');
+
+  // Measured Osm 325 -> Osm Gap = 25 (> 10 Toxic Alcohol risk)
+  const gap = appExports.calcOsmolarGap(325, osm);
+  assert.strictEqual(gap, 25, 'Osmolar Gap = 325 - 300 = 25 mOsm/kg');
+});
+
+test('Electrolytes: FeNa, FeUrea, UAG, and TTKG renal indices', () => {
+  // FeNa: UNa 20, SNa 140, UCr 100, SCr 1.0 -> (20 * 1.0) / (140 * 100) * 100 = 0.1428% (Prerenal)
+  const fena = appExports.calcFeNa(20, 140, 100, 1.0);
+  assert(fena > 0.14 && fena < 0.15, 'FeNa should be ~0.14%');
+
+  // UAG: UNa 30, UK 20, UCl 80 -> (30 + 20) - 80 = -30 (GI loss)
+  const uag = appExports.calcUAG(30, 20, 80);
+  assert.strictEqual(uag, -30, 'UAG = (30 + 20) - 80 = -30 mEq/L');
+
+  // TTKG: UK 40, SK 3.5, UOsm 600, SOsm 300 -> (40 * 300) / (3.5 * 600) = 12000 / 2100 = 5.71
+  const ttkg = appExports.calcTTKG(40, 3.5, 600, 300);
+  assert(ttkg > 5.70 && ttkg < 5.72, 'TTKG should be ~5.71');
+});
+
+test('Electrolytes UI Engine: 10 kg child with labs populated renders complete clinical cards and protocols', () => {
+  document.getElementById('weight').value = '10';
+  document.getElementById('age').value = '3';
+  window.eval('onWeightChange()');
+
+  document.getElementById('lyteNa').value = '130';
+  document.getElementById('lyteGlucose').value = '350';
+  document.getElementById('lyteTotalCa').value = '7.2';
+  document.getElementById('lyteAlbumin').value = '2.5';
+  document.getElementById('lyteK').value = '4.0';
+  document.getElementById('lytePH').value = '7.10';
+  document.getElementById('lyteCl').value = '98';
+  document.getElementById('lyteHCO3').value = '12';
+
+  window.eval('calcElectrolytes()');
+  const out = document.getElementById('lyteOut').innerHTML;
+
+  // 1. Quick Correctors
+  assert(out.includes('134.0'), 'Corrected Na Katz 134.0 check');
+  assert(out.includes('135.0'), 'Corrected Na ISPAD 135.0 check');
+  assert(out.includes('8.4'), 'Corrected Ca 8.4 check');
+  assert(out.includes('2.2'), 'Estimated Baseline K+ 2.2 check');
+
+  // 2. Emergency 3% NaCl Bolus
+  assert(out.includes('30–50 mL'), '3% NaCl bolus 30–50 mL check for 10 kg child');
+
+  // 3. Hyperkalemia 3-Step Cocktail
+  assert(out.includes('5.0 mL'), '10% Calcium Gluconate 5.0 mL check for 10 kg');
+  assert(out.includes('RI 1.0 U'), 'Regular Insulin 1.0 U check for 10 kg');
+  assert(out.includes('D10W 50 mL'), 'D10W 50 mL check for 10 kg');
+
+  // 4. Age reference table
+  assert(out.includes('Child (1–12 years)'), 'Reference table row check');
 });
 
 console.log(`\n----------------------------------------`);

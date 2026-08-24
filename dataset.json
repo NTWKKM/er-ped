@@ -4075,5 +4075,193 @@
         "Impending respiratory failure / need for intubation"
       ]
     }
+  },
+  "electrolyteRef": [
+    {
+      "ageKey": "preterm",
+      "ageLabel": "Preterm (< 37 wk)",
+      "minAgeMonths": 0,
+      "maxAgeMonths": 0,
+      "isPreterm": true,
+      "na": "130–145",
+      "k": "3.0–6.0",
+      "cl": "95–110",
+      "hco3": "14–20",
+      "totalCa": "6.2–11.0",
+      "iCa": "1.05–1.40 mmol/L (4.2–5.6 mg/dL)",
+      "mg": "1.5–2.5",
+      "po4": "5.4–10.9",
+      "osmolality": "266–285",
+      "anionGap": "8–16",
+      "fena": "< 3.0%",
+      "notes": "Physiologic renal Na wasting common; lower renal HCO3 threshold."
+    },
+    {
+      "ageKey": "neonate",
+      "ageLabel": "Neonate (0–28 days)",
+      "minAgeMonths": 0,
+      "maxAgeMonths": 1,
+      "isPreterm": false,
+      "na": "133–146",
+      "k": "3.7–5.9",
+      "cl": "96–111",
+      "hco3": "17–24",
+      "totalCa": "7.6–10.4",
+      "iCa": "1.00–1.30 mmol/L (4.0–5.2 mg/dL)",
+      "mg": "1.6–2.4",
+      "po4": "4.5–9.0",
+      "osmolality": "266–285",
+      "anionGap": "8–16",
+      "fena": "< 2.5%",
+      "notes": "Higher normal K+ due to lower tubular secretion; beware heel stick hemolysis."
+    },
+    {
+      "ageKey": "infant",
+      "ageLabel": "Infant (1–12 months)",
+      "minAgeMonths": 1,
+      "maxAgeMonths": 12,
+      "isPreterm": false,
+      "na": "135–145",
+      "k": "4.1–5.3",
+      "cl": "96–108",
+      "hco3": "19–24",
+      "totalCa": "9.0–11.0",
+      "iCa": "1.20–1.38 mmol/L (4.8–5.5 mg/dL)",
+      "mg": "1.7–2.3",
+      "po4": "4.0–6.5",
+      "osmolality": "275–295",
+      "anionGap": "8–14",
+      "fena": "< 1.0%",
+      "notes": "High PO4 normal due to rapid bone mineralization."
+    },
+    {
+      "ageKey": "child",
+      "ageLabel": "Child (1–12 years)",
+      "minAgeMonths": 12,
+      "maxAgeMonths": 144,
+      "isPreterm": false,
+      "na": "135–145",
+      "k": "3.4–4.7",
+      "cl": "96–108",
+      "hco3": "22–26",
+      "totalCa": "8.8–10.8",
+      "iCa": "1.20–1.35 mmol/L (4.8–5.4 mg/dL)",
+      "mg": "1.7–2.3",
+      "po4": "3.2–5.8",
+      "osmolality": "275–295",
+      "anionGap": "8–12",
+      "fena": "< 1.0%",
+      "notes": "FeNa < 1% Prerenal vs > 2% Intrinsic AKI / ATN."
+    },
+    {
+      "ageKey": "adolescent",
+      "ageLabel": "Adolescent & Adult (> 12 years)",
+      "minAgeMonths": 144,
+      "maxAgeMonths": 240,
+      "isPreterm": false,
+      "na": "135–145",
+      "k": "3.5–5.0",
+      "cl": "98–107",
+      "hco3": "22–28",
+      "totalCa": "8.4–10.2",
+      "iCa": "1.15–1.33 mmol/L (4.6–5.3 mg/dL)",
+      "mg": "1.7–2.2",
+      "po4": "2.5–4.5",
+      "osmolality": "275–295",
+      "anionGap": "8–12",
+      "fena": "< 1.0%",
+      "notes": "Adult reference values standard."
+    }
+  ],
+  "electrolyteProtocols": {
+    "hyperkalemia": [
+      {
+        "step": 1,
+        "name": "10% Calcium Gluconate (Membrane Stabilization)",
+        "doseMgPerKg": 50,
+        "doseMlPerKg": 0.5,
+        "maxMl": 10,
+        "maxMg": 1000,
+        "route": "IV slow over 5–10 min",
+        "prep": "10% solution (100 mg/mL = 0.465 mEq Ca/mL)",
+        "note": "Cardioprotection (30–60 min duration). Does not lower K+. Monitor ECG during infusion."
+      },
+      {
+        "step": 2,
+        "name": "Regular Insulin + D10W (Intracellular Shift)",
+        "insulinDoseUPerKg": 0.1,
+        "maxInsulinU": 10,
+        "d10wMlPerKg": 5,
+        "maxD10wMl": 250,
+        "route": "IV over 30 min",
+        "prep": "RI 0.1 U/kg + D10W 5 mL/kg (0.5 g/kg)",
+        "note": "Check DTX every 15–30 min to prevent hypoglycemia."
+      },
+      {
+        "step": 2,
+        "name": "Salbutamol Nebulization (Intracellular Shift)",
+        "fixedDoseLt25kg": "2.5 mg",
+        "fixedDoseGte25kg": "5.0 mg",
+        "route": "NEB over 10–15 min",
+        "prep": "Respirator solution 5 mg/mL",
+        "note": "Can repeat q20min. Synergistic with Insulin."
+      },
+      {
+        "step": 2,
+        "name": "7.5% / 8.4% Sodium Bicarbonate (if Acidosis)",
+        "doseMeqPerKg": 1,
+        "maxMeq": 50,
+        "route": "IV slow over 10–20 min",
+        "prep": "7.5% NaHCO3 (0.89 mEq/mL) or 8.4% (1.0 mEq/mL)",
+        "note": "Use only if concurrent metabolic acidosis."
+      },
+      {
+        "step": 3,
+        "name": "Furosemide (Lasix) (Total Elimination)",
+        "doseMgPerKg": 1,
+        "maxMg": 40,
+        "route": "IV push",
+        "prep": "10 mg/mL ampoule",
+        "note": "Enhances renal potassium excretion if urine output preserved."
+      },
+      {
+        "step": 3,
+        "name": "Kalimate / Kayexalate (Total Elimination)",
+        "doseGPerKg": 1,
+        "maxG": 30,
+        "route": "PO or PR retention enema",
+        "prep": "Powder 5 g sachet in water/sorbitol",
+        "note": "Cation exchange resin for GI elimination. Slow onset (2–4 hours)."
+      }
+    ],
+    "symptomaticHyponatremia": {
+      "name": "3% Hypertonic Saline Bolus (Seizure / Encephalopathy)",
+      "doseMlPerKgMin": 3,
+      "doseMlPerKgMax": 5,
+      "maxMl": 150,
+      "route": "IV infusion over 10–20 min",
+      "prep": "3% NaCl (0.513 mEq Na/mL)",
+      "note": "Expected to raise serum Na by +2 to 3 mEq/L, reversing brain herniation and stopping seizures. May repeat once if seizing."
+    },
+    "hypocalcemia": {
+      "name": "10% Calcium Gluconate (Acute Symptomatic)",
+      "doseMgPerKg": 100,
+      "doseMlPerKg": 1.0,
+      "maxMl": 20,
+      "maxMg": 2000,
+      "route": "IV slow over 10–20 min",
+      "prep": "10% Calcium Gluconate (100 mg/mL)",
+      "note": "For acute tetany, laryngospasm, seizures, or prolonged QTc. Continuous ECG monitoring. Avoid extravasation."
+    },
+    "hypomagnesemia": {
+      "name": "50% Magnesium Sulfate (Hypomagnesemia / Torsades)",
+      "doseMgPerKg": 50,
+      "doseMlPerKg": 0.1,
+      "maxMl": 4,
+      "maxMg": 2000,
+      "route": "IV infusion over 20–30 min (IV push in 1–2 min if pulseless Torsades)",
+      "prep": "50% MgSO4 (500 mg/mL = 4 mEq/mL)",
+      "note": "Dilute in D5W or NSS. Monitor BP, HR, and deep tendon reflexes."
+    }
   }
 }

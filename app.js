@@ -604,7 +604,7 @@ function showTab(id, btn) {
     }
   }
   
-  ['dose','atb','fluids','pals','ncpr','drip','seizure','tox','psa','vitals','dka','asthma'].forEach(x => {
+  ['dose','atb','fluids','pals','ncpr','drip','seizure','tox','psa','vitals','dka','asthma','electrolytes'].forEach(x => {
     const el = document.getElementById(x);
     if (el) {
       const isActive = (x === id);
@@ -629,6 +629,8 @@ function showTab(id, btn) {
     calcDKA();
   } else if (id === 'asthma') {
     calcAsthma();
+  } else if (id === 'electrolytes') {
+    calcElectrolytes();
   }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -648,6 +650,7 @@ function setupKeyboardShortcuts(){
       if (e.key === '0') { e.preventDefault(); showTab('vitals'); }
       if (e.key.toLowerCase() === 'k') { e.preventDefault(); showTab('dka'); }
       if (e.key.toLowerCase() === 'a') { e.preventDefault(); showTab('asthma'); }
+      if (e.key.toLowerCase() === 'e') { e.preventDefault(); showTab('electrolytes'); }
     }
     if (e.key === 'Escape') {
       closeAllComboboxes();
@@ -1363,7 +1366,7 @@ function dosesPerDayFromFreq(freq){
   return null;
 }
 
-function calcAll(){ calcDose(); calcATB(); calcFluids(); calcPALS(); calcNCPR(); calcDrip(); calcSeizure(); calcTox(); calcPSA(); calcVitals(); calcDKA(); calcAsthma(); }
+function calcAll(){ calcDose(); calcATB(); calcFluids(); calcPALS(); calcNCPR(); calcDrip(); calcSeizure(); calcTox(); calcPSA(); calcVitals(); calcDKA(); calcAsthma(); calcElectrolytes(); }
 
 // --------- 💊 Pediatric Dose Calculator ---------
 
@@ -2799,6 +2802,483 @@ function calcAsthma() {
   outEl.innerHTML = html;
 }
 
+// --------- 🧪 Pediatric Electrolytes & Corrected Imbalance Module ---------
+
+function calcCorrectedNa(measuredNa, glucose, formula = 'katz') {
+  if (typeof measuredNa !== 'number' || isNaN(measuredNa) || measuredNa <= 0) return null;
+  if (typeof glucose !== 'number' || isNaN(glucose) || glucose <= 0) return measuredNa;
+  const factor = (formula === 'ispad' || formula === 'hillier') ? 2.0 : 1.6;
+  if (glucose <= 100) return measuredNa;
+  const delta = factor * ((glucose - 100) / 100);
+  return measuredNa + delta;
+}
+
+function calcCorrectedCa(totalCa, albumin) {
+  if (typeof totalCa !== 'number' || isNaN(totalCa) || totalCa <= 0) return null;
+  if (typeof albumin !== 'number' || isNaN(albumin) || albumin <= 0) return totalCa;
+  return totalCa + 0.8 * (4.0 - albumin);
+}
+
+function calcKShift(measuredK, ph) {
+  if (typeof measuredK !== 'number' || isNaN(measuredK) || measuredK <= 0) return null;
+  if (typeof ph !== 'number' || isNaN(ph) || ph <= 0) return measuredK;
+  const deltaPh = 7.40 - ph;
+  return measuredK - (deltaPh * 6.0);
+}
+
+function getTBWFactor(ageYr, isFemale = false) {
+  if (ageYr === null || ageYr === undefined || isNaN(ageYr)) return 0.60;
+  if (ageYr < 1 / 12) return 0.70;
+  if (ageYr < 1) return 0.65;
+  if (ageYr >= 12 && isFemale) return 0.50;
+  return 0.60;
+}
+
+function calcNaDeficit(weightKg, measuredNa, targetNa = 135, ageYr = 5, isFemale = false) {
+  if (!weightKg || weightKg <= 0 || !measuredNa || measuredNa <= 0) return null;
+  if (measuredNa >= targetNa) return 0;
+  const tbwFactor = getTBWFactor(ageYr, isFemale);
+  const tbw = weightKg * tbwFactor;
+  return tbw * (targetNa - measuredNa);
+}
+
+function calcFreeWaterDeficit(weightKg, measuredNa, targetNa = 140, ageYr = 5, isFemale = false) {
+  if (!weightKg || weightKg <= 0 || !measuredNa || measuredNa <= 0) return null;
+  if (measuredNa <= targetNa) return 0;
+  const tbwFactor = getTBWFactor(ageYr, isFemale);
+  const tbw = weightKg * tbwFactor;
+  return tbw * ((measuredNa / targetNa) - 1);
+}
+
+function calcBicarbonateDeficit(weightKg, measuredHCO3, targetHCO3 = 15) {
+  if (!weightKg || weightKg <= 0 || measuredHCO3 === null || isNaN(measuredHCO3)) return null;
+  if (measuredHCO3 >= targetHCO3) return 0;
+  return weightKg * 0.3 * (targetHCO3 - measuredHCO3);
+}
+
+function calcAnionGap(na, cl, hco3) {
+  if (na === null || isNaN(na) || cl === null || isNaN(cl) || hco3 === null || isNaN(hco3)) return null;
+  return na - (cl + hco3);
+}
+
+function calcCorrectedAnionGap(ag, albumin) {
+  if (ag === null || isNaN(ag)) return null;
+  if (albumin === null || isNaN(albumin) || albumin <= 0) return ag;
+  return ag + 2.5 * (4.0 - albumin);
+}
+
+function calcDeltaRatio(ag, hco3) {
+  if (ag === null || isNaN(ag) || hco3 === null || isNaN(hco3)) return null;
+  const deltaAG = ag - 12;
+  const deltaHCO3 = 24 - hco3;
+  if (deltaHCO3 === 0) return null;
+  return deltaAG / deltaHCO3;
+}
+
+function calcOsmolality(na, glucose, bun) {
+  if (na === null || isNaN(na) || na <= 0) return null;
+  const g = (glucose && !isNaN(glucose) && glucose > 0) ? glucose / 18 : 0;
+  const b = (bun && !isNaN(bun) && bun > 0) ? bun / 2.8 : 0;
+  return (2 * na) + g + b;
+}
+
+function calcEffectiveTonicity(na, glucose) {
+  if (na === null || isNaN(na) || na <= 0) return null;
+  const g = (glucose && !isNaN(glucose) && glucose > 0) ? glucose / 18 : 0;
+  return (2 * na) + g;
+}
+
+function calcOsmolarGap(measuredOsm, calcOsm) {
+  if (measuredOsm === null || isNaN(measuredOsm) || calcOsm === null || isNaN(calcOsm)) return null;
+  return measuredOsm - calcOsm;
+}
+
+function calcFeNa(uNa, sNa, uCr, sCr) {
+  if (uNa === null || sNa === null || uCr === null || sCr === null || isNaN(uNa) || isNaN(sNa) || isNaN(uCr) || isNaN(sCr) || sNa <= 0 || uCr <= 0) return null;
+  return ((uNa * sCr) / (sNa * uCr)) * 100;
+}
+
+function calcFeUrea(uUrea, sBUN, uCr, sCr) {
+  if (uUrea === null || sBUN === null || uCr === null || sCr === null || isNaN(uUrea) || isNaN(sBUN) || isNaN(uCr) || isNaN(sCr) || sBUN <= 0 || uCr <= 0) return null;
+  return ((uUrea * sCr) / (sBUN * uCr)) * 100;
+}
+
+function calcUAG(uNa, uK, uCl) {
+  if (uNa === null || uK === null || uCl === null || isNaN(uNa) || isNaN(uK) || isNaN(uCl)) return null;
+  return (uNa + uK) - uCl;
+}
+
+function calcTTKG(uK, sK, uOsm, sOsm) {
+  if (uK === null || sK === null || uOsm === null || sOsm === null || isNaN(uK) || isNaN(sK) || isNaN(uOsm) || isNaN(sOsm) || sK <= 0 || uOsm <= 0) return null;
+  return (uK * sOsm) / (sK * uOsm);
+}
+
+function getActiveElectrolyteAgeKey(ageYr) {
+  if (ageYr === null || ageYr === undefined || isNaN(ageYr)) return 'child';
+  const ageMonths = ageYr * 12;
+  if (ageMonths < 1) return 'neonate';
+  if (ageMonths < 12) return 'infant';
+  if (ageYr < 12) return 'child';
+  return 'adolescent';
+}
+
+function calcElectrolytes() {
+  const outEl = document.getElementById('lyteOut');
+  if (!outEl) return;
+  const w = getWeight();
+  const ageYr = getAgeInYears();
+
+  if (!w || w <= 0) {
+    outEl.innerHTML = '<div class="badge-cap danger">⚠️ กรุณากรอกน้ำหนักตัว (ABW) ที่ส่วนบนของหน้าจอก่อนคำนวณ</div>';
+    return;
+  }
+
+  // Parse lab inputs
+  const na = parseFloat(document.getElementById('lyteNa')?.value);
+  const glucose = parseFloat(document.getElementById('lyteGlucose')?.value);
+  const totalCa = parseFloat(document.getElementById('lyteTotalCa')?.value);
+  const albumin = parseFloat(document.getElementById('lyteAlbumin')?.value);
+  const k = parseFloat(document.getElementById('lyteK')?.value);
+  const ph = parseFloat(document.getElementById('lytePH')?.value);
+  const cl = parseFloat(document.getElementById('lyteCl')?.value);
+  const hco3 = parseFloat(document.getElementById('lyteHCO3')?.value);
+  const bun = parseFloat(document.getElementById('lyteBUN')?.value);
+  const sCr = parseFloat(document.getElementById('lyteSCr')?.value);
+  const measOsm = parseFloat(document.getElementById('lyteMeasOsm')?.value);
+  const targetNa = parseFloat(document.getElementById('lyteTargetNa')?.value) || 135;
+
+  const uNa = parseFloat(document.getElementById('lyteUNa')?.value);
+  const uK = parseFloat(document.getElementById('lyteUK')?.value);
+  const uCl = parseFloat(document.getElementById('lyteUCl')?.value);
+  const uCr = parseFloat(document.getElementById('lyteUCr')?.value);
+  const uUrea = parseFloat(document.getElementById('lyteUUrea')?.value);
+  const uOsm = parseFloat(document.getElementById('lyteUOsm')?.value);
+
+  // Compute values
+  const corrNaKatz = (!isNaN(na) && !isNaN(glucose)) ? calcCorrectedNa(na, glucose, 'katz') : null;
+  const corrNaISPAD = (!isNaN(na) && !isNaN(glucose)) ? calcCorrectedNa(na, glucose, 'ispad') : null;
+  const corrCa = (!isNaN(totalCa) && !isNaN(albumin)) ? calcCorrectedCa(totalCa, albumin) : null;
+  const estKShift = (!isNaN(k) && !isNaN(ph)) ? calcKShift(k, ph) : null;
+
+  const naDeficit = (!isNaN(na) && na < targetNa) ? calcNaDeficit(w, na, targetNa, ageYr) : null;
+  const freeWaterDeficit = (!isNaN(na) && na > 140) ? calcFreeWaterDeficit(w, na, 140, ageYr) : null;
+  const hco3Deficit = (!isNaN(hco3) && hco3 < 15) ? calcBicarbonateDeficit(w, hco3, 15) : null;
+
+  const ag = (!isNaN(na) && !isNaN(cl) && !isNaN(hco3)) ? calcAnionGap(na, cl, hco3) : null;
+  const corrAG = (ag !== null && !isNaN(albumin)) ? calcCorrectedAnionGap(ag, albumin) : ag;
+  const deltaRatio = (ag !== null && !isNaN(hco3)) ? calcDeltaRatio(ag, hco3) : null;
+
+  const calcOsm = !isNaN(na) ? calcOsmolality(na, glucose, bun) : null;
+  const effTonicity = !isNaN(na) ? calcEffectiveTonicity(na, glucose) : null;
+  const osmGap = (measOsm && calcOsm) ? calcOsmolarGap(measOsm, calcOsm) : null;
+
+  const fena = (!isNaN(uNa) && !isNaN(na) && !isNaN(uCr) && !isNaN(sCr)) ? calcFeNa(uNa, na, uCr, sCr) : null;
+  const feUrea = (!isNaN(uUrea) && !isNaN(bun) && !isNaN(uCr) && !isNaN(sCr)) ? calcFeUrea(uUrea, bun, uCr, sCr) : null;
+  const uag = (!isNaN(uNa) && !isNaN(uK) && !isNaN(uCl)) ? calcUAG(uNa, uK, uCl) : null;
+  const ttkg = (!isNaN(uK) && !isNaN(k) && !isNaN(uOsm) && calcOsm) ? calcTTKG(uK, k, uOsm, calcOsm) : null;
+
+  // Emergency 3% NaCl Bolus
+  const na3PctMinMl = Math.min(w * 3, 100);
+  const na3PctMaxMl = Math.min(w * 5, 150);
+
+  let html = '';
+
+  // ── SECTION 1: Quick Clinical Correctors Display ──
+  html += `
+    <div style="margin-bottom:12px;">
+      <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+        <span>Corrected Electrolyte Values & Transcellular Shifts</span>
+      </div>
+      <div class="grid">
+        <!-- Corrected Sodium Card -->
+        <div class="col-4">
+          <div style="background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:10px 12px; height:100%;">
+            <div style="font-size:11.5px; color:var(--muted); font-weight:600; margin-bottom:4px;">CORRECTED SODIUM (HYPERGLYCEMIA)</div>
+            ${corrNaKatz !== null ? `
+              <div style="font-size:18px; font-weight:800; color:var(--ink); font-family:var(--font-mono); margin-bottom:4px;">
+                ${corrNaKatz.toFixed(1)} <span style="font-size:12px; font-weight:600; color:var(--muted);">mEq/L (Katz 1.6)</span>
+              </div>
+              <div style="font-size:12.5px; font-weight:700; color:var(--accent); font-family:var(--font-mono);">
+                ${corrNaISPAD.toFixed(1)} <span style="font-size:11px; font-weight:500; color:var(--muted);">mEq/L (ISPAD 2.0)</span>
+              </div>
+              <div style="font-size:11px; color:var(--muted); margin-top:6px; line-height:1.4;">
+                Measured Na: <strong>${na}</strong> | Glucose: <strong>${glucose} mg/dL</strong>
+                ${glucose >= 250 ? '<br><span style="color:var(--warning); font-weight:700;">⚠️ ใน DKA เมื่อน้ำตาลลด Na ต้องค่อยๆ เพิ่มขึ้น หาก Corrected Na ลดลงให้ระวัง Cerebral Edema</span>' : ''}
+              </div>
+            ` : `
+              <div style="font-size:12px; color:var(--muted); font-style:italic;">กรอก Serum Na และ Glucose เพื่อคำนวณ</div>
+            `}
+          </div>
+        </div>
+
+        <!-- Corrected Calcium Card -->
+        <div class="col-4">
+          <div style="background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:10px 12px; height:100%;">
+            <div style="font-size:11.5px; color:var(--muted); font-weight:600; margin-bottom:4px;">CORRECTED CALCIUM (PAYNE)</div>
+            ${corrCa !== null ? `
+              <div style="font-size:18px; font-weight:800; color:var(--ink); font-family:var(--font-mono); margin-bottom:4px;">
+                ${corrCa.toFixed(1)} <span style="font-size:12px; font-weight:600; color:var(--muted);">mg/dL</span>
+              </div>
+              <div style="margin-bottom:6px;">
+                ${corrCa < 8.8 ? '<span class="dose-badge" style="background:var(--warning-soft); color:var(--warning);">Hypocalcemia</span>' : (corrCa > 10.8 ? '<span class="dose-badge" style="background:var(--danger-soft); color:var(--danger);">Hypercalcemia</span>' : '<span class="dose-badge" style="background:var(--good-soft); color:var(--good);">Normal Ca</span>')}
+              </div>
+              <div style="font-size:11px; color:var(--muted); line-height:1.4;">
+                Total Ca: <strong>${totalCa}</strong> | Albumin: <strong>${albumin} g/dL</strong><br>
+                <span>สูตร: Ca + 0.8 × (4.0 - Albumin)</span>
+              </div>
+            ` : `
+              <div style="font-size:12px; color:var(--muted); font-style:italic;">กรอก Total Ca และ Albumin เพื่อคำนวณ</div>
+            `}
+          </div>
+        </div>
+
+        <!-- Estimated Baseline K+ Card -->
+        <div class="col-4">
+          <div style="background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:10px 12px; height:100%;">
+            <div style="font-size:11.5px; color:var(--muted); font-weight:600; margin-bottom:4px;">ESTIMATED BASELINE K+ (AT pH 7.40)</div>
+            ${estKShift !== null ? `
+              <div style="font-size:18px; font-weight:800; color:var(--ink); font-family:var(--font-mono); margin-bottom:4px;">
+                ${estKShift.toFixed(1)} <span style="font-size:12px; font-weight:600; color:var(--muted);">mEq/L</span>
+              </div>
+              <div style="font-size:11px; color:var(--muted); line-height:1.4;">
+                Measured K+: <strong>${k}</strong> | Blood pH: <strong>${ph}</strong><br>
+                ${ph < 7.30 && k <= 4.5 ? '<span style="color:var(--danger); font-weight:700;">⚠️ ระวัง Hidden Hypokalemia รุนแรง! เมื่อแก้กรด K+ จะลดลงอีกมาก</span>' : '<span>ปรับตาม Internal shift: Δ0.1 pH ≈ 0.6 mEq/L</span>'}
+              </div>
+            ` : `
+              <div style="font-size:12px; color:var(--muted); font-style:italic;">กรอก Serum K+ และ Blood pH เพื่อคำนวณ</div>
+            `}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // ── SECTION 2: Deficit & Replacement Table ──
+  html += `
+    <div class="stage-card" style="margin-bottom:12px;">
+      <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>
+        <span>2. Fluid & Electrolyte Deficit Calculations (${w.toFixed(1)} kg)</span>
+      </div>
+      <div class="protocol-table-wrapper">
+        <table class="protocol-table">
+          <thead>
+            <tr>
+              <th style="width:25%;">Parameter / Protocol</th>
+              <th style="width:35%;">Calculated Amount</th>
+              <th style="width:40%;">Clinical Directives & Safety Caps</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>3% NaCl Emergency Bolus</strong><br><span style="font-size:11px; color:var(--muted);">Symptomatic Hyponatremia</span></td>
+              <td><span class="dose-badge" style="background:var(--danger-soft); color:var(--danger); font-weight:800;">${na3PctMinMl.toFixed(0)}–${na3PctMaxMl.toFixed(0)} mL</span></td>
+              <td style="color:var(--muted);">3–5 mL/kg IV over 10–20 min (Max 100–150 mL). คาดหวัง Na เพิ่มขึ้น +2–3 mEq/L เพื่อหยุดชัก</td>
+            </tr>
+            <tr>
+              <td><strong>Total Sodium Deficit</strong><br><span style="font-size:11px; color:var(--muted);">Target Na ${targetNa} mEq/L</span></td>
+              <td>${naDeficit !== null ? `<span class="dose-badge">${naDeficit.toFixed(1)} mEq</span>` : '<span style="color:var(--muted); font-style:italic;">กรอก Na < ' + targetNa + '</span>'}</td>
+              <td style="color:var(--muted);">TBW × (Target - Current). ⚠️ <strong>Max Correction:</strong> ≤ 8–10 mEq/L ใน 24 ชม. (≤ 0.5 mEq/L/hr) ป้องกัน ODS / CPM</td>
+            </tr>
+            <tr>
+              <td><strong>Free Water Deficit</strong><br><span style="font-size:11px; color:var(--muted);">Hypernatremia (Target 140)</span></td>
+              <td>${freeWaterDeficit !== null ? `<span class="dose-badge">${freeWaterDeficit.toFixed(2)} L (${(freeWaterDeficit * 1000).toFixed(0)} mL)</span>` : '<span style="color:var(--muted); font-style:italic;">กรอก Na > 140</span>'}</td>
+              <td style="color:var(--muted);">TBW × (Na/140 - 1). ⚠️ แก้ไขช้าๆ ภายใน <strong>48 ชั่วโมง</strong> (ลด Na ≤ 0.5 mEq/L/hr) ป้องกัน Cerebral Edema</td>
+            </tr>
+            <tr>
+              <td><strong>Bicarbonate Deficit</strong><br><span style="font-size:11px; color:var(--muted);">Target HCO3 15 mEq/L</span></td>
+              <td>${hco3Deficit !== null ? `<span class="dose-badge">${hco3Deficit.toFixed(1)} mEq</span>` : '<span style="color:var(--muted); font-style:italic;">กรอก HCO3 < 15</span>'}</td>
+              <td style="color:var(--muted);">BW × 0.3 × (15 - HCO3). ให้เพียง 50% ในระยะแรก และหลีกเลี่ยงการให้ใน DKA/Lactic acidosis</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+
+  // ── SECTION 3: Diagnostic Acid-Base & Renal Indices ──
+  html += `
+    <div class="stage-card" style="margin-bottom:12px;">
+      <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <span>3. Advanced Acid-Base, Osmolality & Renal Indices</span>
+      </div>
+      <div class="protocol-table-wrapper">
+        <table class="protocol-table">
+          <thead>
+            <tr>
+              <th style="width:25%;">Diagnostic Index</th>
+              <th style="width:25%;">Calculated Value</th>
+              <th style="width:50%;">Clinical Interpretation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Serum Anion Gap (AG)</strong></td>
+              <td>${ag !== null ? `<span class="dose-badge">${ag.toFixed(1)} mEq/L</span> ${corrAG !== ag ? `<br><span style="font-size:11px; color:var(--accent);">Corr AG: ${corrAG.toFixed(1)}</span>` : ''}` : '<span style="color:var(--muted); font-style:italic;">กรอก Na, Cl, HCO3</span>'}</td>
+              <td style="color:var(--muted);">Normal: 8–12 mEq/L. ${ag > 12 ? '<strong style="color:var(--danger);">High AG Metabolic Acidosis</strong> (DKA, Lactic, Toxins, Uremia)' : 'Normal Anion Gap'}</td>
+            </tr>
+            <tr>
+              <td><strong>Delta Ratio (ΔAG / ΔHCO3)</strong></td>
+              <td>${deltaRatio !== null ? `<span class="dose-badge">${deltaRatio.toFixed(2)}</span>` : '<span style="color:var(--muted); font-style:italic;">กรอก AG และ HCO3</span>'}</td>
+              <td style="color:var(--muted);">${deltaRatio !== null ? (deltaRatio < 0.8 ? '<strong>< 0.8:</strong> Mixed High AG + Normal AG (Hyperchloremic) Acidosis' : (deltaRatio <= 2.0 ? '<strong>0.8–2.0:</strong> Pure High AG Metabolic Acidosis' : '<strong>> 2.0:</strong> Mixed High AG Acidosis + Metabolic Alkalosis')) : 'ใช้ประเมิน Mixed acid-base disorders'}</td>
+            </tr>
+            <tr>
+              <td><strong>Serum Osmolality & Gap</strong></td>
+              <td>${calcOsm !== null ? `<span class="dose-badge">${calcOsm.toFixed(1)} mOsm/kg</span>` : '<span style="color:var(--muted); font-style:italic;">กรอก Na, Glucose, BUN</span>'}${osmGap !== null ? `<br><span style="font-size:11px; color:${osmGap > 10 ? 'var(--danger)' : 'var(--good)'}; font-weight:700;">Gap: ${osmGap.toFixed(1)}</span>` : ''}</td>
+              <td style="color:var(--muted);">${effTonicity ? `Effective Tonicity: <strong>${effTonicity.toFixed(1)}</strong> mOsm/kg. ` : ''}${osmGap !== null ? (osmGap > 10 ? '<strong style="color:var(--danger);">⚠️ High Osmolar Gap (>10):</strong> สงสัย Toxic Alcohols (Methanol, Ethylene Glycol) หรือ Mannitol' : 'Osmolar gap ปกติ (< 10 mOsm/kg)') : 'Calculated = 2Na + Glu/18 + BUN/2.8'}</td>
+            </tr>
+            <tr>
+              <td><strong>FeNa (%) & FeUrea (%)</strong></td>
+              <td>${fena !== null ? `<span class="dose-badge">FeNa: ${fena.toFixed(2)}%</span>` : ''}${feUrea !== null ? `<br><span class="dose-badge" style="margin-top:2px;">FeUrea: ${feUrea.toFixed(1)}%</span>` : ''}${fena === null && feUrea === null ? '<span style="color:var(--muted); font-style:italic;">กรอก Urine Na/Cr, Serum Na/Cr</span>' : ''}</td>
+              <td style="color:var(--muted);">${fena !== null ? (fena < 1.0 ? '<strong style="color:var(--good);">FeNa < 1.0%: Prerenal Azotemia</strong> (ท่อไตดูด Na กลับได้ดี)' : '<strong style="color:var(--danger);">FeNa > 2.0%: Intrinsic AKI / ATN</strong> (ท่อไตสูญเสียการดูดกลับ)') : ''}${feUrea !== null ? (feUrea < 35 ? '<br>FeUrea < 35%: Prerenal (แม่นยำแม้ได้ยาขับปัสสาวะ)' : '<br>FeUrea > 50%: Intrinsic AKI') : ''}</td>
+            </tr>
+            <tr>
+              <td><strong>Urine Anion Gap (UAG)</strong></td>
+              <td>${uag !== null ? `<span class="dose-badge">${uag > 0 ? '+' : ''}${uag.toFixed(1)} mEq/L</span>` : '<span style="color:var(--muted); font-style:italic;">กรอก Urine Na, K, Cl</span>'}</td>
+              <td style="color:var(--muted);">${uag !== null ? (uag < 0 ? '<strong style="color:var(--good);">UAG ลบ: GI Loss of HCO3-</strong> (Diarrhea — ไตขับ NH4+ ได้ดี)' : '<strong style="color:var(--danger);">UAG บวก/ศูนย์: Renal Tubular Acidosis (RTA)</strong> (ไตขับกรดบกพร่อง)') : 'UAG = (UNa + UK) - UCl (แยกสาเหตุ Normal AG Acidosis)'}</td>
+            </tr>
+            <tr>
+              <td><strong>TTKG</strong></td>
+              <td>${ttkg !== null ? `<span class="dose-badge">${ttkg.toFixed(2)}</span>` : '<span style="color:var(--muted); font-style:italic;">กรอก Urine K/Osm, Serum K/Osm</span>'}</td>
+              <td style="color:var(--muted);">${ttkg !== null ? (ttkg < 2 ? 'TTKG < 2: Extrarenal K+ loss' : (ttkg > 7 ? 'TTKG > 7: Intact Aldosterone response' : 'TTKG 2–7: Intermediate')) : 'ประเมิน Aldosterone response ที่ Distal nephron'}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+
+  // ── SECTION 4: Emergency Resuscitation Protocols ──
+  const proto = DS.electrolyteProtocols;
+  if (proto && proto.hyperkalemia) {
+    html += `
+      <div class="stage-card" style="border-left:4px solid var(--danger); margin-bottom:12px;">
+        <div style="font-size:13px; font-weight:700; color:var(--danger); margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span>4. Emergency Hyperkalemia 3-Step Protocol (${w.toFixed(1)} kg)</span>
+        </div>
+        <div class="protocol-table-wrapper">
+          <table class="protocol-table">
+            <thead>
+              <tr>
+                <th style="width:12%;">Step</th>
+                <th style="width:28%;">Medication</th>
+                <th style="width:30%;">Calculated Dose</th>
+                <th style="width:30%;">Clinical Instructions & Safety</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="dose-badge" style="background:var(--danger-soft); color:var(--danger);">Step 1</span></td>
+                <td><strong>10% Calcium Gluconate</strong><br><span style="font-size:11px; color:var(--muted);">Membrane Stabilization</span></td>
+                <td><span class="dose-badge" style="font-weight:800;">${Math.min(w * 0.5, 10).toFixed(1)} mL</span> <span style="font-size:11px; color:var(--muted);">(${Math.min(w * 50, 1000).toFixed(0)} mg)</span></td>
+                <td style="color:var(--muted);">0.5 mL/kg IV over 5–10 min (Max 10 mL / 1 g). ติด EKG Monitor ป้องกัน Arrhythmia (ไม่ลด K+)</td>
+              </tr>
+              <tr>
+                <td><span class="dose-badge" style="background:var(--warning-soft); color:var(--warning);">Step 2</span></td>
+                <td><strong>RI + D10W</strong><br><span style="font-size:11px; color:var(--muted);">Intracellular Shift</span></td>
+                <td><span class="dose-badge">RI ${Math.min(w * 0.1, 10).toFixed(1)} U</span> + <span class="dose-badge">D10W ${Math.min(w * 5, 250).toFixed(0)} mL</span></td>
+                <td style="color:var(--muted);">RI 0.1 U/kg + D10W 5 mL/kg IV over 30 min (Max 10 U). เจาะ DTX ทุก 15–30 นาที</td>
+              </tr>
+              <tr>
+                <td><span class="dose-badge" style="background:var(--warning-soft); color:var(--warning);">Step 2</span></td>
+                <td><strong>Salbutamol Nebulizer</strong><br><span style="font-size:11px; color:var(--muted);">Intracellular Shift</span></td>
+                <td><span class="dose-badge">${w <= 25 ? '2.5 mg (0.5 mL)' : '5.0 mg (1.0 mL)'}</span></td>
+                <td style="color:var(--muted);">Nebulize over 10–15 min. พ่นซ้ำได้ทุก 20 นาที เสริมฤทธิ์กับ Insulin ดึง K+ เข้าเซลล์</td>
+              </tr>
+              <tr>
+                <td><span class="dose-badge" style="background:var(--warning-soft); color:var(--warning);">Step 2</span></td>
+                <td><strong>7.5% NaHCO3 (if Acidosis)</strong><br><span style="font-size:11px; color:var(--muted);">Intracellular Shift</span></td>
+                <td><span class="dose-badge">${Math.min(w * 1, 50).toFixed(0)} mEq (${Math.min(w * 1.12, 56).toFixed(0)} mL)</span></td>
+                <td style="color:var(--muted);">1–2 mEq/kg IV over 10–20 min. ให้เฉพาะเมื่อมี Severe Metabolic Acidosis ร่วมด้วย</td>
+              </tr>
+              <tr>
+                <td><span class="dose-badge" style="background:var(--good-soft); color:var(--good);">Step 3</span></td>
+                <td><strong>Furosemide (Lasix)</strong><br><span style="font-size:11px; color:var(--muted);">Total Elimination</span></td>
+                <td><span class="dose-badge">${Math.min(w * 1, 40).toFixed(1)} mg (${Math.min(w * 0.1, 4).toFixed(1)} mL)</span></td>
+                <td style="color:var(--muted);">1 mg/kg IV push (Max 40 mg). ขับ K+ ออกทางไต (ต้องมี Urine Output)</td>
+              </tr>
+              <tr>
+                <td><span class="dose-badge" style="background:var(--good-soft); color:var(--good);">Step 3</span></td>
+                <td><strong>Kalimate / Kayexalate</strong><br><span style="font-size:11px; color:var(--muted);">Total Elimination</span></td>
+                <td><span class="dose-badge">${Math.min(w * 1, 30).toFixed(0)} g</span></td>
+                <td style="color:var(--muted);">1 g/kg PO หรือ PR enema (Max 30 g). Cation exchange resin ขับทางเดินอาหาร (ออกฤทธิ์ 2–4 ชม.)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  }
+
+  // ── SECTION 5: Interactive Age-Specific Reference Table ──
+  const ageKey = getActiveElectrolyteAgeKey(ageYr);
+  const refList = DS.electrolyteRef || [];
+
+  html += `
+    <div class="stage-card">
+      <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:6px; display:flex; align-items:center; justify-content:space-between;">
+        <span style="display:inline-flex; align-items:center; gap:6px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M17 12h-2l-2 5-3-10-2 5H7"/></svg>
+          <span>5. Pediatric Electrolyte Normal Reference Ranges by Age (Harriet Lane / Nelson)</span>
+        </span>
+        <span style="font-size:11.5px; font-weight:600; color:var(--muted);">Active Bracket: <strong style="color:var(--accent);">${ageKey.toUpperCase()}</strong></span>
+      </div>
+      <div class="protocol-table-wrapper">
+        <table class="protocol-table">
+          <thead>
+            <tr>
+              <th style="width:16%;">Age Group</th>
+              <th style="width:8%;">Na+</th>
+              <th style="width:8%;">K+</th>
+              <th style="width:8%;">Cl-</th>
+              <th style="width:8%;">HCO3-</th>
+              <th style="width:10%;">Total Ca</th>
+              <th style="width:8%;">Mg2+</th>
+              <th style="width:9%;">PO4</th>
+              <th style="width:9%;">Serum Osm</th>
+              <th style="width:8%;">AG</th>
+              <th style="width:8%;">FeNa</th>
+            </tr>
+          </thead>
+          <tbody>
+  `;
+
+  refList.forEach(r => {
+    const isActive = (r.ageKey === ageKey);
+    const rowStyle = isActive ? 'style="background:var(--accent-soft); font-weight:700;"' : '';
+    html += `
+      <tr ${rowStyle}>
+        <td><strong>${r.ageLabel}</strong> ${isActive ? '<span style="color:var(--accent);">★</span>' : ''}</td>
+        <td>${r.na}</td>
+        <td>${r.k}</td>
+        <td>${r.cl}</td>
+        <td>${r.hco3}</td>
+        <td>${r.totalCa}</td>
+        <td>${r.mg}</td>
+        <td>${r.po4}</td>
+        <td>${r.osmolality}</td>
+        <td>${r.anionGap}</td>
+        <td>${r.fena}</td>
+      </tr>
+    `;
+  });
+
+  html += `
+          </tbody>
+        </table>
+      </div>
+      <div style="font-size:11px; color:var(--muted); margin-top:6px; line-height:1.4;">
+        * หน่วย: Na, K, Cl, HCO3, Anion Gap (mEq/L) | Total Ca, Mg, PO4 (mg/dL) | Serum Osmolality (mOsm/kg). ทารกแรกเกิดมีระดับ K+ และ PO4 สูงกว่าผู้ใหญ่เป็นปกติ
+      </div>
+    </div>
+  `;
+
+  outEl.innerHTML = html;
+}
+
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     estimateWeightFromAge,
@@ -2819,6 +3299,24 @@ if (typeof module !== 'undefined' && module.exports) {
     calcVitals,
     calcDKA,
     calcAsthma,
+    calcElectrolytes,
+    calcCorrectedNa,
+    calcCorrectedCa,
+    calcKShift,
+    calcNaDeficit,
+    calcFreeWaterDeficit,
+    calcBicarbonateDeficit,
+    calcAnionGap,
+    calcCorrectedAnionGap,
+    calcDeltaRatio,
+    calcOsmolality,
+    calcEffectiveTonicity,
+    calcOsmolarGap,
+    calcFeNa,
+    calcFeUrea,
+    calcUAG,
+    calcTTKG,
+    getActiveElectrolyteAgeKey,
     getWeight,
     calculateIBW,
     getAgeInYears,
