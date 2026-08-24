@@ -762,6 +762,28 @@ test('Electrolytes: FeNa, FeUrea, UAG, and TTKG renal indices', () => {
   assert(ttkg > 5.70 && ttkg < 5.72, 'TTKG should be ~5.71');
 });
 
+test('Electrolytes: Hypokalemia IV and Oral KCl Replacement Calculators', () => {
+  // 10 kg child
+  const iv10 = appExports.calcIVKClReplacement(10, 0.5);
+  assert.strictEqual(iv10.doseMeq, 5.0, '10 kg at 0.5 mEq/kg = 5.0 mEq');
+  assert.strictEqual(iv10.kcl2MeqPerMl, 2.5, '5.0 mEq / 2 mEq/mL = 2.5 mL');
+  assert.strictEqual(iv10.minVolPeripheralMl, 125, '5.0 mEq in 40 mEq/L conc = 125 mL');
+  assert.strictEqual(iv10.minVolCentralMl, 63, '5.0 mEq in 80 mEq/L conc = 63 mL');
+  assert.strictEqual(iv10.peripheralRateMlPerHr, 62.5, '125 mL / 2 hr = 62.5 mL/hr');
+  assert.strictEqual(iv10.deliveryRateMeqPerKgPerHr, 0.25, 'Delivery rate 0.25 mEq/kg/hr');
+
+  // 60 kg patient (safety ceiling cap at 20 mEq per dose for peripheral)
+  const iv60 = appExports.calcIVKClReplacement(60, 0.5);
+  assert.strictEqual(iv60.doseMeq, 20.0, '60 kg raw 30 mEq capped at 20 mEq max');
+  assert.strictEqual(iv60.minVolPeripheralMl, 500, '20 mEq in 40 mEq/L conc = 500 mL');
+
+  // Oral KCl: 10 kg child at 1.5 mEq/kg/day
+  const oral10 = appExports.calcOralKClReplacement(10, 1.5);
+  assert.strictEqual(oral10.dailyMeq, 15.0, '10 kg at 1.5 mEq/kg/day = 15.0 mEq/day');
+  assert.strictEqual(oral10.tidDoseMeq, 5.0, '15 mEq / 3 = 5.0 mEq/dose');
+  assert.strictEqual(oral10.kcl10PctSyrupMlPerDose, 3.7, '5.0 mEq / 1.34 mEq/mL = 3.7 mL');
+});
+
 test('Electrolytes UI Engine: 10 kg child with labs populated renders complete clinical cards and protocols', () => {
   document.getElementById('weight').value = '10';
   document.getElementById('age').value = '3';
@@ -793,7 +815,13 @@ test('Electrolytes UI Engine: 10 kg child with labs populated renders complete c
   assert(out.includes('RI 1.0 U'), 'Regular Insulin 1.0 U check for 10 kg');
   assert(out.includes('D10W 50 mL'), 'D10W 50 mL check for 10 kg');
 
-  // 4. Age reference table
+  // 4. Hypokalemia Protocol & Recipe
+  assert(out.includes('KCl 5 mEq (2.5 mL)') || out.includes('KCl 5.0 mEq (2.5 mL)'), 'Hypokalemia IV dose check');
+  assert(out.includes('125 mL'), 'Peripheral dilution volume ≥ 125 mL check');
+  assert(out.includes('62.5 mL/hr'), 'Peripheral rate 62.5 mL/hr check');
+  assert(out.includes('3.7 mL (5 mEq) PO tid pc') || out.includes('3.7 mL (5.0 mEq) PO tid pc'), 'Oral KCl syrup dose check');
+
+  // 5. Age reference table
   assert(out.includes('Child (1–12 years)'), 'Reference table row check');
 });
 

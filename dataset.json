@@ -4262,6 +4262,26 @@
       "route": "IV infusion over 20–30 min (IV push in 1–2 min if pulseless Torsades)",
       "prep": "50% MgSO4 (500 mg/mL = 4 mEq/mL)",
       "note": "Dilute in D5W or NSS. Monitor BP, HR, and deep tendon reflexes."
+    },
+    "hypokalemia": {
+      "name": "Potassium Chloride (KCl) Replacement Protocol",
+      "ivDoseMeqPerKg": 0.5,
+      "maxIvDoseMeq": 20,
+      "maxInfusionRateMeqPerKgPerHr": 0.5,
+      "maxPeripheralConcMeqPerL": 40,
+      "maxCentralConcMeqPerL": 80,
+      "oralDoseMeqPerKgPerDayMin": 1.0,
+      "oralDoseMeqPerKgPerDayMax": 2.0,
+      "maxOralDoseMeq": 40,
+      "ivAdditiveMeqPerLMin": 20,
+      "ivAdditiveMeqPerLMax": 40,
+      "kclPrep": "KCl injection 2 mEq/mL (20 mEq / 10 mL ampoule) or 10% KCl syrup (1.34 mEq/mL)",
+      "safetyRules": [
+        "NEVER GIVE IV PUSH POTASSIUM (Fatal Asystole / Cardiac Arrest).",
+        "Confirm adequate urine output (≥ 0.5–1 mL/kg/hr) before starting IV potassium.",
+        "Check and correct Serum Magnesium (hypomagnesemia causes refractory renal K+ wasting).",
+        "Continuous ECG monitor is mandatory if infusion rate > 0.5 mEq/kg/hr or K+ < 2.5 mEq/L."
+      ]
     }
   }
 }

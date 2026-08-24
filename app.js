@@ -2826,6 +2826,43 @@ function calcKShift(measuredK, ph) {
   return measuredK - (deltaPh * 6.0);
 }
 
+function calcIVKClReplacement(weightKg, doseMeqPerKg = 0.5) {
+  if (!weightKg || isNaN(weightKg) || weightKg <= 0) return null;
+  const rawDoseMeq = weightKg * doseMeqPerKg;
+  const doseMeq = Math.min(rawDoseMeq, 20); // capped at 20 mEq per peripheral piggyback dose
+  const kcl2MeqPerMl = doseMeq / 2; // 2 mEq/mL injection
+  // Peripheral line max conc: 40 mEq/L -> (doseMeq / 40) * 1000 mL
+  const minVolPeripheralMl = Math.round((doseMeq / 40) * 1000);
+  // Central line max conc: 80 mEq/L -> (doseMeq / 80) * 1000 mL
+  const minVolCentralMl = Math.round((doseMeq / 80) * 1000);
+  // Infusion rates
+  const peripheralRateMlPerHr = +(minVolPeripheralMl / 2).toFixed(1); // over 2 hours
+  const centralRateMlPerHr = +(minVolCentralMl / 1).toFixed(1); // over 1 hour
+  const deliveryRateMeqPerKgPerHr = +(doseMeq / weightKg / 2).toFixed(2); // delivery rate mEq/kg/hr over 2 hr
+  return {
+    doseMeq: +doseMeq.toFixed(1),
+    rawDoseMeq: +rawDoseMeq.toFixed(1),
+    kcl2MeqPerMl: +kcl2MeqPerMl.toFixed(1),
+    minVolPeripheralMl,
+    minVolCentralMl,
+    peripheralRateMlPerHr,
+    centralRateMlPerHr,
+    deliveryRateMeqPerKgPerHr
+  };
+}
+
+function calcOralKClReplacement(weightKg, doseMeqPerKgPerDay = 1.5) {
+  if (!weightKg || isNaN(weightKg) || weightKg <= 0) return null;
+  const dailyMeq = Math.min(weightKg * doseMeqPerKgPerDay, 80);
+  const tidDoseMeq = +(dailyMeq / 3).toFixed(1);
+  const kcl10PctSyrupMlPerDose = +(tidDoseMeq / 1.34).toFixed(1); // 10% KCl syrup ~ 1.34 mEq/mL
+  return {
+    dailyMeq: +dailyMeq.toFixed(1),
+    tidDoseMeq,
+    kcl10PctSyrupMlPerDose
+  };
+}
+
 function getTBWFactor(ageYr, isFemale = false) {
   if (ageYr === null || ageYr === undefined || isNaN(ageYr)) return 0.60;
   if (ageYr < 1 / 12) return 0.70;
@@ -2981,6 +3018,10 @@ function calcElectrolytes() {
   const na3PctMinMl = Math.min(w * 3, 100);
   const na3PctMaxMl = Math.min(w * 5, 150);
 
+  // Hypokalemia IV & Oral Replacement Calculations
+  const ivKCl = calcIVKClReplacement(w, 0.5);
+  const oralKCl = calcOralKClReplacement(w, 1.5);
+
   let html = '';
 
   // ── SECTION 1: Quick Clinical Correctors Display ──
@@ -3087,6 +3128,16 @@ function calcElectrolytes() {
               <td style="color:var(--muted);">TBW × (Na/140 - 1). ⚠️ แก้ไขช้าๆ ภายใน <strong>48 ชั่วโมง</strong> (ลด Na ≤ 0.5 mEq/L/hr) ป้องกัน Cerebral Edema</td>
             </tr>
             <tr>
+              <td><strong>IV KCl Slow Piggyback</strong><br><span style="font-size:11px; color:var(--muted);">Symptomatic / Severe Hypokalemia</span></td>
+              <td><span class="dose-badge" style="background:var(--warning-soft); color:var(--warning); font-weight:800;">${ivKCl.doseMeq} mEq (${ivKCl.kcl2MeqPerMl} mL)</span> in NSS ≥ ${ivKCl.minVolPeripheralMl} mL</td>
+              <td style="color:var(--muted);">0.5 mEq/kg (Max 20 mEq) IV over 2 hr (Rate ${ivKCl.peripheralRateMlPerHr} mL/hr, conc ≤ 40 mEq/L). ⚠️ <strong>ห้าม IV Push เด็ดขาด!</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Oral KCl Replacement</strong><br><span style="font-size:11px; color:var(--muted);">Mild–Moderate Hypokalemia</span></td>
+              <td><span class="dose-badge">${oralKCl.tidDoseMeq} mEq/dose (${oralKCl.kcl10PctSyrupMlPerDose} mL 10% syrup)</span></td>
+              <td style="color:var(--muted);">1.5 mEq/kg/day (${oralKCl.dailyMeq} mEq/day) แบ่งให้ tid หลังอาหารพร้อมน้ำ/น้ำผลไม้ (Max 40 mEq/dose)</td>
+            </tr>
+            <tr>
               <td><strong>Bicarbonate Deficit</strong><br><span style="font-size:11px; color:var(--muted);">Target HCO3 15 mEq/L</span></td>
               <td>${hco3Deficit !== null ? `<span class="dose-badge">${hco3Deficit.toFixed(1)} mEq</span>` : '<span style="color:var(--muted); font-style:italic;">กรอก HCO3 < 15</span>'}</td>
               <td style="color:var(--muted);">BW × 0.3 × (15 - HCO3). ให้เพียง 50% ในระยะแรก และหลีกเลี่ยงการให้ใน DKA/Lactic acidosis</td>
@@ -3154,10 +3205,11 @@ function calcElectrolytes() {
   const proto = DS.electrolyteProtocols;
   if (proto && proto.hyperkalemia) {
     html += `
+      <!-- Hyperkalemia 3-Step Cocktail Card -->
       <div class="stage-card" style="border-left:4px solid var(--danger); margin-bottom:12px;">
         <div style="font-size:13px; font-weight:700; color:var(--danger); margin-bottom:8px; display:flex; align-items:center; gap:6px;">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-          <span>4. Emergency Hyperkalemia 3-Step Protocol (${w.toFixed(1)} kg)</span>
+          <span>4A. Emergency Hyperkalemia 3-Step Protocol (${w.toFixed(1)} kg)</span>
         </div>
         <div class="protocol-table-wrapper">
           <table class="protocol-table">
@@ -3205,6 +3257,84 @@ function calcElectrolytes() {
                 <td><strong>Kalimate / Kayexalate</strong><br><span style="font-size:11px; color:var(--muted);">Total Elimination</span></td>
                 <td><span class="dose-badge">${Math.min(w * 1, 30).toFixed(0)} g</span></td>
                 <td style="color:var(--muted);">1 g/kg PO หรือ PR enema (Max 30 g). Cation exchange resin ขับทางเดินอาหาร (ออกฤทธิ์ 2–4 ชม.)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Hypokalemia Replacement Protocol & Dilution Recipe Card -->
+      <div class="stage-card" style="border-left:4px solid var(--accent); margin-bottom:12px;">
+        <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20"/><path d="m17 5-5-3-5 3"/><path d="m17 19-5 3-5-3"/><path d="M2 12h20"/></svg>
+          <span>4B. Hypokalemia Correction & Potassium Replacement Protocol (${w.toFixed(1)} kg)</span>
+        </div>
+        <div class="protocol-table-wrapper">
+          <table class="protocol-table">
+            <thead>
+              <tr>
+                <th style="width:15%;">Indication / Severity</th>
+                <th style="width:25%;">Route & Regimen</th>
+                <th style="width:30%;">Calculated Dose & Dilution</th>
+                <th style="width:30%;">Safety Directives & Rate Limits</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="background:var(--accent-subtle);">
+                <td><strong>Prerequisites</strong><br><span style="font-size:11px; color:var(--muted);">Urine & Mg Check</span></td>
+                <td colspan="2">
+                  <div style="font-size:12px; line-height:1.5;">
+                    1. <strong>Urine Output:</strong> ต้องมั่นใจว่ามีปัสสาวะออก ≥ 0.5–1 mL/kg/hr ก่อนให้ K+ ป้องกัน Anuric Hyperkalemia<br>
+                    2. <strong>Serum Magnesium:</strong> หาก Mg &lt; 1.7 mg/dL ให้ <strong>50% MgSO4 ${Math.min(w * 0.1, 4).toFixed(1)} mL</strong> (${Math.min(w * 50, 2000).toFixed(0)} mg) IV over 30–60 min เพื่อหยุด Refractory Renal K+ leak
+                  </div>
+                </td>
+                <td style="color:var(--danger); font-weight:700; font-size:11.5px;">⚠️ ห้ามให้ IV Push KCl เด็ดขาด (Fatal Cardiac Arrest)</td>
+              </tr>
+              <tr>
+                <td><strong style="color:var(--danger);">Severe / Symptomatic</strong><br><span style="font-size:11px; color:var(--muted);">K+ &lt; 2.5 หรือมี EKG change</span></td>
+                <td><strong>IV KCl Piggyback (Peripheral Line)</strong><br><span style="font-size:11px; color:var(--muted);">Max conc ≤ 40 mEq/L</span></td>
+                <td>
+                  <span class="dose-badge" style="font-weight:800;">KCl ${ivKCl.doseMeq} mEq (${ivKCl.kcl2MeqPerMl} mL)</span><br>
+                  <span style="font-size:11.5px; color:var(--ink);">ผสมใน NSS/D5W <strong>≥ ${ivKCl.minVolPeripheralMl} mL</strong></span><br>
+                  <span style="font-size:11px; color:var(--accent);">Drip over <strong>2 ชั่วโมง</strong> (${ivKCl.peripheralRateMlPerHr} mL/hr)</span>
+                </td>
+                <td style="color:var(--muted);">
+                  อัตราส่งมอบ <strong>0.25 mEq/kg/hr</strong> (Safety cap ≤ 0.5 mEq/kg/hr). ติด EKG Monitor ตลอดเวลา เจาะซ้ำหลังหมด 1–2 ชม.
+                </td>
+              </tr>
+              <tr>
+                <td><strong style="color:var(--danger);">Severe (Central Line)</strong><br><span style="font-size:11px; color:var(--muted);">ICU / Central line</span></td>
+                <td><strong>IV KCl Piggyback (Central Line)</strong><br><span style="font-size:11px; color:var(--muted);">Max conc ≤ 80 mEq/L</span></td>
+                <td>
+                  <span class="dose-badge" style="font-weight:800;">KCl ${ivKCl.doseMeq} mEq (${ivKCl.kcl2MeqPerMl} mL)</span><br>
+                  <span style="font-size:11.5px; color:var(--ink);">ผสมใน NSS <strong>≥ ${ivKCl.minVolCentralMl} mL</strong></span><br>
+                  <span style="font-size:11px; color:var(--accent);">Drip over <strong>1–2 ชั่วโมง</strong> (${ivKCl.centralRateMlPerHr} mL/hr)</span>
+                </td>
+                <td style="color:var(--muted);">
+                  อัตราส่งมอบ <strong>0.50 mEq/kg/hr</strong>. ให้เฉพาะทาง Central line เท่านั้นเพื่อป้องกัน Severe Phlebitis
+                </td>
+              </tr>
+              <tr>
+                <td><strong style="color:var(--warning);">Moderate Hypokalemia</strong><br><span style="font-size:11px; color:var(--muted);">K+ 2.5–3.4 mEq/L</span></td>
+                <td><strong>IV Fluid Maintenance Additive</strong><br><span style="font-size:11px; color:var(--muted);">Ongoing replacement</span></td>
+                <td>
+                  <span class="dose-badge">20–40 mEq KCl / 1,000 mL IV Fluid</span><br>
+                  <span style="font-size:11px; color:var(--muted);">(เช่น เติม KCl 2 mEq/mL จำนวน 5–10 mL ในขวด 500 mL)</span>
+                </td>
+                <td style="color:var(--muted);">
+                  ให้ตามอัตรา Maintenance ของสารน้ำ (Holliday-Segar). สารน้ำทั่วไปไม่ควรเกิน 40 mEq/L ทาง peripheral
+                </td>
+              </tr>
+              <tr>
+                <td><strong style="color:var(--good);">Mild / Asymptomatic</strong><br><span style="font-size:11px; color:var(--muted);">K+ 3.0–3.5 mEq/L (กินได้)</span></td>
+                <td><strong>Oral KCl Syrup (10%)</strong><br><span style="font-size:11px; color:var(--muted);">1.34 mEq/mL syrup</span></td>
+                <td>
+                  <span class="dose-badge">${oralKCl.kcl10PctSyrupMlPerDose} mL (${oralKCl.tidDoseMeq} mEq) PO tid pc</span><br>
+                  <span style="font-size:11px; color:var(--muted);">รวมทั้งวัน: ${oralKCl.dailyMeq} mEq/day (1.5 mEq/kg/day)</span>
+                </td>
+                <td style="color:var(--muted);">
+                  รับประทานพร้อมอาหารหรือน้ำผลไม้เพื่อลดการระคายเคืองกระเพาะอาหาร (Max 40 mEq/dose)
+                </td>
               </tr>
             </tbody>
           </table>
@@ -3303,6 +3433,8 @@ if (typeof module !== 'undefined' && module.exports) {
     calcCorrectedNa,
     calcCorrectedCa,
     calcKShift,
+    calcIVKClReplacement,
+    calcOralKClReplacement,
     calcNaDeficit,
     calcFreeWaterDeficit,
     calcBicarbonateDeficit,
