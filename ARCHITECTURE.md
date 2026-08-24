@@ -155,3 +155,14 @@ flowchart TD
     - **Interactive Age-Specific Reference Ranges**: Dynamically highlights the active patient age bracket (Preterm, Neonate, Infant, Child, Adolescent/Adult) based on topbar age input.
     - **Automated Verification**: Expanded test suite in `scripts/test-core.js` to 65 passing tests.
     - Service worker cache version bumped to `er-ped-v1.10.0-20260824`.
+
+55. **Electrolytes Module Deep Audit, Progressive Disclosure & Safety Hardening (v1.10.1)**:
+    - **Non-Blocking Progressive Disclosure**: Decoupled weight-independent diagnostic calculations (Corrected Na, Corrected Ca, K+ pH shift, Anion Gap, Delta Ratio, Serum Osmolality, FeNa, FeUrea, UAG, TTKG, Reference Ranges) from patient weight, eliminating blank screen wipes when weight is pending. Rendered localized warning callouts only inside Section 2 (Deficits) and Section 4 (Protocols) when weight is absent.
+    - **48-Hour Free Water Combined Fluid Rate**: Automatically calculates and displays total IV fluid pump rate ($\text{Maintenance} + [\text{Deficit} / 48\text{ hr}]$ in mL/hr) with clinical safety directives to restrict sodium drop rate to $\le 0.5\text{ mEq/L/hr}$ to prevent fatal cerebral edema.
+    - **Bicarbonate 50% Initial Resuscitation Dose**: Computes both Total Deficit (mEq) and Initial 50% Resuscitation Dose in mEq and volume (mL) of 7.5% $\text{NaHCO}_3$ ($0.89\text{ mEq/mL}$) over 1–2 hours.
+    - **Section 4C Acute Calcium & Magnesium Crisis Protocols**: Dedicated stage card with violet accent border (`#8b5cf6`) rendering weight-calculated doses and preparation directives for 10% Calcium Gluconate ($1.0\text{ mL/kg}$ max 20 mL) and 50% $\text{MgSO}_4$ ($0.1\text{ mL/kg}$ max 4 mL).
+    - **Smart Context-Aware EHR Order Copying**: Integrated `copyEHROrder('electrolytes')` with automatic clinical triage ($\text{Na} < 125 \to$ 3% NaCl emergency bolus; $\text{K} < 3.5 \to$ IV KCl slow piggyback recipe; $\text{K} > 5.5 \to$ Hyperkalemia 3-step cocktail; default $\to$ combined 3% NaCl + KCl orders).
+    - **Delta Ratio Acid-Base Classification Fix**: Resolved Delta Ratio classification when $\text{HCO}_3 \ge 24\text{ mEq/L}$, correctly designating concurrent Metabolic Alkalosis (Bicarbonate Excess) rather than misclassifying as Mixed High AG + Normal AG Acidosis.
+    - **Automated Verification**: Expanded test suite in `scripts/test-core.js` to 70 passing tests.
+    - Service worker cache version bumped to `er-ped-v1.10.1-20260824`.
+

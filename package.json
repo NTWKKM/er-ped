@@ -1,6 +1,6 @@
 {
   "name": "er-ped",
-  "version": "1.10.0",
+  "version": "1.10.1",
   "description": "👶🏻 ER Pediatric Clinical Calculator PWA",
   "main": "index.html",
   "scripts": {

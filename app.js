@@ -1956,6 +1956,30 @@ function copyEHROrder(module){
       const insulinRate = (w * 0.1).toFixed(1);
       orderStr = `[ER-PED DKA] IV 0.9% NS @ ${totalFluidRate} mL/hr (48h deficit replacement) | Regular Insulin Drip (1 U/mL) @ ${insulinRate} mL/hr (0.1 U/kg/hr) [BW: ${w.toFixed(1)} kg]`;
     }
+  } else if (module === 'electrolytes') {
+    if (w) {
+      const na = parseFloat(document.getElementById('lyteNa')?.value);
+      const k = parseFloat(document.getElementById('lyteK')?.value);
+      const na3PctMin = Math.min(w * 3, 100);
+      const na3PctMax = Math.min(w * 5, 150);
+      const ivKCl = calcIVKClReplacement(w, 0.5);
+
+      if (!isNaN(na) && na < 125) {
+        orderStr = `[ER-PED Electrolyte] IV 3% NaCl ${na3PctMin.toFixed(0)}–${na3PctMax.toFixed(0)} mL IV infusion over 20 min (3–5 mL/kg, max 100–150 mL) [Target Na: 135 mEq/L] [BW: ${w.toFixed(1)} kg]`;
+      } else if (!isNaN(k) && k < 3.5 && ivKCl) {
+        orderStr = `[ER-PED Electrolyte] KCl ${ivKCl.doseMeq} mEq (${ivKCl.kcl2MeqPerMl} mL) in 0.9% NSS ${ivKCl.minVolPeripheralMl} mL IV slow piggyback @ ${ivKCl.peripheralRateMlPerHr} mL/hr over 2 hr (0.25 mEq/kg/hr, conc <= 40 mEq/L) [BW: ${w.toFixed(1)} kg]`;
+      } else if (!isNaN(k) && k > 5.5) {
+        const caGlu = Math.min(w * 0.5, 10).toFixed(1);
+        const ri = Math.min(w * 0.1, 10).toFixed(1);
+        const d10w = Math.min(w * 5, 250).toFixed(0);
+        const salbu = w <= 25 ? '2.5 mg' : '5.0 mg';
+        orderStr = `[ER-PED Hyperkalemia] 10% Calcium Gluconate ${caGlu} mL IV over 5–10 min | Regular Insulin ${ri} U + D10W ${d10w} mL IV over 30 min | Salbutamol neb ${salbu} [BW: ${w.toFixed(1)} kg]`;
+      } else {
+        const defaultNa3 = Math.min(w * 3, 100).toFixed(0);
+        const defaultKCl = ivKCl ? ` | IV KCl ${ivKCl.doseMeq} mEq in NSS ${ivKCl.minVolPeripheralMl} mL over 2 hr` : '';
+        orderStr = `[ER-PED Electrolyte] 3% NaCl ${defaultNa3} mL IV over 20 min${defaultKCl} [BW: ${w.toFixed(1)} kg]`;
+      }
+    }
   }
 
   if (orderStr) {
@@ -2912,6 +2936,29 @@ function calcDeltaRatio(ag, hco3) {
   return deltaAG / deltaHCO3;
 }
 
+function interpretDeltaRatio(ag, hco3) {
+  if (ag === null || isNaN(ag) || hco3 === null || isNaN(hco3)) return 'ใช้ประเมิน Mixed acid-base disorders';
+  if (hco3 >= 24) {
+    if (ag > 12) {
+      return '<strong style="color:var(--warning);">Mixed High AG Acidosis + Metabolic Alkalosis</strong> (HCO3 ≥ 24: มีภาวะด่างเกินร่วม เช่น อาเจียน/เสียกรด)';
+    }
+    return '<strong style="color:var(--good);">Normal AG & Normal/High HCO3</strong> (ไม่มี High AG Acidosis)';
+  }
+  if (ag <= 12) {
+    return '<strong style="color:var(--warning);">Pure Normal AG (Hyperchloremic) Acidosis</strong> (AG ปกติแต่ HCO3 ต่ำ เช่น ท้องเสีย/RTA)';
+  }
+  const deltaAG = ag - 12;
+  const deltaHCO3 = 24 - hco3;
+  const ratio = deltaAG / deltaHCO3;
+  if (ratio < 0.8) {
+    return `<strong>< 0.8 (${ratio.toFixed(2)}):</strong> <strong style="color:var(--warning);">Mixed High AG + Normal AG Acidosis</strong> (HCO3 ลดลงมากกว่า AG ที่เพิ่ม เช่น DKA + Diarrhea/Saline)`;
+  }
+  if (ratio <= 2.0) {
+    return `<strong>0.8–2.0 (${ratio.toFixed(2)}):</strong> <strong style="color:var(--danger);">Pure High AG Metabolic Acidosis</strong> (DKA, Lactic Acidosis, Uremia, Toxins)`;
+  }
+  return `<strong>> 2.0 (${ratio.toFixed(2)}):</strong> <strong style="color:var(--warning);">Mixed High AG Acidosis + Metabolic Alkalosis</strong> (หรือ Compensated Chronic Resp Acidosis)`;
+}
+
 function calcOsmolality(na, glucose, bun) {
   if (na === null || isNaN(na) || na <= 0) return null;
   const g = (glucose && !isNaN(glucose) && glucose > 0) ? glucose / 18 : 0;
@@ -2965,11 +3012,6 @@ function calcElectrolytes() {
   const w = getWeight();
   const ageYr = getAgeInYears();
 
-  if (!w || w <= 0) {
-    outEl.innerHTML = '<div class="badge-cap danger">⚠️ กรุณากรอกน้ำหนักตัว (ABW) ที่ส่วนบนของหน้าจอก่อนคำนวณ</div>';
-    return;
-  }
-
   // Parse lab inputs
   const na = parseFloat(document.getElementById('lyteNa')?.value);
   const glucose = parseFloat(document.getElementById('lyteGlucose')?.value);
@@ -2991,15 +3033,11 @@ function calcElectrolytes() {
   const uUrea = parseFloat(document.getElementById('lyteUUrea')?.value);
   const uOsm = parseFloat(document.getElementById('lyteUOsm')?.value);
 
-  // Compute values
+  // Compute diagnostic values (weight-independent)
   const corrNaKatz = (!isNaN(na) && !isNaN(glucose)) ? calcCorrectedNa(na, glucose, 'katz') : null;
   const corrNaISPAD = (!isNaN(na) && !isNaN(glucose)) ? calcCorrectedNa(na, glucose, 'ispad') : null;
   const corrCa = (!isNaN(totalCa) && !isNaN(albumin)) ? calcCorrectedCa(totalCa, albumin) : null;
   const estKShift = (!isNaN(k) && !isNaN(ph)) ? calcKShift(k, ph) : null;
-
-  const naDeficit = (!isNaN(na) && na < targetNa) ? calcNaDeficit(w, na, targetNa, ageYr) : null;
-  const freeWaterDeficit = (!isNaN(na) && na > 140) ? calcFreeWaterDeficit(w, na, 140, ageYr) : null;
-  const hco3Deficit = (!isNaN(hco3) && hco3 < 15) ? calcBicarbonateDeficit(w, hco3, 15) : null;
 
   const ag = (!isNaN(na) && !isNaN(cl) && !isNaN(hco3)) ? calcAnionGap(na, cl, hco3) : null;
   const corrAG = (ag !== null && !isNaN(albumin)) ? calcCorrectedAnionGap(ag, albumin) : ag;
@@ -3014,13 +3052,16 @@ function calcElectrolytes() {
   const uag = (!isNaN(uNa) && !isNaN(uK) && !isNaN(uCl)) ? calcUAG(uNa, uK, uCl) : null;
   const ttkg = (!isNaN(uK) && !isNaN(k) && !isNaN(uOsm) && calcOsm) ? calcTTKG(uK, k, uOsm, calcOsm) : null;
 
-  // Emergency 3% NaCl Bolus
-  const na3PctMinMl = Math.min(w * 3, 100);
-  const na3PctMaxMl = Math.min(w * 5, 150);
+  // Weight-dependent values
+  const hasWeight = (typeof w === 'number' && !isNaN(w) && w > 0);
+  const naDeficit = (hasWeight && !isNaN(na) && na < targetNa) ? calcNaDeficit(w, na, targetNa, ageYr) : null;
+  const freeWaterDeficit = (hasWeight && !isNaN(na) && na > 140) ? calcFreeWaterDeficit(w, na, 140, ageYr) : null;
+  const hco3Deficit = (hasWeight && !isNaN(hco3) && hco3 < 15) ? calcBicarbonateDeficit(w, hco3, 15) : null;
 
-  // Hypokalemia IV & Oral Replacement Calculations
-  const ivKCl = calcIVKClReplacement(w, 0.5);
-  const oralKCl = calcOralKClReplacement(w, 1.5);
+  const na3PctMinMl = hasWeight ? Math.min(w * 3, 100) : null;
+  const na3PctMaxMl = hasWeight ? Math.min(w * 5, 150) : null;
+  const ivKCl = hasWeight ? calcIVKClReplacement(w, 0.5) : null;
+  const oralKCl = hasWeight ? calcOralKClReplacement(w, 1.5) : null;
 
   let html = '';
 
@@ -3029,7 +3070,7 @@ function calcElectrolytes() {
     <div style="margin-bottom:12px;">
       <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:8px; display:flex; align-items:center; gap:6px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
-        <span>Corrected Electrolyte Values & Transcellular Shifts</span>
+        <span>1. Corrected Electrolyte Values & Transcellular Shifts</span>
       </div>
       <div class="grid">
         <!-- Corrected Sodium Card -->
@@ -3062,7 +3103,7 @@ function calcElectrolytes() {
                 ${corrCa.toFixed(1)} <span style="font-size:12px; font-weight:600; color:var(--muted);">mg/dL</span>
               </div>
               <div style="margin-bottom:6px;">
-                ${corrCa < 8.8 ? '<span class="dose-badge" style="background:var(--warning-soft); color:var(--warning);">Hypocalcemia</span>' : (corrCa > 10.8 ? '<span class="dose-badge" style="background:var(--danger-soft); color:var(--danger);">Hypercalcemia</span>' : '<span class="dose-badge" style="background:var(--good-soft); color:var(--good);">Normal Ca</span>')}
+                ${corrCa < 8.8 ? '<span class="dose-badge" style="background:var(--warning-soft); color:var(--warning);">▲ Hypocalcemia</span>' : (corrCa > 10.8 ? '<span class="dose-badge" style="background:var(--danger-soft); color:var(--danger);">✕ Hypercalcemia</span>' : '<span class="dose-badge" style="background:var(--good-soft); color:var(--good);">✓ Normal Ca</span>')}
               </div>
               <div style="font-size:11px; color:var(--muted); line-height:1.4;">
                 Total Ca: <strong>${totalCa}</strong> | Albumin: <strong>${albumin} g/dL</strong><br>
@@ -3100,8 +3141,20 @@ function calcElectrolytes() {
     <div class="stage-card" style="margin-bottom:12px;">
       <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:8px; display:flex; align-items:center; gap:6px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>
-        <span>2. Fluid & Electrolyte Deficit Calculations (${w.toFixed(1)} kg)</span>
+        <span>2. Fluid & Electrolyte Deficit Calculations ${hasWeight ? `(${w.toFixed(1)} kg)` : ''}</span>
       </div>
+  `;
+
+  if (hasWeight) {
+    const freeWaterMl = (freeWaterDeficit !== null) ? freeWaterDeficit * 1000 : null;
+    const freeWaterHourly = (freeWaterMl !== null) ? (freeWaterMl / 48) : null;
+    const mntHourly = calcMaintenanceMlPerHr(w);
+    const combinedTotalFluidRate = (freeWaterHourly !== null) ? (mntHourly + freeWaterHourly) : null;
+
+    const init50Meq = (hco3Deficit !== null) ? (hco3Deficit * 0.5) : null;
+    const init50Ml = (init50Meq !== null) ? (init50Meq / 0.89) : null;
+
+    html += `
       <div class="protocol-table-wrapper">
         <table class="protocol-table">
           <thead>
@@ -3124,8 +3177,11 @@ function calcElectrolytes() {
             </tr>
             <tr>
               <td><strong>Free Water Deficit</strong><br><span style="font-size:11px; color:var(--muted);">Hypernatremia (Target 140)</span></td>
-              <td>${freeWaterDeficit !== null ? `<span class="dose-badge">${freeWaterDeficit.toFixed(2)} L (${(freeWaterDeficit * 1000).toFixed(0)} mL)</span>` : '<span style="color:var(--muted); font-style:italic;">กรอก Na > 140</span>'}</td>
-              <td style="color:var(--muted);">TBW × (Na/140 - 1). ⚠️ แก้ไขช้าๆ ภายใน <strong>48 ชั่วโมง</strong> (ลด Na ≤ 0.5 mEq/L/hr) ป้องกัน Cerebral Edema</td>
+              <td>${freeWaterDeficit !== null ? `
+                <span class="dose-badge">${freeWaterDeficit.toFixed(2)} L (${freeWaterMl.toFixed(0)} mL)</span><br>
+                <span style="font-size:11.5px; font-weight:700; color:var(--accent);">Total Rate: ${combinedTotalFluidRate.toFixed(1)} mL/hr</span> <span style="font-size:11px; color:var(--muted);">(Mnt: ${mntHourly.toFixed(1)} + Deficit: ${freeWaterHourly.toFixed(1)} mL/hr)</span>
+              ` : '<span style="color:var(--muted); font-style:italic;">กรอก Na > 140</span>'}</td>
+              <td style="color:var(--muted);">TBW × (Na/140 - 1). ⚠️ ให้สารน้ำ (D5 0.2% หรือ 0.45% NaCl) ช้าๆ ภายใน <strong>48 ชั่วโมง</strong> (ลด Na ≤ 0.5 mEq/L/hr) ป้องกัน Cerebral Edema</td>
             </tr>
             <tr>
               <td><strong>IV KCl Slow Piggyback</strong><br><span style="font-size:11px; color:var(--muted);">Symptomatic / Severe Hypokalemia</span></td>
@@ -3139,14 +3195,25 @@ function calcElectrolytes() {
             </tr>
             <tr>
               <td><strong>Bicarbonate Deficit</strong><br><span style="font-size:11px; color:var(--muted);">Target HCO3 15 mEq/L</span></td>
-              <td>${hco3Deficit !== null ? `<span class="dose-badge">${hco3Deficit.toFixed(1)} mEq</span>` : '<span style="color:var(--muted); font-style:italic;">กรอก HCO3 < 15</span>'}</td>
-              <td style="color:var(--muted);">BW × 0.3 × (15 - HCO3). ให้เพียง 50% ในระยะแรก และหลีกเลี่ยงการให้ใน DKA/Lactic acidosis</td>
+              <td>${hco3Deficit !== null ? `
+                <span class="dose-badge">${hco3Deficit.toFixed(1)} mEq Total</span><br>
+                <span style="font-size:11.5px; font-weight:700; color:var(--accent);">Initial 50%: ${init50Meq.toFixed(1)} mEq (${init50Ml.toFixed(1)} mL 7.5% NaHCO3)</span>
+              ` : '<span style="color:var(--muted); font-style:italic;">กรอก HCO3 < 15</span>'}</td>
+              <td style="color:var(--muted);">BW × 0.3 × (15 - HCO3). Drip over 1–2 ชม. หลีกเลี่ยงใน DKA/Lactic acidosis ยกเว้นมี Severe collapse</td>
             </tr>
           </tbody>
         </table>
       </div>
-    </div>
-  `;
+    `;
+  } else {
+    html += `
+      <div style="background:var(--warning-soft); color:var(--warning); border:1px solid var(--warning); border-radius:6px; padding:10px 12px; font-size:12px; font-weight:600;">
+        ⚠️ กรุณากรอกน้ำหนักตัว (ABW) ที่ส่วนบนของหน้าจอเพื่อคำนวณ 3% NaCl Bolus, Sodium/Free Water Deficits, และขนาดยา KCl Replacement
+      </div>
+    `;
+  }
+
+  html += `</div>`;
 
   // ── SECTION 3: Diagnostic Acid-Base & Renal Indices ──
   html += `
@@ -3168,27 +3235,27 @@ function calcElectrolytes() {
             <tr>
               <td><strong>Serum Anion Gap (AG)</strong></td>
               <td>${ag !== null ? `<span class="dose-badge">${ag.toFixed(1)} mEq/L</span> ${corrAG !== ag ? `<br><span style="font-size:11px; color:var(--accent);">Corr AG: ${corrAG.toFixed(1)}</span>` : ''}` : '<span style="color:var(--muted); font-style:italic;">กรอก Na, Cl, HCO3</span>'}</td>
-              <td style="color:var(--muted);">Normal: 8–12 mEq/L. ${ag > 12 ? '<strong style="color:var(--danger);">High AG Metabolic Acidosis</strong> (DKA, Lactic, Toxins, Uremia)' : 'Normal Anion Gap'}</td>
+              <td style="color:var(--muted);">Normal: 8–12 mEq/L. ${ag > 12 ? '<strong style="color:var(--danger);">✕ High AG Metabolic Acidosis</strong> (DKA, Lactic, Toxins, Uremia)' : '<strong style="color:var(--good);">✓ Normal Anion Gap</strong>'}</td>
             </tr>
             <tr>
               <td><strong>Delta Ratio (ΔAG / ΔHCO3)</strong></td>
-              <td>${deltaRatio !== null ? `<span class="dose-badge">${deltaRatio.toFixed(2)}</span>` : '<span style="color:var(--muted); font-style:italic;">กรอก AG และ HCO3</span>'}</td>
-              <td style="color:var(--muted);">${deltaRatio !== null ? (deltaRatio < 0.8 ? '<strong>< 0.8:</strong> Mixed High AG + Normal AG (Hyperchloremic) Acidosis' : (deltaRatio <= 2.0 ? '<strong>0.8–2.0:</strong> Pure High AG Metabolic Acidosis' : '<strong>> 2.0:</strong> Mixed High AG Acidosis + Metabolic Alkalosis')) : 'ใช้ประเมิน Mixed acid-base disorders'}</td>
+              <td>${deltaRatio !== null && !isNaN(deltaRatio) && deltaRatio >= 0 && hco3 < 24 ? `<span class="dose-badge">${deltaRatio.toFixed(2)}</span>` : (ag !== null && hco3 !== null ? '<span class="dose-badge" style="font-size:11px;">Categorized</span>' : '<span style="color:var(--muted); font-style:italic;">กรอก AG และ HCO3</span>')}</td>
+              <td style="color:var(--muted);">${interpretDeltaRatio(ag, hco3)}</td>
             </tr>
             <tr>
               <td><strong>Serum Osmolality & Gap</strong></td>
               <td>${calcOsm !== null ? `<span class="dose-badge">${calcOsm.toFixed(1)} mOsm/kg</span>` : '<span style="color:var(--muted); font-style:italic;">กรอก Na, Glucose, BUN</span>'}${osmGap !== null ? `<br><span style="font-size:11px; color:${osmGap > 10 ? 'var(--danger)' : 'var(--good)'}; font-weight:700;">Gap: ${osmGap.toFixed(1)}</span>` : ''}</td>
-              <td style="color:var(--muted);">${effTonicity ? `Effective Tonicity: <strong>${effTonicity.toFixed(1)}</strong> mOsm/kg. ` : ''}${osmGap !== null ? (osmGap > 10 ? '<strong style="color:var(--danger);">⚠️ High Osmolar Gap (>10):</strong> สงสัย Toxic Alcohols (Methanol, Ethylene Glycol) หรือ Mannitol' : 'Osmolar gap ปกติ (< 10 mOsm/kg)') : 'Calculated = 2Na + Glu/18 + BUN/2.8'}</td>
+              <td style="color:var(--muted);">${effTonicity ? `Effective Tonicity: <strong>${effTonicity.toFixed(1)}</strong> mOsm/kg. ` : ''}${osmGap !== null ? (osmGap > 10 ? '<strong style="color:var(--danger);">⚠️ High Osmolar Gap (>10):</strong> สงสัย Toxic Alcohols (Methanol, Ethylene Glycol) หรือ Mannitol' : '<strong style="color:var(--good);">✓ Osmolar gap ปกติ (< 10 mOsm/kg)</strong>') : 'Calculated = 2Na + Glu/18 + BUN/2.8'}</td>
             </tr>
             <tr>
               <td><strong>FeNa (%) & FeUrea (%)</strong></td>
               <td>${fena !== null ? `<span class="dose-badge">FeNa: ${fena.toFixed(2)}%</span>` : ''}${feUrea !== null ? `<br><span class="dose-badge" style="margin-top:2px;">FeUrea: ${feUrea.toFixed(1)}%</span>` : ''}${fena === null && feUrea === null ? '<span style="color:var(--muted); font-style:italic;">กรอก Urine Na/Cr, Serum Na/Cr</span>' : ''}</td>
-              <td style="color:var(--muted);">${fena !== null ? (fena < 1.0 ? '<strong style="color:var(--good);">FeNa < 1.0%: Prerenal Azotemia</strong> (ท่อไตดูด Na กลับได้ดี)' : '<strong style="color:var(--danger);">FeNa > 2.0%: Intrinsic AKI / ATN</strong> (ท่อไตสูญเสียการดูดกลับ)') : ''}${feUrea !== null ? (feUrea < 35 ? '<br>FeUrea < 35%: Prerenal (แม่นยำแม้ได้ยาขับปัสสาวะ)' : '<br>FeUrea > 50%: Intrinsic AKI') : ''}</td>
+              <td style="color:var(--muted);">${fena !== null ? (fena < 1.0 ? '<strong style="color:var(--good);">✓ FeNa < 1.0%: Prerenal Azotemia</strong> (ท่อไตดูด Na กลับได้ดี)' : '<strong style="color:var(--danger);">✕ FeNa > 2.0%: Intrinsic AKI / ATN</strong> (ท่อไตสูญเสียการดูดกลับ)') : ''}${feUrea !== null ? (feUrea < 35 ? '<br>FeUrea < 35%: Prerenal (แม่นยำแม้ได้ยาขับปัสสาวะ)' : '<br>FeUrea > 50%: Intrinsic AKI') : ''}</td>
             </tr>
             <tr>
               <td><strong>Urine Anion Gap (UAG)</strong></td>
               <td>${uag !== null ? `<span class="dose-badge">${uag > 0 ? '+' : ''}${uag.toFixed(1)} mEq/L</span>` : '<span style="color:var(--muted); font-style:italic;">กรอก Urine Na, K, Cl</span>'}</td>
-              <td style="color:var(--muted);">${uag !== null ? (uag < 0 ? '<strong style="color:var(--good);">UAG ลบ: GI Loss of HCO3-</strong> (Diarrhea — ไตขับ NH4+ ได้ดี)' : '<strong style="color:var(--danger);">UAG บวก/ศูนย์: Renal Tubular Acidosis (RTA)</strong> (ไตขับกรดบกพร่อง)') : 'UAG = (UNa + UK) - UCl (แยกสาเหตุ Normal AG Acidosis)'}</td>
+              <td style="color:var(--muted);">${uag !== null ? (uag < 0 ? '<strong style="color:var(--good);">✓ UAG ลบ: GI Loss of HCO3-</strong> (Diarrhea — ไตขับ NH4+ ได้ดี)' : '<strong style="color:var(--danger);">✕ UAG บวก/ศูนย์: Renal Tubular Acidosis (RTA)</strong> (ไตขับกรดบกพร่อง)') : 'UAG = (UNa + UK) - UCl (แยกสาเหตุ Normal AG Acidosis)'}</td>
             </tr>
             <tr>
               <td><strong>TTKG</strong></td>
@@ -3202,150 +3269,203 @@ function calcElectrolytes() {
   `;
 
   // ── SECTION 4: Emergency Resuscitation Protocols ──
-  const proto = DS.electrolyteProtocols;
-  if (proto && proto.hyperkalemia) {
+  const currentDS = (typeof DS !== 'undefined' && DS) || (typeof window !== 'undefined' && (window.DS || window.ER_PED_DATASET)) || (typeof ER_PED_DATASET !== 'undefined' && ER_PED_DATASET) || {};
+  const proto = currentDS.electrolyteProtocols;
+  if (proto) {
+    // 4A. Hyperkalemia 3-Step Cocktail Card
     html += `
-      <!-- Hyperkalemia 3-Step Cocktail Card -->
       <div class="stage-card" style="border-left:4px solid var(--danger); margin-bottom:12px;">
         <div style="font-size:13px; font-weight:700; color:var(--danger); margin-bottom:8px; display:flex; align-items:center; gap:6px;">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-          <span>4A. Emergency Hyperkalemia 3-Step Protocol (${w.toFixed(1)} kg)</span>
+          <span>4A. Emergency Hyperkalemia 3-Step Protocol ${hasWeight ? `(${w.toFixed(1)} kg)` : ''}</span>
         </div>
-        <div class="protocol-table-wrapper">
-          <table class="protocol-table">
-            <thead>
-              <tr>
-                <th style="width:12%;">Step</th>
-                <th style="width:28%;">Medication</th>
-                <th style="width:30%;">Calculated Dose</th>
-                <th style="width:30%;">Clinical Instructions & Safety</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><span class="dose-badge" style="background:var(--danger-soft); color:var(--danger);">Step 1</span></td>
-                <td><strong>10% Calcium Gluconate</strong><br><span style="font-size:11px; color:var(--muted);">Membrane Stabilization</span></td>
-                <td><span class="dose-badge" style="font-weight:800;">${Math.min(w * 0.5, 10).toFixed(1)} mL</span> <span style="font-size:11px; color:var(--muted);">(${Math.min(w * 50, 1000).toFixed(0)} mg)</span></td>
-                <td style="color:var(--muted);">0.5 mL/kg IV over 5–10 min (Max 10 mL / 1 g). ติด EKG Monitor ป้องกัน Arrhythmia (ไม่ลด K+)</td>
-              </tr>
-              <tr>
-                <td><span class="dose-badge" style="background:var(--warning-soft); color:var(--warning);">Step 2</span></td>
-                <td><strong>RI + D10W</strong><br><span style="font-size:11px; color:var(--muted);">Intracellular Shift</span></td>
-                <td><span class="dose-badge">RI ${Math.min(w * 0.1, 10).toFixed(1)} U</span> + <span class="dose-badge">D10W ${Math.min(w * 5, 250).toFixed(0)} mL</span></td>
-                <td style="color:var(--muted);">RI 0.1 U/kg + D10W 5 mL/kg IV over 30 min (Max 10 U). เจาะ DTX ทุก 15–30 นาที</td>
-              </tr>
-              <tr>
-                <td><span class="dose-badge" style="background:var(--warning-soft); color:var(--warning);">Step 2</span></td>
-                <td><strong>Salbutamol Nebulizer</strong><br><span style="font-size:11px; color:var(--muted);">Intracellular Shift</span></td>
-                <td><span class="dose-badge">${w <= 25 ? '2.5 mg (0.5 mL)' : '5.0 mg (1.0 mL)'}</span></td>
-                <td style="color:var(--muted);">Nebulize over 10–15 min. พ่นซ้ำได้ทุก 20 นาที เสริมฤทธิ์กับ Insulin ดึง K+ เข้าเซลล์</td>
-              </tr>
-              <tr>
-                <td><span class="dose-badge" style="background:var(--warning-soft); color:var(--warning);">Step 2</span></td>
-                <td><strong>7.5% NaHCO3 (if Acidosis)</strong><br><span style="font-size:11px; color:var(--muted);">Intracellular Shift</span></td>
-                <td><span class="dose-badge">${Math.min(w * 1, 50).toFixed(0)} mEq (${Math.min(w * 1.12, 56).toFixed(0)} mL)</span></td>
-                <td style="color:var(--muted);">1–2 mEq/kg IV over 10–20 min. ให้เฉพาะเมื่อมี Severe Metabolic Acidosis ร่วมด้วย</td>
-              </tr>
-              <tr>
-                <td><span class="dose-badge" style="background:var(--good-soft); color:var(--good);">Step 3</span></td>
-                <td><strong>Furosemide (Lasix)</strong><br><span style="font-size:11px; color:var(--muted);">Total Elimination</span></td>
-                <td><span class="dose-badge">${Math.min(w * 1, 40).toFixed(1)} mg (${Math.min(w * 0.1, 4).toFixed(1)} mL)</span></td>
-                <td style="color:var(--muted);">1 mg/kg IV push (Max 40 mg). ขับ K+ ออกทางไต (ต้องมี Urine Output)</td>
-              </tr>
-              <tr>
-                <td><span class="dose-badge" style="background:var(--good-soft); color:var(--good);">Step 3</span></td>
-                <td><strong>Kalimate / Kayexalate</strong><br><span style="font-size:11px; color:var(--muted);">Total Elimination</span></td>
-                <td><span class="dose-badge">${Math.min(w * 1, 30).toFixed(0)} g</span></td>
-                <td style="color:var(--muted);">1 g/kg PO หรือ PR enema (Max 30 g). Cation exchange resin ขับทางเดินอาหาร (ออกฤทธิ์ 2–4 ชม.)</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        ${hasWeight ? `
+          <div class="protocol-table-wrapper">
+            <table class="protocol-table">
+              <thead>
+                <tr>
+                  <th style="width:12%;">Step</th>
+                  <th style="width:28%;">Medication</th>
+                  <th style="width:30%;">Calculated Dose</th>
+                  <th style="width:30%;">Clinical Instructions & Safety</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="dose-badge" style="background:var(--danger-soft); color:var(--danger);">Step 1</span></td>
+                  <td><strong>10% Calcium Gluconate</strong><br><span style="font-size:11px; color:var(--muted);">Membrane Stabilization</span></td>
+                  <td><span class="dose-badge" style="font-weight:800;">${Math.min(w * 0.5, 10).toFixed(1)} mL</span> <span style="font-size:11px; color:var(--muted);">(${Math.min(w * 50, 1000).toFixed(0)} mg)</span></td>
+                  <td style="color:var(--muted);">0.5 mL/kg IV over 5–10 min (Max 10 mL / 1 g). ติด EKG Monitor ป้องกัน Arrhythmia (ไม่ลด K+)</td>
+                </tr>
+                <tr>
+                  <td><span class="dose-badge" style="background:var(--warning-soft); color:var(--warning);">Step 2</span></td>
+                  <td><strong>RI + D10W</strong><br><span style="font-size:11px; color:var(--muted);">Intracellular Shift</span></td>
+                  <td><span class="dose-badge">RI ${Math.min(w * 0.1, 10).toFixed(1)} U</span> + <span class="dose-badge">D10W ${Math.min(w * 5, 250).toFixed(0)} mL</span></td>
+                  <td style="color:var(--muted);">RI 0.1 U/kg + D10W 5 mL/kg IV over 30 min (Max 10 U). เจาะ DTX ทุก 15–30 นาที</td>
+                </tr>
+                <tr>
+                  <td><span class="dose-badge" style="background:var(--warning-soft); color:var(--warning);">Step 2</span></td>
+                  <td><strong>Salbutamol Nebulizer</strong><br><span style="font-size:11px; color:var(--muted);">Intracellular Shift</span></td>
+                  <td><span class="dose-badge">${w <= 25 ? '2.5 mg (0.5 mL)' : '5.0 mg (1.0 mL)'}</span></td>
+                  <td style="color:var(--muted);">Nebulize over 10–15 min. พ่นซ้ำได้ทุก 20 นาที เสริมฤทธิ์กับ Insulin ดึง K+ เข้าเซลล์</td>
+                </tr>
+                <tr>
+                  <td><span class="dose-badge" style="background:var(--warning-soft); color:var(--warning);">Step 2</span></td>
+                  <td><strong>7.5% NaHCO3 (if Acidosis)</strong><br><span style="font-size:11px; color:var(--muted);">Intracellular Shift</span></td>
+                  <td><span class="dose-badge">${Math.min(w * 1, 50).toFixed(0)} mEq (${Math.min(w * 1.12, 56).toFixed(0)} mL)</span></td>
+                  <td style="color:var(--muted);">1–2 mEq/kg IV over 10–20 min. ให้เฉพาะเมื่อมี Severe Metabolic Acidosis ร่วมด้วย</td>
+                </tr>
+                <tr>
+                  <td><span class="dose-badge" style="background:var(--good-soft); color:var(--good);">Step 3</span></td>
+                  <td><strong>Furosemide (Lasix)</strong><br><span style="font-size:11px; color:var(--muted);">Total Elimination</span></td>
+                  <td><span class="dose-badge">${Math.min(w * 1, 40).toFixed(1)} mg (${Math.min(w * 0.1, 4).toFixed(1)} mL)</span></td>
+                  <td style="color:var(--muted);">1 mg/kg IV push (Max 40 mg). ขับ K+ ออกทางไต (ต้องมี Urine Output)</td>
+                </tr>
+                <tr>
+                  <td><span class="dose-badge" style="background:var(--good-soft); color:var(--good);">Step 3</span></td>
+                  <td><strong>Kalimate / Kayexalate</strong><br><span style="font-size:11px; color:var(--muted);">Total Elimination</span></td>
+                  <td><span class="dose-badge">${Math.min(w * 1, 30).toFixed(0)} g</span></td>
+                  <td style="color:var(--muted);">1 g/kg PO หรือ PR enema (Max 30 g). Cation exchange resin ขับทางเดินอาหาร (ออกฤทธิ์ 2–4 ชม.)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        ` : `
+          <div style="background:var(--warning-soft); color:var(--warning); border:1px solid var(--warning); border-radius:6px; padding:8px 12px; font-size:12px; font-weight:600;">
+            ⚠️ กรุณากรอกน้ำหนักตัว (ABW) ที่ส่วนบนของหน้าจอเพื่อคำนวณขนาดยาใน Hyperkalemia 3-Step Protocol
+          </div>
+        `}
       </div>
 
-      <!-- Hypokalemia Replacement Protocol & Dilution Recipe Card -->
+      <!-- 4B. Hypokalemia Replacement Protocol & Dilution Recipe Card -->
       <div class="stage-card" style="border-left:4px solid var(--accent); margin-bottom:12px;">
         <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:8px; display:flex; align-items:center; gap:6px;">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20"/><path d="m17 5-5-3-5 3"/><path d="m17 19-5 3-5-3"/><path d="M2 12h20"/></svg>
-          <span>4B. Hypokalemia Correction & Potassium Replacement Protocol (${w.toFixed(1)} kg)</span>
+          <span>4B. Hypokalemia Correction & Potassium Replacement Protocol ${hasWeight ? `(${w.toFixed(1)} kg)` : ''}</span>
         </div>
-        <div class="protocol-table-wrapper">
-          <table class="protocol-table">
-            <thead>
-              <tr>
-                <th style="width:15%;">Indication / Severity</th>
-                <th style="width:25%;">Route & Regimen</th>
-                <th style="width:30%;">Calculated Dose & Dilution</th>
-                <th style="width:30%;">Safety Directives & Rate Limits</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style="background:var(--accent-subtle);">
-                <td><strong>Prerequisites</strong><br><span style="font-size:11px; color:var(--muted);">Urine & Mg Check</span></td>
-                <td colspan="2">
-                  <div style="font-size:12px; line-height:1.5;">
-                    1. <strong>Urine Output:</strong> ต้องมั่นใจว่ามีปัสสาวะออก ≥ 0.5–1 mL/kg/hr ก่อนให้ K+ ป้องกัน Anuric Hyperkalemia<br>
-                    2. <strong>Serum Magnesium:</strong> หาก Mg &lt; 1.7 mg/dL ให้ <strong>50% MgSO4 ${Math.min(w * 0.1, 4).toFixed(1)} mL</strong> (${Math.min(w * 50, 2000).toFixed(0)} mg) IV over 30–60 min เพื่อหยุด Refractory Renal K+ leak
-                  </div>
-                </td>
-                <td style="color:var(--danger); font-weight:700; font-size:11.5px;">⚠️ ห้ามให้ IV Push KCl เด็ดขาด (Fatal Cardiac Arrest)</td>
-              </tr>
-              <tr>
-                <td><strong style="color:var(--danger);">Severe / Symptomatic</strong><br><span style="font-size:11px; color:var(--muted);">K+ &lt; 2.5 หรือมี EKG change</span></td>
-                <td><strong>IV KCl Piggyback (Peripheral Line)</strong><br><span style="font-size:11px; color:var(--muted);">Max conc ≤ 40 mEq/L</span></td>
-                <td>
-                  <span class="dose-badge" style="font-weight:800;">KCl ${ivKCl.doseMeq} mEq (${ivKCl.kcl2MeqPerMl} mL)</span><br>
-                  <span style="font-size:11.5px; color:var(--ink);">ผสมใน NSS/D5W <strong>≥ ${ivKCl.minVolPeripheralMl} mL</strong></span><br>
-                  <span style="font-size:11px; color:var(--accent);">Drip over <strong>2 ชั่วโมง</strong> (${ivKCl.peripheralRateMlPerHr} mL/hr)</span>
-                </td>
-                <td style="color:var(--muted);">
-                  อัตราส่งมอบ <strong>0.25 mEq/kg/hr</strong> (Safety cap ≤ 0.5 mEq/kg/hr). ติด EKG Monitor ตลอดเวลา เจาะซ้ำหลังหมด 1–2 ชม.
-                </td>
-              </tr>
-              <tr>
-                <td><strong style="color:var(--danger);">Severe (Central Line)</strong><br><span style="font-size:11px; color:var(--muted);">ICU / Central line</span></td>
-                <td><strong>IV KCl Piggyback (Central Line)</strong><br><span style="font-size:11px; color:var(--muted);">Max conc ≤ 80 mEq/L</span></td>
-                <td>
-                  <span class="dose-badge" style="font-weight:800;">KCl ${ivKCl.doseMeq} mEq (${ivKCl.kcl2MeqPerMl} mL)</span><br>
-                  <span style="font-size:11.5px; color:var(--ink);">ผสมใน NSS <strong>≥ ${ivKCl.minVolCentralMl} mL</strong></span><br>
-                  <span style="font-size:11px; color:var(--accent);">Drip over <strong>1–2 ชั่วโมง</strong> (${ivKCl.centralRateMlPerHr} mL/hr)</span>
-                </td>
-                <td style="color:var(--muted);">
-                  อัตราส่งมอบ <strong>0.50 mEq/kg/hr</strong>. ให้เฉพาะทาง Central line เท่านั้นเพื่อป้องกัน Severe Phlebitis
-                </td>
-              </tr>
-              <tr>
-                <td><strong style="color:var(--warning);">Moderate Hypokalemia</strong><br><span style="font-size:11px; color:var(--muted);">K+ 2.5–3.4 mEq/L</span></td>
-                <td><strong>IV Fluid Maintenance Additive</strong><br><span style="font-size:11px; color:var(--muted);">Ongoing replacement</span></td>
-                <td>
-                  <span class="dose-badge">20–40 mEq KCl / 1,000 mL IV Fluid</span><br>
-                  <span style="font-size:11px; color:var(--muted);">(เช่น เติม KCl 2 mEq/mL จำนวน 5–10 mL ในขวด 500 mL)</span>
-                </td>
-                <td style="color:var(--muted);">
-                  ให้ตามอัตรา Maintenance ของสารน้ำ (Holliday-Segar). สารน้ำทั่วไปไม่ควรเกิน 40 mEq/L ทาง peripheral
-                </td>
-              </tr>
-              <tr>
-                <td><strong style="color:var(--good);">Mild / Asymptomatic</strong><br><span style="font-size:11px; color:var(--muted);">K+ 3.0–3.5 mEq/L (กินได้)</span></td>
-                <td><strong>Oral KCl Syrup (10%)</strong><br><span style="font-size:11px; color:var(--muted);">1.34 mEq/mL syrup</span></td>
-                <td>
-                  <span class="dose-badge">${oralKCl.kcl10PctSyrupMlPerDose} mL (${oralKCl.tidDoseMeq} mEq) PO tid pc</span><br>
-                  <span style="font-size:11px; color:var(--muted);">รวมทั้งวัน: ${oralKCl.dailyMeq} mEq/day (1.5 mEq/kg/day)</span>
-                </td>
-                <td style="color:var(--muted);">
-                  รับประทานพร้อมอาหารหรือน้ำผลไม้เพื่อลดการระคายเคืองกระเพาะอาหาร (Max 40 mEq/dose)
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        ${hasWeight ? `
+          <div class="protocol-table-wrapper">
+            <table class="protocol-table">
+              <thead>
+                <tr>
+                  <th style="width:15%;">Indication / Severity</th>
+                  <th style="width:25%;">Route & Regimen</th>
+                  <th style="width:30%;">Calculated Dose & Dilution</th>
+                  <th style="width:30%;">Safety Directives & Rate Limits</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="background:var(--accent-subtle);">
+                  <td><strong>Prerequisites</strong><br><span style="font-size:11px; color:var(--muted);">Urine & Mg Check</span></td>
+                  <td colspan="2">
+                    <div style="font-size:12px; line-height:1.5;">
+                      1. <strong>Urine Output:</strong> ต้องมั่นใจว่ามีปัสสาวะออก ≥ 0.5–1 mL/kg/hr ก่อนให้ K+ ป้องกัน Anuric Hyperkalemia<br>
+                      2. <strong>Serum Magnesium:</strong> หาก Mg &lt; 1.7 mg/dL ให้ <strong>50% MgSO4 ${Math.min(w * 0.1, 4).toFixed(1)} mL</strong> (${Math.min(w * 50, 2000).toFixed(0)} mg) IV over 30–60 min เพื่อหยุด Refractory Renal K+ leak
+                    </div>
+                  </td>
+                  <td style="color:var(--danger); font-weight:700; font-size:11.5px;">⚠️ ห้ามให้ IV Push KCl เด็ดขาด (Fatal Cardiac Arrest)</td>
+                </tr>
+                <tr>
+                  <td><strong style="color:var(--danger);">Severe / Symptomatic</strong><br><span style="font-size:11px; color:var(--muted);">K+ &lt; 2.5 หรือมี EKG change</span></td>
+                  <td><strong>IV KCl Piggyback (Peripheral Line)</strong><br><span style="font-size:11px; color:var(--muted);">Max conc ≤ 40 mEq/L</span></td>
+                  <td>
+                    <span class="dose-badge" style="font-weight:800;">KCl ${ivKCl.doseMeq} mEq (${ivKCl.kcl2MeqPerMl} mL)</span><br>
+                    <span style="font-size:11.5px; color:var(--ink);">ผสมใน NSS/D5W <strong>≥ ${ivKCl.minVolPeripheralMl} mL</strong></span><br>
+                    <span style="font-size:11px; color:var(--accent);">Drip over <strong>2 ชั่วโมง</strong> (${ivKCl.peripheralRateMlPerHr} mL/hr)</span>
+                  </td>
+                  <td style="color:var(--muted);">
+                    อัตราส่งมอบ <strong>0.25 mEq/kg/hr</strong> (Safety cap ≤ 0.5 mEq/kg/hr). ติด EKG Monitor ตลอดเวลา เจาะซ้ำหลังหมด 1–2 ชม.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong style="color:var(--danger);">Severe (Central Line)</strong><br><span style="font-size:11px; color:var(--muted);">ICU / Central line</span></td>
+                  <td><strong>IV KCl Piggyback (Central Line)</strong><br><span style="font-size:11px; color:var(--muted);">Max conc ≤ 80 mEq/L</span></td>
+                  <td>
+                    <span class="dose-badge" style="font-weight:800;">KCl ${ivKCl.doseMeq} mEq (${ivKCl.kcl2MeqPerMl} mL)</span><br>
+                    <span style="font-size:11.5px; color:var(--ink);">ผสมใน NSS <strong>≥ ${ivKCl.minVolCentralMl} mL</strong></span><br>
+                    <span style="font-size:11px; color:var(--accent);">Drip over <strong>1–2 ชั่วโมง</strong> (${ivKCl.centralRateMlPerHr} mL/hr)</span>
+                  </td>
+                  <td style="color:var(--muted);">
+                    อัตราส่งมอบ <strong>0.50 mEq/kg/hr</strong>. ให้เฉพาะทาง Central line เท่านั้นเพื่อป้องกัน Severe Phlebitis
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong style="color:var(--warning);">Moderate Hypokalemia</strong><br><span style="font-size:11px; color:var(--muted);">K+ 2.5–3.4 mEq/L</span></td>
+                  <td><strong>IV Fluid Maintenance Additive</strong><br><span style="font-size:11px; color:var(--muted);">Ongoing replacement</span></td>
+                  <td>
+                    <span class="dose-badge">20–40 mEq KCl / 1,000 mL IV Fluid</span><br>
+                    <span style="font-size:11px; color:var(--muted);">(เช่น เติม KCl 2 mEq/mL จำนวน 5–10 mL ในขวด 500 mL)</span>
+                  </td>
+                  <td style="color:var(--muted);">
+                    ให้ตามอัตรา Maintenance ของสารน้ำ (Holliday-Segar). สารน้ำทั่วไปไม่ควรเกิน 40 mEq/L ทาง peripheral
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong style="color:var(--good);">Mild / Asymptomatic</strong><br><span style="font-size:11px; color:var(--muted);">K+ 3.0–3.5 mEq/L (กินได้)</span></td>
+                  <td><strong>Oral KCl Syrup (10%)</strong><br><span style="font-size:11px; color:var(--muted);">1.34 mEq/mL syrup</span></td>
+                  <td>
+                    <span class="dose-badge">${oralKCl.kcl10PctSyrupMlPerDose} mL (${oralKCl.tidDoseMeq} mEq) PO tid pc</span><br>
+                    <span style="font-size:11px; color:var(--muted);">รวมทั้งวัน: ${oralKCl.dailyMeq} mEq/day (1.5 mEq/kg/day)</span>
+                  </td>
+                  <td style="color:var(--muted);">
+                    รับประทานพร้อมอาหารหรือน้ำผลไม้เพื่อลดการระคายเคืองกระเพาะอาหาร (Max 40 mEq/dose)
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        ` : `
+          <div style="background:var(--warning-soft); color:var(--warning); border:1px solid var(--warning); border-radius:6px; padding:8px 12px; font-size:12px; font-weight:600;">
+            ⚠️ กรุณากรอกน้ำหนักตัว (ABW) ที่ส่วนบนของหน้าจอเพื่อคำนวณขนาดยาและอัตราหยด Potassium Replacement
+          </div>
+        `}
+      </div>
+
+      <!-- 4C. Acute Hypocalcemia & Hypomagnesemia Resuscitation Card (Decision Q4-B) -->
+      <div class="stage-card" style="border-left:4px solid #8b5cf6; margin-bottom:12px;">
+        <div style="font-size:13px; font-weight:700; color:#7c3aed; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20"/><path d="m17 5-5-3-5 3"/><path d="m17 19-5 3-5-3"/><path d="M2 12h20"/></svg>
+          <span>4C. Acute Hypocalcemia & Hypomagnesemia Crisis Protocols ${hasWeight ? `(${w.toFixed(1)} kg)` : ''}</span>
         </div>
+        ${hasWeight ? `
+          <div class="protocol-table-wrapper">
+            <table class="protocol-table">
+              <thead>
+                <tr>
+                  <th style="width:25%;">Indication / Crisis</th>
+                  <th style="width:25%;">Medication & Preparation</th>
+                  <th style="width:25%;">Calculated Dose</th>
+                  <th style="width:25%;">Clinical Instructions & Safety</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong style="color:var(--danger);">Acute Symptomatic Hypocalcemia</strong><br><span style="font-size:11px; color:var(--muted);">Tetany, Laryngospasm, Seizure, Long QTc</span></td>
+                  <td><strong>10% Calcium Gluconate</strong><br><span style="font-size:11px; color:var(--muted);">100 mg/mL (0.465 mEq Ca/mL)</span></td>
+                  <td><span class="dose-badge" style="font-weight:800; background:var(--danger-soft); color:var(--danger);">${Math.min(w * 1.0, 20).toFixed(1)} mL</span> <span style="font-size:11px; color:var(--muted);">(${Math.min(w * 100, 2000).toFixed(0)} mg)</span></td>
+                  <td style="color:var(--muted);">1.0 mL/kg (100 mg/kg) IV slow over 10–20 min (Max 20 mL / 2 g). ติด EKG Monitor ป้องกัน Bradycardia / Arrhythmia ระวัง Extravasation</td>
+                </tr>
+                <tr>
+                  <td><strong style="color:var(--warning);">Acute Hypomagnesemia</strong><br><span style="font-size:11px; color:var(--muted);">Mg &lt; 1.7 mg/dL, Refractory K+ leak, Torsades</span></td>
+                  <td><strong>50% Magnesium Sulfate</strong><br><span style="font-size:11px; color:var(--muted);">500 mg/mL (4 mEq Mg/mL)</span></td>
+                  <td><span class="dose-badge" style="font-weight:800; background:var(--warning-soft); color:var(--warning);">${Math.min(w * 0.1, 4).toFixed(1)} mL</span> <span style="font-size:11px; color:var(--muted);">(${Math.min(w * 50, 2000).toFixed(0)} mg)</span></td>
+                  <td style="color:var(--muted);">0.1 mL/kg (50 mg/kg) IV infusion in D5W/NSS over 20–30 min (Max 4 mL / 2 g). *ถ้า Pulseless Torsades ให้ IV push ใน 1–2 นาที*</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        ` : `
+          <div style="background:var(--warning-soft); color:var(--warning); border:1px solid var(--warning); border-radius:6px; padding:8px 12px; font-size:12px; font-weight:600;">
+            ⚠️ กรุณากรอกน้ำหนักตัว (ABW) ที่ส่วนบนของหน้าจอเพื่อคำนวณขนาดยาฉุกเฉิน 10% Calcium Gluconate และ 50% MgSO4
+          </div>
+        `}
       </div>
     `;
   }
 
   // ── SECTION 5: Interactive Age-Specific Reference Table ──
   const ageKey = getActiveElectrolyteAgeKey(ageYr);
-  const refList = DS.electrolyteRef || [];
+  const refList = currentDS.electrolyteRef || [];
 
   html += `
     <div class="stage-card">
@@ -3441,6 +3561,7 @@ if (typeof module !== 'undefined' && module.exports) {
     calcAnionGap,
     calcCorrectedAnionGap,
     calcDeltaRatio,
+    interpretDeltaRatio,
     calcOsmolality,
     calcEffectiveTonicity,
     calcOsmolarGap,

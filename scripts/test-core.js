@@ -825,6 +825,116 @@ test('Electrolytes UI Engine: 10 kg child with labs populated renders complete c
   assert(out.includes('Child (1–12 years)'), 'Reference table row check');
 });
 
+test('copyEHROrder("electrolytes"): Smart Context-Aware order strings for 10 kg patient', () => {
+  document.getElementById('weight').value = '10';
+  window.eval('onWeightChange()');
+
+  // Case 1: Symptomatic Hyponatremia (Na < 125) -> 3% NaCl order
+  document.getElementById('lyteNa').value = '118';
+  document.getElementById('lyteK').value = '4.0';
+  window.eval('calcElectrolytes()');
+  let orderStr = window.copyEHROrder('electrolytes');
+  assert(orderStr.includes('[ER-PED Electrolyte] IV 3% NaCl 30–50 mL IV infusion over 20 min'), '3% NaCl emergency bolus order check');
+  assert(orderStr.includes('[BW: 10.0 kg]'), 'Weight inclusion check');
+
+  // Case 2: Severe Hypokalemia (K < 3.5) -> IV KCl Piggyback order
+  document.getElementById('lyteNa').value = '136';
+  document.getElementById('lyteK').value = '2.4';
+  window.eval('calcElectrolytes()');
+  orderStr = window.copyEHROrder('electrolytes');
+  assert(orderStr.includes('[ER-PED Electrolyte] KCl 5 mEq (2.5 mL) in 0.9% NSS 125 mL IV slow piggyback @ 62.5 mL/hr over 2 hr') || orderStr.includes('[ER-PED Electrolyte] KCl 5.0 mEq (2.5 mL) in 0.9% NSS 125 mL IV slow piggyback @ 62.5 mL/hr over 2 hr'), 'IV KCl slow piggyback order check');
+
+  // Case 3: Severe Hyperkalemia (K > 5.5) -> Hyperkalemia 3-Step Cocktail order
+  document.getElementById('lyteK').value = '6.8';
+  window.eval('calcElectrolytes()');
+  orderStr = window.copyEHROrder('electrolytes');
+  assert(orderStr.includes('[ER-PED Hyperkalemia] 10% Calcium Gluconate 5.0 mL IV over 5–10 min | Regular Insulin 1.0 U + D10W 50 mL IV over 30 min | Salbutamol neb 2.5 mg'), 'Hyperkalemia cocktail order check');
+});
+
+test('Electrolytes: interpretDeltaRatio logic correctly classifies mixed disorders and alkalosis', () => {
+  const { interpretDeltaRatio } = appExports;
+  
+  // 1. High AG Acidosis + Metabolic Alkalosis (HCO3 >= 24)
+  const alk = interpretDeltaRatio(20, 28);
+  assert(alk.includes('Mixed High AG Acidosis + Metabolic Alkalosis'), 'HCO3 28 with AG 20 must classify as High AG + Metabolic Alkalosis');
+
+  // 2. Pure Normal AG (Hyperchloremic) Acidosis (AG <= 12, HCO3 < 24)
+  const normAG = interpretDeltaRatio(10, 14);
+  assert(normAG.includes('Pure Normal AG (Hyperchloremic) Acidosis'), 'AG 10 with HCO3 14 must classify as Normal AG Acidosis');
+
+  // 3. Pure High AG Acidosis (0.8 <= Ratio <= 2.0)
+  const pureHigh = interpretDeltaRatio(25, 14);
+  assert(pureHigh.includes('Pure High AG Metabolic Acidosis'), 'AG 25 (deltaAG 13) with HCO3 14 (deltaHCO3 10) -> ratio 1.3 -> Pure High AG');
+
+  // 4. Mixed High AG + Normal AG Acidosis (Ratio < 0.8)
+  const mixedLow = interpretDeltaRatio(18, 8);
+  assert(mixedLow.includes('Mixed High AG + Normal AG Acidosis'), 'AG 18 (deltaAG 6) with HCO3 8 (deltaHCO3 16) -> ratio 0.375 -> Mixed High AG + Normal AG');
+});
+
+test('Electrolytes UI Engine: Non-blocking progressive disclosure with zero weight', () => {
+  document.getElementById('weight').value = '';
+  window.eval('onWeightChange()');
+
+  document.getElementById('lyteNa').value = '130';
+  document.getElementById('lyteGlucose').value = '350';
+  document.getElementById('lyteTotalCa').value = '7.2';
+  document.getElementById('lyteAlbumin').value = '2.5';
+  document.getElementById('lyteK').value = '4.0';
+  document.getElementById('lytePH').value = '7.10';
+  document.getElementById('lyteCl').value = '98';
+  document.getElementById('lyteHCO3').value = '12';
+
+  window.eval('calcElectrolytes()');
+  const out = document.getElementById('lyteOut').innerHTML;
+
+  // Weight-independent calculations must render without screen wiping
+  assert(out.includes('134.0'), 'Corrected Na Katz renders with zero weight');
+  assert(out.includes('135.0'), 'Corrected Na ISPAD renders with zero weight');
+  assert(out.includes('8.4'), 'Corrected Ca renders with zero weight');
+  assert(out.includes('2.2'), 'Estimated Baseline K+ renders with zero weight');
+  assert(out.includes('Normal Reference Ranges by Age'), 'Reference table renders with zero weight');
+
+  // Weight-dependent sections must show localized prompts
+  assert(out.includes('กรุณากรอกน้ำหนักตัว (ABW)'), 'Section 2 and 4 localized weight warning prompt check');
+});
+
+test('Electrolytes UI Engine: Section 4C Acute Hypocalcemia & Hypomagnesemia Resuscitation Protocols', () => {
+  document.getElementById('weight').value = '10';
+  window.eval('onWeightChange()');
+  window.eval('calcElectrolytes()');
+  let out = document.getElementById('lyteOut').innerHTML;
+
+  // 10 kg child
+  assert(out.includes('4C. Acute Hypocalcemia') && out.includes('Hypomagnesemia Crisis Protocols (10.0 kg)'), 'Section 4C header check');
+  assert(out.includes('10.0 mL'), '10% Calcium Gluconate 10.0 mL check (1.0 mL/kg)');
+  assert(out.includes('1.0 mL'), '50% MgSO4 1.0 mL check (0.1 mL/kg)');
+
+  // 40 kg child (safety caps)
+  document.getElementById('weight').value = '40';
+  window.eval('onWeightChange()');
+  window.eval('calcElectrolytes()');
+  out = document.getElementById('lyteOut').innerHTML;
+  assert(out.includes('20.0 mL'), '10% Calcium Gluconate capped at 20.0 mL max');
+  assert(out.includes('4.0 mL'), '50% MgSO4 capped at 4.0 mL max');
+});
+
+test('Electrolytes UI Engine: Free Water Deficit combined 48h rate and Bicarb 50% initial dose', () => {
+  document.getElementById('weight').value = '10';
+  document.getElementById('lyteNa').value = '160';
+  document.getElementById('lyteHCO3').value = '10';
+  window.eval('onWeightChange()');
+  window.eval('calcElectrolytes()');
+  const out = document.getElementById('lyteOut').innerHTML;
+
+  // Free Water Deficit combined rate check (10 kg: Mnt 41.7 mL/hr + Deficit ~17.9 mL/hr = ~59.5 mL/hr)
+  assert(out.includes('Total Rate:'), 'Combined 48h total fluid rate check');
+  assert(out.includes('Mnt: 41.7'), 'Maintenance component display check');
+
+  // Bicarbonate 50% initial dose check (10 kg * 0.3 * (15 - 10) = 15 mEq total -> 7.5 mEq initial 50% = ~8.4 mL 7.5% NaHCO3)
+  assert(out.includes('15.0 mEq Total'), 'Total bicarb deficit check');
+  assert(out.includes('Initial 50%: 7.5 mEq (8.4 mL 7.5% NaHCO3)'), 'Initial 50% bicarb dose check');
+});
+
 console.log(`\n----------------------------------------`);
 console.log(`Test Results: ${passed} Passed, ${failed} Failed`);
 console.log(`----------------------------------------\n`);
@@ -834,4 +944,5 @@ if (failed > 0) {
 } else {
   process.exit(0);
 }
+
 
