@@ -2351,7 +2351,8 @@
         "rec": "Bolus 20 mL/kg NS/RL ทันที; ทำซ้ำได้; แล้วแก้ deficit 24–48 h + maintenance",
         "ivOption": "NS/RL"
       }
-    ]
+    ],
+    "refKey": "fluids"
   },
   "pals": {
     "epiArrest": {
@@ -2377,13 +2378,16 @@
     "defib": {
       "first_JPerKg": 2,
       "next_JPerKg": 4,
-      "upper_JPerKg": 4
+      "upper_JPerKg": 10,
+      "note": "2 J/kg initial -> 4 J/kg subsequent -> may escalate up to 10 J/kg for refractory VF/pVT"
     },
     "atropine": {
       "dose_mgPerKg": 0.02,
       "minSingle_mg": 0.1,
       "maxSingle_mg_child": 0.5,
-      "maxTotal_mg_child": 1
+      "maxTotal_mg_child": 1,
+      "maxSingle_mg_adolescent": 1,
+      "maxTotal_mg_adolescent": 2
     },
     "epiInfusion": {
       "range_mcgPerKgPerMin": [
@@ -2498,7 +2502,9 @@
       ]
     },
     "defibJoulesPerKg_initial": 2,
-    "defibJoulesPerKg_next": 4
+    "defibJoulesPerKg_next": 4,
+    "ventilationNote": "Respiratory arrest or advanced airway CPR: 1 breath every 2–3 seconds (20–30 bpm) per 2025 AHA/AAP PALS.",
+    "refKey": "pals"
   },
   "ncpr": {
     "epiIV_mgPerKg": 0.02,
@@ -2662,7 +2668,8 @@
           "catheter": "8F"
         }
       ]
-    }
+    },
+    "refKey": "ncpr"
   },
   "broselow": [
     {
@@ -3863,7 +3870,8 @@
         "range": "> 5.5 mEq/L",
         "action": "Do NOT add KCl to IV fluid. Recheck K+ in 2 hours."
       }
-    ]
+    ],
+    "refKey": "dka"
   },
   "asthmaProtocol": {
     "severityAssessment": [
@@ -4074,7 +4082,8 @@
         "Requiring IV bronchodilators (Terbutaline / Epinephrine infusion)",
         "Impending respiratory failure / need for intubation"
       ]
-    }
+    },
+    "refKey": "asthma"
   },
   "electrolyteRef": [
     {
@@ -4246,7 +4255,7 @@
     "hypocalcemia": {
       "name": "10% Calcium Gluconate (Acute Symptomatic)",
       "doseMgPerKg": 100,
-      "doseMlPerKg": 1.0,
+      "doseMlPerKg": 1,
       "maxMl": 20,
       "maxMg": 2000,
       "route": "IV slow over 10–20 min",
@@ -4270,8 +4279,8 @@
       "maxInfusionRateMeqPerKgPerHr": 0.5,
       "maxPeripheralConcMeqPerL": 40,
       "maxCentralConcMeqPerL": 80,
-      "oralDoseMeqPerKgPerDayMin": 1.0,
-      "oralDoseMeqPerKgPerDayMax": 2.0,
+      "oralDoseMeqPerKgPerDayMin": 1,
+      "oralDoseMeqPerKgPerDayMax": 2,
       "maxOralDoseMeq": 40,
       "ivAdditiveMeqPerLMin": 20,
       "ivAdditiveMeqPerLMax": 40,
@@ -4282,6 +4291,144 @@
         "Check and correct Serum Magnesium (hypomagnesemia causes refractory renal K+ wasting).",
         "Continuous ECG monitor is mandatory if infusion rate > 0.5 mEq/kg/hr or K+ < 2.5 mEq/L."
       ]
+    },
+    "refKey": "electrolytes"
+  },
+  "evidenceReferences": {
+    "pals": {
+      "title": "2025 AHA/AAP Guidelines for CPR and ECC: Part 8: Pediatric Advanced Life Support",
+      "organization": "American Heart Association (AHA) / American Academy of Pediatrics (AAP)",
+      "year": 2025,
+      "journal": "Circulation / Pediatrics",
+      "doi": "10.1161/CIR.0000000000001300",
+      "pmid": "39436150",
+      "loe": "Class I (Level of Evidence B-NR / C-LD)",
+      "category": "Emergency Resuscitation",
+      "summary": "Pediatric resuscitation guidelines: Defibrillation 2 J/kg initial -> 4 J/kg subsequent (up to 10 J/kg for refractory VF/pVT), early Epinephrine 0.01 mg/kg IV/IO (max 1 mg), Amiodarone 5 mg/kg or Lidocaine 1 mg/kg, Atropine 0.02 mg/kg, and ventilation rate 1 breath every 2–3 sec (20–30 bpm)."
+    },
+    "ncpr": {
+      "title": "Textbook of Neonatal Resuscitation (NRP 9th Edition)",
+      "organization": "American Academy of Pediatrics (AAP) / American Heart Association (AHA)",
+      "year": 2025,
+      "journal": "AAP NRP 9th Edition",
+      "isbn": "978-1-61002-677-2",
+      "loe": "Class I (Level of Evidence B-R / C-EO)",
+      "category": "Neonatal Resuscitation",
+      "summary": "Neonatal resuscitation guidelines: Deferred cord clamping >= 60 sec in uncompromised neonates, preferred IV/IO Epinephrine 0.02 mg/kg (0.2 mL/kg of 1:10,000), ETT bridge 0.1 mg/kg (1.0 mL/kg), volume expander 10 mL/kg NS/PRBC, and D10W bolus 2 mL/kg + infusion GIR 4–8 mg/kg/min."
+    },
+    "dka": {
+      "title": "ISPAD Clinical Practice Consensus Guidelines: Chapter 11: Diabetic Ketoacidosis & Hyperglycemic Hyperosmolar State",
+      "organization": "International Society for Pediatric and Adolescent Diabetes (ISPAD)",
+      "year": 2024,
+      "journal": "Pediatric Diabetes",
+      "doi": "10.1111/pedi.13406",
+      "loe": "Class I (Level of Evidence A / B)",
+      "category": "Endocrine Emergencies",
+      "summary": "Pediatric DKA fluid replacement over 48 hours minus initial pre-ED boluses, Regular Insulin IV infusion 0.05–0.1 U/kg/hr started 1–2h post-fluid hydration (no insulin bolus), D5W/D10W titration at BG < 250–300 mg/dL, potassium replacement 20–40 mEq/L, and ISPAD Corrected Sodium formula."
+    },
+    "asthma": {
+      "title": "Global Strategy for Asthma Management and Prevention (2026 Update) & Thai Asthma Council Guidelines (TAC 2568)",
+      "organization": "Global Initiative for Asthma (GINA) / Thai Asthma Council (TAC)",
+      "year": 2026,
+      "journal": "GINA 2026 Strategy Report / TAC Guideline 2025",
+      "loe": "Class I / IIa (Level of Evidence A / B)",
+      "category": "Respiratory Emergencies",
+      "summary": "Stepwise acute asthma exacerbation pathway: Titrated oxygen target SpO2 >= 92%, SABA + Ipratropium nebulization + Systemic Corticosteroids (Prednisolone 1–2 mg/kg, Dexamethasone 0.3–0.6 mg/kg), HFNC 1–2 L/kg/min, IV Magnesium Sulfate 40–50 mg/kg (nebulized MgSO4 excluded), and early Epinephrine IM if anaphylaxis present."
+    },
+    "seizure": {
+      "title": "Evidence-Based Guideline: Treatment of Convulsive Status Epilepticus in Children and Adults & ESETT Trial",
+      "organization": "American Epilepsy Society (AES) / Established Status Epilepticus Treatment Trial",
+      "year": 2020,
+      "journal": "Epilepsy Curr / N Engl J Med",
+      "doi": "10.1056/NEJMoa1905795",
+      "pmid": "31774955",
+      "loe": "Class I (Level of Evidence A / B-R)",
+      "category": "Neurology Emergencies",
+      "summary": "Time-phased status epilepticus protocol: Stage 1 (0–10m) Midazolam IN/IM 0.2 mg/kg or Lorazepam IV 0.1 mg/kg or Diazepam IV 0.2–0.3 mg/kg; Stage 2 (10–20m) Levetiracetam 60 mg/kg (max 4.5 g), Fosphenytoin/Phenytoin 20 mg/kg in NS, Valproate 40 mg/kg, Phenobarbital 20 mg/kg; Stage 3 continuous Midazolam/Ketamine infusion."
+    },
+    "fluids": {
+      "title": "Clinical Practice Guideline: Maintenance Intravenous Fluids in Children & WHO Diarrhoea Guidelines",
+      "organization": "American Academy of Pediatrics (AAP) / World Health Organization (WHO)",
+      "year": 2024,
+      "journal": "Pediatrics / WHO Guidelines",
+      "doi": "10.1542/peds.2018-3083",
+      "pmid": "30478247",
+      "loe": "Class I (Level of Evidence A)",
+      "category": "Fluid & Electrolytes",
+      "summary": "Isotonic maintenance fluids (D5 0.9% NS / D5 0.45% NS / balanced solutions) per Holliday–Segar method to prevent hospital-acquired hyponatremia; Dehydration assessment: ORS 50 mL/kg (mild 3–5%), ORS 75–100 mL/kg (mod 6–9%), and 20 mL/kg isotonic bolus for severe dehydration/shock."
+    },
+    "electrolytes": {
+      "title": "The Harriet Lane Handbook (24th ed) & Nelson Textbook of Pediatrics (22nd ed): Pediatric Electrolyte Emergencies",
+      "organization": "Johns Hopkins Hospital / Nelson Pediatrics",
+      "year": 2026,
+      "journal": "Harriet Lane Handbook 24th ed / Nelson 22nd ed",
+      "loe": "Class I / IIa (Level of Evidence B-NR / C-LD)",
+      "category": "Fluid & Electrolytes",
+      "summary": "Pediatric emergency electrolyte correction: Symptomatic hyponatremia 3% NaCl 3–5 mL/kg (max 150 mL, safe cap <= 8–10 mEq/L/day); Hypernatremia slow 48h free water deficit correction (drop <= 0.5 mEq/L/hr); Hyperkalemia 3-step cocktail (10% Ca Gluconate 0.5–1 mL/kg, RI 0.1 U/kg + D10W 5 mL/kg, Salbutamol neb, NaHCO3, Furosemide, Kalimate); Hypokalemia IV piggyback 0.5 mEq/kg (max conc <= 40 mEq/L peripheral, <= 80 mEq/L central, rate <= 0.5 mEq/kg/hr; NEVER IV PUSH)."
+    },
+    "toxicology": {
+      "title": "Goldfrank's Toxicologic Emergencies (12th ed) & Thai Poison Center Antidote Guidelines",
+      "organization": "Goldfrank's Toxicology / Ramathibodi & Siriraj Poison Centers",
+      "year": 2026,
+      "journal": "Goldfrank's Toxicologic Emergencies 12th ed",
+      "loe": "Class I / IIa (Level of Evidence B-NR / C-EO)",
+      "category": "Toxicology & Antidotes",
+      "summary": "Pediatric toxicology protocols: APAP 21-hour 3-bag NAC IV regimen (150 mg/kg/1h, 50 mg/kg/4h, 100 mg/kg/16h = 300 mg/kg) with pediatric fluid volume reduction for < 20 kg; Naloxone 0.1 mg/kg (max 2 mg); Flumazenil 0.01 mg/kg (max 0.2 mg, total 1.0 mg); Atropine 0.02–0.05 mg/kg doubling q3–5m + 2-PAM 25–50 mg/kg for organophosphates; Activated Charcoal 1 g/kg (max 50 g)."
+    },
+    "sedation": {
+      "title": "Clinical Policy: Procedural Sedation and Analgesia in Children in the Emergency Department",
+      "organization": "American College of Emergency Physicians (ACEP) / American Academy of Pediatrics (AAP)",
+      "year": 2024,
+      "journal": "Pediatrics / Ann Emerg Med",
+      "doi": "10.1542/peds.2019-1000",
+      "loe": "Class I (Level of Evidence A / B)",
+      "category": "Sedation & Analgesia",
+      "summary": "Procedural sedation dosing: Ketamine IV 1–2 mg/kg (max 100 mg), IM 3–4 mg/kg (max 200 mg); Fentanyl IV 1–2 mcg/kg (max 50–100 mcg), IN 1.5–2 mcg/kg (max 100 mcg); Midazolam IV 0.05–0.1 mg/kg (max 5 mg), IN 0.2–0.3 mg/kg (max 10 mg); Mandatory bedside airway equipment, continuous oximetry, capnography, and reversal agents."
+    },
+    "atb": {
+      "title": "Red Book: 2024–2027 Report of the Committee on Infectious Diseases (33rd ed) & PIDS/IDSA Guidelines",
+      "organization": "American Academy of Pediatrics (AAP) / Pediatric Infectious Diseases Society (PIDS)",
+      "year": 2024,
+      "journal": "AAP Red Book 33rd ed / Clin Infect Dis",
+      "loe": "Class I (Level of Evidence A / B)",
+      "category": "Infectious Diseases & Antimicrobials",
+      "summary": "Pediatric antimicrobial dosing: High-dose Amoxicillin (80–90 mg/kg/day) for AOM/CAP; Ampicillin 100–200 / 200–400 mg/kg/day (meningitis); Cefotaxime 100–200 / 200–300 mg/kg/day (preferred in neonates); Ceftriaxone 50–75 / 80–100 mg/kg/day (avoid in hyperbilirubinemic neonates or with IV calcium); Vancomycin 40–60 mg/kg/day; Once-daily Gentamicin 5–7.5 mg/kg and Amikacin 15–20 mg/kg."
+    },
+    "dose": {
+      "title": "The Harriet Lane Handbook (24th ed) & Pediatric Drug Formulary Guidelines",
+      "organization": "Johns Hopkins Hospital / Pediatric Pharmacy Association",
+      "year": 2026,
+      "journal": "Harriet Lane Handbook 24th ed",
+      "loe": "Class I / IIa (Level of Evidence A / B)",
+      "category": "General Pediatric Formulary",
+      "summary": "General pediatric therapeutics: Paracetamol 10–15 mg/kg/dose q4–6h PRN (max 75–90 mg/kg/day or 4000 mg/day, single max 1000 mg); Ibuprofen 5–10 mg/kg/dose q6–8h (age >= 6 mo, max 40 mg/kg/day or 2400 mg/day, single max 400–800 mg); PEG 4000 Disimpaction 1 g/kg/day vs Maintenance 0.5–1 g/kg/day; Age-gated safety limits across all formulations."
+    },
+    "vitals": {
+      "title": "AHA PALS Normal Pediatric Physiological Parameters & Hypotension Thresholds",
+      "organization": "American Heart Association (AHA) / PALS Sub-Committee",
+      "year": 2025,
+      "journal": "Circulation / PALS Manual",
+      "loe": "Class I (Level of Evidence B-NR)",
+      "category": "Physiological References",
+      "summary": "Age-banded pediatric physiological vital signs reference ranges (HR, RR, BP, SpO2) and clinical definition of pediatric hypotension: Neonate (0–28d) SBP < 60 mmHg, Infant (1–12mo) SBP < 70 mmHg, Child (1–10yr) SBP < 70 + (2 x age in years) mmHg, Child (>10yr) SBP < 90 mmHg."
+    },
+    "broselow": {
+      "title": "Broselow Pediatric Resuscitation Tape & CDC/WHO Pediatric Growth Length-Weight Standards",
+      "organization": "Armstrong Medical / CDC / WHO",
+      "year": 2025,
+      "journal": "Broselow Tape Reference",
+      "loe": "Class I (Level of Evidence B-NR)",
+      "category": "Biometrics & Equipment Sizing",
+      "summary": "Length-based 9-color zone weight estimation (Grey 3–5.9 kg, Pink 6–7.9 kg, Red 8–9.9 kg, Purple 10–11.9 kg, Yellow 12–14.9 kg, White 15–18.9 kg, Blue 19–23.9 kg, Orange 24–29.9 kg, Green 30–36 kg) with matched ETT sizes, suction catheters, defibrillation pads, and resuscitation drug doses."
+    },
+    "drips": {
+      "title": "Pediatric Critical Care Medicine Continuous Vasoactive & Inotrope Infusion Standards",
+      "organization": "Society of Critical Care Medicine (SCCM) / Pediatric Section",
+      "year": 2025,
+      "journal": "Pediatr Crit Care Med",
+      "loe": "Class I / IIa (Level of Evidence B-NR / C-LD)",
+      "category": "Critical Care & Inotropes",
+      "summary": "Continuous infusion dosing and pump rates (mcg/kg/min -> mL/hr): Epinephrine (0.05–1.0 mcg/kg/min), Norepinephrine (0.05–1.0 mcg/kg/min for septic shock), Dopamine (2–20 mcg/kg/min), Dobutamine (2–20 mcg/kg/min for cardiogenic shock), Milrinone (0.25–0.75 mcg/kg/min), and Midazolam (0.05–0.4 mg/kg/hr)."
     }
   }
 }

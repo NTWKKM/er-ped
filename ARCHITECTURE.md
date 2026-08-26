@@ -166,3 +166,15 @@ flowchart TD
     - **Automated Verification**: Expanded test suite in `scripts/test-core.js` to 70 passing tests.
     - Service worker cache version bumped to `er-ped-v1.10.1-20260824`.
 
+56. **Clinical Evidence Registry & Medical Guideline Synchronization (v1.11.0 - August 2026)**:
+    - **Canonical Evidence Registry**: Created offline `evidenceReferences` registry in `dataset.json` / `dataset.js` and canonical `REFERENCES.md` documentation covering all 14 clinical domains (PALS, NCPR, DKA, Asthma, Seizure, Fluids, Electrolytes, Toxicology, Sedation, Antibiotics, General Formulary, Vital Signs, Broselow, Continuous Drips).
+    - **August 2026 Guideline Synchronization**:
+      - *AHA/AAP PALS 2025* (*Circulation* / *Pediatrics*, Oct 2025): Defibrillation 2 J/kg initial $\to$ 4 J/kg subsequent, escalation up to 10 J/kg for refractory VF/pVT; ventilation rate 1 breath every 2–3 sec (20–30 bpm) during CPR with advanced airway; Atropine adolescent single max 1.0 mg (total max 2.0 mg) vs child 0.5 mg (total max 1.0 mg).
+      - *AAP/AHA NRP 9th Edition 2025*: Standardized preferred Epinephrine IV/IO dose to 0.02 mg/kg (0.2 mL/kg of 1:10,000) and ETT bridge 0.1 mg/kg; deferred cord clamping $\ge 60\text{ sec}$; 10 mL/kg NS/PRBC volume expansion.
+      - *ISPAD Clinical Practice Consensus Guidelines 2024*: 48h deficit rehydration minus pre-ED fluid boluses; no insulin boluses; insulin infusion 0.05–0.1 U/kg/hr started 1–2h post-fluid hydration; dextrose titration at BG < 250–300 mg/dL; ISPAD corrected sodium ($\text{Na} + 0.02 \times [\text{BG} - 100]$).
+      - *GINA 2026 / Thai TAC 2025*: Acute asthma stepwise pathway; SpO2 target $\ge 92\%$; nebulized MgSO4 excluded, IV MgSO4 40–50 mg/kg (max 2 g) retained; Epinephrine IM prioritized first if anaphylaxis features present.
+      - *AES / ESETT Trial*: Status epilepticus 2nd-line ASMs: Levetiracetam 60 mg/kg (max 4.5 g), Phenytoin 20 mg/kg in NS only (never D5W), Valproate 40 mg/kg.
+      - *AAP Isotonic Maintenance IV Fluids*: Isotonic solutions (D5 0.9% NS / D5 0.45% NS / balanced fluids) mandatory for children 28 days to 18 years to prevent hospital-acquired hyponatremia.
+    - **Interactive Evidence Modal & In-Card Citation Badges**: Integrated `#evidenceBackdrop` modal drawer accessible via topbar Reference popover and clickable in-card citation badges (`.evidence-badge`) across all 13 module headers, enabling instant bedside inspection of Level of Evidence (LOE), Class of Recommendation (COR), and DOI/PMID sources with zero network dependency.
+    - **Automated Verification**: Added dataset schema validation step 4 in `scripts/check-dataset.js` and expanded test suite in `scripts/test-core.js` to 73 passing tests.
+    - Service worker cache version bumped to `er-ped-v1.11.0-20260826`.

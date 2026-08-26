@@ -167,6 +167,23 @@ tables.forEach(tableName => {
   });
 });
 
+// 4. Validate evidenceReferences registry
+if (!dataset.evidenceReferences || typeof dataset.evidenceReferences !== 'object') {
+  logErr('dataset.evidenceReferences is missing or not an object!');
+} else {
+  const refKeys = Object.keys(dataset.evidenceReferences);
+  logInfo(`Checking ${refKeys.length} clinical evidence references in registry...`);
+  const requiredFields = ['title', 'organization', 'year', 'loe', 'summary'];
+  refKeys.forEach(k => {
+    const ref = dataset.evidenceReferences[k];
+    requiredFields.forEach(f => {
+      if (!ref[f]) {
+        logErr(`[evidenceReferences: ${k}] Missing required field '${f}'`);
+      }
+    });
+  });
+}
+
 console.log('\n----------------------------------------');
 console.log(`Validation Complete: ${errors} Error(s), ${warnings} Warning(s)`);
 console.log('----------------------------------------\n');

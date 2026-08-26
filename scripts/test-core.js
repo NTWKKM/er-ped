@@ -55,7 +55,8 @@ const essentialIds = [
   'doseOut', 'nOut', 'atbOut', 'pOut', 'fOut', 'dripOut', 'seizureOut', 'dkaOut', 'psaOut', 'vitalsOut', 'asthmaOut', 'lyteOut',
   'doseDrug', 'atbDrug', 'dripDrug', 'weight', 'age', 'nW', 'fDegree', 'fPlan',
   'dkaSeverity', 'dkaPriorBolus', 'useIBW', 'ibwVal', 'vitalsQuickText', 'a2hsBtn',
-  'lyteNa', 'lyteGlucose', 'lyteTotalCa', 'lyteAlbumin', 'lyteK', 'lytePH'
+  'lyteNa', 'lyteGlucose', 'lyteTotalCa', 'lyteAlbumin', 'lyteK', 'lytePH',
+  'evidenceBackdrop', 'evidencePanel', 'evidenceSearchInput', 'evidenceCategorySelect', 'evidenceListContainer'
 ];
 
 essentialIds.forEach(id => {
@@ -933,6 +934,64 @@ test('Electrolytes UI Engine: Free Water Deficit combined 48h rate and Bicarb 50
   // Bicarbonate 50% initial dose check (10 kg * 0.3 * (15 - 10) = 15 mEq total -> 7.5 mEq initial 50% = ~8.4 mL 7.5% NaHCO3)
   assert(out.includes('15.0 mEq Total'), 'Total bicarb deficit check');
   assert(out.includes('Initial 50%: 7.5 mEq (8.4 mL 7.5% NaHCO3)'), 'Initial 50% bicarb dose check');
+});
+
+test('Evidence Registry: Structural & Clinical Integrity (AHA PALS 2025, GINA 2026, ISPAD 2024, NRP 9th Ed)', () => {
+  const refs = dataset.evidenceReferences;
+  assert(refs !== undefined && typeof refs === 'object', 'evidenceReferences object must exist in dataset');
+  
+  const expectedKeys = ['pals', 'ncpr', 'dka', 'asthma', 'seizure', 'fluids', 'electrolytes', 'toxicology', 'sedation', 'atb', 'dose', 'vitals', 'broselow', 'drips'];
+  expectedKeys.forEach(k => {
+    assert(refs[k], `Evidence registry missing key: ${k}`);
+    assert(refs[k].title, `Evidence entry '${k}' missing title`);
+    assert(refs[k].organization, `Evidence entry '${k}' missing organization`);
+    assert(refs[k].year, `Evidence entry '${k}' missing year`);
+    assert(refs[k].loe, `Evidence entry '${k}' missing LOE`);
+    assert(refs[k].summary, `Evidence entry '${k}' missing summary`);
+  });
+
+  // Verify specific 2025/2026 guidelines
+  assert(refs.pals.title.includes('2025') || String(refs.pals.year) === '2025', 'PALS must reference 2025 AHA Guidelines');
+  assert(refs.asthma.title.includes('2026') || String(refs.asthma.year) === '2026', 'Asthma must reference GINA 2026 Guidelines');
+  assert(refs.ncpr.title.includes('9th Edition') || refs.ncpr.organization.includes('AAP/AHA NRP'), 'NCPR must reference NRP 9th Edition');
+  assert(refs.dka.organization.includes('ISPAD') && String(refs.dka.year) === '2024', 'DKA must reference ISPAD 2024 Guidelines');
+  assert(refs.seizure.organization.includes('AES') && refs.seizure.title.includes('ESETT'), 'Seizure must reference AES / ESETT Guidelines');
+  assert(refs.fluids.organization.includes('AAP') && (refs.fluids.title.includes('Intravenous Fluids') || refs.fluids.summary.includes('Isotonic')), 'Fluids must reference AAP Isotonic CPG');
+});
+
+test('PALS Resuscitation: Updated 2025 Defibrillation Cap & Atropine Ceilings', () => {
+  assert(dataset.pals.defib.upper_JPerKg === 10, 'PALS Defibrillation upper limit must be 10 J/kg for refractory VF/pVT');
+  assert(dataset.pals.atropine.maxSingle_mg_adolescent === 1, 'Adolescent single max dose for Atropine must be 1.0 mg');
+  assert(dataset.pals.atropine.maxTotal_mg_adolescent === 2, 'Adolescent total max dose for Atropine must be 2.0 mg');
+  assert(dataset.evidenceReferences.pals.summary.includes('20–30 bpm') || dataset.evidenceReferences.pals.summary.includes('2–3 sec'), 'PALS CPR ventilation rate updated to 20-30 bpm');
+});
+
+test('Evidence Modal UI Engine: openEvidenceModal, filterEvidenceList, and DOM Rendering', () => {
+  // Test opening specific topic
+  window.eval('openEvidenceModal("pals")');
+  const backdrop = document.getElementById('evidenceBackdrop');
+  assert(backdrop && !backdrop.classList.contains('hidden'), 'evidenceBackdrop must be visible after openEvidenceModal');
+  
+  const container = document.getElementById('evidenceListContainer');
+  assert(container.innerHTML.includes('AHA PALS Guidelines') || container.innerHTML.includes('American Heart Association'), 'evidenceListContainer must render PALS evidence card');
+  assert(container.innerHTML.includes('loe-badge'), 'LOE badge must be rendered');
+
+  // Test category filtering
+  const catSelect = document.getElementById('evidenceCategorySelect');
+  catSelect.value = 'Respiratory Emergencies';
+  window.eval('filterEvidenceList()');
+  assert(container.innerHTML.includes('GINA 2026'), 'Filtered list must display GINA 2026 under Respiratory Emergencies');
+
+  // Test keyword search
+  const searchInput = document.getElementById('evidenceSearchInput');
+  searchInput.value = 'ESETT';
+  catSelect.value = 'all';
+  window.eval('filterEvidenceList()');
+  assert(container.innerHTML.includes('ESETT') && container.innerHTML.includes('Status Epilepticus'), 'Search must find ESETT trial card');
+
+  // Test closing modal
+  window.eval('closeEvidenceModal()');
+  assert(backdrop.classList.contains('hidden'), 'evidenceBackdrop must have hidden class after closeEvidenceModal');
 });
 
 console.log(`\n----------------------------------------`);

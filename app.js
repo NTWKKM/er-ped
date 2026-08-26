@@ -656,6 +656,12 @@ function setupKeyboardShortcuts(){
       closeAllComboboxes();
       const backdrop = document.getElementById('broselowBackdrop') || document.getElementById('broselowPanel');
       if (backdrop && !backdrop.classList.contains('hidden')) backdrop.classList.add('hidden');
+      const evBackdrop = document.getElementById('evidenceBackdrop');
+      if (evBackdrop && !evBackdrop.classList.contains('hidden')) evBackdrop.classList.add('hidden');
+      const clBackdrop = document.getElementById('changelogBackdrop');
+      if (clBackdrop && !clBackdrop.classList.contains('hidden')) clBackdrop.classList.add('hidden');
+      const atBackdrop = document.getElementById('attributionBackdrop');
+      if (atBackdrop && !atBackdrop.classList.contains('hidden')) atBackdrop.classList.add('hidden');
     }
   });
 
@@ -2580,6 +2586,123 @@ function closeAttributionModal() {
   if (backdrop) backdrop.classList.add('hidden');
 }
 
+// --------- 📚 Clinical Evidence & Reference Modal ---------
+function openEvidenceModal(topicKey) {
+  const backdrop = document.getElementById('evidenceBackdrop');
+  if (!backdrop) return;
+
+  const searchInput = document.getElementById('evidenceSearchInput');
+  const catSelect = document.getElementById('evidenceCategorySelect');
+
+  if (topicKey && DS && DS.evidenceReferences && DS.evidenceReferences[topicKey]) {
+    const ref = DS.evidenceReferences[topicKey];
+    if (searchInput) searchInput.value = '';
+    if (catSelect) {
+      catSelect.value = ref.category || 'all';
+    }
+    renderEvidenceList(topicKey, catSelect ? catSelect.value : 'all');
+  } else {
+    if (searchInput) searchInput.value = '';
+    if (catSelect) catSelect.value = 'all';
+    renderEvidenceList('', 'all');
+  }
+
+  backdrop.classList.remove('hidden');
+  if (searchInput) {
+    setTimeout(() => { try { searchInput.focus(); } catch (e) {} }, 50);
+  }
+}
+
+function closeEvidenceModal() {
+  const backdrop = document.getElementById('evidenceBackdrop');
+  if (backdrop) backdrop.classList.add('hidden');
+}
+
+function filterEvidenceList() {
+  const searchInput = document.getElementById('evidenceSearchInput');
+  const catSelect = document.getElementById('evidenceCategorySelect');
+  const query = (searchInput ? searchInput.value : '').trim();
+  const category = catSelect ? catSelect.value : 'all';
+  renderEvidenceList(query, category);
+}
+
+function renderEvidenceList(filterQuery, filterCategory) {
+  const container = document.getElementById('evidenceListContainer');
+  if (!container) return;
+
+  if (!DS || !DS.evidenceReferences) {
+    container.innerHTML = '<div style="color:var(--muted); font-size:13px; text-align:center; padding:16px;">กำลังโหลดฐานข้อมูลหลักฐานทางการแพทย์...</div>';
+    return;
+  }
+
+  const refs = DS.evidenceReferences;
+  const keys = Object.keys(refs);
+  const q = (filterQuery || '').toLowerCase();
+  const cat = filterCategory || 'all';
+
+  const matches = keys.filter(k => {
+    const r = refs[k];
+    if (!r) return false;
+
+    // Category match
+    if (cat !== 'all' && r.category !== cat) {
+      if (k !== filterQuery) return false;
+    }
+
+    // Query search
+    if (!q) return true;
+    if (k.toLowerCase().includes(q)) return true;
+    if ((r.title || '').toLowerCase().includes(q)) return true;
+    if ((r.organization || '').toLowerCase().includes(q)) return true;
+    if ((r.journal || '').toLowerCase().includes(q)) return true;
+    if ((r.summary || '').toLowerCase().includes(q)) return true;
+    if ((r.loe || '').toLowerCase().includes(q)) return true;
+    if ((r.category || '').toLowerCase().includes(q)) return true;
+    return false;
+  });
+
+  if (matches.length === 0) {
+    container.innerHTML = `
+      <div style="text-align:center; padding:24px 12px; color:var(--muted); font-size:13px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-bottom:8px; opacity:0.6;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <div>ไม่พบหลักฐานทางการแพทย์หรือแนวทางที่ตรงกับคำค้นหา "<strong>${escapeHtml(filterQuery)}</strong>"</div>
+        <button type="button" class="btn" style="margin-top:10px; font-size:12px; padding:4px 10px;" onclick="document.getElementById('evidenceSearchInput').value=''; document.getElementById('evidenceCategorySelect').value='all'; filterEvidenceList();">ล้างตัวกรองทั้งหมด</button>
+      </div>
+    `;
+    return;
+  }
+
+  let html = '';
+  matches.forEach(k => {
+    const r = refs[k];
+    const doiLink = r.doi ? `<a href="https://doi.org/${encodeURIComponent(r.doi)}" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-weight:600; text-decoration:underline; display:inline-flex; align-items:center; gap:3px;">DOI: ${escapeHtml(r.doi)} <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>` : '';
+    const pmidLink = r.pmid ? `<a href="https://pubmed.ncbi.nlm.nih.gov/${encodeURIComponent(r.pmid)}/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-weight:600; text-decoration:underline; display:inline-flex; align-items:center; gap:3px;">PMID: ${escapeHtml(r.pmid)} <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>` : '';
+    const isbnText = r.isbn ? `<span style="color:var(--muted); font-weight:600;">ISBN: ${escapeHtml(r.isbn)}</span>` : '';
+
+    const identifiers = [doiLink, pmidLink, isbnText].filter(Boolean).join(' · ');
+
+    html += `
+      <div class="evidence-card" id="evidence-card-${k}">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px; flex-wrap:wrap;">
+          <div style="font-weight:700; font-size:14px; color:var(--ink); line-height:1.35;">
+            ${escapeHtml(r.title)}
+          </div>
+          <span class="loe-badge">${escapeHtml(r.loe || 'Standard Practice')}</span>
+        </div>
+        <div style="font-size:12px; color:var(--muted);">
+          <strong>${escapeHtml(r.organization || '')}</strong> · <span>${escapeHtml(r.journal || '')}</span> (${r.year || '2026'})
+        </div>
+        ${identifiers ? `<div style="font-size:11.5px; margin-top:2px;">${identifiers}</div>` : ''}
+        <div style="font-size:12.5px; color:var(--ink); background:var(--panel-subtle); border-radius:var(--r-sm); padding:8px 10px; margin-top:4px; line-height:1.45; border-left:3px solid var(--accent);">
+          ${escapeHtml(r.summary || '')}
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
 // --------- 🫁 Acute Asthmatic Attack Protocol (GINA 2026) ---------
 function calcAsthma() {
   if (!DS || !DS.asthmaProtocol) return;
@@ -3579,6 +3702,10 @@ if (typeof module !== 'undefined' && module.exports) {
     weightToETTUncuffed,
     weightToDepth,
     applyVersionToUI,
-    syncVersionFromSW
+    syncVersionFromSW,
+    openEvidenceModal,
+    closeEvidenceModal,
+    filterEvidenceList,
+    renderEvidenceList
   };
 }

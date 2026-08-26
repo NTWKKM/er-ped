@@ -1342,6 +1342,52 @@
       box-shadow: 0 6px 20px rgba(220, 38, 38, 0.40);
     }
 
+    /* Clinical Evidence & Reference Badges */
+    .evidence-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--panel-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--r-full);
+      padding: 2px 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+    .evidence-badge:hover {
+      background: var(--panel);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+    .evidence-card {
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 12px 14px;
+      background: var(--card);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: border-color 0.15s ease;
+    }
+    .evidence-card:hover {
+      border-color: var(--accent);
+    }
+    .loe-badge {
+      display: inline-block;
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: var(--r-xs);
+      background: color-mix(in srgb, var(--accent) 12%, transparent);
+      color: var(--accent);
+      border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+    }
+
     /* Broselow Drawer Panel Modal & Backdrop */
     .drawer-backdrop {
       position: fixed;
@@ -1680,6 +1726,9 @@
         <div class="popover-wrapper">
           <button type="button" id="refPopoverBtn" class="btn" style="padding:6px 10px; font-size:12px; display:inline-flex; align-items:center; gap:4px;" onclick="toggleRefPopover(event)" title="เมนูข้อมูลอ้างอิง (Reference Tools)" aria-label="Reference menu" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
           <div id="refPopoverMenu" class="popover-menu" role="menu">
+            <button type="button" class="popover-item" onclick="openEvidenceModal(); closeAllPopovers();" role="menuitem">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> <span>Evidence & References</span>
+            </button>
             <button type="button" class="popover-item" onclick="showTab('vitals'); closeAllPopovers();" role="menuitem">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M17 12h-2l-2 5-3-10-2 5H7"/></svg> <span>Vital Signs by Age</span>
             </button>
@@ -1748,7 +1797,10 @@
     <section id="dose" class="card" role="tabpanel">
       <div class="grid">
         <div class="col-12">
-          <label>Drug Selection & Search (Combobox)</label>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+            <label style="margin:0;">Drug Selection & Search (Combobox)</label>
+            <span class="evidence-badge" onclick="openEvidenceModal('dose')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> Harriet Lane 24th ed</span>
+          </div>
           <div class="drug-category-filter" id="doseCategoryFilter">
             <button type="button" class="drug-filter-pill active" onclick="setDoseCategoryFilter('all', this)">All</button>
             <button type="button" class="drug-filter-pill" onclick="setDoseCategoryFilter('antipyretic', this)">Antipyretic / NSAID</button>
@@ -1780,7 +1832,10 @@
     <section id="atb" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
-          <label>Antibiotic Selection & Search (Combobox)</label>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+            <label style="margin:0;">Antibiotic Selection & Search (Combobox)</label>
+            <span class="evidence-badge" onclick="openEvidenceModal('atb')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> Red Book / PIDS</span>
+          </div>
           <div class="drug-category-filter" id="atbCategoryFilter">
             <button type="button" class="drug-filter-pill active" onclick="setATBCategoryFilter('all', this)">All</button>
             <button type="button" class="drug-filter-pill" onclick="setATBCategoryFilter('penicillin', this)">Penicillins / Cephs</button>
@@ -1810,6 +1865,10 @@
     <!-- IV Fluids -->
     <section id="fluids" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
+        <div class="col-12" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:4px;">
+          <label style="margin:0;">Dehydration Assessment & Maintenance</label>
+          <span class="evidence-badge" onclick="openEvidenceModal('fluids')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> AAP Isotonic CPG</span>
+        </div>
         <div class="col-6">
           <label>Dehydration Degree</label>
           <select id="fDegree" onchange="calcFluids()">
@@ -1848,7 +1907,10 @@
     <section id="pals" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
-          <label>Patient Age (yr) <span style="font-size:10.5px; font-weight:400; color:var(--muted); text-transform:none;">(Optional — คำนวณขนาด ETT ตามช่วงอายุ)</span></label>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+            <label style="margin:0;">Patient Age (yr) <span style="font-size:10.5px; font-weight:400; color:var(--muted); text-transform:none;">(Optional — คำนวณขนาด ETT)</span></label>
+            <span class="evidence-badge" onclick="openEvidenceModal('pals')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> AHA PALS 2025</span>
+          </div>
           <input type="number" id="pAge" min="0" max="15" step="0.1" placeholder="อายุเพื่อคำนวณ ETT (e.g. 4)" oninput="onPALSAgeChange()">
         </div>
         <div class="col-12">
@@ -1861,6 +1923,10 @@
     <!-- NCPR Resuscitation -->
     <section id="ncpr" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
+        <div class="col-12" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:4px;">
+          <label style="margin:0;">Neonatal Resuscitation Program (NCPR)</label>
+          <span class="evidence-badge" onclick="openEvidenceModal('ncpr')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> NRP 9th Edition</span>
+        </div>
         <div class="col-6">
           <label>Birth Weight (kg)</label>
           <div style="display:flex; gap:6px;">
@@ -1887,7 +1953,10 @@
     <section id="drip" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
-          <label>Vasoactive & Continuous Infusion Selection</label>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+            <label style="margin:0;">Vasoactive & Continuous Infusion Selection</label>
+            <span class="evidence-badge" onclick="openEvidenceModal('drips')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> SCCM / PALS Standards</span>
+          </div>
           <select id="dripDrug" style="width:100%; padding:9px 12px; border-radius:var(--r-sm); border:1px solid var(--border); font-size:13.5px; font-weight:700; background:var(--panel); color:var(--ink);" onchange="calcDrip()"></select>
         </div>
         <div class="col-4">
@@ -1913,7 +1982,10 @@
     <section id="seizure" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
-          <h2 style="margin-bottom:8px;">Status Epilepticus Resuscitation Protocol</h2>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+            <h2 style="margin:0;">Status Epilepticus Resuscitation Protocol</h2>
+            <span class="evidence-badge" onclick="openEvidenceModal('seizure')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> AES / ESETT Trial</span>
+          </div>
           <div class="note" style="margin-bottom:14px; font-weight:500;">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>สรุปลำดับการรักษาชักในเด็ก:</strong> เริ่มยา Benzodiazepine ทันทีที่ชัก &gt;5 นาที และเตรียมยา 2nd Line ล่วงหน้า
           </div>
@@ -1926,7 +1998,10 @@
     <section id="tox" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
-          <h2 style="margin-bottom:8px;">Toxicology & Antidote Dosing</h2>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+            <h2 style="margin:0;">Toxicology & Antidote Dosing</h2>
+            <span class="evidence-badge" onclick="openEvidenceModal('toxicology')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> Goldfrank's 12th ed</span>
+          </div>
           <div class="note" style="margin-bottom:14px; font-weight:500;">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>การดูแลเคสได้รับสารพิษ:</strong> ตรวจสอบสิทธิและปรึกษาศูนย์พิษวิทยา (Poison Center) เพิ่มเติมในเคสซับซ้อน
           </div>
@@ -1939,7 +2014,10 @@
     <section id="psa" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
-          <h2 style="margin-bottom:8px;">Procedural Sedation & Analgesia (PSA)</h2>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+            <h2 style="margin:0;">Procedural Sedation & Analgesia (PSA)</h2>
+            <span class="evidence-badge" onclick="openEvidenceModal('sedation')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> ACEP / AAP Guidelines</span>
+          </div>
           <div class="note" style="margin-bottom:14px; font-weight:500;">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>เตรียมความพร้อม:</strong> เตรียมอุปกรณ์ Suction, Bag-Valve-Mask และ Suction พร้อมก่อนเริ่ม Procedural Sedation เสมอ
           </div>
@@ -1952,9 +2030,12 @@
     <section id="vitals" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
-          <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
-            <h2 style="margin:0;">Pediatric Vital Signs by Age Reference</h2>
-            <span id="vitalsQuickText" style="font-size:12px; font-weight:600; color:var(--muted); font-family:'JetBrains Mono',monospace; background:var(--panel-subtle); padding:2px 8px; border-radius:var(--r-full); border:1px solid var(--border);"></span>
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <h2 style="margin:0;">Pediatric Vital Signs by Age Reference</h2>
+              <span id="vitalsQuickText" style="font-size:12px; font-weight:600; color:var(--muted); font-family:'JetBrains Mono',monospace; background:var(--panel-subtle); padding:2px 8px; border-radius:var(--r-full); border:1px solid var(--border);"></span>
+            </div>
+            <span class="evidence-badge" onclick="openEvidenceModal('vitals')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> AHA PALS Vitals</span>
           </div>
           <div id="vitalsOut" class="summary"></div>
         </div>
@@ -1966,7 +2047,10 @@
     <section id="dka" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
-          <h2 style="margin-bottom:8px;">Pediatric DKA Protocol & Fluid Management</h2>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+            <h2 style="margin:0;">Pediatric DKA Protocol & Fluid Management</h2>
+            <span class="evidence-badge" onclick="openEvidenceModal('dka')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> ISPAD 2024 Guidelines</span>
+          </div>
           <div class="note" style="margin-bottom:14px; font-weight:500;">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>โปรโตคอลการรักษา DKA ในเด็ก:</strong> ให้ Regular Insulin หลังเริ่มสารน้ำแล้ว 1–2 ชม. และห้ามเริ่ม Insulin หาก K+ &lt; 3.3 mEq/L
           </div>
@@ -1997,7 +2081,10 @@
     <section id="asthma" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
-          <h2 style="margin-bottom:8px;">Acute Asthmatic Attack Protocol</h2>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+            <h2 style="margin:0;">Acute Asthmatic Attack Protocol</h2>
+            <span class="evidence-badge" onclick="openEvidenceModal('asthma')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> GINA 2026 + TAC 2025</span>
+          </div>
           <div class="note" style="margin-bottom:14px; font-weight:500;">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>GINA 2026 + TAC 2025:</strong> ให้ SABA ทุก 20 นาที ร่วมกับ Systemic Steroid ตั้งแต่แรก — O₂ เมื่อ SpO₂ &lt; 92% เท่านั้น — ถ้ามี Anaphylaxis features ให้ Epinephrine ก่อน
           </div>
@@ -2010,7 +2097,10 @@
     <section id="electrolytes" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12">
-          <h2 style="margin-bottom:8px;">Pediatric Electrolytes & Corrected Imbalance</h2>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+            <h2 style="margin:0;">Pediatric Electrolytes & Corrected Imbalance</h2>
+            <span class="evidence-badge" onclick="openEvidenceModal('electrolytes')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> Harriet Lane & Nelson</span>
+          </div>
           <div class="note" style="margin-bottom:14px; font-weight:500;">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M14.5 2v17.5c0 1.4-1.1 2.5-2.5 2.5h0c-1.4 0-2.5-1.1-2.5-2.5V2"/><path d="M8.5 2h7"/><path d="M14.5 16h-5"/></svg><strong>การปรับค่าและวินิจฉัยเกลือแร่:</strong> ปรับ Na ตามค่าน้ำตาล (Katz 1.6 / ISPAD 2.0) — ปรับ Calcium ตาม Albumin — ปรับ K+ ตามสภาวะกรดด่าง (Δ0.1 pH ≈ 0.6 mEq/L) — คุมอัตราเพิ่ม Na ไม่เกิน 8–10 mEq/L/day
           </div>
@@ -2200,11 +2290,20 @@
   <div id="changelogBackdrop" class="drawer-backdrop hidden" onclick="if(event.target.id==='changelogBackdrop') closeChangelogModal()">
     <div class="drawer" onclick="event.stopPropagation()">
       <div class="drawer-header">
-        <strong id="changelogHeaderTitle" style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg> ER-PED Version <span id="changelogVersionNumber">1.10.1</span> Changelog</strong>
+        <strong id="changelogHeaderTitle" style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg> ER-PED Version <span id="changelogVersionNumber">1.11.0</span> Changelog</strong>
         <button type="button" class="btn" style="padding:4px 10px; font-size:12px; display:inline-flex; align-items:center; gap:4px;" onclick="closeChangelogModal()">Close <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> (Esc)</button>
       </div>
       <div class="drawer-body" style="font-size:13px; line-height:1.6;">
-        <h3 style="color:var(--accent); margin-top:4px;">What's New in v<span id="changelogWhatsNewVersion">1.10.1</span>:</h3>
+        <h3 style="color:var(--accent); margin-top:4px;">What's New in v<span id="changelogWhatsNewVersion">1.11.0</span> (August 2026):</h3>
+        <ul>
+          <li><strong>📚 Offline Clinical Evidence & Reference Registry</strong>: เพิ่มระบบสืบค้นและแสดงเอกสารอ้างอิงทางการแพทย์ ระดับหลักฐาน (LOE/COR) และลิงก์ DOI/PMID ครอบคลุม 14 หมวดหมู่คลินิก ปลอดภัยและทำงานแบบ Offline 100%</li>
+          <li><strong>📖 Interactive In-Card Citation Badges</strong>: เพิ่มป้ายอ้างอิงบนหัวการ์ดทั้ง 13 โมดูลคลินิก (เช่น <code>📖 AHA PALS 2025</code>, <code>📖 GINA 2026</code>, <code>📖 ISPAD 2024</code>, <code>📖 NRP 9th Ed</code>) สามารถกดเปิดดูรายละเอียดหลักฐานได้ทันทีข้างเตียง</li>
+          <li><strong>⚡ AHA/AAP PALS 2025 Guideline Sync</strong>: ปรับเพดานพลังงาน Defibrillation สูงสุด 10 J/kg สำหรับ Refractory VF/pVT, เพิ่มเพดานยา Atropine ในเด็กโต (Single 1.0 mg / Total 2.0 mg) และอัปเดตอัตราช่วยหายใจเป็น 20–30 bpm (1 ครั้งทุก 2–3 วินาที)</li>
+          <li><strong>👶 AAP/AHA NRP 9th Edition 2025 Sync</strong>: กำหนดขนาดยา Epinephrine IV/IO มาตรฐานเป็น 0.02 mg/kg (0.2 mL/kg ของ 1:10,000) และ ETT bridge 0.1 mg/kg</li>
+          <li><strong>🩺 ISPAD 2024 & GINA 2026 Verification</strong>: ปรับปรุงสูตร Corrected Sodium ใน DKA (ISPAD 2.0 multiplier) และแนวทางรักษาหอบหืดเฉียบพลันตาม GINA 2026 / TAC 2025</li>
+        </ul>
+        <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;" />
+        <h4 style="color:var(--ink); margin-top:4px;">📜 Version 1.10.1 Highlights:</h4>
         <ul>
           <li><strong>🧮 Non-Blocking Progressive Disclosure</strong>: คำนวณ Corrected Electrolytes, Acid-Base, Osmolality และ Reference Ranges ได้ทันทีโดยไม่ถูกบล็อกแม้ยังไม่ได้กรอกน้ำหนักตัว โดยแสดงแถบแจ้งเตือนเฉพาะกล่องที่ต้องใช้น้ำหนักตัวเท่านั้น</li>
           <li><strong>💧 Free Water Deficit 48-Hour Combined Fluid Rate</strong>: คำนวณอัตราสารน้ำหยดรวมต่อชั่วโมง (Maintenance + Deficit / 48 ชม.) ในภาวะ Hypernatremia พร้อมเตือนความปลอดภัยการลด Na ≤ 0.5 mEq/L/hr เพื่อป้องกัน Cerebral Edema</li>
@@ -2350,6 +2449,48 @@
           <li><strong>🩺 DKA Protocol Module</strong>: สารน้ำทดแทน 48 ชม. + Regular Insulin drip 0.05–0.1 U/kg/hr</li>
           <li><strong>🌐 Thai / English UI Toggle</strong>: สลับป้ายภาษาไทย/อังกฤษ</li>
         </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clinical Evidence & References Modal -->
+  <div id="evidenceBackdrop" class="drawer-backdrop hidden" onclick="if(event.target.id==='evidenceBackdrop') closeEvidenceModal()">
+    <div id="evidencePanel" class="drawer" style="max-width: 820px; width: 100%; max-height: 85vh; display: flex; flex-direction: column;" onclick="event.stopPropagation()">
+      <div class="drawer-header" style="flex-shrink: 0;">
+        <strong style="font-size:16px; display:inline-flex; align-items:center; gap:6px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+          <span>Clinical Evidence & Reference Registry</span>
+        </strong>
+        <button type="button" class="btn" style="padding:4px 10px; font-size:12px; display:inline-flex; align-items:center; gap:4px;" onclick="closeEvidenceModal()">
+          Close <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> (Esc)
+        </button>
+      </div>
+      <div style="font-size:12px; color:var(--muted); flex-shrink: 0; margin-bottom: 8px;">
+        เอกสารอ้างอิงและระดับหลักฐานทางการแพทย์ (LOE / Class of Recommendation) อัปเดตถึง 26 สิงหาคม 2026
+      </div>
+      
+      <!-- Evidence Search and Filter Bar -->
+      <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; flex-shrink: 0;">
+        <input type="text" id="evidenceSearchInput" class="input" placeholder="🔍 ค้นหาแนวทางรักษา, ยา, คำสำคัญ..." style="flex: 1; min-width: 200px; padding: 6px 10px; font-size: 13px;" oninput="filterEvidenceList()">
+        <select id="evidenceCategorySelect" class="input" style="padding: 6px 10px; font-size: 13px;" onchange="filterEvidenceList()">
+          <option value="all">ทุกหมวดหมู่ (All Categories)</option>
+          <option value="Emergency Resuscitation">Emergency Resuscitation (PALS)</option>
+          <option value="Neonatal Resuscitation">Neonatal Resuscitation (NCPR)</option>
+          <option value="Respiratory Emergencies">Respiratory Emergencies (Asthma / GINA)</option>
+          <option value="Endocrine Emergencies">Endocrine Emergencies (DKA / ISPAD)</option>
+          <option value="Neurology Emergencies">Neurology Emergencies (Seizures / AES)</option>
+          <option value="Fluid & Electrolytes">Fluid & Electrolytes (AAP / Harriet Lane)</option>
+          <option value="Toxicology & Antidotes">Toxicology & Antidotes (Goldfrank's / Thai PC)</option>
+          <option value="Infectious Diseases & Antimicrobials">Infectious Diseases & ATB (Red Book / PIDS)</option>
+          <option value="General Pediatric Formulary">General Pediatric Formulary</option>
+          <option value="Sedation & Analgesia">Sedation & Analgesia (ACEP / AAP)</option>
+        </select>
+      </div>
+
+      <div class="drawer-body" style="overflow-y: auto; flex: 1; padding-right: 4px;">
+        <div id="evidenceListContainer" style="display: flex; flex-direction: column; gap: 10px;">
+          <!-- Rendered dynamically by app.js -->
+        </div>
       </div>
     </div>
   </div>
