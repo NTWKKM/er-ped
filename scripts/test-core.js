@@ -111,6 +111,35 @@ test('1-Tap Quick Weight Triage: applyQuickWeight(10) sets weight, Weech age, an
   assert.strictEqual(document.getElementById('activeWeightVal').textContent, '10.0 kg');
 });
 
+test('Broselow 9-Zone Alignment: All 9 Quick Weight Presets map 1-to-1 to official Broselow color bands', () => {
+  const mappings = [
+    { kg: 5, color: 'Grey' },
+    { kg: 7, color: 'Pink' },
+    { kg: 9, color: 'Red' },
+    { kg: 10, color: 'Purple' },
+    { kg: 13, color: 'Yellow' },
+    { kg: 17, color: 'White' },
+    { kg: 21, color: 'Blue' },
+    { kg: 27, color: 'Orange' },
+    { kg: 33, color: 'Green' }
+  ];
+  mappings.forEach(m => {
+    const zone = appExports.getBroselowZone(m.kg);
+    assert(zone !== null, `Zone for ${m.kg} kg must exist`);
+    assert(zone.color.includes(m.color), `Expected ${m.color} for ${m.kg} kg, got ${zone.color}`);
+  });
+});
+
+test('Broselow Mini-Spectrum Triage: previewBroselowZone("Pink") sets weight to 6.5 kg and highlights Pink segment', () => {
+  window.eval('previewBroselowZone("Pink")');
+  assert.strictEqual(window.eval('getWeight()'), 6.5);
+  const activeSeg = document.querySelector('.broselow-mini-seg.active');
+  assert(activeSeg !== null, 'An active mini segment must be highlighted');
+  assert(activeSeg.getAttribute('title').includes('Pink'), 'Active segment title must include Pink');
+  // Reset clean test state
+  window.eval('gUserABW = null; gWeightSource = null; gAgeUnit = "yr"; document.getElementById("weight").value = ""; document.getElementById("age").value = ""; if (document.getElementById("ageUnitBtn")) document.getElementById("ageUnitBtn").textContent = "yr"; updateBiometricUIState();');
+});
+
 test('Navigation View Transitions: showTab() toggles active panel and mobile dock button safely', () => {
   window.eval('showTab("pals")');
   assert.strictEqual(document.getElementById('pals').style.display, 'block');
@@ -603,6 +632,7 @@ test('Drip Calculator: Zero or invalid volume inputs do not crash or produce Inf
 });
 
 test('Vital Signs Quick Text & Age Bracket Summary syncs correctly', () => {
+  window.eval('gAgeUnit = "yr"; const btn = document.getElementById("ageUnitBtn"); if (btn) btn.textContent = "yr";');
   document.getElementById('age').value = '5';
   window.eval('estimateFromAge()');
   window.eval('calcVitals()');

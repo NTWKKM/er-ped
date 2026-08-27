@@ -464,6 +464,14 @@ function updateBiometricUIState() {
   calcAll();
 }
 
+function getBroselowZone(w) {
+  if (!w || typeof w !== 'number' || w <= 0 || !DS || !DS.broselow) return null;
+  for (const b of DS.broselow) {
+    if (w >= b.min && w <= b.max) return b;
+  }
+  return null;
+}
+
 function applyQuickWeight(kg) {
   if (typeof kg !== 'number' || kg <= 0) return;
   const weightInput = document.getElementById('weight');
@@ -474,31 +482,42 @@ function applyQuickWeight(kg) {
   gWeightSource = 'manual';
   if (weightInput) weightInput.value = String(kg);
 
-  // If age is not set or zero, derive an age estimate using Weech formula
+  // If age is not set or zero, derive an age estimate aligned with Broselow & Weech formula
   const ageInput = document.getElementById('age');
   if (ageInput && (!ageInput.value || parseFloat(ageInput.value) <= 0)) {
     if (kg <= 5.5) {
-      // Infant months: (mo + 9) / 2 = kg => mo = 2*kg - 9
-      const estMo = Math.max(1, Math.round(2 * kg - 9));
       gAgeUnit = 'mo';
-      ageInput.value = String(estMo);
-      const unitBtn = document.getElementById('ageUnitBtn');
-      if (unitBtn) unitBtn.textContent = 'mo';
-    } else if (kg <= 20) {
-      // 1-6 yr: 2 * age + 8 = kg => age = (kg - 8) / 2
-      const estYr = Math.max(1, Math.round((kg - 8) / 2));
+      ageInput.value = '1';
+    } else if (kg <= 7.9) {
+      gAgeUnit = 'mo';
+      ageInput.value = '4';
+    } else if (kg <= 9.9) {
+      gAgeUnit = 'mo';
+      ageInput.value = '9';
+    } else if (kg <= 11.9) {
       gAgeUnit = 'yr';
-      ageInput.value = String(estYr);
-      const unitBtn = document.getElementById('ageUnitBtn');
-      if (unitBtn) unitBtn.textContent = 'yr';
+      ageInput.value = '1';
+    } else if (kg <= 14.9) {
+      gAgeUnit = 'yr';
+      ageInput.value = '2.5';
+    } else if (kg <= 18.9) {
+      gAgeUnit = 'yr';
+      ageInput.value = '4.5';
+    } else if (kg <= 23.9) {
+      gAgeUnit = 'yr';
+      ageInput.value = '6.5';
+    } else if (kg <= 29.9) {
+      gAgeUnit = 'yr';
+      ageInput.value = '8.5';
+    } else if (kg <= 36) {
+      gAgeUnit = 'yr';
+      ageInput.value = '10';
     } else {
-      // >6 yr: (7*age - 5)/2 = kg => age = (2*kg + 5)/7
-      const estYr = Math.min(15, Math.max(7, Math.round((2 * kg + 5) / 7)));
       gAgeUnit = 'yr';
-      ageInput.value = String(estYr);
-      const unitBtn = document.getElementById('ageUnitBtn');
-      if (unitBtn) unitBtn.textContent = 'yr';
+      ageInput.value = '12';
     }
+    const unitBtn = document.getElementById('ageUnitBtn');
+    if (unitBtn) unitBtn.textContent = gAgeUnit;
   }
 
   calculateIBW();
@@ -507,25 +526,31 @@ function applyQuickWeight(kg) {
 
 function renderBroselowMiniSpectrum() {
   const w = getWeight();
-  const zone = (typeof getBroselowZone === 'function') ? getBroselowZone(w) : null;
-  const zoneName = zone ? zone.color : null;
+  const zone = getBroselowZone(w);
+  const zoneColor = zone ? (zone.color || '').toString().trim().split(/\s+/).pop() : null;
   
   // Highlight active mini segment in topbar
   if (typeof document !== 'undefined') {
     document.querySelectorAll('.broselow-mini-seg').forEach(seg => {
       const title = seg.getAttribute('title') || '';
-      const isActive = zoneName && title.startsWith(zoneName);
+      const isActive = zoneColor && title.toLowerCase().startsWith(zoneColor.toLowerCase());
       seg.classList.toggle('active', !!isActive);
     });
 
-    // Highlight active quick weight preset button
+    // Highlight active quick weight preset button by matching zone color or weight proximity
     document.querySelectorAll('.quick-weight-btn').forEach(btn => {
+      const btnColor = btn.getAttribute('data-color');
       const onclickStr = btn.getAttribute('onclick') || '';
       const match = onclickStr.match(/applyQuickWeight\((\d+)\)/);
-      if (match) {
-        const btnKg = parseFloat(match[1]);
-        btn.classList.toggle('active', w !== null && Math.abs(w - btnKg) < 0.1);
+      const btnKg = match ? parseFloat(match[1]) : NaN;
+      
+      let isActive = false;
+      if (zoneColor && btnColor && btnColor.toLowerCase() === zoneColor.toLowerCase()) {
+        isActive = true;
+      } else if (w !== null && !isNaN(btnKg) && Math.abs(w - btnKg) < 0.1) {
+        isActive = true;
       }
+      btn.classList.toggle('active', isActive);
     });
   }
 }
@@ -830,10 +855,12 @@ function handleBroselowBackdropClick(e){
 
 function previewBroselowZone(colorName) {
   const bands = (DS && DS.broselow) || [];
-  const entry = bands.find(b => b.color && b.color.toLowerCase() === colorName.toLowerCase());
+  const cleanName = (colorName || '').toString().trim().toLowerCase();
+  const entry = bands.find(b => b.color && b.color.toLowerCase().includes(cleanName));
   if (!entry) return;
-  const midWeight = ((entry.min + entry.max) / 2);
-  fillBroselowContent(midWeight, entry.color);
+  const approxKg = entry.approxKg || ((entry.min + entry.max) / 2);
+  applyQuickWeight(approxKg);
+  fillBroselowContent(approxKg, entry.color);
 }
 
 function fillBroselowContent(overrideW, overrideColor){
@@ -844,8 +871,9 @@ function fillBroselowContent(overrideW, overrideColor){
 
   const bands = (DS && DS.broselow) || [];
   const color = overrideColor || (w > 0 ? broselowColor(w) : 'Grey');
+  const cleanColor = (color || '').toString().trim().split(/\s+/).pop();
   const entry = bands.find(b => typeof b.min==='number' && typeof b.max==='number' && w>=b.min && w<=b.max)
-             || bands.find(b => b.color === color)
+             || bands.find(b => b.color && b.color.toLowerCase().includes(cleanColor.toLowerCase()))
              || bands[0];
 
   const BROSELOW_SPECTRUM = [
@@ -863,7 +891,7 @@ function fillBroselowContent(overrideW, overrideColor){
   const spectrumHtml = `
     <div class="broselow-spectrum-bar" role="group" aria-label="Broselow Color Bands">
       ${BROSELOW_SPECTRUM.map(s => {
-        const isActive = s.color.toLowerCase() === color.toLowerCase();
+        const isActive = s.color.toLowerCase() === cleanColor.toLowerCase();
         return `
           <div class="broselow-spectrum-seg ${isActive ? 'active' : ''}" style="background:${s.bg}; color:${s.text};" onclick="previewBroselowZone('${s.color}')" title="Broselow ${s.label} (${s.range})">
             <span>${s.label}</span>
@@ -3783,7 +3811,9 @@ if (typeof module !== 'undefined' && module.exports) {
     calculateIBW,
     getAgeInYears,
     estimateFromAge,
+    getBroselowZone,
     applyQuickWeight,
+    previewBroselowZone,
     renderBroselowMiniSpectrum,
     setTheme,
     THEMES,

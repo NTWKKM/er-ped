@@ -602,7 +602,7 @@
     .quick-weight-strip::-webkit-scrollbar { display: none; }
     .quick-weight-btn {
       flex: 0 0 auto;
-      padding: 2px 6px;
+      padding: 2px 7px;
       min-height: 22px;
       border-radius: var(--r-full);
       border: 1px solid var(--border);
@@ -610,9 +610,19 @@
       color: var(--muted);
       font: 700 10.5px 'JetBrains Mono', monospace;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
       transition: all 0.12s ease;
       user-select: none;
       white-space: nowrap;
+    }
+    .qw-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      margin-right: 4px;
+      flex-shrink: 0;
     }
     .quick-weight-btn:hover {
       border-color: var(--accent);
@@ -1923,28 +1933,30 @@
             <input type="number" id="age" min="0" max="15" step="0.1" placeholder="Age" oninput="estimateFromAge()"/>
             <button type="button" id="ageUnitBtn" class="unit-toggle-btn" onclick="toggleAgeUnit()" title="คลิกเพื่อสลับหน่วยปี/เดือน">yr</button>
           </div>
-          <!-- 1-Tap Quick Weight Triage Strip -->
-          <div class="quick-weight-strip" id="quickWeightStrip" role="group" aria-label="Quick Weight Triage Presets">
-            <button type="button" class="quick-weight-btn" onclick="applyQuickWeight(3)" title="Neonate 3 kg">3k</button>
-            <button type="button" class="quick-weight-btn" onclick="applyQuickWeight(5)" title="1 mo (5 kg)">5k</button>
-            <button type="button" class="quick-weight-btn" onclick="applyQuickWeight(10)" title="1 yr (10 kg)">10k</button>
-            <button type="button" class="quick-weight-btn" onclick="applyQuickWeight(15)" title="3 yr (15 kg)">15k</button>
-            <button type="button" class="quick-weight-btn" onclick="applyQuickWeight(20)" title="5 yr (20 kg)">20k</button>
-            <button type="button" class="quick-weight-btn" onclick="applyQuickWeight(25)" title="7 yr (25 kg)">25k</button>
-            <button type="button" class="quick-weight-btn" onclick="applyQuickWeight(30)" title="9 yr (30 kg)">30k</button>
-            <button type="button" class="quick-weight-btn" onclick="applyQuickWeight(40)" title="12 yr (40 kg)">40k</button>
+          <!-- 1-Tap Broselow-Aligned Quick Weight Triage Strip -->
+          <div class="quick-weight-strip" id="quickWeightStrip" role="group" aria-label="Broselow-Aligned Quick Weight Triage Presets">
+            <button type="button" class="quick-weight-btn" data-color="Grey" onclick="applyQuickWeight(5)" title="Grey (3–5.9 kg, ~1 mo)"><span class="qw-dot" style="background:#B0B0B0;"></span>5k</button>
+            <button type="button" class="quick-weight-btn" data-color="Pink" onclick="applyQuickWeight(7)" title="Pink (6–7.9 kg, ~4 mo)"><span class="qw-dot" style="background:#FF80AB;"></span>7k</button>
+            <button type="button" class="quick-weight-btn" data-color="Red" onclick="applyQuickWeight(9)" title="Red (8–9.9 kg, ~9 mo)"><span class="qw-dot" style="background:#FF5252;"></span>9k</button>
+            <button type="button" class="quick-weight-btn" data-color="Purple" onclick="applyQuickWeight(10)" title="Purple (10–11.9 kg, ~1 yr)"><span class="qw-dot" style="background:#B388FF;"></span>10k</button>
+            <button type="button" class="quick-weight-btn" data-color="Yellow" onclick="applyQuickWeight(13)" title="Yellow (12–14.9 kg, ~2.5 yr)"><span class="qw-dot" style="background:#FFEE58;"></span>13k</button>
+            <button type="button" class="quick-weight-btn" data-color="White" onclick="applyQuickWeight(17)" title="White (15–18.9 kg, ~4.5 yr)"><span class="qw-dot" style="background:#FFFFFF; border:1px solid rgba(0,0,0,0.3);"></span>17k</button>
+            <button type="button" class="quick-weight-btn" data-color="Blue" onclick="applyQuickWeight(21)" title="Blue (19–23.9 kg, ~6.5 yr)"><span class="qw-dot" style="background:#40C4FF;"></span>21k</button>
+            <button type="button" class="quick-weight-btn" data-color="Orange" onclick="applyQuickWeight(27)" title="Orange (24–29.9 kg, ~8.5 yr)"><span class="qw-dot" style="background:#FFAB40;"></span>27k</button>
+            <button type="button" class="quick-weight-btn" data-color="Green" onclick="applyQuickWeight(33)" title="Green (30–36 kg, ~10 yr)"><span class="qw-dot" style="background:#69F0AE;"></span>33k</button>
+            <button type="button" class="quick-weight-btn" data-color="Adolescent" onclick="applyQuickWeight(40)" title="Adolescent (>36 kg, ~12 yr)">40k</button>
           </div>
           <!-- Interactive Broselow Mini-Spectrum Bar -->
-          <div class="broselow-mini-strip" id="broselowMiniStrip" title="Broselow 9-Zone Spectrum (คลิกเพื่อดู/พรีวิวโซน)">
-            <div class="broselow-mini-seg" style="background:#B0B0B0;" onclick="previewBroselowZone('Grey', event)" title="Grey (3-5.9 kg)"></div>
-            <div class="broselow-mini-seg" style="background:#FF80AB;" onclick="previewBroselowZone('Pink', event)" title="Pink (6-7.9 kg)"></div>
-            <div class="broselow-mini-seg" style="background:#FF5252;" onclick="previewBroselowZone('Red', event)" title="Red (8-9.9 kg)"></div>
-            <div class="broselow-mini-seg" style="background:#B388FF;" onclick="previewBroselowZone('Purple', event)" title="Purple (10-11.9 kg)"></div>
-            <div class="broselow-mini-seg" style="background:#FFEE58;" onclick="previewBroselowZone('Yellow', event)" title="Yellow (12-14.9 kg)"></div>
-            <div class="broselow-mini-seg" style="background:#FFFFFF;" onclick="previewBroselowZone('White', event)" title="White (15-18.9 kg)"></div>
-            <div class="broselow-mini-seg" style="background:#40C4FF;" onclick="previewBroselowZone('Blue', event)" title="Blue (19-23.9 kg)"></div>
-            <div class="broselow-mini-seg" style="background:#FFAB40;" onclick="previewBroselowZone('Orange', event)" title="Orange (24-29.9 kg)"></div>
-            <div class="broselow-mini-seg" style="background:#69F0AE;" onclick="previewBroselowZone('Green', event)" title="Green (30-36 kg)"></div>
+          <div class="broselow-mini-strip" id="broselowMiniStrip" title="Broselow 9-Zone Spectrum (คลิกเพื่อคำนวณและพรีวิวโซน)">
+            <div class="broselow-mini-seg" style="background:#B0B0B0;" onclick="previewBroselowZone('Grey', event)" title="Grey (3–5.9 kg)"></div>
+            <div class="broselow-mini-seg" style="background:#FF80AB;" onclick="previewBroselowZone('Pink', event)" title="Pink (6–7.9 kg)"></div>
+            <div class="broselow-mini-seg" style="background:#FF5252;" onclick="previewBroselowZone('Red', event)" title="Red (8–9.9 kg)"></div>
+            <div class="broselow-mini-seg" style="background:#B388FF;" onclick="previewBroselowZone('Purple', event)" title="Purple (10–11.9 kg)"></div>
+            <div class="broselow-mini-seg" style="background:#FFEE58;" onclick="previewBroselowZone('Yellow', event)" title="Yellow (12–14.9 kg)"></div>
+            <div class="broselow-mini-seg" style="background:#FFFFFF;" onclick="previewBroselowZone('White', event)" title="White (15–18.9 kg)"></div>
+            <div class="broselow-mini-seg" style="background:#40C4FF;" onclick="previewBroselowZone('Blue', event)" title="Blue (19–23.9 kg)"></div>
+            <div class="broselow-mini-seg" style="background:#FFAB40;" onclick="previewBroselowZone('Orange', event)" title="Orange (24–29.9 kg)"></div>
+            <div class="broselow-mini-seg" style="background:#69F0AE;" onclick="previewBroselowZone('Green', event)" title="Green (30–36 kg)"></div>
           </div>
         </div>
 
