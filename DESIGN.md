@@ -61,6 +61,25 @@
 - `--accent-subtle`: `#262624` (Soft grayscale container background)
 - **Active Controls & Combobox Highlight**: Employs **Tonal Inversion** (`#ECECE8` background with `#121210` dark graphite text and `#FFFFFF` 2px outline for active tabs, pills, and dropdown selections), guaranteeing > 14:1 contrast ratio without color dependencies (Key Decision #36).
 
+### Night-Vision Red Theme Palette (`data-theme="red"`, v1.12.0)
+
+- `--bg`: `#0A0000` (Pure pitch black with deep red undertone, eliminating glare in darkened PICUs/night transports)
+- `--card`: `#180404` (Elevated dark crimson card surface)
+- `--panel`: `#220808` (Dark crimson panel surface)
+- `--panel-subtle`: `#140303` (Subtle dark red inset surface)
+- `--ink`: `#FF6B6B` (High-contrast red-coral text, preserving scotopic rod cell dark adaptation $> 620\text{ nm}$)
+- `--muted`: `#B84A4A` (Medium red secondary labels)
+- `--border`: `#401010` (Dark crimson 1px structural border)
+- `--border-strong`: `#601818` (High-visibility crimson border)
+- `--accent`: `#FF2B2B` (Vivid emergency red accent for active tabs and highlights)
+- `--accent-hover`: `#FF5252` (Lightened emergency red)
+- `--accent-soft`: `#380808` (Subtle dark red container highlight tint)
+- `--accent-subtle`: `#240505` (Soft crimson container background)
+- `--dark-btn`: `#2A0505` (Tactile dark crimson action button)
+- `--good`: `#FF8585` (Safe readable red tint)
+- `--warning`: `#FFAA80` (Warm amber-red tint)
+- `--danger`: `#FF0000` (Critical emergency red)
+
 ### Surface Shadows & Border Radii Scale
 
 - `--shadow-1`: `0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.03)` (Micro card lift)
@@ -98,3 +117,6 @@
 13. **Asthma Protocol Stage Cards & HFNC Settings Panel**: `.stage-card` containers rendering 6-stage stepwise protocol with embedded `.protocol-table` drug dosing grids. Dedicated HFNC card with sky-blue left border (`#0ea5e9`) and auto-calculated settings. Color-coded severity assessment table headers (green Mild–Moderate, yellow Severe, red Life-Threatening).coding (Key Decision #48).
 14. **Pediatric Electrolytes & Corrected Imbalance Panel (v1.10.0)**: Dedicated 13th tabpanel (`#electrolytes`, `Alt+E`) featuring a multi-section modular layout: Quick Correctors grid (3-column responsive cards for Corrected Na, Corrected Ca, and Baseline K+ shift), Deficit & Fluid Replacement table (3% NaCl bolus, Total Na deficit, Free water deficit, IV KCl slow piggyback, Oral KCl syrup, Bicarbonate deficit), Diagnostic Indices table (Anion Gap, Corrected AG, Delta Ratio, Osmolality/Osmolar Gap, FeNa, FeUrea, UAG, TTKG), Emergency Resuscitation Protocols (Hyperkalemia 3-Step Cocktail card with red accent left border, Hypokalemia Replacement Protocol & Piggyback Dilution card with warm accent left border, Calcium gluconate, MgSO4), and an interactive Age-Specific Reference Table with active age bracket highlighting (`var(--accent-soft)`).
 15. **Pediatric Electrolytes Progressive Disclosure & Section 4C Resuscitation Cards (v1.10.1)**: Progressive non-blocking disclosure renders Section 1 (Corrected values), Section 3 (Acid-Base & Renal diagnostics), and Section 5 (Age Reference ranges) unconditionally. Section 2 (Deficit Calculations) and Section 4 (Emergency Protocols) display amber inline warning banners when patient weight is absent. Section 2 presents combined 48-hr fluid pump rates (`Maintenance + Deficit/48h`) in mL/hr and 50% initial bicarbonate resuscitation doses. Section 4 features a dedicated Section 4C stage card with violet accent border (`#8b5cf6`, `#7c3aed` header) for Acute Symptomatic Hypocalcemia (10% Calcium Gluconate 1.0 mL/kg max 20 mL) and Acute Hypomagnesemia (50% MgSO4 0.1 mL/kg max 4 mL).
+16. **Native View Transitions & Zero-CLS Dynamic Tab Engine (v1.12.0)**: Tab switching leverages `document.startViewTransition()` with `@media (prefers-reduced-motion: reduce)` fallbacks, guaranteeing native app fluidity across all 13 clinical modules without layout shifts (CLS 0.00).
+17. **1-Tap Quick Weight Triage Strip & Interactive Broselow Mini-Spectrum Bar (v1.12.0)**: Topbar Measured biometric capsule integrates a horizontal 1-tap quick weight preset strip (`3k`, `5k`, `10k`, `15k`, `20k`, `25k`, `30k`, `40k`) with Weech age estimation and an interactive 9-band Broselow mini-spectrum gradient bar for instant triage recalculations under $< 50\text{ ms}$.
+18. **Mobile Emergency Resuscitation Bottom Quick-Dock & WCAG 2.2 Gloved Hit Ergonomics (v1.12.0)**: Dedicated mobile sticky bottom dock (`.mobile-bottom-dock`) anchoring the 4 highest-priority resuscitation actions (🚨 PALS, 💊 Dose, 💧 Fluids, ⚡ Seizure, ⋯ More) on viewports $< 680\text{ px}$. Dynamic scroll padding (`scroll-padding-top: calc(var(--topbar-h) + 16px)`) prevents sticky topbar focus occlusion. Touch targets meet WCAG 2.2 AA+ standards ($\ge 44\times 44\text{ px}$) with tactile `:active { transform: scale(0.975); }` compression feedback for gloved clinical use.

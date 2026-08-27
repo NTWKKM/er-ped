@@ -146,16 +146,70 @@
       --shadow-3: none;
     }
 
+    /* Night-Vision Red Theme (Dark Resuscitation / Low-Light PICU / Night Transport) */
+    :root[data-theme="red"] {
+      --bg: #0A0000;
+      --card: #180404;
+      --panel: #220808;
+      --panel-subtle: #140303;
+      --ink: #FF6B6B;
+      --muted: #B84A4A;
+      --border: #401010;
+      --border-strong: #601818;
+      --accent: #FF2B2B;
+      --accent-hover: #FF5252;
+      --accent-soft: #380808;
+      --accent-subtle: #240505;
+      --good: #FF8585;
+      --good-soft: #280808;
+      --warning: #FFAA80;
+      --warning-soft: #2D0F08;
+      --danger: #FF0000;
+      --danger-soft: #380000;
+      --dark-btn: #2A0505;
+      --ring: rgba(255, 43, 43, 0.35);
+      --danger-subtle: rgba(255, 0, 0, 0.20);
+      --warning-subtle: rgba(255, 170, 128, 0.20);
+      --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.6);
+      --shadow-2: 0 4px 16px rgba(0, 0, 0, 0.7);
+      --shadow-3: 0 12px 32px rgba(0, 0, 0, 0.85);
+    }
+
+    /* View Transitions (Native Fluid Zero-CLS Tab Navigation) */
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation-duration: 0.16s;
+      animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      ::view-transition-group(*),
+      ::view-transition-old(*),
+      ::view-transition-new(*) {
+        animation: none !important;
+      }
+    }
+
+    /* Container Queries for Responsive Card Modules */
+    .card {
+      container-type: inline-size;
+    }
+    @container (max-width: 440px) {
+      .protocol-table th, .protocol-table td {
+        padding: 4px 5px !important;
+        font-size: 11.5px !important;
+      }
+    }
+
     /* Micro-Interactions & Accessible Focus States */
     :focus-visible {
       outline: 2px solid var(--accent);
       outline-offset: 2px;
     }
-    button, .btn, .tab, .tab-btn, .pill, .chip, .category-pill, .drug-filter-pill, .unit-toggle-btn, .broselow-chip {
+    button, .btn, .tab, .tab-btn, .pill, .chip, .category-pill, .drug-filter-pill, .unit-toggle-btn, .broselow-chip, .quick-weight-btn, .dock-btn {
       touch-action: manipulation;
       font-family: inherit;
     }
-    button:active, .btn:active, .tab-btn:active, .pill:active, .category-pill:active, .drug-filter-pill:active {
+    button:active, .btn:active, .tab-btn:active, .pill:active, .category-pill:active, .drug-filter-pill:active, .quick-weight-btn:active, .dock-btn:active {
       transform: scale(0.975);
     }
     .search-match {
@@ -172,6 +226,10 @@
     :root[data-theme="mono"] .search-match {
       background: #FFFFFF;
       color: #000000;
+    }
+    :root[data-theme="red"] .search-match {
+      background: #4A0E0E;
+      color: #FF8585;
     }
 
     /* Category Jump Navigation Bar */
@@ -479,6 +537,45 @@
       border-radius: 2px;
     }
 
+    /* Night-Vision Red Overrides */
+    :root[data-theme="red"] input, 
+    :root[data-theme="red"] select,
+    :root[data-theme="red"] .combobox-input,
+    :root[data-theme="red"] .bio-fields input[type="number"],
+    :root[data-theme="red"] .chip input[type="number"] {
+      background: #180404;
+      color: #FF8585;
+      border-color: #401010;
+    }
+    :root[data-theme="red"] input:focus,
+    :root[data-theme="red"] select:focus,
+    :root[data-theme="red"] .combobox-input:focus {
+      background: #240606;
+      color: #FFAAAA;
+      border-color: #FF2B2B;
+      box-shadow: 0 0 0 2px rgba(255, 43, 43, 0.35);
+    }
+    :root[data-theme="red"] option {
+      background: #180404;
+      color: #FF8585;
+    }
+    :root[data-theme="red"] .combobox-dropdown {
+      background: #180404;
+      border-color: #601818;
+    }
+    :root[data-theme="red"] .tab-btn.active,
+    :root[data-theme="red"] .pill.active,
+    :root[data-theme="red"] .btn-primary,
+    :root[data-theme="red"] .fab button.pals-fab {
+      background: #FF2B2B;
+      color: #FFFFFF;
+      font-weight: 800;
+      border: 1px solid #FF5252;
+    }
+    :root[data-theme="red"] .topbar {
+      background: rgba(10, 0, 0, 0.92);
+    }
+
     * { box-sizing: border-box; }
     html, body { 
       margin: 0; 
@@ -489,6 +586,138 @@
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       letter-spacing: -0.01em;
+      scroll-padding-top: calc(var(--topbar-h, 140px) + 16px);
+    }
+
+    /* 1-Tap Quick Weight Preset Strip */
+    .quick-weight-strip {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding: 2px 0 1px;
+    }
+    .quick-weight-strip::-webkit-scrollbar { display: none; }
+    .quick-weight-btn {
+      flex: 0 0 auto;
+      padding: 2px 6px;
+      min-height: 22px;
+      border-radius: var(--r-full);
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--muted);
+      font: 700 10.5px 'JetBrains Mono', monospace;
+      cursor: pointer;
+      transition: all 0.12s ease;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .quick-weight-btn:hover {
+      border-color: var(--accent);
+      color: var(--ink);
+      background: var(--panel);
+    }
+    .quick-weight-btn.active {
+      background: var(--accent);
+      color: #FFFFFF;
+      border-color: var(--accent);
+    }
+    :root[data-theme="mono"] .quick-weight-btn.active {
+      background: #FFFFFF;
+      color: #000000;
+      border: 2px solid #FFFFFF;
+    }
+    :root[data-theme="red"] .quick-weight-btn.active {
+      background: #FF2B2B;
+      color: #FFFFFF;
+      border-color: #FF5252;
+    }
+
+    /* Interactive Broselow Mini-Spectrum Bar */
+    .broselow-mini-strip {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 2px;
+      height: 5px;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 2px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+    }
+    .broselow-mini-seg {
+      height: 100%;
+      cursor: pointer;
+      transition: opacity 0.12s ease, transform 0.1s ease;
+      opacity: 0.70;
+    }
+    .broselow-mini-seg:hover {
+      opacity: 1;
+      transform: scaleY(1.4);
+    }
+    .broselow-mini-seg.active {
+      opacity: 1;
+      box-shadow: 0 0 0 1px #000000, 0 0 0 2px var(--accent);
+      z-index: 1;
+    }
+
+    /* Mobile Emergency Bottom Quick-Dock */
+    .mobile-bottom-dock {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 80;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+      padding: 4px 8px calc(4px + env(safe-area-inset-bottom));
+      justify-content: space-around;
+      align-items: center;
+      gap: 2px;
+    }
+    @media (max-width: 680px) {
+      .mobile-bottom-dock {
+        display: flex;
+      }
+      body {
+        padding-bottom: calc(54px + env(safe-area-inset-bottom));
+      }
+    }
+    .dock-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      padding: 4px 2px;
+      background: transparent;
+      border: none;
+      border-radius: var(--r-sm);
+      color: var(--muted);
+      font: 700 10.5px 'Sarabun', sans-serif;
+      cursor: pointer;
+      transition: all 0.12s ease;
+      touch-action: manipulation;
+    }
+    .dock-btn:hover {
+      color: var(--ink);
+      background: var(--panel-subtle);
+    }
+    .dock-btn.active {
+      color: var(--accent);
+      font-weight: 800;
+    }
+    :root[data-theme="red"] .dock-btn.active {
+      color: #FF2B2B;
+    }
+    .dock-btn svg {
+      width: 17px;
+      height: 17px;
     }
 
     h1, h2, h3 { margin: 0 0 8px; font-weight: 700; }
@@ -1694,6 +1923,29 @@
             <input type="number" id="age" min="0" max="15" step="0.1" placeholder="Age" oninput="estimateFromAge()"/>
             <button type="button" id="ageUnitBtn" class="unit-toggle-btn" onclick="toggleAgeUnit()" title="คลิกเพื่อสลับหน่วยปี/เดือน">yr</button>
           </div>
+          <!-- 1-Tap Quick Weight Triage Strip -->
+          <div class="quick-weight-strip" id="quickWeightStrip" role="group" aria-label="Quick Weight Triage Presets">
+            <button type="button" class="quick-weight-btn" onclick="applyQuickWeight(3)" title="Neonate 3 kg">3k</button>
+            <button type="button" class="quick-weight-btn" onclick="applyQuickWeight(5)" title="1 mo (5 kg)">5k</button>
+            <button type="button" class="quick-weight-btn" onclick="applyQuickWeight(10)" title="1 yr (10 kg)">10k</button>
+            <button type="button" class="quick-weight-btn" onclick="applyQuickWeight(15)" title="3 yr (15 kg)">15k</button>
+            <button type="button" class="quick-weight-btn" onclick="applyQuickWeight(20)" title="5 yr (20 kg)">20k</button>
+            <button type="button" class="quick-weight-btn" onclick="applyQuickWeight(25)" title="7 yr (25 kg)">25k</button>
+            <button type="button" class="quick-weight-btn" onclick="applyQuickWeight(30)" title="9 yr (30 kg)">30k</button>
+            <button type="button" class="quick-weight-btn" onclick="applyQuickWeight(40)" title="12 yr (40 kg)">40k</button>
+          </div>
+          <!-- Interactive Broselow Mini-Spectrum Bar -->
+          <div class="broselow-mini-strip" id="broselowMiniStrip" title="Broselow 9-Zone Spectrum (คลิกเพื่อดู/พรีวิวโซน)">
+            <div class="broselow-mini-seg" style="background:#B0B0B0;" onclick="previewBroselowZone('Grey', event)" title="Grey (3-5.9 kg)"></div>
+            <div class="broselow-mini-seg" style="background:#FF80AB;" onclick="previewBroselowZone('Pink', event)" title="Pink (6-7.9 kg)"></div>
+            <div class="broselow-mini-seg" style="background:#FF5252;" onclick="previewBroselowZone('Red', event)" title="Red (8-9.9 kg)"></div>
+            <div class="broselow-mini-seg" style="background:#B388FF;" onclick="previewBroselowZone('Purple', event)" title="Purple (10-11.9 kg)"></div>
+            <div class="broselow-mini-seg" style="background:#FFEE58;" onclick="previewBroselowZone('Yellow', event)" title="Yellow (12-14.9 kg)"></div>
+            <div class="broselow-mini-seg" style="background:#FFFFFF;" onclick="previewBroselowZone('White', event)" title="White (15-18.9 kg)"></div>
+            <div class="broselow-mini-seg" style="background:#40C4FF;" onclick="previewBroselowZone('Blue', event)" title="Blue (19-23.9 kg)"></div>
+            <div class="broselow-mini-seg" style="background:#FFAB40;" onclick="previewBroselowZone('Orange', event)" title="Orange (24-29.9 kg)"></div>
+            <div class="broselow-mini-seg" style="background:#69F0AE;" onclick="previewBroselowZone('Green', event)" title="Green (30-36 kg)"></div>
+          </div>
         </div>
 
         <!-- DERIVED: computed, read-only, with the explicit dosing opt-in -->
@@ -2508,6 +2760,30 @@
       </div>
     </div>
   </div>
+
+  <!-- Mobile Emergency Bottom Quick-Dock (Sticky on small viewports) -->
+  <nav class="mobile-bottom-dock" id="mobileBottomDock" aria-label="Mobile emergency navigation">
+    <button type="button" class="dock-btn" data-dock-tab="pals" onclick="showTab('pals')">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg>
+      <span>PALS</span>
+    </button>
+    <button type="button" class="dock-btn" data-dock-tab="dose" onclick="showTab('dose')">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+      <span>Dose</span>
+    </button>
+    <button type="button" class="dock-btn" data-dock-tab="fluids" onclick="showTab('fluids')">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>
+      <span>Fluids</span>
+    </button>
+    <button type="button" class="dock-btn" data-dock-tab="seizure" onclick="showTab('seizure')">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+      <span>Seizure</span>
+    </button>
+    <button type="button" class="dock-btn" onclick="const r = document.getElementById('mainTabRail'); if (r) { r.scrollIntoView({ behavior: 'smooth', block: 'start' }); }">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+      <span>More</span>
+    </button>
+  </nav>
 
   <!-- Emergency Floating Action Buttons -->
   <div class="fab">

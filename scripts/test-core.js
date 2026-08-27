@@ -56,7 +56,8 @@ const essentialIds = [
   'doseDrug', 'atbDrug', 'dripDrug', 'weight', 'age', 'nW', 'fDegree', 'fPlan',
   'dkaSeverity', 'dkaPriorBolus', 'useIBW', 'ibwVal', 'vitalsQuickText', 'a2hsBtn',
   'lyteNa', 'lyteGlucose', 'lyteTotalCa', 'lyteAlbumin', 'lyteK', 'lytePH',
-  'evidenceBackdrop', 'evidencePanel', 'evidenceSearchInput', 'evidenceCategorySelect', 'evidenceListContainer'
+  'evidenceBackdrop', 'evidencePanel', 'evidenceSearchInput', 'evidenceCategorySelect', 'evidenceListContainer',
+  'quickWeightStrip', 'broselowMiniStrip', 'mobileBottomDock'
 ];
 
 essentialIds.forEach(id => {
@@ -83,8 +84,8 @@ window.eval('populateDrugs();');
 
 // --- TEST SUITES USING PRODUCTION FUNCTIONS ---
 
-// 0. Test Theme Cycling Engine (Light -> Dark -> Mono -> Light)
-test('3-State Theme Cycling: Light -> Dark -> Mono -> Light', () => {
+// 0. Test Theme Cycling Engine (Light -> Dark -> Mono -> Red -> Light)
+test('4-State Theme Cycling: Light -> Dark -> Mono -> Red -> Light', () => {
   window.eval('setTheme("light")');
   assert.strictEqual(document.documentElement.getAttribute('data-theme'), 'light');
   
@@ -93,9 +94,29 @@ test('3-State Theme Cycling: Light -> Dark -> Mono -> Light', () => {
   
   window.eval('toggleTheme()');
   assert.strictEqual(document.documentElement.getAttribute('data-theme'), 'mono');
+
+  window.eval('toggleTheme()');
+  assert.strictEqual(document.documentElement.getAttribute('data-theme'), 'red');
   
   window.eval('toggleTheme()');
   assert.strictEqual(document.documentElement.getAttribute('data-theme'), 'light');
+});
+
+test('1-Tap Quick Weight Triage: applyQuickWeight(10) sets weight, Weech age, and updates tabs', () => {
+  window.eval('document.getElementById("age").value = "";');
+  window.eval('applyQuickWeight(10)');
+  assert.strictEqual(window.eval('getWeight()'), 10);
+  assert.strictEqual(document.getElementById('weight').value, '10');
+  assert.strictEqual(document.getElementById('age').value, '1');
+  assert.strictEqual(document.getElementById('activeWeightVal').textContent, '10.0 kg');
+});
+
+test('Navigation View Transitions: showTab() toggles active panel and mobile dock button safely', () => {
+  window.eval('showTab("pals")');
+  assert.strictEqual(document.getElementById('pals').style.display, 'block');
+  assert(document.getElementById('pals').classList.contains('active-panel'));
+  const dockPals = document.querySelector('.dock-btn[data-dock-tab="pals"]');
+  if (dockPals) assert(dockPals.classList.contains('active'));
 });
 
 // 1. Test Weech Formula (estimateWeightFromAge exported from app.js)

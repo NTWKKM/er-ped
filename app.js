@@ -77,7 +77,7 @@ function loadDataset() {
   }
 }
 
-const THEMES = ['light', 'dark', 'mono'];
+const THEMES = ['light', 'dark', 'mono', 'red'];
 
 function initTheme() {
   const saved = localStorage.getItem('er_ped_theme') || 'light';
@@ -91,10 +91,12 @@ function setTheme(t) {
   const btn = document.getElementById('themeToggleBtn');
   if (btn) {
     if (t === 'mono') btn.innerHTML = 'Mono';
+    else if (t === 'red') btn.innerHTML = 'Red';
     else if (t === 'dark') btn.innerHTML = 'Dark';
     else btn.innerHTML = 'Light';
   }
   if (typeof refreshBroselowChip === 'function') refreshBroselowChip();
+  if (typeof renderBroselowMiniSpectrum === 'function') renderBroselowMiniSpectrum();
 }
 
 function toggleTheme() {
@@ -458,7 +460,74 @@ function updateBiometricUIState() {
   }
 
   refreshBroselowChip();
+  if (typeof renderBroselowMiniSpectrum === 'function') renderBroselowMiniSpectrum();
   calcAll();
+}
+
+function applyQuickWeight(kg) {
+  if (typeof kg !== 'number' || kg <= 0) return;
+  const weightInput = document.getElementById('weight');
+  const useIBWBox = document.getElementById('useIBW');
+  if (useIBWBox && useIBWBox.checked) useIBWBox.checked = false;
+  
+  gUserABW = kg;
+  gWeightSource = 'manual';
+  if (weightInput) weightInput.value = String(kg);
+
+  // If age is not set or zero, derive an age estimate using Weech formula
+  const ageInput = document.getElementById('age');
+  if (ageInput && (!ageInput.value || parseFloat(ageInput.value) <= 0)) {
+    if (kg <= 5.5) {
+      // Infant months: (mo + 9) / 2 = kg => mo = 2*kg - 9
+      const estMo = Math.max(1, Math.round(2 * kg - 9));
+      gAgeUnit = 'mo';
+      ageInput.value = String(estMo);
+      const unitBtn = document.getElementById('ageUnitBtn');
+      if (unitBtn) unitBtn.textContent = 'mo';
+    } else if (kg <= 20) {
+      // 1-6 yr: 2 * age + 8 = kg => age = (kg - 8) / 2
+      const estYr = Math.max(1, Math.round((kg - 8) / 2));
+      gAgeUnit = 'yr';
+      ageInput.value = String(estYr);
+      const unitBtn = document.getElementById('ageUnitBtn');
+      if (unitBtn) unitBtn.textContent = 'yr';
+    } else {
+      // >6 yr: (7*age - 5)/2 = kg => age = (2*kg + 5)/7
+      const estYr = Math.min(15, Math.max(7, Math.round((2 * kg + 5) / 7)));
+      gAgeUnit = 'yr';
+      ageInput.value = String(estYr);
+      const unitBtn = document.getElementById('ageUnitBtn');
+      if (unitBtn) unitBtn.textContent = 'yr';
+    }
+  }
+
+  calculateIBW();
+  updateBiometricUIState();
+}
+
+function renderBroselowMiniSpectrum() {
+  const w = getWeight();
+  const zone = (typeof getBroselowZone === 'function') ? getBroselowZone(w) : null;
+  const zoneName = zone ? zone.color : null;
+  
+  // Highlight active mini segment in topbar
+  if (typeof document !== 'undefined') {
+    document.querySelectorAll('.broselow-mini-seg').forEach(seg => {
+      const title = seg.getAttribute('title') || '';
+      const isActive = zoneName && title.startsWith(zoneName);
+      seg.classList.toggle('active', !!isActive);
+    });
+
+    // Highlight active quick weight preset button
+    document.querySelectorAll('.quick-weight-btn').forEach(btn => {
+      const onclickStr = btn.getAttribute('onclick') || '';
+      const match = onclickStr.match(/applyQuickWeight\((\d+)\)/);
+      if (match) {
+        const btnKg = parseFloat(match[1]);
+        btn.classList.toggle('active', w !== null && Math.abs(w - btnKg) < 0.1);
+      }
+    });
+  }
 }
 
 function onWeightChange() {
@@ -591,48 +660,65 @@ function syncNCPRWithABW(){
 
 function showTab(id, btn) {
   activeTab = id;
-  document.querySelectorAll('.tab-btn').forEach(b => {
-    b.classList.remove('active');
-    b.setAttribute('aria-selected', 'false');
-  });
-  const targetBtn = btn || document.querySelector(`.tab-btn[data-tab="${id}"]`);
-  if (targetBtn) {
-    targetBtn.classList.add('active');
-    targetBtn.setAttribute('aria-selected', 'true');
-    if (typeof targetBtn.scrollIntoView === 'function') {
-      targetBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  const updateDOM = () => {
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-selected', 'false');
+    });
+    const targetBtn = btn || document.querySelector(`.tab-btn[data-tab="${id}"]`);
+    if (targetBtn) {
+      targetBtn.classList.add('active');
+      targetBtn.setAttribute('aria-selected', 'true');
+      if (typeof targetBtn.scrollIntoView === 'function') {
+        targetBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
     }
-  }
-  
-  ['dose','atb','fluids','pals','ncpr','drip','seizure','tox','psa','vitals','dka','asthma','electrolytes'].forEach(x => {
-    const el = document.getElementById(x);
-    if (el) {
-      const isActive = (x === id);
-      el.style.display = isActive ? 'block' : 'none';
-      el.classList.toggle('active-panel', isActive);
+    
+    // Update mobile bottom dock active states
+    document.querySelectorAll('.dock-btn[data-dock-tab]').forEach(db => {
+      db.classList.toggle('active', db.getAttribute('data-dock-tab') === id);
+    });
+    
+    ['dose','atb','fluids','pals','ncpr','drip','seizure','tox','psa','vitals','dka','asthma','electrolytes'].forEach(x => {
+      const el = document.getElementById(x);
+      if (el) {
+        const isActive = (x === id);
+        el.style.display = isActive ? 'block' : 'none';
+        el.classList.toggle('active-panel', isActive);
+      }
+    });
+    
+    if (id === 'pals') {
+      calcPALS();
+    } else if (id === 'drip') {
+      calcDrip();
+    } else if (id === 'seizure') {
+      calcSeizure();
+    } else if (id === 'tox') {
+      calcTox();
+    } else if (id === 'psa') {
+      calcPSA();
+    } else if (id === 'vitals') {
+      calcVitals();
+    } else if (id === 'dka') {
+      calcDKA();
+    } else if (id === 'asthma') {
+      calcAsthma();
+    } else if (id === 'electrolytes') {
+      calcElectrolytes();
     }
-  });
-  
-  if (id === 'pals') {
-    calcPALS();
-  } else if (id === 'drip') {
-    calcDrip();
-  } else if (id === 'seizure') {
-    calcSeizure();
-  } else if (id === 'tox') {
-    calcTox();
-  } else if (id === 'psa') {
-    calcPSA();
-  } else if (id === 'vitals') {
-    calcVitals();
-  } else if (id === 'dka') {
-    calcDKA();
-  } else if (id === 'asthma') {
-    calcAsthma();
-  } else if (id === 'electrolytes') {
-    calcElectrolytes();
+  };
+
+  if (typeof document !== 'undefined' && typeof document.startViewTransition === 'function' && typeof window !== 'undefined' && window.matchMedia && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.startViewTransition(() => {
+      updateDOM();
+    });
+  } else {
+    updateDOM();
   }
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
+    try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (_) {}
+  }
 }
 
 function setupKeyboardShortcuts(){
@@ -3697,6 +3783,10 @@ if (typeof module !== 'undefined' && module.exports) {
     calculateIBW,
     getAgeInYears,
     estimateFromAge,
+    applyQuickWeight,
+    renderBroselowMiniSpectrum,
+    setTheme,
+    THEMES,
     suggestBlade,
     weightToETTCuffed,
     weightToETTUncuffed,

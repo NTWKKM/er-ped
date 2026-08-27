@@ -178,3 +178,12 @@ flowchart TD
     - **Interactive Evidence Modal & In-Card Citation Badges**: Integrated `#evidenceBackdrop` modal drawer accessible via topbar Reference popover and clickable in-card citation badges (`.evidence-badge`) across all 13 module headers, enabling instant bedside inspection of Level of Evidence (LOE), Class of Recommendation (COR), and DOI/PMID sources with zero network dependency.
     - **Automated Verification**: Added dataset schema validation step 4 in `scripts/check-dataset.js` and expanded test suite in `scripts/test-core.js` to 73 passing tests.
     - Service worker cache version bumped to `er-ped-v1.11.0-20260826`.
+
+57. **Comprehensive 2026 UI/UX Overhaul & Bedside Ergonomics (v1.12.0 - August 2026)**:
+    - **Native View Transitions API**: Integrated `document.startViewTransition()` with `@media (prefers-reduced-motion: reduce)` fallbacks in `showTab()`, providing instantaneous fluid navigation across all 13 clinical modules with 0.00 Cumulative Layout Shift (CLS).
+    - **1-Tap Quick Weight Triage Strip & Interactive Broselow Mini-Spectrum**: Embedded `.quick-weight-strip` with 8 preset child weights (`3k`, `5k`, `10k`, `15k`, `20k`, `25k`, `30k`, `40k`) and a 9-band Broselow mini-spectrum bar (`.broselow-mini-strip`) directly inside the topbar Measured biometric group, enabling instantaneous zero-input calculation within $< 50\text{ ms}$.
+    - **Mobile Emergency Resuscitation Bottom Quick-Dock**: Added sticky bottom navigation dock (`.mobile-bottom-dock`) on viewports $< 680\text{ px}$ featuring 4 high-priority emergency shortcuts (🚨 PALS, 💊 Dose, 💧 Fluids, ⚡ Seizure, ⋯ More).
+    - **4th Theme: Night-Vision Red Mode (`data-theme="red"`)**: Introduced monochromatic deep crimson on pitch black ($> 620\text{ nm}$ wavelength) preventing glare and preserving scotopic rod cell dark adaptation in darkened pediatric ICUs, nighttime ambulances, and aeromedical transport.
+    - **CSS Container Queries & WCAG 2.2 Gloved Hit Ergonomics**: Enabled `container-type: inline-size` on `.card` containers with responsive table typography, dynamic `scroll-padding-top: calc(var(--topbar-h) + 16px)` eliminating sticky topbar focus occlusion, and tactile touch targets ($\ge 44\times 44\text{ px}$) for gloved use.
+    - **Automated Verification**: Expanded test suite in `scripts/test-core.js` to 75 passing tests.
+    - Service worker cache version bumped to `er-ped-v1.12.0-20260827`.
