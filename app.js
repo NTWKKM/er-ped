@@ -3863,8 +3863,8 @@ function toggleSex() {
   gSex = (gSex === 'male') ? 'female' : 'male';
   const btn = document.getElementById('sexToggleBtn');
   if (btn) {
-    btn.innerHTML = (gSex === 'male') ? '👦 Boy' : '👧 Girl';
-    btn.title = (gSex === 'male') ? 'เพศ: ชาย (คลิกเพื่อเปลี่ยนเป็นหญิง)' : 'เพศ: หญิง (คลิกเพื่อเปลี่ยนเป็นชาย)';
+    btn.innerHTML = (gSex === 'male') ? '♂' : '♀';
+    btn.title = (gSex === 'male') ? 'เพศ: ชาย ♂ (คลิกเพื่อเปลี่ยนเป็นหญิง ♀)' : 'เพศ: หญิง ♀ (คลิกเพื่อเปลี่ยนเป็นชาย ♂)';
   }
   calcGrowthZScores();
 }
