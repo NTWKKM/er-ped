@@ -35,6 +35,17 @@
   - **Synchronized Cardioversion**: Initial $0.5\text{–}1.0\text{ J/kg}$; increase to $2\text{ J/kg}$ if refractory.
 - **Ventilation Rate in CPR / Advanced Airway**:
   - **With Advanced Airway / Respiratory Arrest**: 1 breath every 2–3 seconds (20–30 breaths/min per 2025 PALS update), avoiding hyperventilation.
+- **CPR Quality Targets (2025 Physiology-Directed CPR)**:
+  - **Diastolic Blood Pressure during CPR** (if invasive arterial monitoring available):
+    - **Infants**: Target $\ge 25\text{ mmHg}$
+    - **Older Children**: Target $\ge 30\text{ mmHg}$
+  - *Evidence Level*: Class IIb, LOE B-NR. Real-time hemodynamic monitoring-guided resuscitation.
+- **Infant CPR Technique (2025 Update)**:
+  - **2-finger technique eliminated**. Recommended: **1-hand or 2-thumb encircling hands** technique for all infant chest compressions.
+  - *Evidence Level*: Class IIa, LOE C-LD.
+- **Foreign Body Airway Obstruction (FBAO) — 2025 Update**:
+  - **Infants**: Alternate **5 back blows** with **5 chest thrusts** until object expelled or infant becomes unresponsive. **Abdominal thrusts are NOT recommended** in infants.
+  - **Children**: Alternate **5 back blows** with **5 abdominal thrusts** until object expelled or child becomes unresponsive.
 
 ---
 
@@ -48,9 +59,12 @@
 - **Delayed Cord Clamping**:
   - Uncompromised term and preterm infants: Defer cord clamping for at least **60 seconds** to improve hemodynamic stability and reduce intraventricular hemorrhage.
 - **Positive Pressure Ventilation (PPV)**:
-  - Initial inflation rate: 40–60 breaths/min.
-  - Initial PIP: $20\text{–}25\text{ cmH}_2\text{O}$ (max $30\text{ cmH}_2\text{O}$ in preterm, $40\text{ cmH}_2\text{O}$ in term). PEEP: $5\text{ cmH}_2\text{O}$.
-  - Oxygen titration: $\ge 35\text{ weeks GA}$: start with $21\%\text{ O}_2$ (room air); $< 35\text{ weeks GA}$: start with $21\%\text{–}30\%\text{ O}_2$.
+  - Initial inflation rate: 30–60 breaths/min (updated from 40–60 per NRP 9th Ed 2025).
+  - Initial PIP: $25\text{ cmH}_2\text{O}$ for $\ge 32\text{ weeks GA}$ (max $40\text{ cmH}_2\text{O}$ in term); $20\text{–}25\text{ cmH}_2\text{O}$ for $\lt 32\text{ weeks GA}$ (max $30\text{ cmH}_2\text{O}$ in preterm). PEEP: $5\text{ cmH}_2\text{O}$.
+  - Oxygen titration: $\ge 35\text{ weeks GA}$: start with $21\%\text{ O}_2$ (room air); $\lt 35\text{ weeks GA}$: start with $21\%\text{–}30\%\text{ O}_2$.
+  - **Laryngeal Mask Airway (LMA)**: Can be used earlier as a **primary device** (NRP 9th Ed 2025).
+  - **Suctioning**: Routine suctioning of the mouth and nose is **no longer recommended** (NRP 9th Ed 2025).
+  - **ETT Depth**: Marked at **tip-to-gum** distance (NRP 9th Ed 2025).
 - **Epinephrine in Neonates**:
   - **IV/IO Route (Preferred)**: $0.02\text{ mg/kg}$ ($0.2\text{ mL/kg}$ of $1:10,000$ / $0.1\text{ mg/mL}$), range $0.01\text{–}0.03\text{ mg/kg}$, followed by $3\text{ mL}$ NSS flush. Repeat every 3–5 minutes if HR $< 60\text{ bpm}$.
   - **Endotracheal (ETT) Route (Bridge)**: $0.1\text{ mg/kg}$ ($1.0\text{ mL/kg}$ of $1:10,000$), range $0.05\text{–}0.1\text{ mg/kg}$.
@@ -125,7 +139,7 @@
 ### 5.1 Guidelines & Consensus Statements
 - **American Epilepsy Society (AES)**: *Evidence-Based Guideline: Treatment of Convulsive Status Epilepticus in Children and Adults: Report of the Guideline Committee of the American Epilepsy Society*. Epilepsy Curr. 2016;16(1):48–61. DOI: 10.5698/1535-7597-16.1.48. PMID: 26900382.
 - **Established Status Epilepticus Treatment Trial (ESETT)**: *Randomized Trial of Three Anticonvulsant Medications for Status Epilepticus*. N Engl J Med. 2019;381(22):2103–2113. DOI: 10.1056/NEJMoa1905795. PMID: 31774955.
-- **Neurocritical Care Society (NCS)**: *Guidelines for the Evaluation and Management of Status Epilepticus*. Neurocrit Care. 2020/2024.
+- **Neurocritical Care Society (NCS)**: *Guidelines for the Evaluation and Management of Status Epilepticus*. Neurocrit Care. 2024/2025. **2025 Update**: Clock-anchored 5-minute dosing intervals for benzodiazepines; ESETT equivalence confirmed for Levetiracetam, Fosphenytoin, and Valproate in BZD-refractory SE.
 
 ### 5.2 Time-Phased Resuscitation Pathway
 - **Stage 1: Emergent Initial Therapy (0–10 min / First-line Benzodiazepine)**:
@@ -171,8 +185,8 @@
 ## 7. Pediatric Electrolyte Disorders & Resuscitation
 
 ### 7.1 Authoritative References
-- **Johns Hopkins Hospital**: *The Harriet Lane Handbook: A Manual for Pediatric House Officers (23rd & 24th Editions)*. Philadelphia: Elsevier; 2024/2026.
-- **Kliegman RM, St. Geme JW, Blum NJ, et al.**: *Nelson Textbook of Pediatrics (21st & 22nd Editions)*. Philadelphia: Elsevier; 2024.
+- **Johns Hopkins Hospital**: *The Harriet Lane Handbook: A Manual for Pediatric House Officers (24th Edition)*. Philadelphia: Elsevier; 2026.
+- **Kliegman RM, St. Geme JW, Blum NJ, et al.**: *Nelson Textbook of Pediatrics (22nd Edition)*. Philadelphia: Elsevier; 2024.
 
 ### 7.2 Emergency Resuscitation Protocols
 - **Symptomatic Hyponatremia (Seizure / Encephalopathy)**:
@@ -305,6 +319,67 @@
 | **Preschool (3–6 yr)**| 80–140 | 22–34 | 85–115 | 55–75 | $< 70 + (2 \times \text{Age})\text{ mmHg}$ |
 | **School Age (6–12 yr)**| 70–120 | 18–30 | 95–120 | 60–80 | $< 70 + (2 \times \text{Age})\text{ mmHg}$ |
 | **Adolescent (>12 yr)**| 60–100 | 12–20 | 100–135| 65–85 | $< 90\text{ mmHg}$ |
+
+---
+
+## 13. Pediatric Sepsis & Septic Shock
+
+### 13.1 Guidelines & Consensus Statements
+- **Society of Critical Care Medicine (SCCM) / European Society of Intensive Care Medicine (ESICM)**: *Surviving Sepsis Campaign International Guidelines for the Management of Sepsis and Septic Shock in Children (2026 Update)*. Pediatr Crit Care Med / Intensive Care Med. April 2026.
+- **SCCM Pediatric Sepsis Definition Task Force**: *International Consensus Criteria for Pediatric Sepsis and Septic Shock (Phoenix Sepsis Score)*. JAMA. 2024;331(8):665–674. DOI: 10.1001/jama.2024.0196. PMID: 38245897.
+
+### 13.2 Phoenix Sepsis Score (2024)
+- **Replaces SIRS criteria** for pediatric sepsis definition. Four-organ-system scoring:
+  - **Respiratory** (0–3 pts): Based on $\text{SpO}_2/\text{FiO}_2$ ratio and invasive mechanical ventilation status.
+  - **Cardiovascular** (0–6 pts): Based on age-adjusted MAP, lactate level, and vasoactive medication use.
+  - **Coagulation** (0–2 pts): Based on Platelets, INR, D-dimer, and Fibrinogen.
+  - **Neurological** (0–2 pts): Based on Glasgow Coma Scale (GCS).
+- **Sepsis**: Phoenix Score $\ge 2$ points in the setting of suspected infection.
+- **Septic Shock**: Sepsis + $\ge 1$ cardiovascular point.
+
+### 13.3 SSC 2026 Management Bundles
+- **1-Hour Bundle**:
+  - Obtain blood cultures before antibiotics.
+  - Administer broad-spectrum antibiotics within 1 hour of recognition.
+  - Assess for fluid responsiveness; administer $10\text{–}20\text{ mL/kg}$ isotonic crystalloid if indicated.
+- **Fluid Resuscitation**:
+  - Initial bolus: $10\text{–}20\text{ mL/kg}$ of isotonic crystalloid (0.9% NaCl or balanced crystalloid) over 10–20 minutes.
+  - Reassess after each bolus; may repeat up to $40\text{–}60\text{ mL/kg}$ in the first hour.
+  - **Do NOT give IV fluid boluses** in the absence of hypotension or signs of poor perfusion (GRADE recommendation).
+- **Vasopressor Initiation**: Consider vasopressors (Epinephrine or Norepinephrine) if shock persists after $40\text{–}60\text{ mL/kg}$ fluid resuscitation or if fluid-refractory shock is identified.
+
+---
+
+## 14. Pediatric Trauma & Burns
+
+### 14.1 Guidelines & Consensus Statements
+- **American College of Surgeons**: *Advanced Trauma Life Support (ATLS) Student Course Manual (11th Edition)*. Chicago: ACS; 2025.
+- **American Burn Association (ABA)**: *Advanced Burn Life Support (ABLS) Course / Pediatric Burn Resuscitation Guidelines*. 2024/2025.
+
+### 14.2 xABCDE Primary Survey (ATLS 11th Ed 2025)
+- **x** — eXsanguinating hemorrhage control (new priority before Airway)
+- **A** — Airway with C-spine protection
+- **B** — Breathing and ventilation
+- **C** — Circulation with hemorrhage control
+- **D** — Disability (neurological assessment, Pediatric GCS)
+- **E** — Exposure and environmental control
+
+### 14.3 Pediatric Trauma Assessment Tools
+- **Pediatric Glasgow Coma Scale**: Modified verbal scale for children $\lt 2\text{ yr}$ (cries/irritable, persistent cry/screams, inconsolable, moans/grunts, no response).
+- **Pediatric Trauma Score (PTS)**: $+2/+1/-1$ scoring across 6 categories (Weight, Airway, SBP, CNS, Open wounds, Skeletal). Total $\lt 8$ = major trauma center criteria.
+- **Estimated Blood Volume (EBV)**:
+  - Preterm: $90\text{–}100\text{ mL/kg}$
+  - Term neonate: $80\text{–}90\text{ mL/kg}$
+  - Infant/Child: $70\text{–}80\text{ mL/kg}$
+  - Adolescent: $65\text{–}70\text{ mL/kg}$
+
+### 14.4 Pediatric Burn Fluid Resuscitation
+- **Modified Parkland Formula**: Total 24h IV fluid = $3\text{ mL} \times \text{kg} \times \%\text{TBSA}$ (Lactated Ringer's).
+  - **First 8 hours**: 50% of total volume.
+  - **Next 16 hours**: Remaining 50%.
+  - **Plus Maintenance**: D5 0.25% NS or D5 0.45% NS added for children (not included in Parkland calculation).
+- **Urine Output Target**: $1.0\text{ mL/kg/hr}$ in pediatric patients (ATLS 11th Ed 2025).
+- **Fluid Creep Prevention**: Minimize crystalloid use; favor early blood products when indicated (ATLS 2025).
 
 ---
 

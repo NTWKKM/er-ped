@@ -2504,6 +2504,28 @@ window.ER_PED_DATASET = {
     "defibJoulesPerKg_initial": 2,
     "defibJoulesPerKg_next": 4,
     "ventilationNote": "Respiratory arrest or advanced airway CPR: 1 breath every 2–3 seconds (20–30 bpm) per 2025 AHA/AAP PALS.",
+    "cprQuality2025": {
+      "diastolicBP_infant_mmHg": 25,
+      "diastolicBP_child_mmHg": 30,
+      "note": "Physiology-directed CPR: Target diastolic BP >= 25 mmHg (infants), >= 30 mmHg (older children) if invasive arterial monitoring available (AHA PALS 2025).",
+      "infantTechnique": "1-hand or 2-thumb encircling hands technique (2-finger method eliminated per AHA 2025)"
+    },
+    "fbao2025": {
+      "infant": {
+        "steps": [
+          "5 back blows",
+          "5 chest thrusts"
+        ],
+        "note": "Alternate until object expelled or infant becomes unresponsive. Abdominal thrusts NOT recommended in infants (AHA 2025)."
+      },
+      "child": {
+        "steps": [
+          "5 back blows",
+          "5 abdominal thrusts"
+        ],
+        "note": "Alternate until object expelled or child becomes unresponsive (AHA 2025)."
+      }
+    },
     "refKey": "pals"
   },
   "ncpr": {
@@ -2521,13 +2543,16 @@ window.ER_PED_DATASET = {
     ],
     "ppv": {
       "flowLpm": 10,
-      "ratePerMin_min": 40,
+      "ratePerMin_min": 30,
       "ratePerMin_max": 60,
-      "pip_cmH2O_min": 20,
+      "pip_cmH2O_min": 25,
       "pip_cmH2O_max": 25,
       "peep_cmH2O": 5,
       "maxPIP_term_cmH2O": 40,
-      "maxPIP_preterm_cmH2O": 30
+      "maxPIP_preterm_cmH2O": 30,
+      "lmaNote": "LMA can be used as primary airway device earlier in algorithm (NRP 9th Ed 2025).",
+      "suctionNote": "Routine suctioning of mouth and nose is no longer recommended (NRP 9th Ed 2025).",
+      "ettDepthNote": "ETT insertion depth marked at tip-to-gum (NRP 9th Ed 2025)."
     },
     "o2": {
       "gaCutoffWk": 35,
@@ -4304,7 +4329,7 @@ window.ER_PED_DATASET = {
       "pmid": "39436150",
       "loe": "Class I (Level of Evidence B-NR / C-LD)",
       "category": "Emergency Resuscitation",
-      "summary": "Pediatric resuscitation guidelines: Defibrillation 2 J/kg initial -> 4 J/kg subsequent (up to 10 J/kg for refractory VF/pVT), early Epinephrine 0.01 mg/kg IV/IO (max 1 mg), Amiodarone 5 mg/kg or Lidocaine 1 mg/kg, Atropine 0.02 mg/kg, and ventilation rate 1 breath every 2–3 sec (20–30 bpm)."
+      "summary": "Pediatric resuscitation guidelines: Defibrillation 2 J/kg initial -> 4 J/kg subsequent (up to 10 J/kg for refractory VF/pVT), early Epinephrine 0.01 mg/kg IV/IO (max 1 mg), Amiodarone 5 mg/kg or Lidocaine 1 mg/kg, Atropine 0.02 mg/kg, ventilation rate 1 breath every 2–3 sec (20–30 bpm). 2025 Updates: Diastolic BP targets during CPR >= 25 mmHg (infants), >= 30 mmHg (older children). Infant CPR: 1-hand or 2-thumb encircling hands technique (2-finger method eliminated). FBAO: Infants 5 back blows + 5 chest thrusts (no abdominal thrusts); Children 5 back blows + 5 abdominal thrusts."
     },
     "ncpr": {
       "title": "Textbook of Neonatal Resuscitation (NRP 9th Edition)",
@@ -4314,7 +4339,7 @@ window.ER_PED_DATASET = {
       "isbn": "978-1-61002-677-2",
       "loe": "Class I (Level of Evidence B-R / C-EO)",
       "category": "Neonatal Resuscitation",
-      "summary": "Neonatal resuscitation guidelines: Deferred cord clamping >= 60 sec in uncompromised neonates, preferred IV/IO Epinephrine 0.02 mg/kg (0.2 mL/kg of 1:10,000), ETT bridge 0.1 mg/kg (1.0 mL/kg), volume expander 10 mL/kg NS/PRBC, and D10W bolus 2 mL/kg + infusion GIR 4–8 mg/kg/min."
+      "summary": "Neonatal resuscitation guidelines: Deferred cord clamping >= 60 sec in uncompromised neonates, preferred IV/IO Epinephrine 0.02 mg/kg (0.2 mL/kg of 1:10,000), ETT bridge 0.1 mg/kg (1.0 mL/kg), volume expander 10 mL/kg NS/PRBC, and D10W bolus 2 mL/kg + infusion GIR 4–8 mg/kg/min. NRP 9th Ed 2025 Updates: Initial PIP 25 cmH2O for >= 32 wk GA, assisted ventilation 30–60 bpm, LMA as early primary device, routine suctioning no longer recommended, ETT depth tip-to-gum marking."
     },
     "dka": {
       "title": "ISPAD Clinical Practice Consensus Guidelines: Chapter 11: Diabetic Ketoacidosis & Hyperglycemic Hyperosmolar State",
@@ -4338,13 +4363,13 @@ window.ER_PED_DATASET = {
     "seizure": {
       "title": "Evidence-Based Guideline: Treatment of Convulsive Status Epilepticus in Children and Adults & ESETT Trial",
       "organization": "American Epilepsy Society (AES) / Established Status Epilepticus Treatment Trial",
-      "year": 2020,
-      "journal": "Epilepsy Curr / N Engl J Med",
+      "year": 2025,
+      "journal": "Epilepsy Curr / N Engl J Med / Neurocrit Care",
       "doi": "10.1056/NEJMoa1905795",
       "pmid": "31774955",
       "loe": "Class I (Level of Evidence A / B-R)",
       "category": "Neurology Emergencies",
-      "summary": "Time-phased status epilepticus protocol: Stage 1 (0–10m) Midazolam IN/IM 0.2 mg/kg or Lorazepam IV 0.1 mg/kg or Diazepam IV 0.2–0.3 mg/kg; Stage 2 (10–20m) Levetiracetam 60 mg/kg (max 4.5 g), Fosphenytoin/Phenytoin 20 mg/kg in NS, Valproate 40 mg/kg, Phenobarbital 20 mg/kg; Stage 3 continuous Midazolam/Ketamine infusion."
+      "summary": "Time-phased status epilepticus protocol with clock-anchored 5-minute dosing intervals (NCS 2025): Stage 1 (0–10m) Midazolam IN/IM 0.2 mg/kg or Lorazepam IV 0.1 mg/kg or Diazepam IV 0.2–0.3 mg/kg; Stage 2 (10–20m) Levetiracetam 60 mg/kg (max 4.5 g), Fosphenytoin/Phenytoin 20 mg/kg in NS, Valproate 40 mg/kg, Phenobarbital 20 mg/kg (ESETT: equivalent efficacy and safety for BZD-refractory SE); Stage 3 continuous Midazolam/Ketamine infusion."
     },
     "fluids": {
       "title": "Clinical Practice Guideline: Maintenance Intravenous Fluids in Children & WHO Diarrhoea Guidelines",
@@ -4429,6 +4454,1092 @@ window.ER_PED_DATASET = {
       "loe": "Class I / IIa (Level of Evidence B-NR / C-LD)",
       "category": "Critical Care & Inotropes",
       "summary": "Continuous infusion dosing and pump rates (mcg/kg/min -> mL/hr): Epinephrine (0.05–1.0 mcg/kg/min), Norepinephrine (0.05–1.0 mcg/kg/min for septic shock), Dopamine (2–20 mcg/kg/min), Dobutamine (2–20 mcg/kg/min for cardiogenic shock), Milrinone (0.25–0.75 mcg/kg/min), and Midazolam (0.05–0.4 mg/kg/hr)."
+    },
+    "sepsis": {
+      "title": "Surviving Sepsis Campaign International Guidelines for Pediatric Sepsis (2026) & Phoenix Sepsis Score (2024)",
+      "organization": "Society of Critical Care Medicine (SCCM) / ESICM / SCCM Pediatric Sepsis Definition Task Force",
+      "year": 2026,
+      "journal": "Pediatr Crit Care Med / Intensive Care Med / JAMA",
+      "doi": "10.1001/jama.2024.0196",
+      "pmid": "38245897",
+      "loe": "Class I (Level of Evidence A / B-R)",
+      "category": "Sepsis & Shock",
+      "summary": "Phoenix Sepsis Score (2024): 4-organ scoring replacing SIRS — Respiratory (SpO2/FiO2), Cardiovascular (MAP, lactate, vasoactives), Coagulation (Plt, INR), Neurological (GCS). Sepsis >= 2 pts; Septic Shock = Sepsis + >= 1 cardiovascular pt. SSC 2026: 1-hour bundle (cultures, broad-spectrum ABx, fluid assessment), isotonic bolus 10–20 mL/kg reassess each bolus (max 40–60 mL/kg in first hour), vasopressors if fluid-refractory."
+    },
+    "trauma": {
+      "title": "Advanced Trauma Life Support (ATLS) 11th Edition & Pediatric Burn Resuscitation Guidelines",
+      "organization": "American College of Surgeons (ACS) / American Burn Association (ABA)",
+      "year": 2025,
+      "journal": "ATLS 11th Edition / ABLS Pediatric Guidelines",
+      "loe": "Class I (Level of Evidence B-NR / C-LD)",
+      "category": "Trauma & Burns",
+      "summary": "xABCDE primary survey (eXsanguinating hemorrhage first per ATLS 2025). Pediatric GCS (modified verbal for < 2 yr). Estimated Blood Volume: Preterm 90–100, Term 80–90, Child 70–80, Adolescent 65–70 mL/kg. Modified Parkland burns: 3 mL × kg × %TBSA (LRS), 50% in first 8h + maintenance D5. Pediatric urine output target 1.0 mL/kg/hr. Early blood products, minimize crystalloid creep."
+    },
+    "airway": {
+      "title": "PALS 2025 Airway Management & Difficult Airway Society (DAS) Pediatric Guidelines",
+      "organization": "American Heart Association (AHA) / Difficult Airway Society",
+      "year": 2025,
+      "journal": "Circulation / Anaesthesia",
+      "loe": "Class I (Level of Evidence B-NR / C-LD)",
+      "category": "Airway & Resuscitation",
+      "summary": "Pediatric rapid sequence intubation (RSI) and airway management: Weight/age-based ETT sizing (cuffed = Age/4 + 3.5), depth (3 x ETT), blade, LMA sizing, RSI drug dosing (Ketamine 1–2 mg/kg, Rocuronium 1.0–1.2 mg/kg, Succinylcholine 1.5–2.0 mg/kg), and immediate Sugammadex reversal (16 mg/kg) for CICO rescue."
+    },
+    "anaphylaxis": {
+      "title": "EAACI Anaphylaxis Guidelines & World Allergy Organization (WAO) Anaphylaxis Guidance",
+      "organization": "European Academy of Allergy and Clinical Immunology / WAO",
+      "year": 2025,
+      "journal": "Allergy / World Allergy Organ J",
+      "loe": "Class I (Level of Evidence A / B-R)",
+      "category": "Immunology & Allergy",
+      "summary": "Pediatric anaphylaxis protocol: 1st line Epinephrine 1:1,000 IM 0.01 mg/kg (0.01 mL/kg, max 0.3 mg for < 30 kg, 0.5 mg for >= 30 kg) into anterolateral mid-thigh q5–15 min; 2nd line H1/H2 antihistamines and corticosteroids; Refractory anaphylaxis IV Epinephrine infusion 0.05–1.0 mcg/kg/min + 20 mL/kg NS bolus; Minimum 4–6 hour biphasic reaction monitoring."
+    },
+    "croup": {
+      "title": "Westley Croup Score & AAP Clinical Guidance for Acute Laryngotracheobronchitis",
+      "organization": "American Academy of Pediatrics (AAP) / UpToDate Clinical Practice",
+      "year": 2025,
+      "journal": "Pediatrics / Cochrane Database Syst Rev",
+      "loe": "Class I (Level of Evidence A / B)",
+      "category": "Respiratory Emergencies",
+      "summary": "Pediatric croup management: Westley Croup Score (0–17) stratification (Mild 0–2, Mod 3–7, Severe 8–11, Impending Failure >= 12); Dexamethasone 0.15–0.6 mg/kg (max 16 mg) single dose; Nebulized Racemic Epinephrine 2.25% 0.05 mL/kg (max 0.5 mL) or L-Epi 1:1,000 0.5 mL/kg (max 5 mL); Post-nebulization 2–4 hr observation for rebound stridor."
+    },
+    "transfusion": {
+      "title": "Pediatric Critical Care Transfusion and Anemia Expertise Initiative (TAXI) & Massive Transfusion Guidelines",
+      "organization": "Pediatric Critical Care Transfusion and Anemia Expertise Initiative (TAXI)",
+      "year": 2024,
+      "journal": "Pediatr Crit Care Med",
+      "loe": "Class I / IIa (Level of Evidence B-NR / C-LD)",
+      "category": "Hematology & Critical Care",
+      "summary": "Pediatric blood component transfusion: Estimated Blood Volume (EBV) by age; PRBC transfusion volume = Weight (kg) x (Target Hb - Current Hb) x 3 mL/kg; Platelet transfusion 5–10 mL/kg; FFP 10–15 mL/kg; Cryoprecipitate 5–10 mL/kg; Balanced Massive Transfusion Protocol (MTP 1:1:1) + early Tranexamic Acid (TXA 15 mg/kg loading, then 2 mg/kg/hr over 8 hr)."
+    }
+  },
+  "airway": {
+    "ett": {
+      "cuffedFormula": "(Age / 4) + 3.5",
+      "uncuffedFormula": "(Age / 4) + 4.0",
+      "depthOralFormula": "3 * ETT_size",
+      "depthByAgeFormula": "(Age / 2) + 12",
+      "suctionFormula": "2 * ETT_size",
+      "sizeByWeight": [
+        {
+          "maxKg": 1,
+          "cuffed": 2.5,
+          "uncuffed": 2.5,
+          "depthCm": 6,
+          "blade": "Miller 0",
+          "suctionFr": 5,
+          "lma": 1
+        },
+        {
+          "minKg": 1,
+          "maxKg": 2,
+          "cuffed": 3,
+          "uncuffed": 3,
+          "depthCm": 7,
+          "blade": "Miller 0",
+          "suctionFr": 6,
+          "lma": 1
+        },
+        {
+          "minKg": 2,
+          "maxKg": 3,
+          "cuffed": 3,
+          "uncuffed": 3.5,
+          "depthCm": 8.5,
+          "blade": "Miller 0/1",
+          "suctionFr": 6,
+          "lma": 1
+        },
+        {
+          "minKg": 3,
+          "maxKg": 5,
+          "cuffed": 3.5,
+          "uncuffed": 3.5,
+          "depthCm": 9.5,
+          "blade": "Miller 1",
+          "suctionFr": 6,
+          "lma": 1
+        },
+        {
+          "minKg": 5,
+          "maxKg": 10,
+          "cuffed": 3.5,
+          "uncuffed": 4,
+          "depthCm": 11,
+          "blade": "Miller 1",
+          "suctionFr": 8,
+          "lma": 1.5
+        },
+        {
+          "minKg": 10,
+          "maxKg": 20,
+          "cuffed": 4.5,
+          "uncuffed": 5,
+          "depthCm": 14,
+          "blade": "Mac 2 / Miller 2",
+          "suctionFr": 8,
+          "lma": 2
+        },
+        {
+          "minKg": 20,
+          "maxKg": 30,
+          "cuffed": 5.5,
+          "uncuffed": 6,
+          "depthCm": 16.5,
+          "blade": "Mac 2 / Mac 3",
+          "suctionFr": 10,
+          "lma": 2.5
+        },
+        {
+          "minKg": 30,
+          "maxKg": 50,
+          "cuffed": 6.5,
+          "uncuffed": 7,
+          "depthCm": 19,
+          "blade": "Mac 3",
+          "suctionFr": 12,
+          "lma": 3
+        },
+        {
+          "minKg": 50,
+          "maxKg": 999,
+          "cuffed": 7.5,
+          "uncuffed": 8,
+          "depthCm": 21,
+          "blade": "Mac 3/4",
+          "suctionFr": 14,
+          "lma": 4
+        }
+      ]
+    },
+    "rsiDrugs": [
+      {
+        "key": "atropine",
+        "name": "Atropine (Premedication)",
+        "category": "Premedication",
+        "doseMinMgPerKg": 0.02,
+        "doseMaxMgPerKg": 0.02,
+        "minSingleMg": 0.1,
+        "maxSingleMg": 0.5,
+        "adolescentMaxSingleMg": 1,
+        "defaultConcMgPerMl": 0.6,
+        "prep": "0.6 mg/mL ampoule",
+        "route": "IV/IO slow",
+        "indication": "Infants < 1 yr, or with Succinylcholine, or bradycardia risk."
+      },
+      {
+        "key": "ketamine",
+        "name": "Ketamine (Induction / Sedative)",
+        "category": "Induction",
+        "doseMinMgPerKg": 1,
+        "doseMaxMgPerKg": 2,
+        "maxSingleMg": 100,
+        "defaultConcMgPerMl": 50,
+        "prep": "50 mg/mL vial",
+        "route": "IV/IO over 1 min",
+        "indication": "Bronchospasm / Asthma, Shock, Hemodynamic instability. Preserves airway reflexes."
+      },
+      {
+        "key": "propofol",
+        "name": "Propofol (Induction / Sedative)",
+        "category": "Induction",
+        "doseMinMgPerKg": 2,
+        "doseMaxMgPerKg": 3,
+        "maxSingleMg": 150,
+        "defaultConcMgPerMl": 10,
+        "prep": "10 mg/mL (1%) ampoule",
+        "route": "IV/IO slow",
+        "indication": "Status epilepticus, head trauma (normotensive). Avoid in shock/hypotension."
+      },
+      {
+        "key": "etomidate",
+        "name": "Etomidate (Induction / Sedative)",
+        "category": "Induction",
+        "doseMinMgPerKg": 0.3,
+        "doseMaxMgPerKg": 0.3,
+        "maxSingleMg": 20,
+        "defaultConcMgPerMl": 2,
+        "prep": "2 mg/mL ampoule",
+        "route": "IV/IO slow",
+        "indication": "Hemodynamically neutral. Caution in suspected sepsis (adrenal suppression)."
+      },
+      {
+        "key": "midazolam",
+        "name": "Midazolam (Induction / Sedative)",
+        "category": "Induction",
+        "doseMinMgPerKg": 0.2,
+        "doseMaxMgPerKg": 0.3,
+        "maxSingleMg": 10,
+        "defaultConcMgPerMl": 5,
+        "prep": "5 mg/mL ampoule",
+        "route": "IV/IO slow",
+        "indication": "Seizures, sedation. May cause hypotension in hypovolemia."
+      },
+      {
+        "key": "rocuronium",
+        "name": "Rocuronium (Paralytic / NMBA)",
+        "category": "Paralysis",
+        "doseMinMgPerKg": 1,
+        "doseMaxMgPerKg": 1.2,
+        "maxSingleMg": 100,
+        "defaultConcMgPerMl": 10,
+        "prep": "10 mg/mL (50 mg/5 mL) vial",
+        "route": "IV/IO rapid push",
+        "onsetSec": "45–60 sec",
+        "durationMin": "30–60 min",
+        "indication": "Preferred 1st-line NMBA for pediatric RSI. Reversible with Sugammadex."
+      },
+      {
+        "key": "succinylcholine",
+        "name": "Succinylcholine (Paralytic / Depolarizing NMBA)",
+        "category": "Paralysis",
+        "doseMinMgPerKg": 1.5,
+        "doseMaxMgPerKg": 2,
+        "infantDoseMgPerKg": 2,
+        "maxSingleMg": 150,
+        "defaultConcMgPerMl": 50,
+        "prep": "50 mg/mL vial",
+        "route": "IV/IO rapid push",
+        "onsetSec": "30–45 sec",
+        "durationMin": "4–10 min",
+        "indication": "Rapid onset. Contraindicated in malignant hyperthermia, crush injury >24h, burns >24h, neuromuscular disease, hyperkalemia."
+      },
+      {
+        "key": "sugammadex",
+        "name": "Sugammadex (Rocuronium Reversal)",
+        "category": "Reversal",
+        "doseRoutineMgPerKg": 2,
+        "doseDeepMgPerKg": 4,
+        "doseRescueMgPerKg": 16,
+        "maxSingleMg": 1500,
+        "defaultConcMgPerMl": 100,
+        "prep": "100 mg/mL vial",
+        "route": "IV/IO rapid bolus",
+        "indication": "Immediate reversal of Rocuronium in 'Cannot Intubate, Cannot Oxygenate' (CICO) rescue (16 mg/kg)."
+      }
+    ],
+    "refKey": "airway"
+  },
+  "sepsis": {
+    "phoenix": {
+      "respiratory": {
+        "name": "Respiratory Dysfunction",
+        "maxPoints": 3,
+        "rules": [
+          {
+            "points": 0,
+            "label": "Normal / Mild",
+            "desc": "PaO2/FiO2 ≥ 400 or SpO2/FiO2 ≥ 292 (or no respiratory support)"
+          },
+          {
+            "points": 1,
+            "label": "Mild Hypoxemia",
+            "desc": "PaO2/FiO2 200–399 or SpO2/FiO2 220–291 with non-invasive respiratory support (HFNC, CPAP, BiPAP)"
+          },
+          {
+            "points": 2,
+            "label": "Moderate ARDS",
+            "desc": "PaO2/FiO2 100–199 or SpO2/FiO2 148–219 with invasive mechanical ventilation"
+          },
+          {
+            "points": 3,
+            "label": "Severe ARDS",
+            "desc": "PaO2/FiO2 < 100 or SpO2/FiO2 < 148 with invasive mechanical ventilation"
+          }
+        ]
+      },
+      "cardiovascular": {
+        "name": "Cardiovascular Dysfunction",
+        "maxPoints": 6,
+        "mapCutoffs": [
+          {
+            "ageMaxMo": 1,
+            "mapMin": 31,
+            "label": "0–1 mo (Neonate)"
+          },
+          {
+            "ageMinMo": 1,
+            "ageMaxMo": 11,
+            "mapMin": 39,
+            "label": "1–11 mo (Infant)"
+          },
+          {
+            "ageMinMo": 12,
+            "ageMaxMo": 23,
+            "mapMin": 44,
+            "label": "1–2 yr (Toddler)"
+          },
+          {
+            "ageMinMo": 24,
+            "ageMaxMo": 59,
+            "mapMin": 45,
+            "label": "2–5 yr (Preschool)"
+          },
+          {
+            "ageMinMo": 60,
+            "ageMaxMo": 143,
+            "mapMin": 49,
+            "label": "5–12 yr (School)"
+          },
+          {
+            "ageMinMo": 144,
+            "ageMaxMo": 216,
+            "mapMin": 58,
+            "label": "12–17 yr (Adolescent)"
+          }
+        ],
+        "rules": [
+          {
+            "points": 1,
+            "label": "1 Vasoactive",
+            "desc": "Receiving 1 vasoactive medication (any dose of Epi, Norepi, Dopamine, Dobutamine, Milrinone)"
+          },
+          {
+            "points": 2,
+            "label": "Hypotension / Lactate ≥ 5 / 2 Vasoactives",
+            "desc": "Lactate ≥ 5.0 mmol/L, or 2+ vasoactives, or MAP below age-specific threshold"
+          },
+          {
+            "points": 4,
+            "label": "Severe Shock (Lactate ≥ 11)",
+            "desc": "Lactate ≥ 11.0 mmol/L, or severe refractory hypotension"
+          },
+          {
+            "points": 6,
+            "label": "Refractory Septic Shock",
+            "desc": "High-dose vasoactive infusion (Epinephrine or Norepinephrine > 0.2 mcg/kg/min)"
+          }
+        ]
+      },
+      "coagulation": {
+        "name": "Coagulation Dysfunction",
+        "maxPoints": 2,
+        "rules": [
+          {
+            "points": 1,
+            "label": "Mild Coagulopathy",
+            "desc": "Platelets < 100,000 /mcL, or INR > 1.6"
+          },
+          {
+            "points": 2,
+            "label": "Severe Coagulopathy / DIC",
+            "desc": "Platelets < 50,000 /mcL, or Fibrinogen < 100 mg/dL, or D-dimer > 10x ULN"
+          }
+        ]
+      },
+      "neurological": {
+        "name": "Neurological Dysfunction",
+        "maxPoints": 2,
+        "rules": [
+          {
+            "points": 1,
+            "label": "Altered Mental Status",
+            "desc": "Glasgow Coma Scale (GCS) 11–14 or non-reactive pupils"
+          },
+          {
+            "points": 2,
+            "label": "Coma / Stupor",
+            "desc": "Glasgow Coma Scale (GCS) ≤ 10"
+          }
+        ]
+      }
+    },
+    "bundle1hr": [
+      {
+        "step": 1,
+        "title": "Blood Cultures",
+        "desc": "Obtain blood culture prior to antibiotic administration (do not delay ABx > 1h if culture difficult)."
+      },
+      {
+        "step": 2,
+        "title": "Broad-Spectrum IV Antibiotics",
+        "desc": "Administer within 1 hour: Ceftriaxone 80–100 mg/kg (or Cefotaxime 200 mg/kg) ± Vancomycin 15 mg/kg."
+      },
+      {
+        "step": 3,
+        "title": "Fluid Resuscitation (Isotonic)",
+        "desc": "10–20 mL/kg isotonic crystalloid (0.9% NS or Plasmalyte) over 10–20 min if hypotensive or poor perfusion."
+      },
+      {
+        "step": 4,
+        "title": "Reassessment & Vasoactive Escalation",
+        "desc": "Reassess after each bolus. If shock persists after 40–60 mL/kg → start Epinephrine (0.05–0.3 mcg/kg/min for cold shock) or Norepinephrine (0.05–0.3 mcg/kg/min for warm shock)."
+      }
+    ],
+    "refKey": "sepsis"
+  },
+  "anaphylaxis": {
+    "firstLine": {
+      "drug": "Epinephrine (1:1,000 / 1 mg/mL)",
+      "doseMgPerKg": 0.01,
+      "doseMlPerKg": 0.01,
+      "maxMg_under30kg": 0.3,
+      "maxMg_30kgAndOver": 0.5,
+      "route": "Intramuscular (IM) — Anterolateral mid-thigh",
+      "repeatMin": [
+        5,
+        15
+      ],
+      "drawingGuide": "1 mg/mL prep: 0.1 mL per 10 kg BW (e.g. 10 kg -> 0.1 mL, 20 kg -> 0.2 mL, 30 kg -> 0.3 mL, >=50 kg -> 0.5 mL)"
+    },
+    "secondLine": [
+      {
+        "name": "Diphenhydramine",
+        "doseMgPerKg": 1,
+        "maxMg": 50,
+        "route": "IV/IM slow or PO",
+        "prep": "50 mg/mL",
+        "indication": "H1-antihistamine for pruritus, urticaria, angioedema."
+      },
+      {
+        "name": "Cetirizine",
+        "doseNote": "6mo–2yr: 2.5 mg OD, 2–5yr: 2.5–5 mg OD, >6yr: 10 mg OD",
+        "route": "PO",
+        "prep": "5 mg/5 mL syrup / 10 mg tab",
+        "indication": "Non-sedating 2nd-gen H1 antihistamine."
+      },
+      {
+        "name": "Famotidine",
+        "doseMgPerKg": 0.5,
+        "maxMg": 20,
+        "route": "IV over 2 min or PO",
+        "prep": "10 mg/mL",
+        "indication": "H2-blocker synergism for cutaneous symptoms."
+      },
+      {
+        "name": "Methylprednisolone",
+        "doseMgPerKg": 1.5,
+        "maxMg": 125,
+        "route": "IV slow",
+        "prep": "40 mg/mL",
+        "indication": "Corticosteroid to prevent biphasic/prolonged reaction."
+      },
+      {
+        "name": "Dexamethasone",
+        "doseMgPerKg": 0.3,
+        "maxMg": 16,
+        "route": "IV/PO",
+        "prep": "4 mg/mL",
+        "indication": "Alternative long-acting corticosteroid."
+      },
+      {
+        "name": "0.9% Normal Saline Bolus",
+        "doseMlPerKg": 20,
+        "maxMl": 1000,
+        "route": "IV rapid over 10–20 min",
+        "indication": "For refractory hypotension / distributive shock."
+      }
+    ],
+    "refractory": {
+      "drug": "Epinephrine Continuous IV Infusion",
+      "rangeMcgPerKgPerMin": [
+        0.05,
+        1
+      ],
+      "prep": "1 mg in 100 mL D5W/NSS (10 mcg/mL) or 1 mg in 250 mL (4 mcg/mL)",
+      "indication": "Refractory hypotension or shock after 2–3 IM Epinephrine doses and fluid bolus."
+    },
+    "observationHours": {
+      "min": 4,
+      "standard": 6,
+      "severe": 24
+    },
+    "refKey": "anaphylaxis"
+  },
+  "trauma": {
+    "xabcde": [
+      {
+        "step": "x",
+        "title": "eXsanguinating Hemorrhage",
+        "actions": "Direct pressure, wound packing with hemostatic gauze, commercial tourniquet high and tight for limb hemorrhage."
+      },
+      {
+        "step": "A",
+        "title": "Airway & C-Spine",
+        "actions": "Manual inline stabilization, rigid cervical collar, suction, jaw thrust, clear airway, early intubation if GCS ≤ 8."
+      },
+      {
+        "step": "B",
+        "title": "Breathing & Ventilation",
+        "actions": "High-flow O2, needle thoracostomy (2nd ICS MCL or 4th/5th ICS AAL) for tension pneumothorax, chest tube, bag-mask ventilation."
+      },
+      {
+        "step": "C",
+        "title": "Circulation & Bleeding",
+        "actions": "2 large-bore IV/IO, pelvic binder if pelvic fx suspected, eFAST ultrasound, balanced blood resuscitation (10–20 mL/kg PRBC if hemorrhagic shock)."
+      },
+      {
+        "step": "D",
+        "title": "Disability & Neuro",
+        "actions": "Pediatric GCS, pupil size and reactivity, check blood glucose, assess for spinal cord injury."
+      },
+      {
+        "step": "E",
+        "title": "Exposure & Environment",
+        "actions": "Fully expose to inspect all injuries, log roll with C-spine control, active warming (warm blankets, fluid warmer) to prevent hypothermia triad of death."
+      }
+    ],
+    "burns": {
+      "parklandFormula": "3 mL * Weight(kg) * %TBSA (Lactated Ringer's over 24 hours)",
+      "schedule": "50% of calculated volume in first 8 hr from burn time, remaining 50% in next 16 hr",
+      "maintenanceRequired": true,
+      "targetUrineOutputMlPerKgPerHr": 1,
+      "lundBrowder": [
+        {
+          "part": "Head",
+          "birth": 19,
+          "yr1": 17,
+          "yr5": 13,
+          "yr10": 11,
+          "yr15": 9,
+          "adult": 7
+        },
+        {
+          "part": "Neck",
+          "all": 2
+        },
+        {
+          "part": "Anterior Trunk",
+          "all": 13
+        },
+        {
+          "part": "Posterior Trunk",
+          "all": 13
+        },
+        {
+          "part": "Buttocks (both)",
+          "all": 5
+        },
+        {
+          "part": "Genitalia",
+          "all": 1
+        },
+        {
+          "part": "Upper Arms (both)",
+          "all": 8
+        },
+        {
+          "part": "Forearms (both)",
+          "all": 6
+        },
+        {
+          "part": "Hands (both)",
+          "all": 5
+        },
+        {
+          "part": "Thighs (both)",
+          "birth": 11,
+          "yr1": 13,
+          "yr5": 16,
+          "yr10": 17,
+          "yr15": 18,
+          "adult": 19
+        },
+        {
+          "part": "Lower Legs (both)",
+          "birth": 10,
+          "yr1": 10,
+          "yr5": 11,
+          "yr10": 12,
+          "yr15": 13,
+          "adult": 14
+        },
+        {
+          "part": "Feet (both)",
+          "all": 7
+        }
+      ]
+    },
+    "ebv": [
+      {
+        "category": "Preterm neonate",
+        "mlPerKg": 95
+      },
+      {
+        "category": "Term neonate (0–28d)",
+        "mlPerKg": 85
+      },
+      {
+        "category": "Infant (1–12mo)",
+        "mlPerKg": 80
+      },
+      {
+        "category": "Child (1–12yr)",
+        "mlPerKg": 75
+      },
+      {
+        "category": "Adolescent (>12yr)",
+        "mlPerKg": 70
+      }
+    ],
+    "refKey": "trauma"
+  },
+  "croup": {
+    "westley": {
+      "consciousness": [
+        {
+          "score": 0,
+          "label": "Normal (including sleeping)"
+        },
+        {
+          "score": 5,
+          "label": "Disoriented / Depressed / Lethargic"
+        }
+      ],
+      "cyanosis": [
+        {
+          "score": 0,
+          "label": "None"
+        },
+        {
+          "score": 4,
+          "label": "Cyanosis with agitation"
+        },
+        {
+          "score": 5,
+          "label": "Cyanosis at rest"
+        }
+      ],
+      "stridor": [
+        {
+          "score": 0,
+          "label": "None"
+        },
+        {
+          "score": 1,
+          "label": "Stridor with agitation"
+        },
+        {
+          "score": 2,
+          "label": "Stridor at rest"
+        }
+      ],
+      "airEntry": [
+        {
+          "score": 0,
+          "label": "Normal"
+        },
+        {
+          "score": 1,
+          "label": "Decreased"
+        },
+        {
+          "score": 2,
+          "label": "Markedly decreased / Absent"
+        }
+      ],
+      "retractions": [
+        {
+          "score": 0,
+          "label": "None"
+        },
+        {
+          "score": 1,
+          "label": "Mild (intercostal)"
+        },
+        {
+          "score": 2,
+          "label": "Moderate (intercostal + substernal)"
+        },
+        {
+          "score": 3,
+          "label": "Severe (sternal + supra-sternal indrawing)"
+        }
+      ]
+    },
+    "meds": [
+      {
+        "key": "dexa",
+        "name": "Dexamethasone (Single Dose)",
+        "doseMinMgPerKg": 0.15,
+        "doseMaxMgPerKg": 0.6,
+        "standardDoseMgPerKg": 0.6,
+        "maxSingleMg": 16,
+        "prep": "4 mg/mL injection or 0.5 mg/5 mL syrup / 4 mg tab",
+        "route": "PO / IM / IV (PO is equally effective)",
+        "note": "Single dose provides therapeutic anti-inflammatory effect over 72 hours."
+      },
+      {
+        "key": "epiRacemic",
+        "name": "Nebulized Racemic Epinephrine (2.25%)",
+        "doseMlPerKg": 0.05,
+        "maxMl": 0.5,
+        "diluent": "Dilute in 3 mL 0.9% Normal Saline",
+        "route": "Nebulization over 10–15 min with oxygen (6–8 L/min)",
+        "note": "Indicated for moderate-to-severe croup (stridor at rest). Onset 10–30 min."
+      },
+      {
+        "key": "epiL",
+        "name": "Nebulized L-Epinephrine 1:1,000 (1 mg/mL)",
+        "doseMlPerKg": 0.5,
+        "maxMl": 5,
+        "diluent": "Undiluted (or dilute to total 3–5 mL with NSS)",
+        "route": "Nebulization over 10–15 min with oxygen (6–8 L/min)",
+        "note": "Validated equivalent alternative to racemic epinephrine."
+      }
+    ],
+    "observationHours": {
+      "min": 2,
+      "standard": 4
+    },
+    "refKey": "croup"
+  },
+  "transfusion": {
+    "prbc": {
+      "formula": "Volume (mL) = Weight (kg) * (Target_Hb - Current_Hb) * 3 (or 4 for SAGM)",
+      "factorCPDA1": 3,
+      "factorSAGM": 4,
+      "standardBolusMlPerKg": 10,
+      "maxBolusMlPerKg": 15,
+      "infusionRateMaxMlPerKgPerHr": 5,
+      "durationHours": [
+        2,
+        4
+      ],
+      "expectedRiseGPerDl": "10 mL/kg raises Hb by approx. 2–3 g/dL (Hct by 6–9%)"
+    },
+    "platelets": {
+      "doseMlPerKg": 10,
+      "maxMl": 300,
+      "unitsRule": "1 random donor unit per 10 kg BW, or 1 apheresis unit for weight > 30 kg",
+      "expectedRise": "10 mL/kg raises platelet count by approx. 30,000–50,000 /mcL"
+    },
+    "ffp": {
+      "doseMlPerKg": 10,
+      "maxMlPerKg": 15,
+      "maxMl": 1000,
+      "expectedRise": "10–15 mL/kg increases coagulation factor levels by 15–20%"
+    },
+    "cryoprecipitate": {
+      "doseMlPerKg": 5,
+      "maxMlPerKg": 10,
+      "unitsRule": "1 unit per 5–10 kg BW (max 10 units)",
+      "expectedRise": "1 unit/10 kg raises Fibrinogen by approx. 50–70 mg/dL"
+    },
+    "mtp": {
+      "ratio": "1 : 1 : 1 (PRBC : FFP : Platelets)",
+      "txaDoseMgPerKg": 15,
+      "txaMaxMg": 1000,
+      "txaInfusionMgPerKgPerHr": 2,
+      "note": "Early balanced blood component transfusion + Tranexamic Acid (TXA) 15 mg/kg IV loading over 10 min, then 2 mg/kg/hr over 8 hr."
+    },
+    "refKey": "transfusion"
+  },
+  "whoGrowth": {
+    "boys": {
+      "table": [
+        [
+          0,
+          3.3,
+          0.45,
+          49.9,
+          1.9
+        ],
+        [
+          1,
+          4.5,
+          0.55,
+          54.7,
+          2
+        ],
+        [
+          2,
+          5.6,
+          0.65,
+          58.4,
+          2.1
+        ],
+        [
+          3,
+          6.4,
+          0.7,
+          61.4,
+          2.2
+        ],
+        [
+          6,
+          7.9,
+          0.8,
+          67.6,
+          2.4
+        ],
+        [
+          9,
+          8.9,
+          0.9,
+          72,
+          2.5
+        ],
+        [
+          12,
+          9.6,
+          1,
+          75.7,
+          2.6
+        ],
+        [
+          18,
+          10.9,
+          1.15,
+          82.3,
+          2.9
+        ],
+        [
+          24,
+          12.2,
+          1.3,
+          87.8,
+          3.2
+        ],
+        [
+          36,
+          14.3,
+          1.6,
+          96.1,
+          3.7
+        ],
+        [
+          48,
+          16.3,
+          1.9,
+          103.3,
+          4.2
+        ],
+        [
+          60,
+          18.3,
+          2.3,
+          110,
+          4.7
+        ],
+        [
+          72,
+          20.5,
+          2.8,
+          116,
+          5.2
+        ],
+        [
+          84,
+          22.9,
+          3.4,
+          121.7,
+          5.6
+        ],
+        [
+          96,
+          25.6,
+          4.1,
+          127.3,
+          6
+        ],
+        [
+          108,
+          28.6,
+          4.9,
+          132.6,
+          6.4
+        ],
+        [
+          120,
+          32,
+          5.8,
+          137.8,
+          6.8
+        ],
+        [
+          132,
+          35.8,
+          6.8,
+          143,
+          7.3
+        ],
+        [
+          144,
+          40,
+          7.8,
+          149.1,
+          7.8
+        ],
+        [
+          156,
+          45,
+          8.8,
+          156,
+          8.3
+        ],
+        [
+          168,
+          50.5,
+          9.7,
+          163.2,
+          8.5
+        ],
+        [
+          180,
+          56,
+          10.5,
+          169,
+          8.5
+        ]
+      ]
+    },
+    "girls": {
+      "table": [
+        [
+          0,
+          3.2,
+          0.4,
+          49.1,
+          1.9
+        ],
+        [
+          1,
+          4.2,
+          0.5,
+          53.7,
+          2
+        ],
+        [
+          2,
+          5.1,
+          0.6,
+          57.1,
+          2.1
+        ],
+        [
+          3,
+          5.8,
+          0.65,
+          59.8,
+          2.2
+        ],
+        [
+          6,
+          7.3,
+          0.75,
+          65.7,
+          2.4
+        ],
+        [
+          9,
+          8.2,
+          0.85,
+          70.1,
+          2.5
+        ],
+        [
+          12,
+          8.9,
+          0.95,
+          74,
+          2.6
+        ],
+        [
+          18,
+          10.2,
+          1.1,
+          80.7,
+          2.9
+        ],
+        [
+          24,
+          11.5,
+          1.25,
+          86.4,
+          3.2
+        ],
+        [
+          36,
+          13.9,
+          1.6,
+          95.1,
+          3.7
+        ],
+        [
+          48,
+          16.1,
+          2,
+          102.7,
+          4.2
+        ],
+        [
+          60,
+          18.2,
+          2.4,
+          109.4,
+          4.7
+        ],
+        [
+          72,
+          20.2,
+          3,
+          115.5,
+          5.2
+        ],
+        [
+          84,
+          22.4,
+          3.6,
+          121.1,
+          5.6
+        ],
+        [
+          96,
+          25,
+          4.3,
+          126.6,
+          6
+        ],
+        [
+          108,
+          28.2,
+          5.2,
+          132.2,
+          6.4
+        ],
+        [
+          120,
+          31.9,
+          6.2,
+          138,
+          6.8
+        ],
+        [
+          132,
+          36.2,
+          7.3,
+          144,
+          7.2
+        ],
+        [
+          144,
+          41,
+          8.2,
+          150,
+          7.4
+        ],
+        [
+          156,
+          45.8,
+          8.9,
+          155,
+          7.4
+        ],
+        [
+          168,
+          49.5,
+          9.3,
+          158.5,
+          7.2
+        ],
+        [
+          180,
+          52.5,
+          9.5,
+          160,
+          7
+        ]
+      ]
     }
   }
 };

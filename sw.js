@@ -7,7 +7,7 @@
 // stale-while-revalidate. Bump this on every release, not just dataset-only changes.
 // Format: er-ped-v{major}.{minor}.{patch}-{YYYYMMDD}
 // Example: er-ped-v1.4.0-20260729
-const CACHE_NAME = 'er-ped-v1.12.0-20260827';
+const CACHE_NAME = 'er-ped-v2.0.0-20260827';
 
 const ASSETS = [
   './',
@@ -31,6 +31,10 @@ self.addEventListener('activate', (e) => {
     const keys = await caches.keys();
     await Promise.all(keys.filter(k=>k!==CACHE_NAME).map(k=>caches.delete(k)));
     self.clients.claim();
+    // Clear badge on fresh activation
+    if ('clearAppBadge' in navigator) {
+      try { navigator.clearAppBadge(); } catch (_) {}
+    }
   })());
 });
 
@@ -58,3 +62,4 @@ self.addEventListener('fetch', (e) => {
     e.respondWith(fetch(e.request).catch(()=>caches.match('./index.html')));
   }
 });
+

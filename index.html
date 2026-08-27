@@ -1949,6 +1949,149 @@
       align-items: center;
       gap: 10px;
     }
+
+    /* Modern Platform 2026: CSS Anchor Positioning for Tooltips */
+    @supports (anchor-name: --popover-anchor) {
+      .has-anchor-tooltip { anchor-name: --popover-anchor; }
+      .anchor-tooltip-popup {
+        position: fixed;
+        position-anchor: --popover-anchor;
+        position-area: top center;
+        position-try-fallbacks: flip-block;
+      }
+    }
+
+    /* Modern Platform 2026: @starting-style Entry Animations */
+    @starting-style {
+      .popover-menu.open {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.96);
+      }
+      .drawer-backdrop:not(.hidden) .drawer-content {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      .toast.show {
+        opacity: 0;
+        transform: translateX(-50%) translateY(16px);
+      }
+    }
+
+    /* "Show Math" Explainable Calculation Styles */
+    .math-breakdown {
+      margin-top: 6px;
+      font-size: 11.5px;
+      color: var(--muted);
+      background: var(--panel-subtle);
+      border: 1px dashed var(--border);
+      border-radius: var(--r-sm);
+      padding: 5px 8px;
+    }
+    .math-breakdown summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--ink);
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .math-breakdown summary:hover {
+      color: var(--accent);
+    }
+    .math-breakdown-content {
+      margin-top: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1.45;
+      color: var(--ink);
+      font-size: 11px;
+    }
+
+    /* Seizure Stopwatch Timer Widget */
+    .seizure-timer-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--accent-soft);
+      border: 1px solid var(--accent);
+      border-radius: var(--r-md);
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .seizure-timer-readout {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: 1px;
+    }
+    .seizure-timer-stage {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--ink);
+      flex: 1 1 auto;
+    }
+    .seizure-progress-track {
+      width: 100%;
+      height: 6px;
+      background: var(--panel);
+      border-radius: var(--r-full);
+      overflow: hidden;
+      margin-top: 4px;
+    }
+    .seizure-progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      transition: width 0.3s ease, background-color 0.3s ease;
+    }
+
+    /* Delta Vital Signs Visualizer */
+    .vital-delta-container {
+      margin-top: 6px;
+      padding: 6px 10px;
+      background: var(--panel-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      font-size: 11.5px;
+    }
+    .vital-delta-bar-track {
+      position: relative;
+      height: 8px;
+      background: var(--panel);
+      border-radius: var(--r-full);
+      margin: 4px 0 2px;
+      overflow: visible;
+    }
+    .vital-delta-normal-zone {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      background: rgba(21, 128, 61, 0.25);
+      border-left: 1px solid var(--good);
+      border-right: 1px solid var(--good);
+    }
+    .vital-delta-point {
+      position: absolute;
+      top: -3px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid #FFFFFF;
+      transform: translateX(-50%);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    /* Mobile Bottom Dock Gloved Ergonomics: 48x48px hit targets */
+    .dock-btn {
+      min-height: 48px;
+      min-width: 48px;
+      padding: 6px 10px;
+    }
+
   </style>
 </head>
 <body>
@@ -1966,6 +2109,7 @@
 
             <input type="number" id="age" min="0" max="15" step="0.1" placeholder="Age" oninput="estimateFromAge()"/>
             <button type="button" id="ageUnitBtn" class="unit-toggle-btn" onclick="toggleAgeUnit()" title="คลิกเพื่อสลับหน่วยปี/เดือน">yr</button>
+            <button type="button" id="sexToggleBtn" class="unit-toggle-btn" onclick="toggleSex()" title="สลับเพศ Boy/Girl สำหรับ Growth Z-Score">👦 Boy</button>
           </div>
         </div>
 
@@ -1982,6 +2126,7 @@
               <input type="checkbox" id="useIBW" class="switch" onchange="applyIBWToBW()"/>
               <span>Use Wt-for-Ht</span>
             </label>
+            <span id="growthZScoreBadge" class="bio-derived-src" style="display:inline-flex; align-items:center; gap:4px; font-weight:700;" title="WHO Growth Standards Z-Score (WAZ / HAZ)">WAZ: — · HAZ: —</span>
           </div>
         </div>
       </div>
@@ -2025,7 +2170,10 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> <span>Install App</span>
             </button>
             <button type="button" id="printBtn" class="popover-item" onclick="triggerPrintCard(); closeAllPopovers();" role="menuitem">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3h12v6"/><rect width="12" height="8" x="6" y="14" rx="1"/></svg> <span>Print Reference Card</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3h12v6"/><rect width="12" height="8" x="6" y="14" rx="1"/></svg> <span>Print Active Tab</span>
+            </button>
+            <button type="button" id="printSummaryBtn" class="popover-item" onclick="printBedsideSummaryCard(); closeAllPopovers();" role="menuitem">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="16" height="20" x="4" y="2" rx="2"/><path d="M8 10h8"/><path d="M8 14h8"/><path d="M8 18h5"/></svg> <span>Print Bedside Pocket Card</span>
             </button>
             <button type="button" id="langToggleBtn" class="popover-item" onclick="toggleLanguage(); closeAllPopovers();" role="menuitem">
               <span>TH / EN</span>
@@ -2042,10 +2190,10 @@
     <!-- Category Jump Bar & Broselow Triage Navigation Row (Option 1: Inline Split Row) -->
     <div class="category-bar-wrapper">
       <div class="category-bar category-pills-group" role="group" aria-label="Module categories">
-        <button type="button" class="category-pill active" data-cat="all" onclick="filterNavCategory('all', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg> <span>All Modules</span></button>
-        <button type="button" class="category-pill" data-cat="resus" onclick="filterNavCategory('resus', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> <span>Emergency Resus</span></button>
-        <button type="button" class="category-pill" data-cat="meds" onclick="filterNavCategory('meds', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg> <span>Meds & Fluids</span></button>
-        <button type="button" class="category-pill" data-cat="protocols" onclick="filterNavCategory('protocols', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg> <span>Protocols & Vitals</span></button>
+        <button type="button" class="category-pill active" data-cat="meds" onclick="filterNavCategory('meds', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg> <span>💊 Meds & Transfusion (5)</span></button>
+        <button type="button" class="category-pill" data-cat="resus" onclick="filterNavCategory('resus', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> <span>🚨 Emergency Resus (7)</span></button>
+        <button type="button" class="category-pill" data-cat="protocols" onclick="filterNavCategory('protocols', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg> <span>📋 Protocols & CDS (7)</span></button>
+        <button type="button" class="category-pill" data-cat="all" onclick="filterNavCategory('all', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg> <span>🌐 All (19)</span></button>
       </div>
 
       <!-- 1-Tap Broselow-Aligned Quick Weight Triage Strip -->
@@ -2080,19 +2228,30 @@
     <!-- Flat Underline Navigation Tabs (Single Responsive Rail) -->
     <div role="tablist" aria-label="Clinical Calculators & Protocols" style="margin-bottom:14px;">
       <div class="tabs" id="mainTabRail" style="overflow-x:auto;">
+        <!-- 💊 Meds & Transfusion (5 Modules — Default) -->
         <button type="button" class="tab tab-btn active" data-tab="dose" data-category="meds" onclick="showTab('dose', this)" title="Pediatric Dose Calculator [Alt+1]" aria-keyshortcuts="Alt+1" role="tab" aria-selected="true" aria-controls="dose" aria-label="Pediatric Dose Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg><span class="tab-label"> Dose</span></button>
         <button type="button" class="tab tab-btn" data-tab="atb" data-category="meds" onclick="showTab('atb', this)" title="Antibiotic Dosing Calculator [Alt+2]" aria-keyshortcuts="Alt+2" role="tab" aria-selected="false" aria-controls="atb" aria-label="Antibiotic Dosing Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3 3 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6Z"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 9.8 3 11.4 3 14"/><path d="M6 17H2"/><path d="M17.47 9c1.93.8 3.53 2.4 3.53 5"/><path d="M18 17h4"/></svg><span class="tab-label"> ATB</span></button>
         <button type="button" class="tab tab-btn" data-tab="fluids" data-category="meds" onclick="showTab('fluids', this)" title="IV Maintenance & Deficit Calculator [Alt+3]" aria-keyshortcuts="Alt+3" role="tab" aria-selected="false" aria-controls="fluids" aria-label="IV Maintenance & Deficit Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg><span class="tab-label"> IV Fluids</span></button>
-        <button type="button" class="tab tab-btn" data-tab="pals" data-category="resus" onclick="showTab('pals', this)" title="Pediatric Advanced Life Support Protocol [Alt+4]" aria-keyshortcuts="Alt+4" role="tab" aria-selected="false" aria-controls="pals" aria-label="Pediatric Advanced Life Support Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg><span class="tab-label"> PALS</span></button>
-        <button type="button" class="tab tab-btn" data-tab="ncpr" data-category="resus" onclick="showTab('ncpr', this)" title="Neonatal Resuscitation Program Protocol [Alt+5]" aria-keyshortcuts="Alt+5" role="tab" aria-selected="false" aria-controls="ncpr" aria-label="Neonatal Resuscitation Program Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 5 6.3"/><path d="M12 2a4 4 0 0 0-4 4c0 .7.2 1.4.5 2"/><path d="M12 2a4 4 0 0 1 4 4c0 .7-.2 1.4-.5 2"/></svg><span class="tab-label"> NCPR</span></button>
-        <button type="button" class="tab tab-btn" data-tab="drip" data-category="resus" onclick="showTab('drip', this)" title="Continuous Vasoactive Infusion Calculator [Alt+6]" aria-keyshortcuts="Alt+6" role="tab" aria-selected="false" aria-controls="drip" aria-label="Continuous Vasoactive Infusion Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span class="tab-label"> Drip Rate</span></button>
-        <button type="button" class="tab tab-btn" data-tab="seizure" data-category="resus" onclick="showTab('seizure', this)" title="Status Epilepticus Resuscitation Protocol [Alt+7]" aria-keyshortcuts="Alt+7" role="tab" aria-selected="false" aria-controls="seizure" aria-label="Status Epilepticus Resuscitation Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg><span class="tab-label"> Seizure</span></button>
-        <button type="button" class="tab tab-btn" data-tab="tox" data-category="protocols" onclick="showTab('tox', this)" title="Antidotes & Overdose Protocol [Alt+8]" aria-keyshortcuts="Alt+8" role="tab" aria-selected="false" aria-controls="tox" aria-label="Antidotes & Overdose Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v7.31L4.75 18.1A2 2 0 0 0 6.47 21h11.06a2 2 0 0 0 1.72-2.9L14 9.31V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg><span class="tab-label"> Toxicology</span></button>
-        <button type="button" class="tab tab-btn" data-tab="psa" data-category="protocols" onclick="showTab('psa', this)" title="Procedural Sedation & Analgesia [Alt+9]" aria-keyshortcuts="Alt+9" role="tab" aria-selected="false" aria-controls="psa" aria-label="Procedural Sedation & Analgesia"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"/><path d="m9 11 4 4"/><path d="m5 19-3 3"/><path d="m14 4 6 6"/></svg><span class="tab-label"> Sedation</span></button>
-        <button type="button" class="tab tab-btn" data-tab="vitals" data-category="protocols" onclick="showTab('vitals', this)" title="Age-Banded Physiological Normal Ranges [Alt+0]" aria-keyshortcuts="Alt+0" role="tab" aria-selected="false" aria-controls="vitals" aria-label="Age-Banded Physiological Normal Ranges"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M17 12h-2l-2 5-3-10-2 5H7"/></svg><span class="tab-label"> Vitals</span></button>
-        <button type="button" class="tab tab-btn" data-tab="dka" data-category="resus" onclick="showTab('dka', this)" title="Pediatric DKA Protocol Engine [Alt+K]" aria-keyshortcuts="Alt+K" role="tab" aria-selected="false" aria-controls="dka" aria-label="Pediatric DKA Protocol Engine"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.8 2.3A.3.3 0 0 0 4.5 2H3.5a.3.3 0 0 0-.3.3v4.2a6 6 0 0 0 12 0V2.3a.3.3 0 0 0-.3-.3h-1a.3.3 0 0 0-.3.3v4.2a4 4 0 0 1-8 0V2.3z"/><path d="M11 12.5v1.5a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/></svg><span class="tab-label"> DKA</span></button>
-        <button type="button" class="tab tab-btn" data-tab="asthma" data-category="resus" onclick="showTab('asthma', this)" title="Acute Asthmatic Attack Protocol [Alt+A]" aria-keyshortcuts="Alt+A" role="tab" aria-selected="false" aria-controls="asthma" aria-label="Acute Asthmatic Attack Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg><span class="tab-label"> Asthma</span></button>
-        <button type="button" class="tab tab-btn" data-tab="electrolytes" data-category="protocols" onclick="showTab('electrolytes', this)" title="Pediatric Electrolytes & Corrected Imbalance [Alt+E]" aria-keyshortcuts="Alt+E" role="tab" aria-selected="false" aria-controls="electrolytes" aria-label="Pediatric Electrolytes & Corrected Imbalance"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 2v17.5c0 1.4-1.1 2.5-2.5 2.5h0c-1.4 0-2.5-1.1-2.5-2.5V2"/><path d="M8.5 2h7"/><path d="M14.5 16h-5"/></svg><span class="tab-label"> Electrolytes</span></button>
+        <button type="button" class="tab tab-btn" data-tab="drip" data-category="meds" onclick="showTab('drip', this)" title="Continuous Vasoactive Infusion Calculator [Alt+6]" aria-keyshortcuts="Alt+6" role="tab" aria-selected="false" aria-controls="drip" aria-label="Continuous Vasoactive Infusion Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span class="tab-label"> Drip Rate</span></button>
+        <button type="button" class="tab tab-btn" data-tab="transfusion" data-category="meds" onclick="showTab('transfusion', this)" title="Blood Component Transfusion Calculator [Alt+B]" aria-keyshortcuts="Alt+B" role="tab" aria-selected="false" aria-controls="transfusion" aria-label="Blood Component Transfusion Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span class="tab-label"> Transfusion</span></button>
+
+        <!-- 🚨 Emergency Resus (7 Modules) -->
+        <button type="button" class="tab tab-btn" data-tab="airway" data-category="resus" style="display:none;" onclick="showTab('airway', this)" title="Pediatric Airway & RSI Protocol [Alt+W]" aria-keyshortcuts="Alt+W" role="tab" aria-selected="false" aria-controls="airway" aria-label="Pediatric Airway & RSI Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg><span class="tab-label"> Airway / RSI</span></button>
+        <button type="button" class="tab tab-btn" data-tab="pals" data-category="resus" style="display:none;" onclick="showTab('pals', this)" title="Pediatric Advanced Life Support Protocol [Alt+4]" aria-keyshortcuts="Alt+4" role="tab" aria-selected="false" aria-controls="pals" aria-label="Pediatric Advanced Life Support Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg><span class="tab-label"> PALS</span></button>
+        <button type="button" class="tab tab-btn" data-tab="ncpr" data-category="resus" style="display:none;" onclick="showTab('ncpr', this)" title="Neonatal Resuscitation Program Protocol [Alt+5]" aria-keyshortcuts="Alt+5" role="tab" aria-selected="false" aria-controls="ncpr" aria-label="Neonatal Resuscitation Program Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 5 6.3"/><path d="M12 2a4 4 0 0 0-4 4c0 .7.2 1.4.5 2"/><path d="M12 2a4 4 0 0 1 4 4c0 .7-.2 1.4-.5 2"/></svg><span class="tab-label"> NCPR</span></button>
+        <button type="button" class="tab tab-btn" data-tab="sepsis" data-category="resus" style="display:none;" onclick="showTab('sepsis', this)" title="Pediatric Sepsis & Phoenix Score [Alt+S]" aria-keyshortcuts="Alt+S" role="tab" aria-selected="false" aria-controls="sepsis" aria-label="Pediatric Sepsis & Phoenix Score"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg><span class="tab-label"> Sepsis</span></button>
+        <button type="button" class="tab tab-btn" data-tab="anaphylaxis" data-category="resus" style="display:none;" onclick="showTab('anaphylaxis', this)" title="Pediatric Anaphylaxis Protocol [Alt+N]" aria-keyshortcuts="Alt+N" role="tab" aria-selected="false" aria-controls="anaphylaxis" aria-label="Pediatric Anaphylaxis Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg><span class="tab-label"> Anaphylaxis</span></button>
+        <button type="button" class="tab tab-btn" data-tab="trauma" data-category="resus" style="display:none;" onclick="showTab('trauma', this)" title="Pediatric Trauma & Burns Protocol [Alt+T]" aria-keyshortcuts="Alt+T" role="tab" aria-selected="false" aria-controls="trauma" aria-label="Pediatric Trauma & Burns Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m19 14-7 7-7-7"/><path d="M12 3v18"/></svg><span class="tab-label"> Trauma & Burns</span></button>
+        <button type="button" class="tab tab-btn" data-tab="seizure" data-category="resus" style="display:none;" onclick="showTab('seizure', this)" title="Status Epilepticus Resuscitation Protocol [Alt+7]" aria-keyshortcuts="Alt+7" role="tab" aria-selected="false" aria-controls="seizure" aria-label="Status Epilepticus Resuscitation Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg><span class="tab-label"> Seizure</span></button>
+
+        <!-- 📋 Protocols & CDS (7 Modules) -->
+        <button type="button" class="tab tab-btn" data-tab="asthma" data-category="protocols" style="display:none;" onclick="showTab('asthma', this)" title="Acute Asthmatic Attack Protocol [Alt+A]" aria-keyshortcuts="Alt+A" role="tab" aria-selected="false" aria-controls="asthma" aria-label="Acute Asthmatic Attack Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg><span class="tab-label"> Asthma</span></button>
+        <button type="button" class="tab tab-btn" data-tab="dka" data-category="protocols" style="display:none;" onclick="showTab('dka', this)" title="Pediatric DKA Protocol Engine [Alt+K]" aria-keyshortcuts="Alt+K" role="tab" aria-selected="false" aria-controls="dka" aria-label="Pediatric DKA Protocol Engine"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.8 2.3A.3.3 0 0 0 4.5 2H3.5a.3.3 0 0 0-.3.3v4.2a6 6 0 0 0 12 0V2.3a.3.3 0 0 0-.3-.3h-1a.3.3 0 0 0-.3.3v4.2a4 4 0 0 1-8 0V2.3z"/><path d="M11 12.5v1.5a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/></svg><span class="tab-label"> DKA</span></button>
+        <button type="button" class="tab tab-btn" data-tab="croup" data-category="protocols" style="display:none;" onclick="showTab('croup', this)" title="Croup & Stridor Protocol [Alt+U]" aria-keyshortcuts="Alt+U" role="tab" aria-selected="false" aria-controls="croup" aria-label="Croup & Stridor Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/></svg><span class="tab-label"> Croup</span></button>
+        <button type="button" class="tab tab-btn" data-tab="electrolytes" data-category="protocols" style="display:none;" onclick="showTab('electrolytes', this)" title="Pediatric Electrolytes & Corrected Imbalance [Alt+E]" aria-keyshortcuts="Alt+E" role="tab" aria-selected="false" aria-controls="electrolytes" aria-label="Pediatric Electrolytes & Corrected Imbalance"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 2v17.5c0 1.4-1.1 2.5-2.5 2.5h0c-1.4 0-2.5-1.1-2.5-2.5V2"/><path d="M8.5 2h7"/><path d="M14.5 16h-5"/></svg><span class="tab-label"> Electrolytes</span></button>
+        <button type="button" class="tab tab-btn" data-tab="psa" data-category="protocols" style="display:none;" onclick="showTab('psa', this)" title="Procedural Sedation & Analgesia [Alt+9]" aria-keyshortcuts="Alt+9" role="tab" aria-selected="false" aria-controls="psa" aria-label="Procedural Sedation & Analgesia"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"/><path d="m9 11 4 4"/><path d="m5 19-3 3"/><path d="m14 4 6 6"/></svg><span class="tab-label"> Sedation</span></button>
+        <button type="button" class="tab tab-btn" data-tab="tox" data-category="protocols" style="display:none;" onclick="showTab('tox', this)" title="Antidotes & Overdose Protocol [Alt+8]" aria-keyshortcuts="Alt+8" role="tab" aria-selected="false" aria-controls="tox" aria-label="Antidotes & Overdose Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v7.31L4.75 18.1A2 2 0 0 0 6.47 21h11.06a2 2 0 0 0 1.72-2.9L14 9.31V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg><span class="tab-label"> Toxicology</span></button>
+        <button type="button" class="tab tab-btn" data-tab="vitals" data-category="protocols" style="display:none;" onclick="showTab('vitals', this)" title="Age-Banded Physiological Normal Ranges [Alt+0]" aria-keyshortcuts="Alt+0" role="tab" aria-selected="false" aria-controls="vitals" aria-label="Age-Banded Physiological Normal Ranges"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M17 12h-2l-2 5-3-10-2 5H7"/></svg><span class="tab-label"> Vitals</span></button>
       </div>
     </div>
 
@@ -2288,6 +2447,19 @@
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
             <h2 style="margin:0;">Status Epilepticus Resuscitation Protocol</h2>
             <span class="evidence-badge" onclick="openEvidenceModal('seizure')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> AES / ESETT Trial</span>
+          </div>
+
+          <!-- Seizure Resuscitation Clock Timer -->
+          <div class="seizure-timer-card" id="seizureTimerWidget">
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+              <div class="seizure-timer-readout" id="seizureTimerTime">0:00</div>
+              <div style="display:flex; gap:6px;">
+                <button type="button" id="seizureTimerToggleBtn" class="btn btn-primary" style="padding:4px 12px; font-size:12px; font-weight:700;" onclick="toggleSeizureTimer()">▶ Start</button>
+                <button type="button" class="btn" style="padding:4px 10px; font-size:12px;" onclick="resetSeizureTimer()">↺ Reset</button>
+              </div>
+            </div>
+            <div class="seizure-timer-stage" id="seizureTimerStage">⚡ Stage 1 (0–5 min): Emergent BZD (Midazolam IN/IM or Lorazepam/Diazepam IV)</div>
+            <div class="seizure-progress-track"><div class="seizure-progress-bar" id="seizureTimerProgress"></div></div>
           </div>
           <div class="note" style="margin-bottom:14px; font-weight:500;">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>สรุปลำดับการรักษาชักในเด็ก:</strong> เริ่มยา Benzodiazepine ทันทีที่ชัก &gt;5 นาที และเตรียมยา 2nd Line ล่วงหน้า
@@ -2505,6 +2677,248 @@
 
         <div class="col-12">
           <div id="lyteOut" class="summary"></div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Pediatric Airway & RSI Protocol -->
+    <section id="airway" class="card" role="tabpanel" style="display:none;">
+      <div class="grid">
+        <div class="col-12">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+            <h2 style="margin:0;">Pediatric Airway Management & Rapid Sequence Intubation (RSI)</h2>
+            <span class="evidence-badge" onclick="openEvidenceModal('airway')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> PALS / DAS Airway</span>
+          </div>
+          <div class="note" style="margin-bottom:14px; font-weight:500;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>การใส่ท่อช่วยหายใจในเด็ก (PALS 2025):</strong> ใช้ Cuffed ETT แนะนำมากกว่า Uncuffed (ลดการเปลี่ยนท่อและควบคุม ventilation แม่นยำ) — เตรียม Sugammadex 16 mg/kg สำหรับ CICO rescue เสมอเมื่อใช้ Rocuronium
+          </div>
+          <div id="airwayOut" class="summary"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pediatric Sepsis & Septic Shock (Phoenix Score + SSC 2026) -->
+    <section id="sepsis" class="card" role="tabpanel" style="display:none;">
+      <div class="grid">
+        <div class="col-12">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+            <h2 style="margin:0;">Pediatric Sepsis & Septic Shock (Phoenix Criteria 2024 / SSC 2026)</h2>
+            <span class="evidence-badge" onclick="openEvidenceModal('sepsis')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> Phoenix 2024 / SSC 2026</span>
+          </div>
+          <div class="drug-category-filter" style="margin-bottom:12px;">
+            <button type="button" class="drug-filter-pill active" id="sepsisModePhoenixBtn" onclick="setSepsisMode('phoenix')">Phoenix Sepsis Score (Full)</button>
+            <button type="button" class="drug-filter-pill" id="sepsisModeSimpleBtn" onclick="setSepsisMode('simple')">Simplified ER Screening Checklist</button>
+          </div>
+          <div class="note" style="margin-bottom:14px; font-weight:500;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg><strong>เกณฑ์วินิจฉัย Sepsis ใหม่ (Phoenix 2024):</strong> แทนที่ SIRS — ประเมิน 4 ระบบ (หายใจ, ไหลเวียน, การแข็งตัวของเลือด, ระบบประสาท) คะแนน ≥ 2 = Sepsis; Sepsis + ≥1 แต้มระบบไหลเวียน = Septic Shock
+          </div>
+        </div>
+
+        <!-- Phoenix Score Interactive Form -->
+        <div id="phoenixScoreForm" class="col-12 grid" style="margin:0; padding:0;">
+          <div class="col-3">
+            <label>1. Respiratory Support</label>
+            <select id="sepsisResp" style="width:100%; padding:8px; border-radius:var(--r-sm); border:1px solid var(--border); background:var(--panel); color:var(--ink); font-weight:700;" onchange="calcSepsis()">
+              <option value="0">0 pt: SpO2/FiO2 ≥ 292 (Room Air/Normal)</option>
+              <option value="1">1 pt: Non-invasive support (HFNC, CPAP, BiPAP)</option>
+              <option value="2">2 pts: Invasive MV (Moderate ARDS)</option>
+              <option value="3">3 pts: Invasive MV (Severe ARDS, SpO2/FiO2 < 148)</option>
+            </select>
+          </div>
+          <div class="col-3">
+            <label>2. Cardiovascular / Lactate</label>
+            <select id="sepsisCardio" style="width:100%; padding:8px; border-radius:var(--r-sm); border:1px solid var(--border); background:var(--panel); color:var(--ink); font-weight:700;" onchange="calcSepsis()">
+              <option value="0">0 pt: Normal MAP & Lactate & No Vasoactive</option>
+              <option value="1">1 pt: 1 Vasoactive medication</option>
+              <option value="2">2 pts: MAP < Cutoff / Lactate ≥ 5 / 2+ Vasoactives</option>
+              <option value="4">4 pts: Lactate ≥ 11 mmol/L or Severe Shock</option>
+              <option value="6">6 pts: High-Dose Vasoactives (>0.2 mcg/kg/min)</option>
+            </select>
+          </div>
+          <div class="col-3">
+            <label>3. Coagulation / Platelet</label>
+            <select id="sepsisCoag" style="width:100%; padding:8px; border-radius:var(--r-sm); border:1px solid var(--border); background:var(--panel); color:var(--ink); font-weight:700;" onchange="calcSepsis()">
+              <option value="0">0 pt: Plt ≥ 100k & INR ≤ 1.6</option>
+              <option value="1">1 pt: Plt < 100k or INR > 1.6</option>
+              <option value="2">2 pts: Plt < 50k or Fibrinogen < 100 or D-dimer >10x</option>
+            </select>
+          </div>
+          <div class="col-3">
+            <label>4. Neurological (GCS / Pupils)</label>
+            <select id="sepsisNeuro" style="width:100%; padding:8px; border-radius:var(--r-sm); border:1px solid var(--border); background:var(--panel); color:var(--ink); font-weight:700;" onchange="calcSepsis()">
+              <option value="0">0 pt: GCS 15 (Alert & Oriented)</option>
+              <option value="1">1 pt: GCS 11–14 or non-reactive pupils</option>
+              <option value="2">2 pts: GCS ≤ 10 (Coma / Stupor)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Simplified Screening Checklist Form (hidden by default) -->
+        <div id="simpleSepsisForm" class="col-12" style="display:none;">
+          <div style="background:var(--panel-subtle); border:1px solid var(--border); border-radius:var(--r-md); padding:12px; margin-bottom:12px;">
+            <div style="font-weight:700; margin-bottom:8px;">Suspected Infection + ตรวจพบ 2 ข้อขึ้นไป:</div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:8px;">
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer;"><input type="checkbox" id="chkSepsisTemp" onchange="calcSepsis()"/> <span>ไข้สูง > 38.5°C หรือ ตัวเย็น < 36.0°C</span></label>
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer;"><input type="checkbox" id="chkSepsisHR" onchange="calcSepsis()"/> <span>หัวใจเต้นเร็ว (Tachycardia for age)</span></label>
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer;"><input type="checkbox" id="chkSepsisRR" onchange="calcSepsis()"/> <span>หายใจเร็ว (Tachypnea for age)</span></label>
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer;"><input type="checkbox" id="chkSepsisMental" onchange="calcSepsis()"/> <span>ซึมลง สับสน หรือหงุดหงิดผิดปกติ</span></label>
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer;"><input type="checkbox" id="chkSepsisCRT" onchange="calcSepsis()"/> <span>Capillary Refill > 2 วินาที หรือ Flash CRT</span></label>
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer;"><input type="checkbox" id="chkSepsisPulse" onchange="calcSepsis()"/> <span>ชีพจรส่วนปลายเบา หรือ ผิวลาย (Mottled)</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div id="sepsisOut" class="summary"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pediatric Anaphylaxis Protocol -->
+    <section id="anaphylaxis" class="card" role="tabpanel" style="display:none;">
+      <div class="grid">
+        <div class="col-12">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+            <h2 style="margin:0;">Pediatric Anaphylaxis Emergency Protocol</h2>
+            <span class="evidence-badge" onclick="openEvidenceModal('anaphylaxis')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> EAACI / WAO 2025</span>
+          </div>
+          <div class="note" style="margin-bottom:14px; font-weight:500;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>การรักษา Anaphylaxis (EAACI 2025):</strong> ฉีด Epinephrine IM ทันทีที่ต้นขาด้านนอก (Anterolateral Thigh) — ห้ามรอ Antihistamine/Steroid — สังเกตอาการ Biphasic Reaction อย่างน้อย 4–6 ชั่วโมง
+          </div>
+          <div id="anaphylaxisOut" class="summary"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pediatric Trauma & Burns Protocol -->
+    <section id="trauma" class="card" role="tabpanel" style="display:none;">
+      <div class="grid">
+        <div class="col-12">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+            <h2 style="margin:0;">Pediatric Trauma & Burn Resuscitation (ATLS 11th Ed 2025)</h2>
+            <span class="evidence-badge" onclick="openEvidenceModal('trauma')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> ATLS 11th Ed 2025</span>
+          </div>
+          <div class="note" style="margin-bottom:14px; font-weight:500;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="m19 14-7 7-7-7"/><path d="M12 3v18"/></svg><strong>ATLS 11th Ed (2025):</strong> เรียงลำดับ xABCDE (ควบคุม eXsanguinating Hemorrhage ก่อน) — แผลไฟไหม้ใช้น้ำเกลือ Lactated Ringer's 3 mL/kg/%TBSA + สารน้ำคงที่ (Maintenance) — ควบคุม Urine Output ≥ 1.0 mL/kg/hr
+          </div>
+        </div>
+
+        <div class="col-4">
+          <label>% Total Body Surface Area Burn (%TBSA)</label>
+          <input type="number" id="burnTBSA" min="0" max="100" step="1" placeholder="e.g. 20" oninput="calcTrauma()">
+        </div>
+        <div class="col-4">
+          <label>Hours Elapsed Since Burn Injury</label>
+          <input type="number" id="burnHoursElapsed" min="0" max="24" step="0.5" placeholder="e.g. 2 (hours)" oninput="calcTrauma()">
+        </div>
+        <div class="col-4">
+          <label>Patient Age Scale for GCS</label>
+          <select id="traumaAgeMode" style="width:100%; padding:8px; border-radius:var(--r-sm); border:1px solid var(--border); background:var(--panel); color:var(--ink); font-weight:700;" onchange="calcTrauma()">
+            <option value="infant">Infant (< 2 yr / Pre-verbal)</option>
+            <option value="child" selected>Child (≥ 2 yr / Verbal)</option>
+          </select>
+        </div>
+
+        <div class="col-12">
+          <div id="traumaOut" class="summary"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Croup & Stridor Protocol -->
+    <section id="croup" class="card" role="tabpanel" style="display:none;">
+      <div class="grid">
+        <div class="col-12">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+            <h2 style="margin:0;">Pediatric Croup (Laryngotracheobronchitis) & Stridor Protocol</h2>
+            <span class="evidence-badge" onclick="openEvidenceModal('croup')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> Westley / AAP Guidelines</span>
+          </div>
+          <div class="note" style="margin-bottom:14px; font-weight:500;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/></svg><strong>การรักษา Croup:</strong> ให้ Dexamethasone 0.15–0.6 mg/kg (single dose, max 16 mg) ในทุกระดับความรุนแรง — พ่นยา Epinephrine เมื่อมี Stridor at rest และสังเกตอาการ 2–4 ชม. เพื่อเฝ้าระวัง Rebound Stridor
+          </div>
+        </div>
+
+        <div class="col-12 grid" style="margin:0; padding:0;">
+          <div class="col-4">
+            <label>1. Stridor</label>
+            <select id="croupStridor" style="width:100%; padding:8px; border-radius:var(--r-sm); border:1px solid var(--border); background:var(--panel); color:var(--ink); font-weight:700;" onchange="calcCroup()">
+              <option value="0">0 pt: ไม่มี Stridor</option>
+              <option value="1">1 pt: มี Stridor เมื่อร้อง/กระสับกระส่าย (With agitation)</option>
+              <option value="2" selected>2 pts: มี Stridor ขณะพัก (At rest)</option>
+            </select>
+          </div>
+          <div class="col-4">
+            <label>2. Retractions (การดึงรั้งทรวงอก)</label>
+            <select id="croupRetract" style="width:100%; padding:8px; border-radius:var(--r-sm); border:1px solid var(--border); background:var(--panel); color:var(--ink); font-weight:700;" onchange="calcCroup()">
+              <option value="0">0 pt: ไม่มี Retractions</option>
+              <option value="1" selected>1 pt: เล็กน้อย (Mild intercostal)</option>
+              <option value="2">2 pts: ปานกลาง (Moderate substernal)</option>
+              <option value="3">3 pts: รุนแรง (Severe suprasternal indrawing)</option>
+            </select>
+          </div>
+          <div class="col-4">
+            <label>3. Air Entry (ลมเข้าปอด)</label>
+            <select id="croupAirEntry" style="width:100%; padding:8px; border-radius:var(--r-sm); border:1px solid var(--border); background:var(--panel); color:var(--ink); font-weight:700;" onchange="calcCroup()">
+              <option value="0" selected>0 pt: ลมเข้าปกติ (Normal)</option>
+              <option value="1">1 pt: ลมเข้าลดลง (Decreased)</option>
+              <option value="2">2 pts: ลมเข้าลดลงมาก (Markedly decreased)</option>
+            </select>
+          </div>
+          <div class="col-6">
+            <label>4. Cyanosis (ภาวะเขียว)</label>
+            <select id="croupCyanosis" style="width:100%; padding:8px; border-radius:var(--r-sm); border:1px solid var(--border); background:var(--panel); color:var(--ink); font-weight:700;" onchange="calcCroup()">
+              <option value="0" selected>0 pt: ไม่เขียว (None)</option>
+              <option value="4">4 pts: เขียวเมื่อร้อง (With agitation)</option>
+              <option value="5">5 pts: เขียวขณะพัก (At rest)</option>
+            </select>
+          </div>
+          <div class="col-6">
+            <label>5. Level of Consciousness (ความรู้สึกตัว)</label>
+            <select id="croupConscious" style="width:100%; padding:8px; border-radius:var(--r-sm); border:1px solid var(--border); background:var(--panel); color:var(--ink); font-weight:700;" onchange="calcCroup()">
+              <option value="0" selected>0 pt: รู้สึกตัวปกติ (Normal / Alert)</option>
+              <option value="5">5 pts: สับสน / ซึมมาก / กระสับกระส่ายรุนแรง (Disoriented / Lethargic)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div id="croupOut" class="summary"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blood Component Transfusion Calculator -->
+    <section id="transfusion" class="card" role="tabpanel" style="display:none;">
+      <div class="grid">
+        <div class="col-12">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+            <h2 style="margin:0;">Pediatric Blood Component Transfusion & MTP Protocol</h2>
+            <span class="evidence-badge" onclick="openEvidenceModal('transfusion')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> TAXI Guidelines 2024</span>
+          </div>
+          <div class="note" style="margin-bottom:14px; font-weight:500;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><strong>การให้เลือดและส่วนประกอบของเลือดในเด็ก:</strong> ปริมาตร PRBC (mL) = BW × (Hb เป้าหมาย - Hb ปัจจุบัน) × 3 (CPDA-1) หรือ × 4 (SAGM) — ระวังภาวะ Transfusion-Associated Circulatory Overload (TACO) โดยคุมอัตราให้ ≤ 5 mL/kg/hr
+          </div>
+        </div>
+
+        <div class="col-4">
+          <label>Current Hb (g/dL)</label>
+          <input type="number" id="txCurrentHb" min="1" max="20" step="0.1" placeholder="e.g. 6.5" oninput="calcTransfusion()">
+        </div>
+        <div class="col-4">
+          <label>Target Hb (g/dL)</label>
+          <input type="number" id="txTargetHb" min="1" max="20" step="0.1" placeholder="e.g. 10.0" value="10.0" oninput="calcTransfusion()">
+        </div>
+        <div class="col-4">
+          <label>PRBC Anticoagulant Type</label>
+          <select id="txPrbcType" style="width:100%; padding:8px; border-radius:var(--r-sm); border:1px solid var(--border); background:var(--panel); color:var(--ink); font-weight:700;" onchange="calcTransfusion()">
+            <option value="cpda" selected>CPDA-1 PRBC (Hct ~60%, factor ×3)</option>
+            <option value="sagm">SAGM PRBC (Hct ~70%, factor ×4)</option>
+          </select>
+        </div>
+
+        <div class="col-12">
+          <div id="transfusionOut" class="summary"></div>
         </div>
       </div>
     </section>

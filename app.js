@@ -47,6 +47,15 @@ let gIBWSource = null; // 'length', 'age', 'bw', or null
 let gWeightSource = null; // 'manual' (real measured/reported ABW) or 'estimated' (Weech age-based)
 let gFluidType = 'NS';
 let gAgeUnit = 'yr'; // 'yr' or 'mo'
+var gSex = 'male';
+if (typeof window !== 'undefined') window.gSex = gSex;
+var gSepsisMode = 'phoenix';
+if (typeof window !== 'undefined') window.gSepsisMode = gSepsisMode;
+var gSeizureTimerInterval = null;
+var gSeizureTimerSeconds = 0;
+if (typeof window !== 'undefined') window.gSeizureTimerSeconds = gSeizureTimerSeconds;
+var gSeizureTimerRunning = false;
+if (typeof window !== 'undefined') window.gSeizureTimerRunning = gSeizureTimerRunning;
 let activeTab = 'dose';
 
 // --- Dataset Loading (Robust dual-mode for web server & offline file:// execution) ---
@@ -686,11 +695,25 @@ function syncNCPRWithABW(){
 function showTab(id, btn) {
   activeTab = id;
   const updateDOM = () => {
+    const targetBtn = btn || document.querySelector(`.tab-btn[data-tab="${id}"]`);
+    if (targetBtn) {
+      const tabCat = targetBtn.getAttribute('data-category');
+      if (tabCat && gNavCategory !== 'all' && gNavCategory !== tabCat) {
+        gNavCategory = tabCat;
+        document.querySelectorAll('.category-pill').forEach(p => {
+          p.classList.toggle('active', p.getAttribute('data-cat') === tabCat);
+        });
+        document.querySelectorAll('.tab-btn').forEach(t => {
+          const tc = t.getAttribute('data-category');
+          t.style.display = (tc === tabCat) ? 'inline-flex' : 'none';
+        });
+      }
+    }
+
     document.querySelectorAll('.tab-btn').forEach(b => {
       b.classList.remove('active');
       b.setAttribute('aria-selected', 'false');
     });
-    const targetBtn = btn || document.querySelector(`.tab-btn[data-tab="${id}"]`);
     if (targetBtn) {
       targetBtn.classList.add('active');
       targetBtn.setAttribute('aria-selected', 'true');
@@ -704,7 +727,7 @@ function showTab(id, btn) {
       db.classList.toggle('active', db.getAttribute('data-dock-tab') === id);
     });
     
-    ['dose','atb','fluids','pals','ncpr','drip','seizure','tox','psa','vitals','dka','asthma','electrolytes'].forEach(x => {
+    ['dose','atb','fluids','pals','ncpr','drip','seizure','tox','psa','vitals','dka','asthma','electrolytes','airway','sepsis','anaphylaxis','trauma','croup','transfusion'].forEach(x => {
       const el = document.getElementById(x);
       if (el) {
         const isActive = (x === id);
@@ -731,6 +754,18 @@ function showTab(id, btn) {
       calcAsthma();
     } else if (id === 'electrolytes') {
       calcElectrolytes();
+    } else if (id === 'airway') {
+      calcAirway();
+    } else if (id === 'sepsis') {
+      calcSepsis();
+    } else if (id === 'anaphylaxis') {
+      calcAnaphylaxis();
+    } else if (id === 'trauma') {
+      calcTrauma();
+    } else if (id === 'croup') {
+      calcCroup();
+    } else if (id === 'transfusion') {
+      calcTransfusion();
     }
   };
 
@@ -762,6 +797,12 @@ function setupKeyboardShortcuts(){
       if (e.key.toLowerCase() === 'k') { e.preventDefault(); showTab('dka'); }
       if (e.key.toLowerCase() === 'a') { e.preventDefault(); showTab('asthma'); }
       if (e.key.toLowerCase() === 'e') { e.preventDefault(); showTab('electrolytes'); }
+      if (e.key.toLowerCase() === 'w') { e.preventDefault(); showTab('airway'); }
+      if (e.key.toLowerCase() === 's') { e.preventDefault(); showTab('sepsis'); }
+      if (e.key.toLowerCase() === 'n') { e.preventDefault(); showTab('anaphylaxis'); }
+      if (e.key.toLowerCase() === 't') { e.preventDefault(); showTab('trauma'); }
+      if (e.key.toLowerCase() === 'u') { e.preventDefault(); showTab('croup'); }
+      if (e.key.toLowerCase() === 'b') { e.preventDefault(); showTab('transfusion'); }
     }
     if (e.key === 'Escape') {
       closeAllComboboxes();
@@ -1150,7 +1191,7 @@ function selectATBItem(key, name){
 
 let gDoseCategoryFilter = 'all';
 let gATBCategoryFilter = 'all';
-let gNavCategory = 'all';
+let gNavCategory = 'meds';
 
 function setDoseCategoryFilter(cat, btn) {
   gDoseCategoryFilter = cat;
@@ -1178,7 +1219,9 @@ function setATBCategoryFilter(cat, btn) {
 
 function filterNavCategory(cat, btn) {
   gNavCategory = cat;
-  document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.category-pill').forEach(p => {
+    p.classList.toggle('active', p.getAttribute('data-cat') === cat);
+  });
   if (btn) btn.classList.add('active');
   
   const tabs = document.querySelectorAll('.tab-btn');
@@ -1486,7 +1529,28 @@ function dosesPerDayFromFreq(freq){
   return null;
 }
 
-function calcAll(){ calcDose(); calcATB(); calcFluids(); calcPALS(); calcNCPR(); calcDrip(); calcSeizure(); calcTox(); calcPSA(); calcVitals(); calcDKA(); calcAsthma(); calcElectrolytes(); }
+function calcAll(){
+  calcGrowthZScores();
+  calcDose();
+  calcATB();
+  calcFluids();
+  calcPALS();
+  calcNCPR();
+  calcDrip();
+  calcSeizure();
+  calcTox();
+  calcPSA();
+  calcVitals();
+  calcDKA();
+  calcAsthma();
+  calcElectrolytes();
+  calcAirway();
+  calcSepsis();
+  calcAnaphylaxis();
+  calcTrauma();
+  calcCroup();
+  calcTransfusion();
+}
 
 // --------- 💊 Pediatric Dose Calculator ---------
 
@@ -1986,7 +2050,12 @@ function calcNCPR(){
 // --------- Medical EHR Clipboard Order Copy Engine ---------
 
 function copyEHROrder(module){
-  const w = getWeight() || gIBW || 0;
+  const rawW = getWeight() || gIBW;
+  if (!rawW || rawW <= 0) {
+    showToast('กรุณากรอกน้ำหนักตัว (BW) ก่อนคัดลอกคำสั่งรักษา');
+    return;
+  }
+  const w = Number(rawW);
   let orderStr = '';
 
   if (module === 'dose') {
@@ -2076,6 +2145,26 @@ function copyEHROrder(module){
       const insulinRate = (w * 0.1).toFixed(1);
       orderStr = `[ER-PED DKA] IV 0.9% NS @ ${totalFluidRate} mL/hr (48h deficit replacement) | Regular Insulin Drip (1 U/mL) @ ${insulinRate} mL/hr (0.1 U/kg/hr) [BW: ${w.toFixed(1)} kg]`;
     }
+  } else if (module === 'airway') {
+    const ageYr = getAgeInYears() || (w ? (w < 10 ? 0.5 : (w < 20 ? 3 : 8)) : 1);
+    const cuffed = ageYr >= 1 ? ((ageYr / 4) + 3.5).toFixed(1) : (w < 1 ? '2.5' : (w < 2 ? '3.0' : '3.5'));
+    const depth = (parseFloat(cuffed) * 3).toFixed(1);
+    const blade = suggestBlade(w);
+    orderStr = `[ER-PED Airway/RSI] ETT Cuffed ${cuffed} mm ID @ depth ${depth} cm (oral) | Blade: ${blade} | Ketamine ${(w*1.5).toFixed(0)} mg IV + Rocuronium ${(w*1.0).toFixed(0)} mg IV [BW: ${w.toFixed(1)} kg]`;
+  } else if (module === 'sepsis') {
+    orderStr = `[ER-PED Sepsis 1h Bundle] Blood Culture x2 | IV Ceftriaxone ${Math.min(2000, w*80).toFixed(0)} mg | IV 0.9% NS Bolus ${(w*20).toFixed(0)} mL over 15 min [BW: ${w.toFixed(1)} kg]`;
+  } else if (module === 'anaphylaxis') {
+    const epiDoseMg = Math.min(w < 30 ? 0.3 : 0.5, w * 0.01).toFixed(2);
+    const epiMl = (epiDoseMg * 1.0).toFixed(2);
+    orderStr = `[ER-PED Anaphylaxis] Epinephrine 1:1,000 ${epiDoseMg} mg (${epiMl} mL) IM anterolateral thigh q 5-15 min PRN | Diphenhydramine ${Math.min(50, w*1).toFixed(0)} mg IV [BW: ${w.toFixed(1)} kg]`;
+  } else if (module === 'trauma') {
+    const ebv = (w * 75).toFixed(0);
+    orderStr = `[ER-PED Trauma/Burns] xABCDE survey completed | EBV: ${ebv} mL | Modified Parkland: 3 mL x ${w.toFixed(1)}kg x %TBSA (LRS) + Maintenance D5 0.45% NS | Target UO >= 1.0 mL/kg/hr [BW: ${w.toFixed(1)} kg]`;
+  } else if (module === 'croup') {
+    const dexaMg = Math.min(16, Math.max(0.15 * w, 0.6 * w)).toFixed(1);
+    orderStr = `[ER-PED Croup] Dexamethasone ${dexaMg} mg PO/IM/IV single dose | Nebulized Epinephrine 1:1,000 ${Math.min(5, w*0.5).toFixed(1)} mL [BW: ${w.toFixed(1)} kg]`;
+  } else if (module === 'transfusion') {
+    orderStr = `[ER-PED Transfusion] PRBC (CPDA-1) ${(w*10).toFixed(0)} mL IV over 3 hr (10 mL/kg) | Max rate: ${(w*5).toFixed(0)} mL/hr [BW: ${w.toFixed(1)} kg]`;
   } else if (module === 'electrolytes') {
     if (w) {
       const na = parseFloat(document.getElementById('lyteNa')?.value);
@@ -3766,6 +3855,964 @@ function calcElectrolytes() {
   outEl.innerHTML = html;
 }
 
+
+// ==========================================
+// WHO GROWTH STANDARDS Z-SCORE ENGINE
+// ==========================================
+function toggleSex() {
+  gSex = (gSex === 'male') ? 'female' : 'male';
+  const btn = document.getElementById('sexToggleBtn');
+  if (btn) {
+    btn.innerHTML = (gSex === 'male') ? '👦 Boy' : '👧 Girl';
+    btn.title = (gSex === 'male') ? 'เพศ: ชาย (คลิกเพื่อเปลี่ยนเป็นหญิง)' : 'เพศ: หญิง (คลิกเพื่อเปลี่ยนเป็นชาย)';
+  }
+  calcGrowthZScores();
+}
+
+function calcGrowthZScores() {
+  const badge = document.getElementById('growthZScoreBadge');
+  if (!badge) return;
+  const ageYr = getAgeInYears();
+  const weightKg = getWeight();
+  const htCm = parseFloat(document.getElementById('length')?.value) || 0;
+  
+  if (!ageYr || ageYr <= 0 || !weightKg || weightKg <= 0 || !DS || !DS.whoGrowth) {
+    badge.innerHTML = 'WAZ: — · HAZ: —';
+    badge.className = 'bio-derived-src';
+    return;
+  }
+  
+  const ageMo = Math.min(180, Math.round(ageYr * 12));
+  const table = (gSex === 'male' ? DS.whoGrowth.boys.table : DS.whoGrowth.girls.table);
+  
+  let closestRow = table[0];
+  let minDiff = 999;
+  for (let i = 0; i < table.length; i++) {
+    const diff = Math.abs(table[i][0] - ageMo);
+    if (diff < minDiff) {
+      minDiff = diff;
+      closestRow = table[i];
+    }
+  }
+  
+  const [rowMo, wMed, wSD, hMed, hSD] = closestRow;
+  const waz = (weightKg - wMed) / wSD;
+  let wazClass = 'good';
+  let wazLabel = 'Normal';
+  if (waz < -3) { wazClass = 'danger'; wazLabel = 'Severe Underweight'; }
+  else if (waz < -2) { wazClass = 'warning'; wazLabel = 'Underweight'; }
+  else if (waz > 3) { wazClass = 'danger'; wazLabel = 'Obese'; }
+  else if (waz > 2) { wazClass = 'warning'; wazLabel = 'Overweight'; }
+  
+  let hazText = 'HAZ: —';
+  if (htCm > 0) {
+    const haz = (htCm - hMed) / hSD;
+    let hazClass = 'good';
+    let hazLabel = 'Normal';
+    if (haz < -3) { hazClass = 'danger'; hazLabel = 'Severe Stunting'; }
+    else if (haz < -2) { hazClass = 'warning'; hazLabel = 'Stunted'; }
+    else if (haz > 2) { hazClass = 'warning'; hazLabel = 'Tall'; }
+    hazText = `HAZ: ${haz >= 0 ? '+' : ''}${haz.toFixed(1)} (${hazLabel})`;
+  }
+  
+  badge.innerHTML = `WAZ: ${waz >= 0 ? '+' : ''}${waz.toFixed(1)} (${wazLabel}) · ${hazText}`;
+  badge.title = `WHO Growth Standards (${gSex === 'male' ? 'Boy' : 'Girl'}, ${ageMo} mo): Weight Median ${wMed}kg (±${wSD}), Height Median ${hMed}cm (±${hSD})`;
+}
+
+// ==========================================
+// SEIZURE STOPWATCH TIMER ENGINE
+// ==========================================
+function formatSeizureTime(totalSec) {
+  const m = Math.floor(totalSec / 60);
+  const s = totalSec % 60;
+  return `${m}:${s < 10 ? '0' : ''}${s}`;
+}
+
+function getSeizureStageText(sec) {
+  if (sec < 300) return '⚡ Stage 1 (0–5 min): Emergent BZD (Midazolam IN/IM or Lorazepam/Diazepam IV)';
+  if (sec < 600) return '⚡ Stage 1 repeat (5–10 min): Repeat 2nd BZD dose if seizure persists';
+  if (sec < 1200) return '⚡ Stage 2 (10–20 min): Urgent Control (Levetiracetam 60 mg/kg or Fosphenytoin/Valproate)';
+  if (sec < 2400) return '🚨 Stage 3 (20–40 min): Refractory SE (PICU / Midazolam or Ketamine Infusion)';
+  return '🚨 Super-Refractory SE (> 40 min): Anesthetic Infusions, Intubation, Continuous EEG';
+}
+
+function updateSeizureTimerUI() {
+  const timeEl = document.getElementById('seizureTimerTime');
+  const stageEl = document.getElementById('seizureTimerStage');
+  const barEl = document.getElementById('seizureTimerProgress');
+  if (timeEl) timeEl.textContent = formatSeizureTime(gSeizureTimerSeconds);
+  if (stageEl) stageEl.textContent = getSeizureStageText(gSeizureTimerSeconds);
+  if (barEl) {
+    const pct = Math.min(100, (gSeizureTimerSeconds / 1800) * 100);
+    barEl.style.width = `${pct}%`;
+    if (gSeizureTimerSeconds >= 600) {
+      barEl.style.backgroundColor = 'var(--danger)';
+    } else if (gSeizureTimerSeconds >= 300) {
+      barEl.style.backgroundColor = 'var(--warning)';
+    } else {
+      barEl.style.backgroundColor = 'var(--accent)';
+    }
+  }
+}
+
+function toggleSeizureTimer() {
+  const btn = document.getElementById('seizureTimerToggleBtn');
+  if (gSeizureTimerRunning) {
+    clearInterval(gSeizureTimerInterval);
+    gSeizureTimerRunning = false;
+    if (btn) btn.innerHTML = '▶ Start';
+  } else {
+    gSeizureTimerRunning = true;
+    if (btn) btn.innerHTML = '⏸ Pause';
+    gSeizureTimerInterval = setInterval(() => {
+      gSeizureTimerSeconds++;
+      updateSeizureTimerUI();
+      if (gSeizureTimerSeconds === 300 || gSeizureTimerSeconds === 600 || gSeizureTimerSeconds === 1200) {
+        if (typeof navigator !== 'undefined' && navigator.vibrate) {
+          try { navigator.vibrate([200, 100, 200]); } catch (_) {}
+        }
+        showToast(`⏱️ Seizure Milestone: ${Math.round(gSeizureTimerSeconds/60)} นาที — ${getSeizureStageText(gSeizureTimerSeconds)}`);
+      }
+    }, 1000);
+  }
+}
+
+function resetSeizureTimer() {
+  clearInterval(gSeizureTimerInterval);
+  gSeizureTimerRunning = false;
+  gSeizureTimerSeconds = 0;
+  const btn = document.getElementById('seizureTimerToggleBtn');
+  if (btn) btn.innerHTML = '▶ Start';
+  updateSeizureTimerUI();
+}
+
+// ==========================================
+// 1. PEDIATRIC AIRWAY & RSI ENGINE
+// ==========================================
+function calcAirway() {
+  const outEl = document.getElementById('airwayOut');
+  if (!outEl) return;
+  const w = getWeight();
+  const rawAge = getAgeInYears();
+  const ageYr = (rawAge !== null && !isNaN(rawAge) && rawAge > 0) ? rawAge : (w ? (w < 10 ? 0.5 : (w < 20 ? 3 : 8)) : 1);
+
+  if (w <= 0) {
+    outEl.innerHTML = '<div style="color:var(--muted); padding:16px; text-align:center; font-style:italic;">กรุณาระบุน้ำหนักหรืออายุผู้ป่วยที่แถบด้านบน เพื่อคำนวณขนาดอุปกรณ์ทางเดินหายใจและยา RSI</div>';
+    return;
+  }
+
+  // Calculate ETT sizes
+  let cuffedETT = '3.5';
+  let uncuffedETT = '4.0';
+  let ettDepth = (w * 3).toFixed(1);
+  let blade = suggestBlade(w);
+  let lma = '1.5';
+  let suction = '8 Fr';
+
+  if (ageYr >= 1) {
+    cuffedETT = ((ageYr / 4) + 3.5).toFixed(1);
+    uncuffedETT = ((ageYr / 4) + 4.0).toFixed(1);
+    ettDepth = (parseFloat(cuffedETT) * 3).toFixed(1);
+    suction = `${Math.round(parseFloat(cuffedETT) * 2)} Fr`;
+    if (w < 5) lma = '1';
+    else if (w < 10) lma = '1.5';
+    else if (w < 20) lma = '2';
+    else if (w < 30) lma = '2.5';
+    else if (w < 50) lma = '3';
+    else lma = '4';
+  } else {
+    if (w < 1) { cuffedETT = '2.5'; uncuffedETT = '2.5'; ettDepth = '6.0'; blade = 'Miller 0'; suction = '5 Fr'; lma = '1'; }
+    else if (w < 2) { cuffedETT = '3.0'; uncuffedETT = '3.0'; ettDepth = '7.0'; blade = 'Miller 0'; suction = '6 Fr'; lma = '1'; }
+    else if (w < 3) { cuffedETT = '3.0'; uncuffedETT = '3.5'; ettDepth = '8.5'; blade = 'Miller 0/1'; suction = '6 Fr'; lma = '1'; }
+    else if (w < 5) { cuffedETT = '3.5'; uncuffedETT = '3.5'; ettDepth = '9.5'; blade = 'Miller 1'; suction = '6 Fr'; lma = '1'; }
+    else { cuffedETT = '3.5'; uncuffedETT = '4.0'; ettDepth = '11.0'; blade = 'Miller 1'; suction = '8 Fr'; lma = '1.5'; }
+  }
+
+  // RSI Drugs Calculations
+  const atropineDose = Math.min(ageYr > 12 ? 1.0 : 0.5, Math.max(0.1, w * 0.02)).toFixed(2);
+  const atropineVol = (atropineDose / 0.6).toFixed(2);
+
+  const ketamineDose = Math.min(100, w * 1.5).toFixed(0);
+  const ketamineVol = (ketamineDose / 50).toFixed(2);
+
+  const propofolDose = Math.min(150, w * 2.5).toFixed(0);
+  const propofolVol = (propofolDose / 10).toFixed(1);
+
+  const etomidateDose = Math.min(20, w * 0.3).toFixed(1);
+  const etomidateVol = (etomidateDose / 2).toFixed(1);
+
+  const midazolamDose = Math.min(10, w * 0.2).toFixed(1);
+  const midazolamVol = (midazolamDose / 5).toFixed(2);
+
+  const rocuroniumDose = Math.min(100, w * 1.0).toFixed(1);
+  const rocuroniumVol = (rocuroniumDose / 10).toFixed(2);
+
+  const succinylDose = Math.min(150, w * (ageYr < 1 ? 2.0 : 1.5)).toFixed(1);
+  const succinylVol = (succinylDose / 50).toFixed(2);
+
+  const sugammadexRescueDose = Math.min(1500, w * 16.0).toFixed(0);
+  const sugammadexRescueVol = (sugammadexRescueDose / 100).toFixed(1);
+
+  const bZone = getBroselowZone(w);
+  const broselowColor = (bZone && bZone.color) ? bZone.color : '—';
+
+  let html = `
+    <!-- Airway Equipment Sizing Hero Grid -->
+    <div style="font-weight:700; font-size:13px; color:var(--accent); margin-bottom:8px;">1. Airway & Intubation Equipment Sizing (อุปกรณ์ช่วยหายใจ)</div>
+    <div class="hero-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:8px; margin-bottom:14px;">
+      <div class="hero-metric">
+        <div class="hero-metric-label">Cuffed ETT (ID)</div>
+        <div class="hero-metric-value">${cuffedETT} <span style="font-size:13px;">mm</span></div>
+        <div class="hero-metric-sub">Uncuffed: ${uncuffedETT} mm</div>
+      </div>
+      <div class="hero-metric">
+        <div class="hero-metric-label">ETT Depth (Oral)</div>
+        <div class="hero-metric-value">${ettDepth} <span style="font-size:13px;">cm</span></div>
+        <div class="hero-metric-sub">ที่ริมฝีปาก (3 × ID)</div>
+      </div>
+      <div class="hero-metric">
+        <div class="hero-metric-label">Laryngoscope Blade</div>
+        <div class="hero-metric-value" style="font-size:18px;">${blade}</div>
+        <div class="hero-metric-sub">Broselow: ${broselowColor}</div>
+      </div>
+      <div class="hero-metric">
+        <div class="hero-metric-label">LMA / Suction</div>
+        <div class="hero-metric-value" style="font-size:18px;">Size ${lma}</div>
+        <div class="hero-metric-sub">Suction: ${suction}</div>
+      </div>
+    </div>
+
+    <!-- RSI Medications Protocol Table -->
+    <div style="font-weight:700; font-size:13px; color:var(--accent); margin-bottom:8px;">2. Rapid Sequence Intubation (RSI) Medications</div>
+    <div class="protocol-table-wrapper" style="margin-bottom:14px;">
+      <table class="protocol-table">
+        <thead>
+          <tr>
+            <th>Role / Medication</th>
+            <th>Calculated Dose</th>
+            <th>Volume to Draw</th>
+            <th>Prep & Route</th>
+            <th>Clinical Indication / Guardrails</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Atropine</strong><br><span style="font-size:10.5px; color:var(--muted);">Premedication</span></td>
+            <td><span class="dose-badge">${atropineDose} mg</span></td>
+            <td><strong>${atropineVol} mL</strong></td>
+            <td>0.6 mg/mL amp<br>IV/IO slow</td>
+            <td>เด็ก &lt;1 ปี หรือให้ร่วมกับ Succinylcholine (min 0.1 mg, max 0.5 mg)</td>
+          </tr>
+          <tr>
+            <td><strong>Ketamine</strong><br><span style="font-size:10.5px; color:var(--muted);">Induction (Preferred)</span></td>
+            <td><span class="dose-badge">${ketamineDose} mg</span> (1.5 mg/kg)</td>
+            <td><strong>${ketamineVol} mL</strong></td>
+            <td>50 mg/mL vial<br>IV/IO 1 min</td>
+            <td>ยานำสลบ 1st-line ใน Asthma / Shock / Hemodynamic instability</td>
+          </tr>
+          <tr>
+            <td><strong>Propofol</strong><br><span style="font-size:10.5px; color:var(--muted);">Induction (1%)</span></td>
+            <td><span class="dose-badge">${propofolDose} mg</span> (2.5 mg/kg)</td>
+            <td><strong>${propofolVol} mL</strong></td>
+            <td>10 mg/mL amp<br>IV/IO slow</td>
+            <td>Status epilepticus / Head trauma (BP ปกติ). ห้ามใช้ในภาวะ Shock</td>
+          </tr>
+          <tr>
+            <td><strong>Etomidate</strong><br><span style="font-size:10.5px; color:var(--muted);">Induction</span></td>
+            <td><span class="dose-badge">${etomidateDose} mg</span> (0.3 mg/kg)</td>
+            <td><strong>${etomidateVol} mL</strong></td>
+            <td>2 mg/mL amp<br>IV/IO slow</td>
+            <td>ไม่กระทบความดันโลหิต (ระวัง Adrenal suppression ใน Sepsis)</td>
+          </tr>
+          <tr>
+            <td><strong>Midazolam</strong><br><span style="font-size:10.5px; color:var(--muted);">Induction</span></td>
+            <td><span class="dose-badge">${midazolamDose} mg</span> (0.2 mg/kg)</td>
+            <td><strong>${midazolamVol} mL</strong></td>
+            <td>5 mg/mL amp<br>IV/IO slow</td>
+            <td>ยาทางเลือก ระวังความดันตกในผู้ป่วยขาดสารน้ำ</td>
+          </tr>
+          <tr style="background:rgba(158,61,36,0.06);">
+            <td><strong>Rocuronium</strong><br><span style="font-size:10.5px; color:var(--accent); font-weight:700;">1st-Line Paralytic</span></td>
+            <td><span class="dose-badge" style="background:var(--accent); color:#fff;">${rocuroniumDose} mg</span> (1.0 mg/kg)</td>
+            <td><strong>${rocuroniumVol} mL</strong></td>
+            <td>10 mg/mL vial<br>IV/IO push</td>
+            <td>ออกฤทธิ์ใน 45–60 วินาที นาน 30–60 นาที <em>(แก้ฤทธิ์ได้ด้วย Sugammadex)</em></td>
+          </tr>
+          <tr>
+            <td><strong>Succinylcholine</strong><br><span style="font-size:10.5px; color:var(--muted);">Depolarizing NMBA</span></td>
+            <td><span class="dose-badge">${succinylDose} mg</span></td>
+            <td><strong>${succinylVol} mL</strong></td>
+            <td>50 mg/mL vial<br>IV/IO push</td>
+            <td>ออกฤทธิ์ 30 วินาที ห้ามใช้ใน Hyperkalemia, Crush/Burn &gt;24h, กล้ามเนื้ออ่อนแรง</td>
+          </tr>
+          <tr style="background:rgba(220,38,38,0.06);">
+            <td><strong>Sugammadex</strong><br><span style="font-size:10.5px; color:var(--danger); font-weight:700;">🚨 CICO Rescue Reversal</span></td>
+            <td><span class="dose-badge" style="background:var(--danger); color:#fff;">${sugammadexRescueDose} mg</span> (16 mg/kg)</td>
+            <td><strong>${sugammadexRescueVol} mL</strong></td>
+            <td>100 mg/mL vial<br>IV bolus</td>
+            <td><strong>แก้ฤทธิ์ Rocuronium ทันที</strong> กรณี 'Cannot Intubate, Cannot Oxygenate'</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- "Show Math" Explainable Details -->
+    <details class="math-breakdown">
+      <summary><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> Show Math & Formula Breakdown</summary>
+      <div class="math-breakdown-content">
+        • Cuffed ETT: (Age ${typeof ageYr === 'number' ? ageYr.toFixed(1) : '1.0'} yr / 4) + 3.5 = ${cuffedETT} mm ID<br>
+        • Uncuffed ETT: (Age ${typeof ageYr === 'number' ? ageYr.toFixed(1) : '1.0'} yr / 4) + 4.0 = ${uncuffedETT} mm ID<br>
+        • Depth at Lip: 3 × ${cuffedETT} mm = ${ettDepth} cm (or Age/2 + 12 = ${(ageYr/2 + 12).toFixed(1)} cm)<br>
+        • Rocuronium 1.0 mg/kg × ${w.toFixed(1)} kg = ${rocuroniumDose} mg ÷ 10 mg/mL = ${rocuroniumVol} mL<br>
+        • Sugammadex CICO Rescue 16 mg/kg × ${w.toFixed(1)} kg = ${sugammadexRescueDose} mg ÷ 100 mg/mL = ${sugammadexRescueVol} mL
+      </div>
+    </details>
+  `;
+
+  outEl.innerHTML = html;
+}
+
+// ==========================================
+// 2. PEDIATRIC SEPSIS & PHOENIX SCORE ENGINE
+// ==========================================
+function setSepsisMode(mode) {
+  gSepsisMode = mode;
+  const pBtn = document.getElementById('sepsisModePhoenixBtn');
+  const sBtn = document.getElementById('sepsisModeSimpleBtn');
+  const pForm = document.getElementById('phoenixScoreForm');
+  const sForm = document.getElementById('simpleSepsisForm');
+  if (pBtn) pBtn.classList.toggle('active', mode === 'phoenix');
+  if (sBtn) sBtn.classList.toggle('active', mode === 'simple');
+  if (pForm) pForm.style.display = (mode === 'phoenix') ? 'flex' : 'none';
+  if (sForm) sForm.style.display = (mode === 'simple') ? 'block' : 'none';
+  calcSepsis();
+}
+
+function calcSepsis() {
+  const outEl = document.getElementById('sepsisOut');
+  if (!outEl) return;
+  const w = getWeight();
+  const ageYr = getAgeInYears();
+
+  if (w <= 0) {
+    outEl.innerHTML = '<div style="color:var(--muted); padding:16px; text-align:center; font-style:italic;">กรุณาระบุน้ำหนักหรืออายุผู้ป่วยที่แถบด้านบน เพื่อคำนวณคะแนน Phoenix Sepsis Score และปริมาตรสารน้ำ 1h Bundle</div>';
+    return;
+  }
+
+  // Phoenix Score calculation
+  const respPts = parseInt(document.getElementById('sepsisResp')?.value || '0', 10);
+  const cardioPts = parseInt(document.getElementById('sepsisCardio')?.value || '0', 10);
+  const coagPts = parseInt(document.getElementById('sepsisCoag')?.value || '0', 10);
+  const neuroPts = parseInt(document.getElementById('sepsisNeuro')?.value || '0', 10);
+  const totalPhoenix = respPts + cardioPts + coagPts + neuroPts;
+
+  // Simple checklist calculation
+  let simpleCount = 0;
+  ['chkSepsisTemp', 'chkSepsisHR', 'chkSepsisRR', 'chkSepsisMental', 'chkSepsisCRT', 'chkSepsisPulse'].forEach(id => {
+    if (document.getElementById(id)?.checked) simpleCount++;
+  });
+
+  // Interpretation
+  let statusClass = 'good';
+  let statusTitle = '✓ Low Sepsis Probability / Normal Organ Function';
+  let statusDesc = 'Phoenix Score < 2: ยังไม่เข้าเกณฑ์ Sepsis ตาม Phoenix Criteria 2024';
+
+  if (gSepsisMode === 'phoenix') {
+    if (totalPhoenix >= 2 && cardioPts >= 1) {
+      statusClass = 'danger';
+      statusTitle = '🚨 SEPTIC SHOCK (ภาวะช็อกจากการติดเชื้อ)';
+      statusDesc = `Phoenix Score ${totalPhoenix} คะแนน (≥ 2 + Cardiovascular ≥ 1 pt) — เริ่ม Vasoactive และให้สารน้ำด่วน`;
+    } else if (totalPhoenix >= 2) {
+      statusClass = 'danger';
+      statusTitle = '🚨 PEDIATRIC SEPSIS (ภาวะติดเชื้อในกระแสเลือด)';
+      statusDesc = `Phoenix Score ${totalPhoenix} คะแนน (≥ 2) — มีอวัยวะทำงานล้มเหลว (Organ Dysfunction) ต้องเริ่ม 1-Hour Bundle`;
+    }
+  } else {
+    if (simpleCount >= 2) {
+      statusClass = 'danger';
+      statusTitle = '⚠️ POSSIBLY SEVERE INFECTION / SEPSIS ALERT';
+      statusDesc = `พบสัญญาณเตือน ${simpleCount}/6 ข้อ ร่วมกับสงสัยการติดเชื้อ — ส่งตรวจ Lab และประเมิน 1-Hour Bundle ทันที`;
+    } else {
+      statusTitle = '✓ Screening Negative';
+      statusDesc = `พบสัญญาณเตือน ${simpleCount}/6 ข้อ`;
+    }
+  }
+
+  // Fluid bolus calculations (SSC 2026)
+  const bolus10 = (w * 10).toFixed(0);
+  const bolus20 = (w * 20).toFixed(0);
+  const bolus40 = (w * 40).toFixed(0);
+  const bolus60 = (w * 60).toFixed(0);
+  const ceftriaxoneDose = Math.min(2000, w * 80).toFixed(0);
+  const vancoDose = Math.min(1000, w * 15).toFixed(0);
+
+  let html = `
+    <!-- Sepsis Score Status Banner -->
+    <div style="background:var(--${statusClass}-soft); border:1.5px solid var(--${statusClass}); border-radius:var(--r-md); padding:12px 16px; margin-bottom:14px;">
+      <div style="font-weight:800; font-size:15px; color:var(--${statusClass}); margin-bottom:4px;">${statusTitle}</div>
+      <div style="font-size:12.5px; color:var(--ink);">${statusDesc}</div>
+      ${gSepsisMode === 'phoenix' ? `<div style="font-size:11.5px; color:var(--muted); margin-top:6px; font-family:'JetBrains Mono',monospace;">คะแนนย่อย: หายใจ ${respPts} | ไหลเวียน ${cardioPts} | การแข็งตัว ${coagPts} | ระบบประสาท ${neuroPts} = รวม ${totalPhoenix}/13 pts</div>` : ''}
+    </div>
+
+    <!-- SSC 2026 1-Hour Bundle & Fluid Resuscitation Targets -->
+    <div style="font-weight:700; font-size:13px; color:var(--accent); margin-bottom:8px;">Surviving Sepsis Campaign (SSC 2026) 1-Hour Bundle Guidelines</div>
+    <div class="hero-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:8px; margin-bottom:14px;">
+      <div class="hero-metric">
+        <div class="hero-metric-label">1st Fluid Bolus (20 mL/kg)</div>
+        <div class="hero-metric-value">${bolus20} <span style="font-size:13px;">mL</span></div>
+        <div class="hero-metric-sub">0.9% NS / Plasmalyte in 15m</div>
+      </div>
+      <div class="hero-metric">
+        <div class="hero-metric-label">Max Fluid (40–60 mL/kg)</div>
+        <div class="hero-metric-value">${bolus40}–${bolus60} <span style="font-size:13px;">mL</span></div>
+        <div class="hero-metric-sub">เกินนี้เริ่ม Vasoactive ทันที</div>
+      </div>
+      <div class="hero-metric">
+        <div class="hero-metric-label">IV Ceftriaxone (80 mg/kg)</div>
+        <div class="hero-metric-value">${ceftriaxoneDose} <span style="font-size:13px;">mg</span></div>
+        <div class="hero-metric-sub">ให้ภายใน 1 ชม. (max 2g)</div>
+      </div>
+      <div class="hero-metric">
+        <div class="hero-metric-label">IV Vancomycin (15 mg/kg)</div>
+        <div class="hero-metric-value">${vancoDose} <span style="font-size:13px;">mg</span></div>
+        <div class="hero-metric-sub">MRSA coverage (max 1g)</div>
+      </div>
+    </div>
+
+    <!-- Stepwise Sepsis Bundle Action Plan -->
+    <div class="protocol-table-wrapper" style="margin-bottom:14px;">
+      <table class="protocol-table">
+        <thead>
+          <tr>
+            <th style="width:70px;">Step</th>
+            <th>Action Item (ภายใน 60 นาที)</th>
+            <th>Clinical Directive & Targets</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Step 1</strong></td>
+            <td><strong>Hemoculture x 2 Sites</strong></td>
+            <td>เจาะเพาะเชื้อเลือดก่อนให้ยาปฏิชีวนะ (ห้ามดีเลย์ยาเกิน 1 ชม. หากเจาะยาก)</td>
+          </tr>
+          <tr>
+            <td><strong>Step 2</strong></td>
+            <td><strong>Empiric IV Antibiotics</strong></td>
+            <td>ให้ <strong>Ceftriaxone ${ceftriaxoneDose} mg</strong> (หรือ Cefotaxime) ± Vancomycin ${vancoDose} mg ทันที</td>
+          </tr>
+          <tr>
+            <td><strong>Step 3</strong></td>
+            <td><strong>Isotonic Crystalloid Bolus</strong></td>
+            <td>ให้ <strong>0.9% NS หรือ Balanced Crystalloid ${bolus20} mL</strong> ใน 10–20 นาที และประเมินซ้ำ</td>
+          </tr>
+          <tr style="background:rgba(220,38,38,0.06);">
+            <td><strong>Step 4</strong></td>
+            <td><strong>Vasoactive Escalation</strong></td>
+            <td>หากได้รับสารน้ำครบ ${bolus40}–${bolus60} mL แล้วยัง Shock → <strong>เริ่ม Epinephrine หรือ Norepinephrine 0.05–0.3 mcg/kg/min</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <details class="math-breakdown">
+      <summary><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> Show Math & Formula Breakdown</summary>
+      <div class="math-breakdown-content">
+        • Initial Bolus 20 mL/kg × ${w.toFixed(1)} kg = ${bolus20} mL (Isotonic Crystalloid)<br>
+        • Cumulative Cap 40 mL/kg = ${bolus40} mL | 60 mL/kg = ${bolus60} mL<br>
+        • Ceftriaxone: 80 mg/kg × ${w.toFixed(1)} kg = ${(w*80).toFixed(0)} mg (clamped to max 2000 mg -> ${ceftriaxoneDose} mg)
+      </div>
+    </details>
+  `;
+
+  outEl.innerHTML = html;
+}
+
+// ==========================================
+// 3. PEDIATRIC ANAPHYLAXIS PROTOCOL ENGINE
+// ==========================================
+function calcAnaphylaxis() {
+  const outEl = document.getElementById('anaphylaxisOut');
+  if (!outEl) return;
+  const w = getWeight();
+
+  if (w <= 0) {
+    outEl.innerHTML = '<div style="color:var(--muted); padding:16px; text-align:center; font-style:italic;">กรุณาระบุน้ำหนักผู้ป่วยที่แถบด้านบน เพื่อคำนวณขนาดยา Epinephrine IM และยาร่วมใน Anaphylaxis</div>';
+    return;
+  }
+
+  // 1st Line Epinephrine IM (1:1,000 / 1 mg/mL)
+  const maxEpiMg = w < 30 ? 0.3 : 0.5;
+  const epiDoseMg = Math.min(maxEpiMg, w * 0.01).toFixed(2);
+  const epiDoseMl = (epiDoseMg * 1.0).toFixed(2); // 1 mg/mL -> mL = mg
+
+  // 2nd Line Medications
+  const diphenDose = Math.min(50, w * 1.0).toFixed(1);
+  const diphenVol = (diphenDose / 50).toFixed(2);
+
+  const famotidineDose = Math.min(20, w * 0.5).toFixed(1);
+  const famotidineVol = (famotidineDose / 10).toFixed(2);
+
+  const methylpredDose = Math.min(125, w * 1.5).toFixed(1);
+  const methylpredVol = (methylpredDose / 40).toFixed(2);
+
+  const nsBolus = Math.min(1000, w * 20).toFixed(0);
+
+  let html = `
+    <!-- 1st-Line Epinephrine Hero Grid -->
+    <div style="font-weight:700; font-size:13px; color:var(--danger); margin-bottom:8px;">1. First-Line Life-Saving Treatment (ฉีดทันที ห้ามรีรอ)</div>
+    <div class="hero-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:8px; margin-bottom:14px;">
+      <div class="hero-metric" style="border-color:var(--danger);">
+        <div class="hero-metric-label">Epinephrine 1:1,000 (IM)</div>
+        <div class="hero-metric-value" style="color:var(--danger);">${epiDoseMg} <span style="font-size:13px;">mg</span></div>
+        <div class="hero-metric-sub">0.01 mg/kg (max ${maxEpiMg} mg)</div>
+      </div>
+      <div class="hero-metric" style="border-color:var(--danger);">
+        <div class="hero-metric-label">Syringe Volume (1 mg/mL)</div>
+        <div class="hero-metric-value" style="color:var(--danger);">${epiDoseMl} <span style="font-size:13px;">mL</span></div>
+        <div class="hero-metric-sub">ดูดด้วย Syringe 1 mL (Tuberculin)</div>
+      </div>
+      <div class="hero-metric">
+        <div class="hero-metric-label">Injection Site & Repeat</div>
+        <div class="hero-metric-value" style="font-size:16px;">IM ต้นขาด้านนอก</div>
+        <div class="hero-metric-sub">ซ้ำได้ทุก 5–15 นาที หากไม่ดีขึ้น</div>
+      </div>
+      <div class="hero-metric">
+        <div class="hero-metric-label">IV Fluid Bolus (20 mL/kg)</div>
+        <div class="hero-metric-value">${nsBolus} <span style="font-size:13px;">mL</span></div>
+        <div class="hero-metric-sub">0.9% NS สำหรับ Hypotension</div>
+      </div>
+    </div>
+
+    <!-- 2nd-Line Adjunctive Therapy Table -->
+    <div style="font-weight:700; font-size:13px; color:var(--accent); margin-bottom:8px;">2. Second-Line Adjunctive Medications (ให้หลังฉีด Epinephrine แล้ว)</div>
+    <div class="protocol-table-wrapper" style="margin-bottom:14px;">
+      <table class="protocol-table">
+        <thead>
+          <tr>
+            <th>Medication</th>
+            <th>Calculated Dose</th>
+            <th>Volume</th>
+            <th>Prep & Route</th>
+            <th>Clinical Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Diphenhydramine</strong><br><span style="font-size:10.5px; color:var(--muted);">H1-Antihistamine</span></td>
+            <td><span class="dose-badge">${diphenDose} mg</span> (1 mg/kg)</td>
+            <td><strong>${diphenVol} mL</strong></td>
+            <td>50 mg/mL amp<br>IV slow / IM</td>
+            <td>ลดผื่น คัน ลมพิษ (ห้ามใช้แทน Epinephrine ใน Anaphylaxis)</td>
+          </tr>
+          <tr>
+            <td><strong>Famotidine</strong><br><span style="font-size:10.5px; color:var(--muted);">H2-Blocker</span></td>
+            <td><span class="dose-badge">${famotidineDose} mg</span> (0.5 mg/kg)</td>
+            <td><strong>${famotidineVol} mL</strong></td>
+            <td>10 mg/mL amp<br>IV over 2 min</td>
+            <td>เสริมฤทธิ์ H1-antihistamine ในการควบคุมอาการทางผิวหนัง</td>
+          </tr>
+          <tr>
+            <td><strong>Methylprednisolone</strong><br><span style="font-size:10.5px; color:var(--muted);">Corticosteroid</span></td>
+            <td><span class="dose-badge">${methylpredDose} mg</span> (1.5 mg/kg)</td>
+            <td><strong>${methylpredVol} mL</strong></td>
+            <td>40 mg/mL vial<br>IV slow</td>
+            <td>ป้องกัน Biphasic Reaction (เริ่มออกฤทธิ์หลังฉีด 4–6 ชม.)</td>
+          </tr>
+          <tr style="background:rgba(220,38,38,0.06);">
+            <td><strong>Epinephrine IV Drip</strong><br><span style="font-size:10.5px; color:var(--danger); font-weight:700;">Refractory Shock</span></td>
+            <td><span class="dose-badge" style="background:var(--danger); color:#fff;">0.05–1.0 mcg/kg/min</span></td>
+            <td><strong>Rate by pump</strong></td>
+            <td>1 mg in 100 mL D5W<br>(10 mcg/mL)</td>
+            <td>สำหรับเคสที่ฉีด IM 2–3 ครั้งและให้สารน้ำแล้วยังความดันตก / Shock</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Observation and Discharge Warning -->
+    <div class="note" style="border-left:3px solid var(--warning);">
+      <strong>⏱️ การเฝ้าระวัง Biphasic Reaction (EAACI 2025):</strong> ผู้ป่วย Anaphylaxis ต้องสังเกตอาการที่ห้องฉุกเฉินอย่างน้อย <strong>4–6 ชั่วโมง</strong> (หรือ 24 ชม. หากอาการรุนแรงมาก) ก่อนจำหน่าย และต้องจ่ายยา Epinephrine Auto-Injector หรือนัดตรวจคลินิกภูมิแพ้เสมอ
+    </div>
+
+    <details class="math-breakdown">
+      <summary><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> Show Math & Formula Breakdown</summary>
+      <div class="math-breakdown-content">
+        • Epinephrine IM 1:1000: 0.01 mg/kg × ${w.toFixed(1)} kg = ${(w*0.01).toFixed(3)} mg (capped at ${maxEpiMg} mg -> ${epiDoseMg} mg = ${epiDoseMl} mL of 1 mg/mL)<br>
+        • Diphenhydramine: 1.0 mg/kg × ${w.toFixed(1)} kg = ${diphenDose} mg ÷ 50 mg/mL = ${diphenVol} mL<br>
+        • NS Bolus: 20 mL/kg × ${w.toFixed(1)} kg = ${nsBolus} mL
+      </div>
+    </details>
+  `;
+
+  outEl.innerHTML = html;
+}
+
+// ==========================================
+// 4. PEDIATRIC TRAUMA & BURNS PROTOCOL ENGINE
+// ==========================================
+function calcTrauma() {
+  const outEl = document.getElementById('traumaOut');
+  if (!outEl) return;
+  const w = getWeight();
+  const tbsa = parseFloat(document.getElementById('burnTBSA')?.value) || 0;
+  const hoursElapsed = parseFloat(document.getElementById('burnHoursElapsed')?.value) || 0;
+
+  if (w <= 0) {
+    outEl.innerHTML = '<div style="color:var(--muted); padding:16px; text-align:center; font-style:italic;">กรุณาระบุน้ำหนักผู้ป่วยที่แถบด้านบน เพื่อคำนวณปริมาตรสารน้ำแผลไฟไหม้ (Parkland) และปริมาตรเลือด (EBV)</div>';
+    return;
+  }
+
+  // Modified Parkland Burn Calculation: 3 mL * kg * %TBSA (LRS)
+  const parklandTotal24h = (3 * w * tbsa);
+  const parklandFirst8h = parklandTotal24h * 0.5;
+  const parklandNext16h = parklandTotal24h * 0.5;
+
+  // Rate in remaining first 8h
+  const hoursRemainingFirst8h = Math.max(0.5, 8 - hoursElapsed);
+  const rateFirst8h = (parklandFirst8h / hoursRemainingFirst8h).toFixed(1);
+  const rateNext16h = (parklandNext16h / 16).toFixed(1);
+
+  // Holliday-Segar Maintenance Fluid
+  const maintHourlyRate = calcMaintenanceMlPerHr(w);
+
+  // Target Urine Output (1.0 mL/kg/hr)
+  const targetUO = (w * 1.0).toFixed(0);
+
+  // Estimated Blood Volume
+  const ebvTotal = (w * 75).toFixed(0);
+  const prbc10ml = (w * 10).toFixed(0);
+
+  let html = `
+    <!-- ATLS 11th Ed xABCDE Survey Checklist -->
+    <div style="font-weight:700; font-size:13px; color:var(--accent); margin-bottom:8px;">1. ATLS 11th Ed (2025) xABCDE Primary Trauma Survey</div>
+    <div class="protocol-table-wrapper" style="margin-bottom:14px;">
+      <table class="protocol-table">
+        <thead>
+          <tr>
+            <th style="width:50px;">Priority</th>
+            <th style="width:160px;">Survey Focus</th>
+            <th>Immediate Resuscitative Interventions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:rgba(220,38,38,0.06);">
+            <td><strong style="color:var(--danger); font-size:16px;">x</strong></td>
+            <td><strong style="color:var(--danger);">eXsanguinating Hemorrhage</strong></td>
+            <td>ขัน Tourniquet แขน/ขาที่เลือดพุ่ง, แพ็คแผลด้วย Hemostatic Gauze และกดทันที</td>
+          </tr>
+          <tr>
+            <td><strong>A</strong></td>
+            <td><strong>Airway + C-Spine</strong></td>
+            <td>Manual in-line stabilization, Rigid collar, ดูดเสมหะ/เลือด, Intubation หาก GCS ≤ 8</td>
+          </tr>
+          <tr>
+            <td><strong>B</strong></td>
+            <td><strong>Breathing & O2</strong></td>
+            <td>ระบาย Tension Pneumothorax (Needle 2nd ICS MCL / 5th ICS AAL), Chest tube, High-flow O2</td>
+          </tr>
+          <tr>
+            <td><strong>C</strong></td>
+            <td><strong>Circulation & Shock</strong></td>
+            <td>เปิด IV/IO เบอร์ใหญ่ 2 สาย, ใส่ Pelvic Binder, ตรวจ eFAST, ให้ <strong>PRBC ${prbc10ml} mL</strong> หาก hemorrhagic shock</td>
+          </tr>
+          <tr>
+            <td><strong>D</strong></td>
+            <td><strong>Disability (Neuro)</strong></td>
+            <td>ประเมิน Pediatric GCS, รูม่านตา (Pupils), ตรวจระดับน้ำตาลในเลือด (Dextrostix)</td>
+          </tr>
+          <tr>
+            <td><strong>E</strong></td>
+            <td><strong>Exposure & Warmth</strong></td>
+            <td>ถอดเสื้อผ้าตรวจบาดแผลทั้งตัว, Log roll, ห่มผ้าอุ่น ป้องกัน Hypothermia Triad of Death</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Modified Parkland Pediatric Burn Calculator -->
+    <div style="font-weight:700; font-size:13px; color:var(--accent); margin-bottom:8px;">2. Modified Parkland Pediatric Burn Fluid Resuscitation (แผลไฟไหม้)</div>
+    ${tbsa > 0 ? `
+    <div class="hero-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:8px; margin-bottom:14px;">
+      <div class="hero-metric">
+        <div class="hero-metric-label">Total 24h Parkland (LRS)</div>
+        <div class="hero-metric-value">${parklandTotal24h.toFixed(0)} <span style="font-size:13px;">mL</span></div>
+        <div class="hero-metric-sub">3 mL × ${w.toFixed(1)}kg × ${tbsa}% TBSA</div>
+      </div>
+      <div class="hero-metric" style="border-color:var(--accent);">
+        <div class="hero-metric-label">1st 8h Rate (เหลือนม ${hoursRemainingFirst8h}h)</div>
+        <div class="hero-metric-value" style="color:var(--accent);">${rateFirst8h} <span style="font-size:13px;">mL/hr</span></div>
+        <div class="hero-metric-sub">ยอด 50%: ${parklandFirst8h.toFixed(0)} mL LRS</div>
+      </div>
+      <div class="hero-metric">
+        <div class="hero-metric-label">Next 16h Rate</div>
+        <div class="hero-metric-value">${rateNext16h} <span style="font-size:13px;">mL/hr</span></div>
+        <div class="hero-metric-sub">ยอด 50%: ${parklandNext16h.toFixed(0)} mL LRS</div>
+      </div>
+      <div class="hero-metric">
+        <div class="hero-metric-label">+ Maintenance Fluid Rate</div>
+        <div class="hero-metric-value">${maintHourlyRate.toFixed(1)} <span style="font-size:13px;">mL/hr</span></div>
+        <div class="hero-metric-sub">D5 0.45% NS วิ่งคู่ LRS</div>
+      </div>
+      <div class="hero-metric" style="border-color:var(--good);">
+        <div class="hero-metric-label">Target Urine Output</div>
+        <div class="hero-metric-value" style="color:var(--good);">≥ ${targetUO} <span style="font-size:13px;">mL/hr</span></div>
+        <div class="hero-metric-sub">เป้าหมาย 1.0 mL/kg/hr</div>
+      </div>
+    </div>
+    ` : `
+    <div style="background:var(--panel-subtle); border:1px solid var(--border); border-radius:var(--r-md); padding:10px 14px; margin-bottom:14px; font-size:12.5px;">
+      ระบุ <strong>% TBSA Burn</strong> ด้านบนเพื่อคำนวณอัตราหยดสารน้ำ Lactated Ringer's ตามสูตร Modified Parkland
+    </div>
+    `}
+
+    <details class="math-breakdown">
+      <summary><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> Show Math & Formula Breakdown</summary>
+      <div class="math-breakdown-content">
+        • Estimated Blood Volume (EBV): ${w.toFixed(1)} kg × 75 mL/kg = ${ebvTotal} mL<br>
+        • Standard Initial Blood Bolus: 10 mL/kg × ${w.toFixed(1)} kg = ${prbc10ml} mL PRBC<br>
+        ${tbsa > 0 ? `• Parkland 24h: 3 mL × ${w.toFixed(1)} kg × ${tbsa}% = ${parklandTotal24h.toFixed(0)} mL LRS (First 8h: ${parklandFirst8h.toFixed(0)} mL @ ${rateFirst8h} mL/hr + Next 16h: ${parklandNext16h.toFixed(0)} mL @ ${rateNext16h} mL/hr)<br>• Maintenance Fluid: ${maintHourlyRate.toFixed(1)} mL/hr` : ''}
+      </div>
+    </details>
+  `;
+
+  outEl.innerHTML = html;
+}
+
+// ==========================================
+// 5. CROUP & STRIDOR PROTOCOL ENGINE
+// ==========================================
+function calcCroup() {
+  const outEl = document.getElementById('croupOut');
+  if (!outEl) return;
+  const w = getWeight();
+
+  if (w <= 0) {
+    outEl.innerHTML = '<div style="color:var(--muted); padding:16px; text-align:center; font-style:italic;">กรุณาระบุน้ำหนักผู้ป่วยที่แถบด้านบน เพื่อคำนวณขนาดยา Dexamethasone และ Epinephrine พ่นสำหรับ Croup</div>';
+    return;
+  }
+
+  // Westley Score Calculation
+  const stridorPts = parseInt(document.getElementById('croupStridor')?.value || '0', 10);
+  const retractPts = parseInt(document.getElementById('croupRetract')?.value || '0', 10);
+  const airEntryPts = parseInt(document.getElementById('croupAirEntry')?.value || '0', 10);
+  const cyanosisPts = parseInt(document.getElementById('croupCyanosis')?.value || '0', 10);
+  const consciousPts = parseInt(document.getElementById('croupConscious')?.value || '0', 10);
+  const totalWestley = stridorPts + retractPts + airEntryPts + cyanosisPts + consciousPts;
+
+  // Severity classification
+  let severityClass = 'good';
+  let severityLabel = 'Mild Croup (คะแนน 0–2)';
+  let severityPlan = 'Dexamethasone รับประทานครั้งเดียว + กลับบ้านสังเกตอาการ';
+
+  if (totalWestley >= 12) {
+    severityClass = 'danger';
+    severityLabel = 'Impending Respiratory Failure (คะแนน ≥ 12)';
+    severityPlan = '🚨 เตรียมใส่ท่อช่วยหายใจด่วน + พ่น Epinephrine ทันที + Admit PICU';
+  } else if (totalWestley >= 8) {
+    severityClass = 'danger';
+    severityLabel = 'Severe Croup (คะแนน 8–11)';
+    severityPlan = 'Dexamethasone + พ่นยา Epinephrine ทันที + Admit Ward/PICU';
+  } else if (totalWestley >= 3) {
+    severityClass = 'warning';
+    severityLabel = 'Moderate Croup (คะแนน 3–7)';
+    severityPlan = 'Dexamethasone + พิจารณาพ่น Epinephrine + สังเกตอาการที่ ER 2–4 ชม.';
+  }
+
+  // Medication Dosing
+  const dexaDoseMg = Math.min(16, w * 0.6).toFixed(1);
+  const dexaLowMg = Math.min(16, w * 0.15).toFixed(1);
+  const dexaInjVol = (dexaDoseMg / 4).toFixed(2);
+  const dexaSyrupVol = (dexaDoseMg / 0.1).toFixed(1);
+
+  const epiRacemicMl = Math.min(0.5, w * 0.05).toFixed(2);
+  const epiLMl = Math.min(5.0, w * 0.5).toFixed(1);
+
+  let html = `
+    <!-- Westley Score Severity Banner -->
+    <div style="background:var(--${severityClass}-soft); border:1.5px solid var(--${severityClass}); border-radius:var(--r-md); padding:12px 16px; margin-bottom:14px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+        <div style="font-weight:800; font-size:15px; color:var(--${severityClass});">Westley Croup Score: ${totalWestley} / 17 คะแนน — ${severityLabel}</div>
+      </div>
+      <div style="font-size:12.5px; color:var(--ink); margin-top:4px;"><strong>แผนการรักษา:</strong> ${severityPlan}</div>
+      <div style="font-size:11.5px; color:var(--muted); margin-top:6px; font-family:'JetBrains Mono',monospace;">คะแนนย่อย: Stridor ${stridorPts} | Retraction ${retractPts} | Air entry ${airEntryPts} | Cyanosis ${cyanosisPts} | Consciousness ${consciousPts}</div>
+    </div>
+
+    <!-- Croup Medications Hero Grid -->
+    <div style="font-weight:700; font-size:13px; color:var(--accent); margin-bottom:8px;">Croup Medications & Dosing (ยารักษาโรค Croup)</div>
+    <div class="hero-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:8px; margin-bottom:14px;">
+      <div class="hero-metric" style="border-color:var(--good);">
+        <div class="hero-metric-label">Dexamethasone (0.6 mg/kg)</div>
+        <div class="hero-metric-value" style="color:var(--good);">${dexaDoseMg} <span style="font-size:13px;">mg</span></div>
+        <div class="hero-metric-sub">Single dose (max 16 mg)</div>
+      </div>
+      <div class="hero-metric">
+        <div class="hero-metric-label">Dexa Injection (4 mg/mL)</div>
+        <div class="hero-metric-value">${dexaInjVol} <span style="font-size:13px;">mL</span></div>
+        <div class="hero-metric-sub">IV / IM หรือกินได้</div>
+      </div>
+      <div class="hero-metric" style="border-color:var(--accent);">
+        <div class="hero-metric-label">Nebulized L-Epi (1:1,000)</div>
+        <div class="hero-metric-value" style="color:var(--accent);">${epiLMl} <span style="font-size:13px;">mL</span></div>
+        <div class="hero-metric-sub">0.5 mL/kg (max 5 mL) พ่น 15m</div>
+      </div>
+      <div class="hero-metric">
+        <div class="hero-metric-label">Racemic Epi (2.25%)</div>
+        <div class="hero-metric-value">${epiRacemicMl} <span style="font-size:13px;">mL</span></div>
+        <div class="hero-metric-sub">+ NSS 3 mL (max 0.5 mL)</div>
+      </div>
+    </div>
+
+    <div class="note" style="border-left:3px solid var(--warning);">
+      <strong>⏱️ ข้อควรระวัง Rebound Stridor:</strong> ฤทธิ์ยาพ่น Epinephrine จะหมดลงใน 2 ชั่วโมง หากพ่นยาแล้วต้องสังเกตอาการที่ ER อย่างน้อย <strong>2–4 ชั่วโมง</strong> หากยังมี Stridor at rest หลังพ่นยา 2 ครั้งควรรับไว้รักษาในโรงพยาบาล
+    </div>
+
+    <details class="math-breakdown">
+      <summary><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> Show Math & Formula Breakdown</summary>
+      <div class="math-breakdown-content">
+        • Dexamethasone Standard 0.6 mg/kg × ${w.toFixed(1)} kg = ${(w*0.6).toFixed(2)} mg (clamped to max 16 mg -> ${dexaDoseMg} mg = ${dexaInjVol} mL of 4 mg/mL)<br>
+        • Dexamethasone Low-Dose 0.15 mg/kg × ${w.toFixed(1)} kg = ${dexaLowMg} mg<br>
+        • Nebulized L-Epinephrine 1:1000: 0.5 mL/kg × ${w.toFixed(1)} kg = ${epiLMl} mL (max 5.0 mL)
+      </div>
+    </details>
+  `;
+
+  outEl.innerHTML = html;
+}
+
+// ==========================================
+// 6. BLOOD TRANSFUSION & MTP ENGINE
+// ==========================================
+function calcTransfusion() {
+  const outEl = document.getElementById('transfusionOut');
+  if (!outEl) return;
+  const w = getWeight();
+  const currentHb = parseFloat(document.getElementById('txCurrentHb')?.value) || 0;
+  const targetHb = parseFloat(document.getElementById('txTargetHb')?.value) || 10.0;
+  const prbcType = document.getElementById('txPrbcType')?.value || 'cpda';
+
+  if (w <= 0) {
+    outEl.innerHTML = '<div style="color:var(--muted); padding:16px; text-align:center; font-style:italic;">กรุณาระบุน้ำหนักผู้ป่วยที่แถบด้านบน เพื่อคำนวณปริมาตรเม็ดเลือดแดงเข้มข้น (PRBC), เกล็ดเลือด, FFP และสูตร MTP</div>';
+    return;
+  }
+
+  // PRBC Calculation
+  const factor = (prbcType === 'sagm') ? 4 : 3;
+  const deltaHb = Math.max(0, targetHb - currentHb);
+  let prbcVol = (w * deltaHb * factor);
+  if (currentHb <= 0) {
+    // Default bolus if current Hb not entered
+    prbcVol = (w * 10);
+  }
+  const maxInfusionRate = (w * 5).toFixed(0);
+
+  // Platelet, FFP, Cryo
+  const pltVol = (w * 10).toFixed(0);
+  const ffpVol = (w * 12.5).toFixed(0);
+  const cryoVol = (w * 5).toFixed(0);
+  const txaLoadingMg = Math.min(1000, w * 15).toFixed(0);
+  const txaInfusionRate = (w * 2).toFixed(1);
+
+  let html = `
+    <!-- PRBC Transfusion Hero Grid -->
+    <div style="font-weight:700; font-size:13px; color:var(--accent); margin-bottom:8px;">1. Packed Red Blood Cells (PRBC) Calculation</div>
+    <div class="hero-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:8px; margin-bottom:14px;">
+      <div class="hero-metric" style="border-color:var(--danger);">
+        <div class="hero-metric-label">Calculated PRBC Volume</div>
+        <div class="hero-metric-value" style="color:var(--danger);">${prbcVol.toFixed(0)} <span style="font-size:13px;">mL</span></div>
+        <div class="hero-metric-sub">${currentHb > 0 ? `เพิ่ม Hb จาก ${currentHb} -> ${targetHb} g/dL` : 'ขนาดมาตรฐาน 10 mL/kg'}</div>
+      </div>
+      <div class="hero-metric">
+        <div class="hero-metric-label">Max Safe Infusion Rate</div>
+        <div class="hero-metric-value">${maxInfusionRate} <span style="font-size:13px;">mL/hr</span></div>
+        <div class="hero-metric-sub">5 mL/kg/hr (ป้องกัน TACO)</div>
+      </div>
+      <div class="hero-metric">
+        <div class="hero-metric-label">Transfusion Duration</div>
+        <div class="hero-metric-value" style="font-size:18px;">2–4 <span style="font-size:13px;">ชั่วโมง</span></div>
+        <div class="hero-metric-sub">ห้ามเกิน 4 ชม. ต่อถุง</div>
+      </div>
+      <div class="hero-metric">
+        <div class="hero-metric-label">Expected Hb Rise</div>
+        <div class="hero-metric-value" style="font-size:18px;">+ ${deltaHb > 0 ? deltaHb.toFixed(1) : '2–3'} <span style="font-size:13px;">g/dL</span></div>
+        <div class="hero-metric-sub">Hct เพิ่มขึ้น ~6–9%</div>
+      </div>
+    </div>
+
+    <!-- Blood Components & MTP Protocol Table -->
+    <div style="font-weight:700; font-size:13px; color:var(--accent); margin-bottom:8px;">2. Pediatric Blood Components & Massive Transfusion Protocol (MTP 1:1:1)</div>
+    <div class="protocol-table-wrapper" style="margin-bottom:14px;">
+      <table class="protocol-table">
+        <thead>
+          <tr>
+            <th>Blood Component</th>
+            <th>Calculated Dose</th>
+            <th>Standard Rule</th>
+            <th>Clinical Target</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>PRBC</strong><br><span style="font-size:10.5px; color:var(--muted);">Packed Red Cells</span></td>
+            <td><span class="dose-badge">${(w*10).toFixed(0)}–${(w*15).toFixed(0)} mL</span></td>
+            <td>10–15 mL/kg</td>
+            <td>เพิ่ม Hb 2–3 g/dL (รักษา Shock / Severe Anemia)</td>
+          </tr>
+          <tr>
+            <td><strong>Platelet Concentrate</strong><br><span style="font-size:10.5px; color:var(--muted);">เกล็ดเลือด</span></td>
+            <td><span class="dose-badge">${pltVol} mL</span></td>
+            <td>10 mL/kg (หรือ 1 unit/10 kg)</td>
+            <td>เพิ่มเกล็ดเลือด ~30,000–50,000 /mcL (เป้าหมาย ≥ 50k ในเลือดออก)</td>
+          </tr>
+          <tr>
+            <td><strong>Fresh Frozen Plasma (FFP)</strong><br><span style="font-size:10.5px; color:var(--muted);">พลาสมาสดแช่แข็ง</span></td>
+            <td><span class="dose-badge">${ffpVol} mL</span></td>
+            <td>10–15 mL/kg</td>
+            <td>เพิ่มระดับ Coagulation Factors 15–20% (INR &gt; 1.5)</td>
+          </tr>
+          <tr>
+            <td><strong>Cryoprecipitate</strong><br><span style="font-size:10.5px; color:var(--muted);">ไครโอพรีซิพิเทต</span></td>
+            <td><span class="dose-badge">${cryoVol} mL</span></td>
+            <td>5–10 mL/kg (หรือ 1 unit/5 kg)</td>
+            <td>รักษา Fibrinogen &lt; 100–150 mg/dL</td>
+          </tr>
+          <tr style="background:rgba(158,61,36,0.06);">
+            <td><strong>Tranexamic Acid (TXA)</strong><br><span style="font-size:10.5px; color:var(--accent); font-weight:700;">Antifibrinolytic</span></td>
+            <td><span class="dose-badge" style="background:var(--accent); color:#fff;">${txaLoadingMg} mg</span> Load</td>
+            <td>15 mg/kg IV in 10m (max 1g)<br>then ${txaInfusionRate} mg/hr</td>
+            <td>ยับยั้งการสลายลิ่มเลือดใน Major Trauma / MTP ภายใน 3 ชม.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <details class="math-breakdown">
+      <summary><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> Show Math & Formula Breakdown</summary>
+      <div class="math-breakdown-content">
+        • PRBC Formula: Weight ${w.toFixed(1)} kg × (Target ${targetHb} - Current ${currentHb} g/dL) × factor ${factor} = ${prbcVol.toFixed(0)} mL<br>
+        • Maximum Safe Infusion Rate: 5 mL/kg/hr × ${w.toFixed(1)} kg = ${maxInfusionRate} mL/hr<br>
+        • Tranexamic Acid (TXA): 15 mg/kg × ${w.toFixed(1)} kg = ${(w*15).toFixed(0)} mg (clamped to max 1000 mg -> ${txaLoadingMg} mg)
+      </div>
+    </details>
+  `;
+
+  outEl.innerHTML = html;
+}
+
+// ==========================================
+// 7. BEDSIDE SUMMARY POCKET CARD PRINT ENGINE
+// ==========================================
+function printBedsideSummaryCard() {
+  const w = getWeight();
+  const ageYr = getAgeInYears();
+  if (w <= 0) {
+    showToast('กรุณาระบุน้ำหนักผู้ป่วยก่อนพิมพ์ Bedside Pocket Card');
+    return;
+  }
+  if (typeof window !== 'undefined' && typeof window.print === 'function') {
+    window.print();
+  }
+}
+
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     estimateWeightFromAge,
@@ -3787,6 +4834,20 @@ if (typeof module !== 'undefined' && module.exports) {
     calcDKA,
     calcAsthma,
     calcElectrolytes,
+    calcAirway,
+    calcSepsis,
+    calcAnaphylaxis,
+    calcTrauma,
+    calcCroup,
+    calcTransfusion,
+    calcGrowthZScores,
+    toggleSex,
+    toggleSeizureTimer,
+    resetSeizureTimer,
+    setSepsisMode,
+    printBedsideSummaryCard,
+    formatSeizureTime,
+    getSeizureStageText,
     calcCorrectedNa,
     calcCorrectedCa,
     calcKShift,

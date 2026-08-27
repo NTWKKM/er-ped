@@ -53,9 +53,12 @@ console.log('✅ JSDOM Environment & Dataset (DS) initialized synchronously.\n')
 // 4. DOM Element Smoke Tests
 const essentialIds = [
   'doseOut', 'nOut', 'atbOut', 'pOut', 'fOut', 'dripOut', 'seizureOut', 'dkaOut', 'psaOut', 'vitalsOut', 'asthmaOut', 'lyteOut',
+  'airwayOut', 'sepsisOut', 'anaphylaxisOut', 'traumaOut', 'croupOut', 'transfusionOut',
   'doseDrug', 'atbDrug', 'dripDrug', 'weight', 'age', 'nW', 'fDegree', 'fPlan',
   'dkaSeverity', 'dkaPriorBolus', 'useIBW', 'ibwVal', 'vitalsQuickText', 'a2hsBtn',
   'lyteNa', 'lyteGlucose', 'lyteTotalCa', 'lyteAlbumin', 'lyteK', 'lytePH',
+  'sepsisResp', 'sepsisCardio', 'burnTBSA', 'croupStridor', 'txCurrentHb',
+  'growthZScoreBadge', 'seizureTimerWidget',
   'evidenceBackdrop', 'evidencePanel', 'evidenceSearchInput', 'evidenceCategorySelect', 'evidenceListContainer',
   'quickWeightStrip', 'broselowMiniStrip', 'mobileBottomDock'
 ];
@@ -536,7 +539,7 @@ test('Standalone Footer Integrity: footer is direct child of container and not t
   assert.strictEqual(footer.parentElement.classList.contains('container'), true, 'Footer must be a direct child of .container');
   
   const sections = Array.from(document.querySelectorAll('section[role="tabpanel"]'));
-  assert.strictEqual(sections.length, 13, 'Must have 13 clinical tabpanel sections');
+  assert.strictEqual(sections.length, 19, 'Must have 19 clinical tabpanel sections (13 original + 6 new v2.0 modules)');
   sections.forEach(section => {
     assert.strictEqual(section.contains(footer), false, `Section #${section.id} must NOT contain the footer`);
   });
@@ -547,6 +550,332 @@ test('Standalone Footer Integrity: footer is direct child of container and not t
   assert(footer.innerHTML.includes('openChangelogModal'), 'Footer must have changelog button');
   assert(footer.innerHTML.includes('openDatasetEditor'), 'Footer must have dataset editor button');
   assert(footer.innerHTML.includes('triggerPrintCard'), 'Footer must have printable card button');
+});
+
+
+// --- PHASE 3 & V2.0 EXPANDED CLINICAL TEST SUITES ---
+
+test('Airway Module UI Engine: 10 kg child sizing and RSI dosing', () => {
+  window.eval('applyQuickWeight(10); showTab("airway");');
+  const out = document.getElementById('airwayOut');
+  assert(out !== null, 'airwayOut element must exist');
+  assert(out.innerHTML.includes('Cuffed ETT (ID)'), 'Must render Cuffed ETT hero metric');
+  assert(out.innerHTML.includes('Ketamine'), 'Must render Ketamine RSI drug');
+  assert(out.innerHTML.includes('Rocuronium'), 'Must render Rocuronium 1st-line NMBA');
+  assert(out.innerHTML.includes('Sugammadex'), 'Must render Sugammadex rescue reversal');
+  assert(out.innerHTML.includes('160 mg') || out.innerHTML.includes('16 mg/kg'), 'Sugammadex 16 mg/kg rescue dose for 10 kg child');
+});
+
+test('Sepsis Module UI Engine: Phoenix Sepsis Score calculation', () => {
+  window.eval('applyQuickWeight(15); showTab("sepsis");');
+  const out = document.getElementById('sepsisOut');
+  assert(out !== null, 'sepsisOut element must exist');
+  assert(out.innerHTML.includes('Surviving Sepsis Campaign'), 'Must render SSC 2026 guidelines banner');
+  assert(out.innerHTML.includes('1st Fluid Bolus (20 mL/kg)'), 'Must render 20 mL/kg fluid bolus hero metric');
+  assert(out.innerHTML.includes('300 mL'), '15 kg x 20 mL/kg = 300 mL');
+  assert(out.innerHTML.includes('Ceftriaxone'), 'Must render Ceftriaxone 1h empiric dosing');
+});
+
+test('Sepsis Module: Septic Shock classification with cardiovascular points', () => {
+  document.getElementById('sepsisCardio').value = '2'; // MAP below cutoff / Lactate >= 5
+  document.getElementById('sepsisResp').value = '1';
+  window.eval('calcSepsis();');
+  const out = document.getElementById('sepsisOut');
+  assert(out.innerHTML.includes('SEPTIC SHOCK'), 'Total score >= 2 with Cardio pts must trigger SEPTIC SHOCK alert');
+});
+
+test('Anaphylaxis Module UI Engine: Epinephrine IM calculation (10 kg vs 40 kg safety cap)', () => {
+  window.eval('applyQuickWeight(10); showTab("anaphylaxis");');
+  let out = document.getElementById('anaphylaxisOut');
+  assert(out.innerHTML.includes('0.10 mg') || out.innerHTML.includes('0.1 mg'), '10 kg child gets 0.1 mg Epinephrine IM');
+  assert(out.innerHTML.includes('0.10 mL') || out.innerHTML.includes('0.1 mL'), '10 kg child gets 0.1 mL of 1 mg/mL prep');
+
+  // Test 40 kg adolescent safety ceiling (capped at max 0.5 mg)
+  window.eval('applyQuickWeight(40); showTab("anaphylaxis");');
+  out = document.getElementById('anaphylaxisOut');
+  assert(out.innerHTML.includes('0.40 mg') || out.innerHTML.includes('0.4 mg'), '40 kg child gets 0.4 mg Epinephrine IM');
+  assert(out.innerHTML.includes('Diphenhydramine'), 'Must include 2nd-line Diphenhydramine');
+  assert(out.innerHTML.includes('Methylprednisolone'), 'Must include 2nd-line Methylprednisolone');
+});
+
+test('Trauma & Burns Module UI Engine: Modified Parkland Burn Fluid Calculation', () => {
+  window.eval('applyQuickWeight(20); showTab("trauma");');
+  document.getElementById('burnTBSA').value = '20'; // 20% TBSA
+  document.getElementById('burnHoursElapsed').value = '0';
+  window.eval('calcTrauma();');
+  const out = document.getElementById('traumaOut');
+  // 3 mL * 20 kg * 20% = 1200 mL total Parkland
+  assert(out.innerHTML.includes('1200 mL'), '20 kg child with 20% TBSA gets 1200 mL Total 24h Parkland LRS');
+  assert(out.innerHTML.includes('75.0 mL/hr') || out.innerHTML.includes('75 mL/hr'), 'First 8h rate = 600 mL / 8h = 75 mL/hr');
+  assert(out.innerHTML.includes('xABCDE'), 'Must render ATLS 11th Ed xABCDE priority sequence');
+  assert(out.innerHTML.includes('eXsanguinating Hemorrhage'), 'x = eXsanguinating Hemorrhage must be 1st item');
+});
+
+test('Croup Module UI Engine: Westley Score calculation & Dexamethasone dosing', () => {
+  window.eval('applyQuickWeight(12); showTab("croup");');
+  document.getElementById('croupStridor').value = '2'; // Stridor at rest (2 pts)
+  document.getElementById('croupRetract').value = '2'; // Moderate retractions (2 pts)
+  document.getElementById('croupAirEntry').value = '1'; // Decreased (1 pt)
+  window.eval('calcCroup();');
+  const out = document.getElementById('croupOut');
+  // Total score = 2+2+1 = 5 pts (Moderate Croup)
+  assert(out.innerHTML.includes('Moderate Croup'), '5 pts must classify as Moderate Croup');
+  assert(out.innerHTML.includes('7.2 mg') || out.innerHTML.includes('7.20 mg'), '12 kg child gets 0.6 mg/kg = 7.2 mg Dexamethasone');
+  assert(out.innerHTML.includes('Nebulized'), 'Must render Nebulized Epinephrine prep');
+});
+
+test('Blood Transfusion Module UI Engine: PRBC volume and rate calculations', () => {
+  window.eval('applyQuickWeight(10); showTab("transfusion");');
+  document.getElementById('txCurrentHb').value = '6.0';
+  document.getElementById('txTargetHb').value = '10.0';
+  document.getElementById('txPrbcType').value = 'cpda';
+  window.eval('calcTransfusion();');
+  const out = document.getElementById('transfusionOut');
+  // 10 kg * (10 - 6) * 3 = 120 mL PRBC
+  assert(out.innerHTML.includes('120 mL'), '10 kg child with Hb 6->10 gets 120 mL PRBC');
+  assert(out.innerHTML.includes('50 mL/hr'), 'Max safe rate 5 mL/kg/hr = 50 mL/hr');
+  assert(out.innerHTML.includes('Tranexamic Acid (TXA)'), 'Must render TXA MTP protocol');
+});
+
+test('WHO Growth Standards Z-Score Engine: WAZ & HAZ calculation', () => {
+  window.eval('applyQuickWeight(10);'); // 10 kg -> Weech age = 1 yr (12 mo)
+  document.getElementById('length').value = '75'; // 75 cm
+  window.eval('calcGrowthZScores();');
+  const badge = document.getElementById('growthZScoreBadge');
+  assert(badge !== null, 'growthZScoreBadge must exist');
+  assert(badge.innerHTML.includes('WAZ:'), 'Must display Weight-for-Age Z-Score');
+  assert(badge.innerHTML.includes('HAZ:'), 'Must display Height-for-Age Z-Score');
+  assert(badge.innerHTML.includes('Normal'), '10 kg @ 12 mo is within normal WAZ');
+
+  // Test sex toggle to Girl
+  window.eval('toggleSex();');
+  assert.strictEqual(window.eval('gSex'), 'female', 'toggleSex switches gSex to female');
+  window.eval('calcGrowthZScores();');
+  assert(badge.innerHTML.includes('WAZ:'), 'WAZ calculated for female standard');
+  window.eval('toggleSex();'); // switch back
+});
+
+test('Seizure Stopwatch Timer Engine: Start, interval progress, and reset', () => {
+  const { toggleSeizureTimer, resetSeizureTimer, formatSeizureTime, getSeizureStageText } = appExports;
+  assert.strictEqual(formatSeizureTime(125), '2:05', '125 seconds format as 2:05');
+  assert.strictEqual(formatSeizureTime(300), '5:00', '300 seconds format as 5:00');
+  assert(getSeizureStageText(250).includes('Stage 1'), '250s is in Stage 1');
+  assert(getSeizureStageText(650).includes('Stage 2'), '650s is in Stage 2 (10-20m)');
+  assert(getSeizureStageText(1500).includes('Stage 3'), '1500s is in Stage 3 (20-40m)');
+
+  window.eval('toggleSeizureTimer();');
+  assert.strictEqual(window.eval('gSeizureTimerRunning'), true, 'Timer should be running');
+  window.eval('toggleSeizureTimer();');
+  assert.strictEqual(window.eval('gSeizureTimerRunning'), false, 'Timer should be paused');
+  window.eval('resetSeizureTimer();');
+  assert.strictEqual(window.eval('gSeizureTimerSeconds'), 0, 'Timer should be reset to 0');
+});
+
+test('copyEHROrder: New v2.0 clinical modules order string generation', () => {
+  window.eval('applyQuickWeight(10);');
+
+  // Airway
+  const oAirway = window.copyEHROrder('airway');
+  assert(oAirway && oAirway.includes('[ER-PED Airway/RSI]'), 'Airway order copied');
+
+  // Sepsis
+  const oSepsis = window.copyEHROrder('sepsis');
+  assert(oSepsis && oSepsis.includes('[ER-PED Sepsis 1h Bundle]'), 'Sepsis order copied');
+
+  // Anaphylaxis
+  const oAna = window.copyEHROrder('anaphylaxis');
+  assert(oAna && oAna.includes('[ER-PED Anaphylaxis]'), 'Anaphylaxis order copied');
+
+  // Trauma
+  const oTrauma = window.copyEHROrder('trauma');
+  assert(oTrauma && oTrauma.includes('[ER-PED Trauma/Burns]'), 'Trauma order copied');
+
+  // Croup
+  const oCroup = window.copyEHROrder('croup');
+  assert(oCroup && oCroup.includes('[ER-PED Croup]'), 'Croup order copied');
+
+  // Transfusion
+  const oTx = window.copyEHROrder('transfusion');
+  assert(oTx && oTx.includes('[ER-PED Transfusion]'), 'Transfusion order copied');
+});
+
+test('All 19 Tabs Navigation & Print Isolation Integrity', () => {
+  const tabs = ['dose','atb','fluids','pals','ncpr','drip','seizure','tox','psa','vitals','dka','asthma','electrolytes','airway','sepsis','anaphylaxis','trauma','croup','transfusion'];
+  tabs.forEach(tabId => {
+    window.eval(`showTab("${tabId}")`);
+    const panel = document.getElementById(tabId);
+    assert(panel !== null, `Tabpanel #${tabId} must exist`);
+    assert.strictEqual(panel.style.display, 'block', `Active panel #${tabId} must have display:block`);
+    assert(panel.classList.contains('active-panel'), `Active panel #${tabId} must have .active-panel class for print isolation`);
+  });
+});
+
+
+test('Airway Module: Sugammadex 16 mg/kg CICO rescue for 20 kg child', () => {
+  window.eval('applyQuickWeight(20); showTab("airway");');
+  const out = document.getElementById('airwayOut');
+  assert(out.innerHTML.includes('320 mg') || out.innerHTML.includes('16 mg/kg'), 'Sugammadex 16 mg/kg for 20 kg = 320 mg');
+  assert(out.innerHTML.includes('3.2 mL'), '320 mg / 100 mg/mL = 3.2 mL');
+});
+
+test('Airway Module: LMA sizing rule for infant vs child vs adolescent', () => {
+  window.eval('applyQuickWeight(5); showTab("airway");');
+  let out = document.getElementById('airwayOut');
+  assert(out.innerHTML.includes('Size 1.5') || out.innerHTML.includes('Size 1'), '5 kg infant gets LMA 1.5 or 1');
+
+  window.eval('applyQuickWeight(25); showTab("airway");');
+  out = document.getElementById('airwayOut');
+  assert(out.innerHTML.includes('Size 2.5'), '25 kg child gets LMA 2.5');
+
+  window.eval('applyQuickWeight(50); showTab("airway");');
+  out = document.getElementById('airwayOut');
+  assert(out.innerHTML.includes('Size 3') || out.innerHTML.includes('Size 4'), '50 kg adolescent gets LMA 3 or 4');
+});
+
+test('Sepsis Module: Simplified screening with 1 sign = Negative', () => {
+  window.eval('setSepsisMode("simple");');
+  // Uncheck all
+  ['chkSepsisTemp', 'chkSepsisHR', 'chkSepsisRR', 'chkSepsisMental', 'chkSepsisCRT', 'chkSepsisPulse'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.checked = false;
+  });
+  document.getElementById('chkSepsisTemp').checked = true; // only 1 sign
+  window.eval('calcSepsis();');
+  const out = document.getElementById('sepsisOut');
+  assert(out.innerHTML.includes('Screening Negative'), '1 sign must be screening negative');
+
+  // Check 2nd sign -> Alert
+  document.getElementById('chkSepsisHR').checked = true;
+  window.eval('calcSepsis();');
+  assert(out.innerHTML.includes('SEPSIS ALERT'), '2 signs must trigger SEPSIS ALERT');
+  window.eval('setSepsisMode("phoenix");'); // Reset mode
+});
+
+test('Sepsis Module: 1-Hour bundle fluid bolus cumulative ceiling calculations', () => {
+  window.eval('applyQuickWeight(20); showTab("sepsis");');
+  const out = document.getElementById('sepsisOut');
+  assert(out.innerHTML.includes('400 mL'), '20 kg x 20 mL/kg = 400 mL bolus');
+  assert(out.innerHTML.includes('800–1200 mL') || out.innerHTML.includes('800–1200'), '40-60 mL/kg cumulative fluid cap for 20 kg child is 800-1200 mL');
+});
+
+test('Anaphylaxis Module: Syringe drawing guide for 10 kg vs 25 kg vs 50 kg', () => {
+  window.eval('applyQuickWeight(10); showTab("anaphylaxis");');
+  let out = document.getElementById('anaphylaxisOut');
+  assert(out.innerHTML.includes('0.10 mL') || out.innerHTML.includes('0.1 mL'), '10 kg gets 0.1 mL');
+
+  window.eval('applyQuickWeight(27); showTab("anaphylaxis");');
+  out = document.getElementById('anaphylaxisOut');
+  assert(out.innerHTML.includes('0.27 mL'), '27 kg gets 0.27 mL');
+
+  window.eval('applyQuickWeight(50); showTab("anaphylaxis");');
+  out = document.getElementById('anaphylaxisOut');
+  assert(out.innerHTML.includes('0.50 mL') || out.innerHTML.includes('0.5 mL'), '50 kg capped at 0.5 mL max');
+});
+
+test('Anaphylaxis Module: 2nd line Famotidine 0.5 mg/kg capped at 20 mg', () => {
+  window.eval('applyQuickWeight(10); showTab("anaphylaxis");');
+  let out = document.getElementById('anaphylaxisOut');
+  assert(out.innerHTML.includes('5.0 mg') || out.innerHTML.includes('5 mg'), '10 kg child gets 5 mg Famotidine');
+
+  window.eval('applyQuickWeight(50); showTab("anaphylaxis");');
+  out = document.getElementById('anaphylaxisOut');
+  assert(out.innerHTML.includes('20.0 mg') || out.innerHTML.includes('20 mg'), '50 kg patient gets 20 mg max Famotidine');
+});
+
+test('Trauma Module: Modified Parkland 0% TBSA edge case', () => {
+  window.eval('applyQuickWeight(20); showTab("trauma");');
+  document.getElementById('burnTBSA').value = '0';
+  window.eval('calcTrauma();');
+  const out = document.getElementById('traumaOut');
+  assert(out.innerHTML.includes('ระบุ % TBSA Burn') || out.innerHTML.includes('TBSA'), '0% TBSA shows prompt to enter % TBSA');
+});
+
+test('Croup Module: Severe Croup (score 8-11) triggers hospital admission directive', () => {
+  window.eval('applyQuickWeight(10); showTab("croup");');
+  document.getElementById('croupStridor').value = '2'; // 2 pts
+  document.getElementById('croupRetract').value = '3'; // 3 pts
+  document.getElementById('croupAirEntry').value = '2'; // 2 pts
+  document.getElementById('croupCyanosis').value = '0'; // 0 pts
+  document.getElementById('croupConscious').value = '5'; // 5 pts (total 12 -> Impending)
+  window.eval('calcCroup();');
+  let out = document.getElementById('croupOut');
+  assert(out.innerHTML.includes('Impending Respiratory Failure'), 'Score >= 12 triggers Impending Failure alert');
+
+  // Moderate score 5
+  document.getElementById('croupConscious').value = '0';
+  document.getElementById('croupAirEntry').value = '0';
+  document.getElementById('croupRetract').value = '2';
+  document.getElementById('croupStridor').value = '2';
+  window.eval('calcCroup();');
+  out = document.getElementById('croupOut');
+  assert(out.innerHTML.includes('Moderate Croup'), 'Score 4 triggers Moderate Croup');
+});
+
+test('Transfusion Module: SAGM PRBC factor 4 vs CPDA-1 factor 3 comparison', () => {
+  window.eval('applyQuickWeight(10); showTab("transfusion");');
+  document.getElementById('txCurrentHb').value = '6.0';
+  document.getElementById('txTargetHb').value = '10.0';
+
+  // CPDA-1 (factor 3): 10 * 4 * 3 = 120 mL
+  document.getElementById('txPrbcType').value = 'cpda';
+  window.eval('calcTransfusion();');
+  let out = document.getElementById('transfusionOut');
+  assert(out.innerHTML.includes('120 mL'), 'CPDA-1 PRBC volume = 120 mL');
+
+  // SAGM (factor 4): 10 * 4 * 4 = 160 mL
+  document.getElementById('txPrbcType').value = 'sagm';
+  window.eval('calcTransfusion();');
+  out = document.getElementById('transfusionOut');
+  assert(out.innerHTML.includes('160 mL'), 'SAGM PRBC volume = 160 mL');
+});
+
+test('Transfusion Module: Tranexamic Acid (TXA) loading capped at 1000 mg', () => {
+  window.eval('applyQuickWeight(10); showTab("transfusion");');
+  let out = document.getElementById('transfusionOut');
+  assert(out.innerHTML.includes('150 mg'), '10 kg gets 150 mg TXA load (15 mg/kg)');
+
+  window.eval('applyQuickWeight(80); showTab("transfusion");');
+  out = document.getElementById('transfusionOut');
+  assert(out.innerHTML.includes('1000 mg'), '80 kg gets capped 1000 mg TXA load');
+});
+
+test('WHO Growth Standards: Severe Underweight (WAZ < -3 SD) detection', () => {
+  // 1 yr old boy (12 mo median ~9.6kg). Weight 5.0 kg is > 4 SD below median
+  document.getElementById('weight').value = '5.0';
+  document.getElementById('age').value = '1';
+  document.getElementById('ageUnitBtn').textContent = 'yr';
+  window.eval('gSex = "male"; onWeightChange(); calcGrowthZScores();');
+  const badge = document.getElementById('growthZScoreBadge');
+  assert(badge.innerHTML.includes('Severe Underweight') || badge.innerHTML.includes('-'), '5 kg @ 12 mo triggers Severe Underweight');
+});
+
+test('Bedside Pocket Card Print Function: Safe execution check', () => {
+  window.eval('applyQuickWeight(10);');
+  const { printBedsideSummaryCard } = appExports;
+  assert.doesNotThrow(() => {
+    printBedsideSummaryCard();
+  }, 'printBedsideSummaryCard must execute safely');
+});
+
+test('Category Jump Filter: Resus, Meds, Protocols, All filtering across 19 tabs', () => {
+  const allTabs = Array.from(document.querySelectorAll('.tab-btn'));
+  assert.strictEqual(allTabs.length, 19, 'Must have exactly 19 tab buttons');
+
+  // Filter Resus
+  window.eval('filterNavCategory("resus");');
+  const resusTabs = allTabs.filter(t => t.getAttribute('data-category') === 'resus');
+  assert(resusTabs.length >= 7, 'Must have at least 7 resus tabs');
+
+  // Filter Meds
+  window.eval('filterNavCategory("meds");');
+  const medsTabs = allTabs.filter(t => t.getAttribute('data-category') === 'meds');
+  assert(medsTabs.length >= 4, 'Must have at least 4 meds tabs');
+
+  // Reset All
+  window.eval('filterNavCategory("all");');
+  allTabs.forEach(t => {
+    assert.notStrictEqual(t.style.display, 'none', 'All tabs visible under "all" filter');
+  });
 });
 
 // --- ADVANCED CLINICAL ENGINE & EDGE CASE TEST SUITES ---
