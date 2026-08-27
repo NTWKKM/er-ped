@@ -57,6 +57,7 @@
 
       --font-display: 'Newsreader', Georgia, serif;
       --t-fast: 120ms cubic-bezier(.2,.7,.2,1);
+      --topbar-h: 52px;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -232,18 +233,26 @@
       color: #FF8585;
     }
 
-    /* Category Jump Navigation Bar */
-    .category-bar {
+    /* Unified Category Jump & Broselow Triage Navigation Row */
+    .category-bar-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .category-bar, .category-pills-group {
       display: flex;
       align-items: center;
       gap: 6px;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
-      margin-bottom: 8px;
       padding: 2px 0;
+      flex-shrink: 0;
     }
-    .category-bar::-webkit-scrollbar { display: none; }
+    .category-bar::-webkit-scrollbar, .category-pills-group::-webkit-scrollbar { display: none; }
     .category-pill {
       flex: 0 0 auto;
       padding: 5px 12px;
@@ -278,6 +287,19 @@
       color: #121210;
       border: 2px solid #FFFFFF;
       font-weight: 800;
+    }
+
+    .triage-strip-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      flex: 0 0 auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 3px 8px 4px;
+      box-shadow: var(--shadow-1);
+      max-width: 100%;
     }
 
     /* Drug Category Filter in Combobox */
@@ -1024,7 +1046,7 @@
     /* Main Container */
     .container { 
       max-width: 1180px; 
-      margin: calc(var(--topbar-h, 130px) + 12px) auto 70px; 
+      margin: calc(var(--topbar-h, 52px) + 12px) auto 70px; 
       padding: 16px; 
     }
 
@@ -1792,9 +1814,21 @@
 
     @media (max-width: 768px) {
       .container {
-        margin-top: calc(var(--topbar-h, 130px) + 8px);
+        margin-top: calc(var(--topbar-h, 74px) + 8px);
         padding: 8px;
         padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+      }
+      .category-bar-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+      }
+      .category-pills-group {
+        width: 100%;
+      }
+      .triage-strip-wrapper {
+        width: 100%;
+        box-sizing: border-box;
       }
       .grid { grid-template-columns: repeat(6, 1fr); gap: 8px; }
       .col-12, .col-9, .col-8, .col-6, .col-4 { grid-column: span 6; }
@@ -1850,7 +1884,7 @@
 
     /* JVC Monochrome Panel — 1200×800, mounted portrait */
     @media (orientation: portrait) and (min-width: 700px) and (max-width: 900px) {
-      .container { max-width: 760px; margin: calc(var(--topbar-h, 130px) + 12px) auto 100px; padding: 16px; }
+      .container { max-width: 760px; margin: calc(var(--topbar-h, 74px) + 12px) auto 100px; padding: 16px; }
 
       .topbar-inner { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px 14px; }
       .chip { justify-content: space-between; }
@@ -1933,31 +1967,6 @@
             <input type="number" id="age" min="0" max="15" step="0.1" placeholder="Age" oninput="estimateFromAge()"/>
             <button type="button" id="ageUnitBtn" class="unit-toggle-btn" onclick="toggleAgeUnit()" title="คลิกเพื่อสลับหน่วยปี/เดือน">yr</button>
           </div>
-          <!-- 1-Tap Broselow-Aligned Quick Weight Triage Strip -->
-          <div class="quick-weight-strip" id="quickWeightStrip" role="group" aria-label="Broselow-Aligned Quick Weight Triage Presets">
-            <button type="button" class="quick-weight-btn" data-color="Grey" onclick="applyQuickWeight(5)" title="Grey (3–5.9 kg, ~1 mo)"><span class="qw-dot" style="background:#B0B0B0;"></span>5k</button>
-            <button type="button" class="quick-weight-btn" data-color="Pink" onclick="applyQuickWeight(7)" title="Pink (6–7.9 kg, ~4 mo)"><span class="qw-dot" style="background:#FF80AB;"></span>7k</button>
-            <button type="button" class="quick-weight-btn" data-color="Red" onclick="applyQuickWeight(9)" title="Red (8–9.9 kg, ~9 mo)"><span class="qw-dot" style="background:#FF5252;"></span>9k</button>
-            <button type="button" class="quick-weight-btn" data-color="Purple" onclick="applyQuickWeight(10)" title="Purple (10–11.9 kg, ~1 yr)"><span class="qw-dot" style="background:#B388FF;"></span>10k</button>
-            <button type="button" class="quick-weight-btn" data-color="Yellow" onclick="applyQuickWeight(13)" title="Yellow (12–14.9 kg, ~2.5 yr)"><span class="qw-dot" style="background:#FFEE58;"></span>13k</button>
-            <button type="button" class="quick-weight-btn" data-color="White" onclick="applyQuickWeight(17)" title="White (15–18.9 kg, ~4.5 yr)"><span class="qw-dot" style="background:#FFFFFF; border:1px solid rgba(0,0,0,0.3);"></span>17k</button>
-            <button type="button" class="quick-weight-btn" data-color="Blue" onclick="applyQuickWeight(21)" title="Blue (19–23.9 kg, ~6.5 yr)"><span class="qw-dot" style="background:#40C4FF;"></span>21k</button>
-            <button type="button" class="quick-weight-btn" data-color="Orange" onclick="applyQuickWeight(27)" title="Orange (24–29.9 kg, ~8.5 yr)"><span class="qw-dot" style="background:#FFAB40;"></span>27k</button>
-            <button type="button" class="quick-weight-btn" data-color="Green" onclick="applyQuickWeight(33)" title="Green (30–36 kg, ~10 yr)"><span class="qw-dot" style="background:#69F0AE;"></span>33k</button>
-            <button type="button" class="quick-weight-btn" data-color="Adolescent" onclick="applyQuickWeight(40)" title="Adolescent (>36 kg, ~12 yr)">40k</button>
-          </div>
-          <!-- Interactive Broselow Mini-Spectrum Bar -->
-          <div class="broselow-mini-strip" id="broselowMiniStrip" title="Broselow 9-Zone Spectrum (คลิกเพื่อคำนวณและพรีวิวโซน)">
-            <div class="broselow-mini-seg" style="background:#B0B0B0;" onclick="previewBroselowZone('Grey', event)" title="Grey (3–5.9 kg)"></div>
-            <div class="broselow-mini-seg" style="background:#FF80AB;" onclick="previewBroselowZone('Pink', event)" title="Pink (6–7.9 kg)"></div>
-            <div class="broselow-mini-seg" style="background:#FF5252;" onclick="previewBroselowZone('Red', event)" title="Red (8–9.9 kg)"></div>
-            <div class="broselow-mini-seg" style="background:#B388FF;" onclick="previewBroselowZone('Purple', event)" title="Purple (10–11.9 kg)"></div>
-            <div class="broselow-mini-seg" style="background:#FFEE58;" onclick="previewBroselowZone('Yellow', event)" title="Yellow (12–14.9 kg)"></div>
-            <div class="broselow-mini-seg" style="background:#FFFFFF;" onclick="previewBroselowZone('White', event)" title="White (15–18.9 kg)"></div>
-            <div class="broselow-mini-seg" style="background:#40C4FF;" onclick="previewBroselowZone('Blue', event)" title="Blue (19–23.9 kg)"></div>
-            <div class="broselow-mini-seg" style="background:#FFAB40;" onclick="previewBroselowZone('Orange', event)" title="Orange (24–29.9 kg)"></div>
-            <div class="broselow-mini-seg" style="background:#69F0AE;" onclick="previewBroselowZone('Green', event)" title="Green (30–36 kg)"></div>
-          </div>
         </div>
 
         <!-- DERIVED: computed, read-only, with the explicit dosing opt-in -->
@@ -2030,12 +2039,42 @@
   <!-- MAIN APP CONTAINER -->
   <div class="container" id="app">
     
-    <!-- Category Jump Bar & Smooth-Rail Navigation -->
-    <div class="category-bar" role="group" aria-label="Module categories">
-      <button type="button" class="category-pill active" data-cat="all" onclick="filterNavCategory('all', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg> <span>All Modules</span></button>
-      <button type="button" class="category-pill" data-cat="resus" onclick="filterNavCategory('resus', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> <span>Emergency Resus</span></button>
-      <button type="button" class="category-pill" data-cat="meds" onclick="filterNavCategory('meds', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg> <span>Meds & Fluids</span></button>
-      <button type="button" class="category-pill" data-cat="protocols" onclick="filterNavCategory('protocols', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg> <span>Protocols & Vitals</span></button>
+    <!-- Category Jump Bar & Broselow Triage Navigation Row (Option 1: Inline Split Row) -->
+    <div class="category-bar-wrapper">
+      <div class="category-bar category-pills-group" role="group" aria-label="Module categories">
+        <button type="button" class="category-pill active" data-cat="all" onclick="filterNavCategory('all', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg> <span>All Modules</span></button>
+        <button type="button" class="category-pill" data-cat="resus" onclick="filterNavCategory('resus', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> <span>Emergency Resus</span></button>
+        <button type="button" class="category-pill" data-cat="meds" onclick="filterNavCategory('meds', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg> <span>Meds & Fluids</span></button>
+        <button type="button" class="category-pill" data-cat="protocols" onclick="filterNavCategory('protocols', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg> <span>Protocols & Vitals</span></button>
+      </div>
+
+      <!-- 1-Tap Broselow-Aligned Quick Weight Triage Strip -->
+      <div class="triage-strip-wrapper">
+        <div class="quick-weight-strip" id="quickWeightStrip" role="group" aria-label="Broselow-Aligned Quick Weight Triage Presets">
+          <button type="button" class="quick-weight-btn" data-color="Grey" onclick="applyQuickWeight(5)" title="Grey (3–5.9 kg, ~1 mo)"><span class="qw-dot" style="background:#B0B0B0;"></span>5k</button>
+          <button type="button" class="quick-weight-btn" data-color="Pink" onclick="applyQuickWeight(7)" title="Pink (6–7.9 kg, ~4 mo)"><span class="qw-dot" style="background:#FF80AB;"></span>7k</button>
+          <button type="button" class="quick-weight-btn" data-color="Red" onclick="applyQuickWeight(9)" title="Red (8–9.9 kg, ~9 mo)"><span class="qw-dot" style="background:#FF5252;"></span>9k</button>
+          <button type="button" class="quick-weight-btn" data-color="Purple" onclick="applyQuickWeight(10)" title="Purple (10–11.9 kg, ~1 yr)"><span class="qw-dot" style="background:#B388FF;"></span>10k</button>
+          <button type="button" class="quick-weight-btn" data-color="Yellow" onclick="applyQuickWeight(13)" title="Yellow (12–14.9 kg, ~2.5 yr)"><span class="qw-dot" style="background:#FFEE58;"></span>13k</button>
+          <button type="button" class="quick-weight-btn" data-color="White" onclick="applyQuickWeight(17)" title="White (15–18.9 kg, ~4.5 yr)"><span class="qw-dot" style="background:#FFFFFF; border:1px solid rgba(0,0,0,0.3);"></span>17k</button>
+          <button type="button" class="quick-weight-btn" data-color="Blue" onclick="applyQuickWeight(21)" title="Blue (19–23.9 kg, ~6.5 yr)"><span class="qw-dot" style="background:#40C4FF;"></span>21k</button>
+          <button type="button" class="quick-weight-btn" data-color="Orange" onclick="applyQuickWeight(27)" title="Orange (24–29.9 kg, ~8.5 yr)"><span class="qw-dot" style="background:#FFAB40;"></span>27k</button>
+          <button type="button" class="quick-weight-btn" data-color="Green" onclick="applyQuickWeight(33)" title="Green (30–36 kg, ~10 yr)"><span class="qw-dot" style="background:#69F0AE;"></span>33k</button>
+          <button type="button" class="quick-weight-btn" data-color="Adolescent" onclick="applyQuickWeight(40)" title="Adolescent (>36 kg, ~12 yr)">40k</button>
+        </div>
+        <!-- Interactive Broselow Mini-Spectrum Bar -->
+        <div class="broselow-mini-strip" id="broselowMiniStrip" title="Broselow 9-Zone Spectrum (คลิกเพื่อคำนวณและพรีวิวโซน)">
+          <div class="broselow-mini-seg" style="background:#B0B0B0;" onclick="previewBroselowZone('Grey', event)" title="Grey (3–5.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#FF80AB;" onclick="previewBroselowZone('Pink', event)" title="Pink (6–7.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#FF5252;" onclick="previewBroselowZone('Red', event)" title="Red (8–9.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#B388FF;" onclick="previewBroselowZone('Purple', event)" title="Purple (10–11.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#FFEE58;" onclick="previewBroselowZone('Yellow', event)" title="Yellow (12–14.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#FFFFFF;" onclick="previewBroselowZone('White', event)" title="White (15–18.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#40C4FF;" onclick="previewBroselowZone('Blue', event)" title="Blue (19–23.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#FFAB40;" onclick="previewBroselowZone('Orange', event)" title="Orange (24–29.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#69F0AE;" onclick="previewBroselowZone('Green', event)" title="Green (30–36 kg)"></div>
+        </div>
+      </div>
     </div>
 
     <!-- Flat Underline Navigation Tabs (Single Responsive Rail) -->
