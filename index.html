@@ -752,6 +752,302 @@
       height: 17px;
     }
 
+    /* Mode Switcher Segmented Pill */
+    .mode-switch-pill {
+      display: inline-flex;
+      background: var(--panel);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--r-full);
+      padding: 2px;
+      gap: 2px;
+      align-items: center;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.06);
+    }
+    .mode-switch-btn {
+      padding: 4px 10px;
+      font: 800 11.5px 'JetBrains Mono', monospace;
+      border: none;
+      border-radius: var(--r-full);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      touch-action: manipulation;
+      min-height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .mode-switch-btn:hover {
+      color: var(--ink);
+    }
+    .mode-switch-btn.active {
+      background: var(--card);
+      color: var(--ink);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      font-weight: 900;
+    }
+    :root[data-theme="mono"] .mode-switch-btn.active {
+      background: #ECECE8;
+      color: #121210;
+    }
+    :root[data-theme="red"] .mode-switch-btn.active {
+      background: #FF2B2B;
+      color: #0A0000;
+    }
+
+    /* Container Mode Visibility */
+    :root[data-app-mode="v1"] #v1ModeContainer { display: block !important; }
+    :root[data-app-mode="v1"] #v2ModeContainer { display: none !important; }
+    :root[data-app-mode="v1"] .category-bar-wrapper { display: none !important; }
+    :root[data-app-mode="v1"] .mobile-bottom-dock { display: none !important; }
+    :root[data-app-mode="v1"] .v1-bottom-dock { display: flex !important; }
+
+    :root[data-app-mode="v2"] #v1ModeContainer { display: none !important; }
+    :root[data-app-mode="v2"] #v2ModeContainer { display: block !important; }
+    :root[data-app-mode="v2"] .category-bar-wrapper { display: block !important; }
+    :root[data-app-mode="v2"] .v1-bottom-dock { display: none !important; }
+    @media (max-width: 680px) {
+      :root[data-app-mode="v2"] .mobile-bottom-dock { display: flex !important; }
+    }
+
+    /* V1 Mode Layout & Minimal Emergency Cards */
+    .v1-container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding-bottom: 70px;
+    }
+    .v1-header-strip {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-1);
+    }
+    .v1-stepper-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .v1-stepper-btn {
+      min-width: 44px;
+      min-height: 40px;
+      padding: 6px 12px;
+      font: 800 13px 'JetBrains Mono', monospace;
+      background: var(--panel);
+      color: var(--ink);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      cursor: pointer;
+      transition: all 0.12s ease;
+      touch-action: manipulation;
+    }
+    .v1-stepper-btn:hover {
+      background: var(--panel-subtle);
+      border-color: var(--border-strong);
+    }
+    .v1-stepper-btn:active {
+      transform: scale(0.95);
+    }
+    .v1-weight-display {
+      font: 800 20px 'JetBrains Mono', monospace;
+      color: var(--accent);
+      padding: 4px 10px;
+      background: var(--accent-soft);
+      border-radius: var(--r-sm);
+      border: 1px solid var(--border);
+      text-align: center;
+      min-width: 100px;
+    }
+    .v1-search-box {
+      margin-top: 10px;
+      position: relative;
+    }
+    .v1-search-input {
+      width: 100%;
+      padding: 8px 36px 8px 12px;
+      font: 600 14px 'Sarabun', sans-serif;
+      background: var(--panel-subtle);
+      color: var(--ink);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      outline: none;
+      box-sizing: border-box;
+    }
+    .v1-search-input:focus {
+      border-color: var(--accent);
+      background: var(--card);
+    }
+    .v1-search-clear {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 14px;
+      cursor: pointer;
+      padding: 4px 8px;
+      display: none;
+    }
+
+    .v1-section {
+      margin-bottom: 18px;
+      scroll-margin-top: calc(var(--topbar-h) + 12px);
+    }
+    .v1-section-title {
+      font: 700 14px 'Sarabun', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 8px;
+      padding-left: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .v1-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 8px;
+    }
+    @media (max-width: 580px) {
+      .v1-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .v1-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 10px 12px;
+      box-shadow: var(--shadow-1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 6px;
+      position: relative;
+      transition: border-color 0.15s ease;
+    }
+    .v1-card:hover {
+      border-color: var(--border-strong);
+    }
+    .v1-card-pals { border-left: 4px solid var(--danger); }
+    .v1-card-airway { border-left: 4px solid #D97706; }
+    .v1-card-seizure { border-left: 4px solid #7C3AED; }
+    .v1-card-resp { border-left: 4px solid var(--accent); }
+    .v1-card-meds { border-left: 4px solid var(--good); }
+    .v1-card-fluids { border-left: 4px solid #0284C7; }
+
+    .v1-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .v1-card-title {
+      font: 700 13.5px 'Sarabun', sans-serif;
+      color: var(--ink);
+      line-height: 1.25;
+    }
+    .v1-card-route {
+      font: 800 11px 'JetBrains Mono', monospace;
+      padding: 2px 6px;
+      border-radius: var(--r-xs);
+      background: var(--panel);
+      color: var(--ink);
+      border: 1px solid var(--border);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .v1-hero-dose {
+      font: 800 18px 'JetBrains Mono', monospace;
+      font-variant-numeric: tabular-nums;
+      color: var(--ink);
+      line-height: 1.2;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .v1-hero-vol {
+      font-size: 15px;
+      color: var(--accent);
+      font-weight: 800;
+    }
+    :root[data-theme="red"] .v1-hero-vol {
+      color: #FF6B6B;
+    }
+    .v1-card-prep {
+      font-size: 11.5px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+    .v1-cap-warning {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font: 700 10.5px 'JetBrains Mono', monospace;
+      color: #B45309;
+      background: rgba(245, 158, 11, 0.12);
+      padding: 1px 5px;
+      border-radius: var(--r-xs);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    /* V1 Sticky Bottom Category Dock */
+    .v1-bottom-dock {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 80;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+      padding: 4px 6px calc(4px + env(safe-area-inset-bottom));
+      justify-content: space-around;
+      align-items: center;
+      gap: 2px;
+    }
+    .v1-dock-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      padding: 6px 2px;
+      min-height: 48px;
+      min-width: 44px;
+      background: transparent;
+      border: none;
+      border-radius: var(--r-sm);
+      color: var(--muted);
+      font: 700 11px 'Sarabun', sans-serif;
+      cursor: pointer;
+      transition: all 0.12s ease;
+      touch-action: manipulation;
+    }
+    .v1-dock-btn:hover {
+      color: var(--ink);
+      background: var(--panel-subtle);
+    }
+    .v1-dock-btn.active {
+      color: var(--accent);
+      font-weight: 800;
+      background: var(--accent-soft);
+    }
+    :root[data-theme="red"] .v1-dock-btn.active {
+      color: #FF2B2B;
+      background: rgba(255, 43, 43, 0.15);
+    }
+
     h1, h2, h3 { margin: 0 0 8px; font-weight: 700; }
     /* Display type: Newsreader serif headings on module titles */
     h1, h2 {
@@ -2156,6 +2452,12 @@
           </div>
         </div>
 
+        <!-- V1 / V2 Mode Switcher Pill -->
+        <div class="mode-switch-pill" id="appModeSwitch" role="radiogroup" aria-label="Mode Switcher">
+          <button type="button" class="mode-switch-btn active" data-mode="v1" onclick="setAppMode('v1')" title="V1: Minimal Bedside Emergency" role="radio" aria-checked="true">V1</button>
+          <button type="button" class="mode-switch-btn" data-mode="v2" onclick="setAppMode('v2')" title="V2: Comprehensive Clinical Suite" role="radio" aria-checked="false">V2</button>
+        </div>
+
         <!-- Broselow Color Tape Chip -->
         <button type="button" id="broselow" class="broselow-chip mono" style="padding:4px 8px; border-radius:var(--r-sm); font-weight:800; background:var(--panel); color:var(--ink); border:1px solid var(--border); font-size:12px;" onclick="toggleBroselowPanel()" aria-label="Broselow Color Tape Reference" title="คลิกเพื่อดู Broselow Color Tape Reference">—</button>
 
@@ -2166,6 +2468,9 @@
         <div class="popover-wrapper">
           <button type="button" id="overflowBtn" class="btn" style="padding:6px 9px; font-size:13px; font-weight:800;" onclick="toggleOverflowMenu(event)" title="เมนูเพิ่มเติม (More Options)" aria-label="More actions" aria-haspopup="true" aria-expanded="false">⋯</button>
           <div id="overflowMenu" class="popover-menu" role="menu">
+            <button type="button" id="modeSwitchMenuBtn" class="popover-item" onclick="toggleAppMode(); closeAllPopovers();" role="menuitem">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></svg> <span id="modeSwitchMenuText">Switch to V2</span>
+            </button>
             <button type="button" id="a2hsBtn" class="popover-item" style="display:none;" onclick="triggerA2HS(); closeAllPopovers();" role="menuitem">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> <span>Install App</span>
             </button>
@@ -2187,8 +2492,120 @@
   <!-- MAIN APP CONTAINER -->
   <div class="container" id="app">
     
-    <!-- Category Jump Bar & Broselow Triage Navigation Row (Option 1: Inline Split Row) -->
-    <div class="category-bar-wrapper">
+    <!-- ========================================================================= -->
+    <!-- V1 MODE: MINIMAL BEDSIDE EMERGENCY FAST-TRACK                             -->
+    <!-- ========================================================================= -->
+    <main id="v1ModeContainer" class="v1-container" role="region" aria-label="V1 Minimal Bedside Emergency">
+      
+      <!-- V1 Top Header & One-Handed Stepper Strip -->
+      <div class="v1-header-strip">
+        <div class="v1-stepper-row">
+          <button type="button" class="v1-stepper-btn" onclick="stepWeight(-5)" title="ลดน้ำหนัก -5 kg" aria-label="Decrease 5 kg">-5k</button>
+          <button type="button" class="v1-stepper-btn" onclick="stepWeight(-1)" title="ลดน้ำหนัก -1 kg" aria-label="Decrease 1 kg">-1k</button>
+          <div class="v1-weight-display" id="v1WeightDisplay" title="น้ำหนักผู้ป่วยปัจจุบัน (Current Weight)">— kg</div>
+          <button type="button" class="v1-stepper-btn" onclick="stepWeight(1)" title="เพิ่มน้ำหนัก +1 kg" aria-label="Increase 1 kg">+1k</button>
+          <button type="button" class="v1-stepper-btn" onclick="stepWeight(5)" title="เพิ่มน้ำหนัก +5 kg" aria-label="Increase 5 kg">+5k</button>
+        </div>
+
+        <!-- V1 1-Tap Quick Weight Strip -->
+        <div style="margin-top:8px;">
+          <div class="quick-weight-strip" id="v1QuickWeightStrip" role="group" aria-label="Quick Weight Presets">
+            <button type="button" class="quick-weight-btn" data-color="Grey" onclick="applyQuickWeight(3)" title="3 kg (Neonate)"><span class="qw-dot" style="background:#B0B0B0;"></span>3k</button>
+            <button type="button" class="quick-weight-btn" data-color="Grey" onclick="applyQuickWeight(5)" title="Grey (5 kg)"><span class="qw-dot" style="background:#B0B0B0;"></span>5k</button>
+            <button type="button" class="quick-weight-btn" data-color="Pink" onclick="applyQuickWeight(7)" title="Pink (7 kg)"><span class="qw-dot" style="background:#FF80AB;"></span>7k</button>
+            <button type="button" class="quick-weight-btn" data-color="Red" onclick="applyQuickWeight(9)" title="Red (9 kg)"><span class="qw-dot" style="background:#FF5252;"></span>9k</button>
+            <button type="button" class="quick-weight-btn" data-color="Purple" onclick="applyQuickWeight(10)" title="Purple (10 kg)"><span class="qw-dot" style="background:#B388FF;"></span>10k</button>
+            <button type="button" class="quick-weight-btn" data-color="Yellow" onclick="applyQuickWeight(13)" title="Yellow (13 kg)"><span class="qw-dot" style="background:#FFEE58;"></span>13k</button>
+            <button type="button" class="quick-weight-btn" data-color="White" onclick="applyQuickWeight(17)" title="White (17 kg)"><span class="qw-dot" style="background:#FFFFFF; border:1px solid rgba(0,0,0,0.3);"></span>17k</button>
+            <button type="button" class="quick-weight-btn" data-color="Blue" onclick="applyQuickWeight(21)" title="Blue (21 kg)"><span class="qw-dot" style="background:#40C4FF;"></span>21k</button>
+            <button type="button" class="quick-weight-btn" data-color="Orange" onclick="applyQuickWeight(27)" title="Orange (27 kg)"><span class="qw-dot" style="background:#FFAB40;"></span>27k</button>
+            <button type="button" class="quick-weight-btn" data-color="Green" onclick="applyQuickWeight(33)" title="Green (33 kg)"><span class="qw-dot" style="background:#69F0AE;"></span>33k</button>
+            <button type="button" class="quick-weight-btn" data-color="Adolescent" onclick="applyQuickWeight(40)" title="40 kg (Adolescent)">40k</button>
+          </div>
+        </div>
+
+        <!-- V1 Quick Search -->
+        <div class="v1-search-box">
+          <input type="text" id="v1SearchInput" class="v1-search-input" placeholder="Search emergency drug / equipment (e.g. Epi, ETT, Defib)..." oninput="searchV1Items(this.value)" autocomplete="off" />
+          <button type="button" id="v1SearchClear" class="v1-search-clear" onclick="clearV1Search()" title="Clear search">✕</button>
+        </div>
+      </div>
+
+      <!-- Section 1: 🚨 Resuscitation & PALS -->
+      <section class="v1-section" id="v1-sec-pals" data-category="pals">
+        <div class="v1-section-title">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--danger);"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span>Cardiac Arrest & Resuscitation (PALS)</span>
+        </div>
+        <div class="v1-grid" id="v1CardsPals">
+          <!-- Populated by calcV1Mode() -->
+        </div>
+      </section>
+
+      <!-- Section 2: 🫁 Airway & Intubation -->
+      <section class="v1-section" id="v1-sec-airway" data-category="airway">
+        <div class="v1-section-title">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#D97706;"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+          <span>Airway & Intubation (RSI)</span>
+        </div>
+        <div class="v1-grid" id="v1CardsAirway">
+          <!-- Populated by calcV1Mode() -->
+        </div>
+      </section>
+
+      <!-- Section 3: ⚡ Seizure Protocol -->
+      <section class="v1-section" id="v1-sec-seizure" data-category="seizure">
+        <div class="v1-section-title">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#7C3AED;"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+          <span>Status Epilepticus (Seizure Rescue)</span>
+        </div>
+        <div class="v1-grid" id="v1CardsSeizure">
+          <!-- Populated by calcV1Mode() -->
+        </div>
+      </section>
+
+      <!-- Section 4: 🐝 Anaphylaxis & Acute Respiratory -->
+      <section class="v1-section" id="v1-sec-resp" data-category="resp">
+        <div class="v1-section-title">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--accent);"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+          <span>Anaphylaxis, Asthma & Croup</span>
+        </div>
+        <div class="v1-grid" id="v1CardsResp">
+          <!-- Populated by calcV1Mode() -->
+        </div>
+      </section>
+
+      <!-- Section 5: 💊 Fast Bedside Medications -->
+      <section class="v1-section" id="v1-sec-meds" data-category="meds">
+        <div class="v1-section-title">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--good);"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+          <span>Fast Bedside Emergency Medications</span>
+        </div>
+        <div class="v1-grid" id="v1CardsMeds">
+          <!-- Populated by calcV1Mode() -->
+        </div>
+      </section>
+
+      <!-- Section 6: 💧 Fluids & Vitals Reference -->
+      <section class="v1-section" id="v1-sec-fluids" data-category="fluids">
+        <div class="v1-section-title">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#0284C7;"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>
+          <span>Maintenance Fluids & Bedside Vitals Target</span>
+        </div>
+        <div class="v1-grid" id="v1CardsFluids">
+          <!-- Populated by calcV1Mode() -->
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ========================================================================= -->
+    <!-- V2 MODE: COMPREHENSIVE CLINICAL DECISION SUPPORT SUITE                    -->
+    <!-- ========================================================================= -->
+    <div id="v2ModeContainer" class="v2-container">
+      
+      <!-- Category Jump Bar & Broselow Triage Navigation Row (Option 1: Inline Split Row) -->
+      <div class="category-bar-wrapper">
       <div class="category-bar category-pills-group" role="group" aria-label="Module categories">
         <button type="button" class="category-pill active" data-cat="meds" onclick="filterNavCategory('meds', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg> <span>💊 Meds & Transfusion (5)</span></button>
         <button type="button" class="category-pill" data-cat="resus" onclick="filterNavCategory('resus', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> <span>🚨 Emergency Resus (7)</span></button>
@@ -2922,6 +3339,7 @@
         </div>
       </div>
     </section>
+    </div><!-- /v2ModeContainer -->
 
     <!-- Standalone Footer -->
     <footer class="app-footer">
@@ -3011,13 +3429,18 @@
         <button type="button" class="btn" style="padding:4px 10px; font-size:12px; display:inline-flex; align-items:center; gap:4px;" onclick="closeChangelogModal()">Close <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> (Esc)</button>
       </div>
       <div class="drawer-body" style="font-size:13px; line-height:1.6;">
-        <h3 style="color:var(--accent); margin-top:4px;">What's New in v<span id="changelogWhatsNewVersion">1.11.0</span> (August 2026):</h3>
+        <h3 style="color:var(--accent); margin-top:4px;">What's New in v<span id="changelogWhatsNewVersion">2.1.0</span> (August 2026):</h3>
         <ul>
-          <li><strong>📚 Offline Clinical Evidence & Reference Registry</strong>: เพิ่มระบบสืบค้นและแสดงเอกสารอ้างอิงทางการแพทย์ ระดับหลักฐาน (LOE/COR) และลิงก์ DOI/PMID ครอบคลุม 14 หมวดหมู่คลินิก ปลอดภัยและทำงานแบบ Offline 100%</li>
-          <li><strong>📖 Interactive In-Card Citation Badges</strong>: เพิ่มป้ายอ้างอิงบนหัวการ์ดทั้ง 13 โมดูลคลินิก (เช่น <code>📖 AHA PALS 2025</code>, <code>📖 GINA 2026</code>, <code>📖 ISPAD 2024</code>, <code>📖 NRP 9th Ed</code>) สามารถกดเปิดดูรายละเอียดหลักฐานได้ทันทีข้างเตียง</li>
-          <li><strong>⚡ AHA/AAP PALS 2025 Guideline Sync</strong>: ปรับเพดานพลังงาน Defibrillation สูงสุด 10 J/kg สำหรับ Refractory VF/pVT, เพิ่มเพดานยา Atropine ในเด็กโต (Single 1.0 mg / Total 2.0 mg) และอัปเดตอัตราช่วยหายใจเป็น 20–30 bpm (1 ครั้งทุก 2–3 วินาที)</li>
-          <li><strong>👶 AAP/AHA NRP 9th Edition 2025 Sync</strong>: กำหนดขนาดยา Epinephrine IV/IO มาตรฐานเป็น 0.02 mg/kg (0.2 mL/kg ของ 1:10,000) และ ETT bridge 0.1 mg/kg</li>
-          <li><strong>🩺 ISPAD 2024 & GINA 2026 Verification</strong>: ปรับปรุงสูตร Corrected Sodium ใน DKA (ISPAD 2.0 multiplier) และแนวทางรักษาหอบหืดเฉียบพลันตาม GINA 2026 / TAC 2025</li>
+          <li><strong>⚡ Dual-Mode Platform Architecture (V1 vs V2)</strong>: เพิ่มระบบสลับโหมดการทำงาน <code>[ V1 | V2 ]</code> ข้างเตียงแบบไร้รอยต่อ โดย <strong>V1 (Basic / Bedside Fast-Track)</strong> ออกแบบมาเพื่อการใช้งานมือเดียวบนสมาร์ทโฟน ตัดข้อมูลและข้อความที่ไม่จำเป็นออกทั้งหมด แสดงขนาดยา ปริมาตรดูดจริง (mL) อัตราฉีด และขนาดอุปกรณ์ช่วยชีวิต 25 รายการเร่งด่วนที่สุดแบบ "เอาไปใช้เลย" พร้อมปุ่มเลื่อนน้ำหนัก <code>[-1k]</code>, <code>[+1k]</code>, <code>[-5k]</code>, <code>[+5k]</code> และ Dock นำทางด้านล่าง</li>
+          <li><strong>💎 V2 (Pro / Comprehensive CDS Suite)</strong>: คงฟังก์ชันการคำนวณขั้นสูงครบถ้วนทั้ง 19 โมดูลคลินิก (โมโนกราฟยาฉบับเต็ม 80+ รายการ, ยาปฏิชีวนะ, เกลือแร่ 5 ระยะ, ภาวะ DKA, Sepsis Phoenix, แผลไฟไหม้ Parkland, ถ่ายเลือด MTP, กราฟ WHO Z-Scores และ Stopwatch จับเวลาชัก)</li>
+          <li><strong>🔄 Zero-Latency Biometric Synchronization</strong>: สลับโหมดได้ทันทีโดยไม่ต้องคำนวณใหม่ น้ำหนัก อายุ และเพศของผู้ป่วยจะเชื่อมโยงถึงกัน 100% พร้อมบันทึกโหมดที่ใช้งานล่าสุดอัตโนมัติ</li>
+        </ul>
+        <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;" />
+        <h4 style="color:var(--ink); margin-top:4px;">📜 Version 2.0.0 Highlights:</h4>
+        <ul>
+          <li><strong>🫁 6 New Emergency Clinical Engines</strong>: เพิ่มเครื่องคิดเลข 6 โมดูลใหม่ (Airway & RSI, Sepsis Phoenix 2024, Anaphylaxis, Trauma & Burns Parkland, Croup Westley, Blood Transfusion MTP)</li>
+          <li><strong>📈 WHO Growth Standards Z-Scores</strong>: ระบบประเมินภาวะโภชนาการ WAZ & HAZ อัตโนมัติตามเกณฑ์องค์การอนามัยโลก</li>
+          <li><strong>⏱️ Seizure Stopwatch Timer</strong>: นาฬิกาจับเวลาชักฉุกเฉินข้างเตียงพร้อมระบบแจ้งเตือนทุก 5 นาที</li>
         </ul>
         <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;" />
         <h4 style="color:var(--ink); margin-top:4px;">📜 Version 1.10.1 Highlights:</h4>
@@ -3225,6 +3648,34 @@
       </div>
     </div>
   </div>
+
+  <!-- V1 Mobile Bottom Category Dock -->
+  <nav class="v1-bottom-dock" id="v1BottomDock" aria-label="V1 Emergency Navigation">
+    <button type="button" class="v1-dock-btn active" data-v1-target="v1-sec-pals" onclick="scrollToV1Section('v1-sec-pals', this)">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      <span>PALS</span>
+    </button>
+    <button type="button" class="v1-dock-btn" data-v1-target="v1-sec-airway" onclick="scrollToV1Section('v1-sec-airway', this)">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+      <span>Airway</span>
+    </button>
+    <button type="button" class="v1-dock-btn" data-v1-target="v1-sec-seizure" onclick="scrollToV1Section('v1-sec-seizure', this)">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+      <span>Seizure</span>
+    </button>
+    <button type="button" class="v1-dock-btn" data-v1-target="v1-sec-resp" onclick="scrollToV1Section('v1-sec-resp', this)">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+      <span>Allergy</span>
+    </button>
+    <button type="button" class="v1-dock-btn" data-v1-target="v1-sec-meds" onclick="scrollToV1Section('v1-sec-meds', this)">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+      <span>Meds</span>
+    </button>
+    <button type="button" class="v1-dock-btn" data-v1-target="v1-sec-fluids" onclick="scrollToV1Section('v1-sec-fluids', this)">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>
+      <span>Fluids</span>
+    </button>
+  </nav>
 
   <!-- Mobile Emergency Bottom Quick-Dock (Sticky on small viewports) -->
   <nav class="mobile-bottom-dock" id="mobileBottomDock" aria-label="Mobile emergency navigation">

@@ -56,7 +56,115 @@ var gSeizureTimerSeconds = 0;
 if (typeof window !== 'undefined') window.gSeizureTimerSeconds = gSeizureTimerSeconds;
 var gSeizureTimerRunning = false;
 if (typeof window !== 'undefined') window.gSeizureTimerRunning = gSeizureTimerRunning;
+var gAppMode = 'v1';
+if (typeof window !== 'undefined') window.gAppMode = gAppMode;
 let activeTab = 'dose';
+
+function initAppMode() {
+  const saved = (typeof localStorage !== 'undefined') ? (localStorage.getItem('er_ped_app_mode') || 'v1') : 'v1';
+  setAppMode(saved, false);
+}
+
+function setAppMode(mode, triggerVT = true) {
+  if (mode !== 'v1' && mode !== 'v2') mode = 'v1';
+  gAppMode = mode;
+  if (typeof window !== 'undefined') window.gAppMode = mode;
+  if (typeof localStorage !== 'undefined') {
+    try { localStorage.setItem('er_ped_app_mode', mode); } catch (_) {}
+  }
+
+  const applyDomChanges = () => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute('data-app-mode', mode);
+      
+      // Update Topbar Mode Switcher Buttons
+      const v1Btn = document.querySelector('.mode-switch-btn[data-mode="v1"]');
+      const v2Btn = document.querySelector('.mode-switch-btn[data-mode="v2"]');
+      if (v1Btn) {
+        v1Btn.classList.toggle('active', mode === 'v1');
+        v1Btn.setAttribute('aria-checked', mode === 'v1' ? 'true' : 'false');
+      }
+      if (v2Btn) {
+        v2Btn.classList.toggle('active', mode === 'v2');
+        v2Btn.setAttribute('aria-checked', mode === 'v2' ? 'true' : 'false');
+      }
+
+      // Update Overflow Menu Label
+      const menuText = document.getElementById('modeSwitchMenuText');
+      if (menuText) {
+        menuText.textContent = mode === 'v1' ? 'Switch to V2' : 'Switch to V1';
+      }
+    }
+  };
+
+  if (triggerVT && typeof document !== 'undefined' && document.startViewTransition) {
+    document.startViewTransition(() => {
+      applyDomChanges();
+      if (mode === 'v1') calcV1Mode();
+    });
+  } else {
+    applyDomChanges();
+    if (mode === 'v1') calcV1Mode();
+  }
+}
+
+function toggleAppMode() {
+  setAppMode(gAppMode === 'v1' ? 'v2' : 'v1');
+}
+
+function getAppMode() {
+  return gAppMode;
+}
+
+function stepWeight(delta) {
+  const current = getWeight() || 10;
+  let next = Math.round((current + delta) * 10) / 10;
+  if (next < 1) next = 1;
+  if (next > 100) next = 100;
+  applyQuickWeight(next);
+}
+
+function scrollToV1Section(secId, btn) {
+  if (typeof document === 'undefined') return;
+  const sec = document.getElementById(secId);
+  if (sec && typeof sec.scrollIntoView === 'function') {
+    sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  if (btn) {
+    document.querySelectorAll('.v1-dock-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+}
+
+function searchV1Items(query) {
+  const q = (query || '').toLowerCase().trim();
+  if (typeof document === 'undefined') return;
+  const clearBtn = document.getElementById('v1SearchClear');
+  if (clearBtn) clearBtn.style.display = q ? 'block' : 'none';
+
+  const cards = document.querySelectorAll('.v1-card');
+  cards.forEach(card => {
+    const text = card.textContent.toLowerCase();
+    const matches = !q || text.includes(q);
+    card.style.display = matches ? 'flex' : 'none';
+  });
+
+  const sections = document.querySelectorAll('.v1-section');
+  sections.forEach(sec => {
+    const visibleCards = sec.querySelectorAll('.v1-card:not([style*="display: none"])');
+    sec.style.display = (visibleCards.length > 0) ? 'block' : 'none';
+  });
+}
+
+function clearV1Search() {
+  if (typeof document === 'undefined') return;
+  const inp = document.getElementById('v1SearchInput');
+  if (inp) {
+    inp.value = '';
+    searchV1Items('');
+    inp.focus();
+  }
+}
 
 // --- Dataset Loading (Robust dual-mode for web server & offline file:// execution) ---
 function loadDataset() {
@@ -182,6 +290,7 @@ function syncTopbarHeight() {
 
 function initUI(){
   initTheme();
+  initAppMode();
   populateDrugs();
   initComboboxes();
   setupKeyboardShortcuts();
@@ -1530,6 +1639,7 @@ function dosesPerDayFromFreq(freq){
 }
 
 function calcAll(){
+  calcV1Mode();
   calcGrowthZScores();
   calcDose();
   calcATB();
@@ -1550,6 +1660,307 @@ function calcAll(){
   calcTrauma();
   calcCroup();
   calcTransfusion();
+}
+
+// --------- ⚡ V1 Mode: Minimal Bedside Emergency Engine ---------
+
+function calcV1Mode() {
+  if (typeof document === 'undefined') return;
+  const bw = getWeight();
+  const ageYr = getAgeInYears();
+
+  // 1. Update Weight Display in V1 Header
+  const wDisp = document.getElementById('v1WeightDisplay');
+  if (wDisp) {
+    if (bw && bw > 0) {
+      let ageStr = '';
+      if (ageYr !== null && ageYr !== undefined && ageYr > 0) {
+        ageStr = ageYr < 1 ? ` (${Math.round(ageYr * 12)} mo)` : ` (${ageYr >= 10 ? ageYr.toFixed(0) : ageYr.toFixed(1)} yr)`;
+      }
+      wDisp.textContent = `${bw.toFixed(1)} kg${ageStr}`;
+      wDisp.style.color = 'var(--accent)';
+      wDisp.style.background = 'var(--accent-soft)';
+    } else {
+      wDisp.textContent = '— kg';
+      wDisp.style.color = 'var(--muted)';
+      wDisp.style.background = 'var(--panel)';
+    }
+  }
+
+  // Highlight active quick weight preset button in V1
+  document.querySelectorAll('#v1QuickWeightStrip .quick-weight-btn').forEach(btn => {
+    const btnText = btn.textContent || '';
+    const num = parseFloat(btnText);
+    const isActive = bw && num && Math.abs(bw - num) < 0.3;
+    btn.classList.toggle('active', !!isActive);
+  });
+
+  const palsEl = document.getElementById('v1CardsPals');
+  const airwayEl = document.getElementById('v1CardsAirway');
+  const seizureEl = document.getElementById('v1CardsSeizure');
+  const respEl = document.getElementById('v1CardsResp');
+  const medsEl = document.getElementById('v1CardsMeds');
+  const fluidsEl = document.getElementById('v1CardsFluids');
+
+  if (!palsEl || !airwayEl || !seizureEl || !respEl || !medsEl || !fluidsEl) return;
+
+  if (!bw || bw <= 0) {
+    const emptyMsg = '<div style="grid-column: 1/-1; padding: 14px; text-align: center; color: var(--muted); background: var(--panel-subtle); border-radius: var(--r-sm); border: 1px dashed var(--border); font-size: 13px;">กรุณาระบุน้ำหนัก (BW) หรือกดปุ่มน้ำหนักด่วนด้านบนเพื่อคำนวณ</div>';
+    palsEl.innerHTML = emptyMsg;
+    airwayEl.innerHTML = emptyMsg;
+    seizureEl.innerHTML = emptyMsg;
+    respEl.innerHTML = emptyMsg;
+    medsEl.innerHTML = emptyMsg;
+    fluidsEl.innerHTML = emptyMsg;
+    return;
+  }
+
+  const helper = (title, route, doseStr, volStr, prepStr, capStr, typeClass) => `
+    <div class="v1-card ${typeClass}">
+      <div class="v1-card-top">
+        <div class="v1-card-title">${title}</div>
+        <div class="v1-card-route">${route}</div>
+      </div>
+      <div class="v1-hero-dose">
+        ${doseStr}
+        ${volStr ? `<span class="v1-hero-vol">(${volStr})</span>` : ''}
+      </div>
+      <div class="v1-card-prep">${prepStr}</div>
+      ${capStr ? `<div><span class="v1-cap-warning">⚠️ ${capStr}</span></div>` : ''}
+    </div>
+  `;
+
+  // ----------------------------------------------------
+  // SECTION 1: 🚨 Resuscitation & PALS
+  // ----------------------------------------------------
+  const epiVol = Math.min(bw * 0.1, 10.0);
+  const epiDose = Math.min(bw * 0.01, 1.0);
+  const epiCap = (bw * 0.1 >= 10.0) ? 'Max 10 mL (1.0 mg)' : '';
+
+  const defib1 = Math.min(Math.round(bw * 2), 200);
+  const defib2 = Math.min(Math.round(bw * 4), 200);
+
+  const cardio1 = Math.min(Math.max(1, Math.round(bw * 0.5)), 100);
+  const cardio2 = Math.min(Math.round(bw * 2), 200);
+
+  const amioDose = Math.min(Math.round(bw * 5), 300);
+  const amioVol = (amioDose / 50).toFixed(1);
+  const amioCap = (bw * 5 >= 300) ? 'Max 300 mg' : '';
+
+  const isAdol = (ageYr !== null && ageYr >= 12);
+  const maxAtropine = isAdol ? 1.0 : 0.5;
+  const atropineDose = Math.max(0.1, Math.min(bw * 0.02, maxAtropine));
+  const atropineVol = (atropineDose / 0.6).toFixed(2);
+  const atropineCap = (bw * 0.02 < 0.1) ? 'Min 0.1 mg' : ((bw * 0.02 >= maxAtropine) ? `Max ${maxAtropine} mg` : '');
+
+  const aden1 = Math.min(bw * 0.1, 6.0);
+  const aden2 = Math.min(bw * 0.2, 12.0);
+  const adenCap = (bw * 0.1 >= 6.0) ? 'Max 1st 6 mg, 2nd 12 mg' : '';
+
+  const shockBolus = Math.min(Math.round(bw * 20), 1000);
+  const shockCap = (bw * 20 >= 1000) ? 'Max 1,000 mL' : '';
+
+  const d10wVol = Math.min(Math.round(bw * 2), 100);
+
+  palsEl.innerHTML = [
+    helper('Adrenaline (Epi 1:10,000)', 'IV / IO', `${epiVol.toFixed(1)} mL IV push`, `${epiDose.toFixed(2)} mg`, '1:10,000 neat IV/IO push q 3–5 min + 5 mL NS flush', epiCap, 'v1-card-pals'),
+    helper('Defibrillation (VF / pVT)', 'Defib', `Initial: ${defib1} J`, `2nd+: ${defib2} J`, 'Biphasic manual defib ; Max 10 J/kg or adult 200 J', '', 'v1-card-pals'),
+    helper('Synchronized Cardioversion', 'Sync', `1st: ${cardio1} J`, `2nd: ${cardio2} J`, 'SVT / VT with pulse ; Turn SYNC ON ; Pre-sedate if stable', '', 'v1-card-pals'),
+    helper('Amiodarone (50 mg/mL)', 'IV / IO', `${amioDose} mg`, `${amioVol} mL`, '5 mg/kg rapid IV push for shock-refractory VF/pVT', amioCap, 'v1-card-pals'),
+    helper('Atropine (0.6 mg/mL)', 'IV / IO', `${atropineDose.toFixed(2)} mg`, `${atropineVol} mL`, '0.02 mg/kg IV push for symptomatic bradycardia', atropineCap, 'v1-card-pals'),
+    helper('Adenosine (3 mg/mL)', 'IV Push', `1st: ${aden1.toFixed(1)} mg`, `2nd: ${aden2.toFixed(1)} mg`, 'Rapid IV push over 1–2 sec immediately followed by 5 mL NS flush', adenCap, 'v1-card-pals'),
+    helper('Shock Fluid Bolus (NSS/Acetar)', 'IV Push', `${shockBolus} mL`, '20 mL/kg', 'Isotonic crystalloid push over 10–15 min ; Re-assess perfusion', shockCap, 'v1-card-pals'),
+    helper('Hypoglycemia Bolus (D10W)', 'IV Push', `${d10wVol} mL`, '2 mL/kg', 'D10W (0.2 g/kg) IV push over 2–3 min ; Recheck glucose 15 min', '', 'v1-card-pals')
+  ].join('');
+
+  // ----------------------------------------------------
+  // SECTION 2: 🫁 Airway & Intubation (RSI)
+  // ----------------------------------------------------
+  let cuffedETT = 4.0;
+  let uncuffedETT = 4.5;
+  if (ageYr !== null && ageYr !== undefined) {
+    if (ageYr <= 1) {
+      cuffedETT = bw <= 3.5 ? 3.0 : 3.5;
+      uncuffedETT = bw <= 3.5 ? 3.5 : 4.0;
+    } else {
+      cuffedETT = Math.min(7.5, Math.round((ageYr / 4 + 3.5) * 2) / 2);
+      uncuffedETT = Math.min(8.0, Math.round((ageYr / 4 + 4.0) * 2) / 2);
+    }
+  } else {
+    cuffedETT = (typeof weightToETTCuffed === 'function') ? weightToETTCuffed(bw) : 4.0;
+    uncuffedETT = (typeof weightToETTUncuffed === 'function') ? weightToETTUncuffed(bw) : 4.5;
+  }
+  const ettDepth = Math.round(cuffedETT * 3 * 10) / 10;
+  const bladeStr = (typeof suggestBlade === 'function') ? suggestBlade(bw, ageYr) : (bw < 10 ? 'Miller 1' : 'Mac 2');
+  const suctionFr = Math.round(cuffedETT * 2);
+  const lmaSize = bw < 5 ? '1' : (bw < 10 ? '1.5' : (bw < 20 ? '2' : (bw < 30 ? '2.5' : (bw < 50 ? '3' : '4'))));
+
+  const ketaMin = Math.round(bw * 1.5);
+  const ketaMax = Math.min(Math.round(bw * 2.0), 200);
+  const ketaVol = (ketaMax / 50).toFixed(1);
+  const ketaCap = (bw * 2.0 >= 200) ? 'Max 200 mg' : '';
+
+  const rocurDose = Math.min(Math.round(bw * 1.0 * 10) / 10, 100);
+  const rocurVol = (rocurDose / 10).toFixed(1);
+  const rocurCap = (bw >= 100) ? 'Max 100 mg' : '';
+
+  const suxDose = Math.min(Math.round(bw * (bw < 10 ? 2.0 : 1.5)), 150);
+  const suxVol = (suxDose / 50).toFixed(1);
+  const suxCap = (bw * 1.5 >= 150) ? 'Max 150 mg' : '';
+
+  const sugaDose = Math.min(Math.round(bw * 16), 1500);
+  const sugaVol = (sugaDose / 100).toFixed(1);
+
+  airwayEl.innerHTML = [
+    helper('Endotracheal Tube (ETT)', 'ETT ID', `Cuffed: ${cuffedETT} mm`, `Uncuffed: ${uncuffedETT} mm`, `Lip Depth: ${ettDepth} cm (Depth = ETT ID × 3) ; เตรียมเบอร์ ±0.5 สำรอง`, '', 'v1-card-airway'),
+    helper('Airway Equipment Sizing', 'Device', `Blade: ${bladeStr}`, `Suction: ${suctionFr} Fr`, `LMA: Size ${lmaSize} · BVM: ${bw < 10 ? 'Infant (500 mL)' : 'Child (750 mL)'}`, '', 'v1-card-airway'),
+    helper('Ketamine (50 mg/mL)', 'IV Push', `${ketaMin}–${ketaMax} mg`, `${(ketaMin/50).toFixed(1)}–${ketaVol} mL`, '1.5–2.0 mg/kg IV push RSI Induction over 30–60 sec', ketaCap, 'v1-card-airway'),
+    helper('Rocuronium (10 mg/mL)', 'IV Push', `${rocurDose} mg`, `${rocurVol} mL`, '1.0 mg/kg IV push RSI Paralytic (onset 45–60s, duration 40m)', rocurCap, 'v1-card-airway'),
+    helper('Succinylcholine (50 mg/mL)', 'IV Push', `${suxDose} mg`, `${suxVol} mL`, `${bw < 10 ? '2.0 mg/kg' : '1.5 mg/kg'} IV push ; ระวัง hyperkalemia / MH`, suxCap, 'v1-card-airway'),
+    helper('Sugammadex (100 mg/mL)', 'IV Push', `${sugaDose} mg`, `${sugaVol} mL`, '16 mg/kg IV push for immediate Rocuronium reversal (CICO Rescue)', '', 'v1-card-airway')
+  ].join('');
+
+  // ----------------------------------------------------
+  // SECTION 3: ⚡ Seizure Protocol
+  // ----------------------------------------------------
+  const midazIv = Math.min(Math.round(bw * 0.2 * 10) / 10, 5.0);
+  const midazIvVol = (midazIv / 5).toFixed(2);
+  const midazIvCap = (bw * 0.2 >= 5.0) ? 'Max 5.0 mg' : '';
+
+  const midazIn = Math.min(Math.round(bw * 0.2 * 10) / 10, 10.0);
+  const midazInVol = (midazIn / 5).toFixed(2);
+  const midazInCap = (bw * 0.2 >= 10.0) ? 'Max 10.0 mg' : '';
+
+  const diaIv = Math.min(Math.round(bw * 0.3 * 10) / 10, 10.0);
+  const diaIvVol = (diaIv / 5).toFixed(2);
+  const diaRec = Math.min(Math.round(bw * 0.5 * 10) / 10, 10.0);
+  const diaCap = (bw * 0.3 >= 10.0) ? 'Max 10.0 mg' : '';
+
+  const kepDose = Math.min(Math.round(bw * 60), 4500);
+  const kepVol = (kepDose / 100).toFixed(1);
+  const kepCap = (bw * 60 >= 4500) ? 'Max 4,500 mg' : '';
+
+  const phenyDose = Math.min(Math.round(bw * 20), 1000);
+  const phenyVol = (phenyDose / 50).toFixed(1);
+  const phenyCap = (bw * 20 >= 1000) ? 'Max 1,000 mg' : '';
+
+  const phenoDose = Math.min(Math.round(bw * 20), 1000);
+  const phenoVol = (phenoDose / 100).toFixed(1);
+  const phenoCap = (bw * 20 >= 1000) ? 'Max 1,000 mg' : '';
+
+  seizureEl.innerHTML = [
+    helper('Midazolam (5 mg/mL) IV/IO', 'IV / IO', `${midazIv} mg`, `${midazIvVol} mL`, '0.1–0.2 mg/kg IV push over 1–2 min ; Repeat once at 5 min if seizure persists', midazIvCap, 'v1-card-seizure'),
+    helper('Midazolam (5 mg/mL) IN/Buccal', 'IN / Buccal', `${midazIn} mg`, `${midazInVol} mL`, '0.2–0.3 mg/kg Buccal / IN (ผ่าน MAD) / IM หากยังไม่มีเส้น IV', midazInCap, 'v1-card-seizure'),
+    helper('Diazepam (5 mg/mL) IV/Rectal', 'IV / Rectal', `IV: ${diaIv} mg (${diaIvVol} mL)`, `Rectal: ${diaRec} mg`, 'IV 0.2–0.3 mg/kg (rate 1–2 mg/min) ; Rectal tube 0.5 mg/kg', diaCap, 'v1-card-seizure'),
+    helper('Levetiracetam / Keppra (100 mg/mL)', 'IV Infusion', `${kepDose} mg`, `${kepVol} mL`, '60 mg/kg ผสมใน NSS 20–50 mL หยดทาง IV ใน 10 นาที (1st-choice 2nd line)', kepCap, 'v1-card-seizure'),
+    helper('Phenytoin (50 mg/mL)', 'IV Infusion', `${phenyDose} mg`, `${phenyVol} mL`, '20 mg/kg ผสมใน NSS เท่านั้น! (ห้าม D5W) หยดช้าๆ ใน 20–30 นาที (Max 50 mg/min)', phenyCap, 'v1-card-seizure'),
+    helper('Phenobarbital (100 mg/mL)', 'IV Infusion', `${phenoDose} mg`, `${phenoVol} mL`, '20 mg/kg IV ช้าๆ (30–50 mg/min) — First-line ใน Neonatal Seizure', phenoCap, 'v1-card-seizure')
+  ].join('');
+
+  // ----------------------------------------------------
+  // SECTION 4: 🐝 Anaphylaxis, Asthma & Croup
+  // ----------------------------------------------------
+  const maxEpiIm = (bw >= 30) ? 0.5 : 0.3;
+  const epiImVol = Math.min(bw * 0.01, maxEpiIm);
+  const epiImDose = epiImVol * 1.0;
+  const epiImCap = (bw * 0.01 >= maxEpiIm) ? `Max ${maxEpiIm} mL (${maxEpiIm} mg)` : '';
+
+  const salbStr = (bw < 20) ? '2.5 mg (0.5 mL)' : '5.0 mg (1.0 mL)';
+  const ipraStr = (bw < 20) ? '250 mcg (1.0 mL)' : '500 mcg (2.0 mL)';
+
+  const dexaDose = Math.min(Math.round(bw * 0.6 * 10) / 10, 16.0);
+  const dexaVol = (dexaDose / 4).toFixed(2);
+  const dexaCap = (bw * 0.6 >= 16.0) ? 'Max 16.0 mg' : '';
+
+  const hydroDose = Math.min(Math.round(bw * 4), 200);
+  const hydroCap = (bw * 4 >= 200) ? 'Max 200 mg' : '';
+
+  const cpmDose = Math.min(Math.round(bw * 0.1 * 10) / 10, 5.0);
+  const cpmVol = (cpmDose / 10).toFixed(2);
+  const cpmCap = (bw * 0.1 >= 5.0) ? 'Max 5.0 mg' : '';
+
+  respEl.innerHTML = [
+    helper('Adrenaline (1:1,000 / 1 mg/mL) IM', 'IM Thigh', `${epiImVol.toFixed(2)} mL`, `${epiImDose.toFixed(2)} mg`, '0.01 mL/kg ฉีดเข้ากล้ามเนื้อหน้าขา (Anterolateral Thigh) ทันที! ซ้ำได้ q 5–15 min', epiImCap, 'v1-card-resp'),
+    helper('Salbutamol (Ventolin 5 mg/mL)', 'Nebulize', salbStr, '+ 3 mL NSS', 'พ่นละอองยา q 20 min x 3 doses ในชั่วโมงแรกสำหรับ acute asthma', '', 'v1-card-resp'),
+    helper('Ipratropium (Atrovent 250 mcg/mL)', 'Nebulize', ipraStr, 'Neb', 'พ่นร่วมกับ Salbutamol ใน Severe / Life-threatening asthma x 3 doses', '', 'v1-card-resp'),
+    helper('Dexamethasone (4 mg/mL)', 'PO / IV / IM', `${dexaDose} mg`, `${dexaVol} mL`, '0.6 mg/kg single dose สำหรับ Croup / Acute Severe Asthma', dexaCap, 'v1-card-resp'),
+    helper('Hydrocortisone (100 mg vial)', 'IV Push', `${hydroDose} mg`, '4 mg/kg', '4–5 mg/kg IV q 6 hr ใน severe anaphylaxis / asthma exacerbation', hydroCap, 'v1-card-resp'),
+    helper('Chlorpheniramine / CPM (10 mg/mL)', 'IV / IM', `${cpmDose} mg`, `${cpmVol} mL`, '0.1 mg/kg IV/IM q 6–8 hr PRN สำหรับ allergic urticaria / itching', cpmCap, 'v1-card-resp')
+  ].join('');
+
+  // ----------------------------------------------------
+  // SECTION 5: 💊 Fast Bedside Medications
+  // ----------------------------------------------------
+  const para15 = Math.min(Math.round(bw * 15), 1000);
+  const para250Vol = (para15 / 50).toFixed(1);
+  const para120Vol = (para15 / 24).toFixed(1);
+  const paraIvVol = (para15 / 10).toFixed(1);
+  const paraCap = (bw * 15 >= 1000) ? 'Max 1,000 mg/dose (4,000 mg/day)' : '';
+
+  const ibuDose = Math.min(Math.round(bw * 10), 400);
+  const ibuVol = (ibuDose / 20).toFixed(1);
+  const ibuCap = (bw * 10 >= 400) ? 'Max 400 mg/dose' : '';
+
+  const ondanDose = Math.min(Math.round(bw * 0.15 * 100) / 100, 8.0);
+  const ondanVol = (ondanDose / 2).toFixed(2);
+  const ondanCap = (bw * 0.15 >= 8.0) ? 'Max 8.0 mg' : '';
+
+  const cefMin = Math.round(bw * 50);
+  const cefMax = Math.min(Math.round(bw * 100), 2000);
+  const cefCap = (bw * 100 >= 2000) ? 'Max 2,000 mg' : '';
+
+  const morphDose = Math.min(Math.round(bw * 0.1 * 100) / 100, 5.0);
+  const morphVol = (morphDose / 10).toFixed(2);
+  const morphCap = (bw * 0.1 >= 5.0) ? 'Max 5.0 mg' : '';
+
+  const fentDose = Math.min(Math.round(bw * 1.5), 100);
+  const fentVol = (fentDose / 50).toFixed(2);
+  const fentCap = (bw * 1.5 >= 100) ? 'Max 100 mcg' : '';
+
+  medsEl.innerHTML = [
+    helper('Paracetamol Syrup (250 mg / 5 mL)', 'PO q4–6h', `${para15} mg`, `${para250Vol} mL`, '10–15 mg/kg PO q 4–6 hr PRN fever/pain (10 kg ≈ 1/2 tsp = 3 mL)', paraCap, 'v1-card-meds'),
+    helper('Paracetamol Syrup (120 mg / 5 mL)', 'PO q4–6h', `${para15} mg`, `${para120Vol} mL`, '10–15 mg/kg PO q 4–6 hr PRN fever/pain (10 kg ≈ 1 tsp = 6 mL)', paraCap, 'v1-card-meds'),
+    helper('Paracetamol IV (10 mg/mL)', 'IV Infuse', `${para15} mg`, `${paraIvVol} mL`, '15 mg/kg IV drip in 15 min q 6 hr PRN (ห้าม push เร็ว)', paraCap, 'v1-card-meds'),
+    helper('Ibuprofen Syrup (100 mg / 5 mL)', 'PO q6–8h', `${ibuDose} mg`, `${ibuVol} mL`, '10 mg/kg PO q 6–8 hr pc PRN (ห้ามใช้ในเด็ก <6 เดือน หรือสงสัยไข้เลือดออก)', ibuCap, 'v1-card-meds'),
+    helper('Ondansetron (4 mg / 2 mL)', 'IV / PO', `${ondanDose} mg`, `${ondanVol} mL`, '0.15 mg/kg IV push over 2–5 min / PO สำหรับ acute gastroenteritis vomiting', ondanCap, 'v1-card-meds'),
+    helper('Ceftriaxone IV (1st Dose)', 'IV Infuse', `${cefMin}–${cefMax} mg`, '50–100 mg/kg', 'First dose Sepsis / Meningitis / Severe Bacterial Infection หยดใน 30 min', cefCap, 'v1-card-meds'),
+    helper('Morphine (10 mg/mL)', 'IV / SC', `${morphDose} mg`, `${morphVol} mL`, '0.05–0.1 mg/kg IV push ช้าๆ ใน 4–5 นาที สำหรับ severe pain', morphCap, 'v1-card-meds'),
+    helper('Fentanyl (50 mcg/mL)', 'IV Push', `${fentDose} mcg`, `${fentVol} mL`, '1–2 mcg/kg IV push ช้าๆ ใน 2–3 นาที (onset เร็ว 1–2 นาที)', fentCap, 'v1-card-meds')
+  ].join('');
+
+  // ----------------------------------------------------
+  // SECTION 6: 💧 Fluids & Vitals Reference
+  // ----------------------------------------------------
+  let maintRate = 0;
+  if (bw <= 10) maintRate = bw * 4;
+  else if (bw <= 20) maintRate = 40 + (bw - 10) * 2;
+  else maintRate = 60 + (bw - 20) * 1;
+  maintRate = Math.round(maintRate * 10) / 10;
+  const maintDay = Math.round(maintRate * 24);
+
+  let hrRange = '80–120';
+  let rrRange = '20–30';
+  let minSBP = 70;
+  if (ageYr !== null && ageYr !== undefined) {
+    if (ageYr < 1) { hrRange = '100–160'; rrRange = '30–60'; minSBP = 70; }
+    else if (ageYr < 3) { hrRange = '90–150'; rrRange = '24–40'; minSBP = 70 + Math.round(ageYr * 2); }
+    else if (ageYr < 6) { hrRange = '80–120'; rrRange = '20–30'; minSBP = 70 + Math.round(ageYr * 2); }
+    else if (ageYr < 12) { hrRange = '70–110'; rrRange = '18–25'; minSBP = Math.min(90, 70 + Math.round(ageYr * 2)); }
+    else { hrRange = '60–100'; rrRange = '12–20'; minSBP = 90; }
+  } else {
+    minSBP = bw <= 10 ? 70 : Math.min(90, 70 + Math.round((bw - 8) / 2));
+  }
+
+  fluidsEl.innerHTML = [
+    helper('Holliday-Segar Maintenance Rate', 'IV Rate', `${maintRate} mL/hr`, `${maintDay} mL/day`, '4 mL/kg (1–10 kg) + 2 mL/kg (11–20 kg) + 1 mL/kg (>20 kg) ; D5/0.45% NaCl + KCl 20 mEq/L', '', 'v1-card-fluids'),
+    helper('Bedside Normal Vitals Target', 'Reference', `HR: ${hrRange} bpm`, `RR: ${rrRange} /min`, `Hypotension SBP Floor: < ${minSBP} mmHg (70 + 2 × Age) · SpO2 target ≥ 94% (Asthma ≥ 92%)`, '', 'v1-card-fluids')
+  ].join('');
+
+  // If a search query is active, re-apply filter to updated cards
+  const searchInp = document.getElementById('v1SearchInput');
+  if (searchInp && searchInp.value) {
+    searchV1Items(searchInp.value);
+  }
 }
 
 // --------- 💊 Pediatric Dose Calculator ---------
@@ -4887,6 +5298,14 @@ if (typeof module !== 'undefined' && module.exports) {
     openEvidenceModal,
     closeEvidenceModal,
     filterEvidenceList,
-    renderEvidenceList
+    renderEvidenceList,
+    setAppMode,
+    getAppMode,
+    toggleAppMode,
+    calcV1Mode,
+    stepWeight,
+    scrollToV1Section,
+    searchV1Items,
+    clearV1Search
   };
 }

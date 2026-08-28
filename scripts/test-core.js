@@ -60,7 +60,10 @@ const essentialIds = [
   'sepsisResp', 'sepsisCardio', 'burnTBSA', 'croupStridor', 'txCurrentHb',
   'growthZScoreBadge', 'seizureTimerWidget',
   'evidenceBackdrop', 'evidencePanel', 'evidenceSearchInput', 'evidenceCategorySelect', 'evidenceListContainer',
-  'quickWeightStrip', 'broselowMiniStrip', 'mobileBottomDock'
+  'quickWeightStrip', 'broselowMiniStrip', 'mobileBottomDock',
+  'appModeSwitch', 'v1ModeContainer', 'v2ModeContainer', 'v1WeightDisplay', 'v1QuickWeightStrip',
+  'v1SearchInput', 'v1SearchClear', 'v1CardsPals', 'v1CardsAirway', 'v1CardsSeizure',
+  'v1CardsResp', 'v1CardsMeds', 'v1CardsFluids', 'v1BottomDock'
 ];
 
 essentialIds.forEach(id => {
@@ -1372,6 +1375,149 @@ test('Evidence Modal UI Engine: openEvidenceModal, filterEvidenceList, and DOM R
   // Test closing modal
   window.eval('closeEvidenceModal()');
   assert(backdrop.classList.contains('hidden'), 'evidenceBackdrop must have hidden class after closeEvidenceModal');
+});
+
+// --- V1 MINIMAL BEDSIDE MODE & MODE SWITCHER TEST SUITES ---
+
+// 1. Mode Switcher (V1 vs V2) State & DOM Integrity
+test('Mode Switcher: setAppMode, toggleAppMode, and DOM attributes', () => {
+  window.eval('setAppMode("v1", false)');
+  assert.strictEqual(window.eval('getAppMode()'), 'v1', 'App mode must be v1');
+  assert.strictEqual(document.documentElement.getAttribute('data-app-mode'), 'v1', 'data-app-mode attribute must be v1');
+  
+  const v1Btn = document.querySelector('.mode-switch-btn[data-mode="v1"]');
+  const v2Btn = document.querySelector('.mode-switch-btn[data-mode="v2"]');
+  assert(v1Btn && v1Btn.classList.contains('active'), 'V1 button must have active class');
+  assert(v2Btn && !v2Btn.classList.contains('active'), 'V2 button must not have active class');
+
+  const menuText = document.getElementById('modeSwitchMenuText');
+  assert(menuText && menuText.textContent.includes('Switch to V2'), 'Menu text must offer Switch to V2');
+
+  // Switch to V2
+  window.eval('setAppMode("v2", false)');
+  assert.strictEqual(window.eval('getAppMode()'), 'v2', 'App mode must be v2');
+  assert.strictEqual(document.documentElement.getAttribute('data-app-mode'), 'v2', 'data-app-mode attribute must be v2');
+  assert(v2Btn && v2Btn.classList.contains('active'), 'V2 button must have active class in v2 mode');
+  assert(v1Btn && !v1Btn.classList.contains('active'), 'V1 button must not have active class in v2 mode');
+  assert(menuText && menuText.textContent.includes('Switch to V1'), 'Menu text must offer Switch to V1');
+
+  // Toggle back to V1
+  window.eval('toggleAppMode()');
+  assert.strictEqual(window.eval('getAppMode()'), 'v1', 'toggleAppMode must switch back to v1');
+});
+
+// 2. V1 Mode Clinical Calculations (10 kg Child Standard Reference)
+test('V1 Mode Clinical Calculations: 10 kg child comprehensive emergency cards', () => {
+  window.eval('applyQuickWeight(10)');
+  window.eval('calcV1Mode()');
+
+  const palsCards = document.getElementById('v1CardsPals');
+  assert(palsCards.innerHTML.includes('1.0 mL IV push') && palsCards.innerHTML.includes('0.10 mg'), 'PALS must calculate 1.0 mL (0.10 mg) for Adrenaline 1:10,000');
+  assert(palsCards.innerHTML.includes('Initial: 20 J') && palsCards.innerHTML.includes('2nd+: 40 J'), 'PALS must calculate 20 J and 40 J for Defibrillation');
+  assert(palsCards.innerHTML.includes('50 mg') && palsCards.innerHTML.includes('1.0 mL'), 'PALS must calculate 50 mg (1.0 mL) for Amiodarone');
+  assert(palsCards.innerHTML.includes('0.20 mg') && palsCards.innerHTML.includes('0.33 mL'), 'PALS must calculate 0.20 mg (0.33 mL) for Atropine');
+  assert(palsCards.innerHTML.includes('1st: 1.0 mg') && palsCards.innerHTML.includes('2nd: 2.0 mg'), 'PALS must calculate 1.0 mg and 2.0 mg for Adenosine');
+  assert(palsCards.innerHTML.includes('200 mL'), 'PALS must calculate 200 mL for Shock Fluid Bolus');
+  assert(palsCards.innerHTML.includes('20 mL'), 'PALS must calculate 20 mL for D10W Hypoglycemia Bolus');
+
+  const airwayCards = document.getElementById('v1CardsAirway');
+  assert(airwayCards.innerHTML.includes('Cuffed:') && airwayCards.innerHTML.includes('Uncuffed:'), 'Airway must render Cuffed and Uncuffed ETT sizes');
+  assert(airwayCards.innerHTML.includes('Lip Depth: 12 cm') || airwayCards.innerHTML.includes('Lip Depth: 10.5 cm') || airwayCards.innerHTML.includes('Lip Depth:'), 'Airway must render Lip Depth');
+  assert(airwayCards.innerHTML.includes('Ketamine') && airwayCards.innerHTML.includes('15–20 mg'), 'Airway must calculate Ketamine 15-20 mg');
+  assert(airwayCards.innerHTML.includes('Rocuronium') && airwayCards.innerHTML.includes('10 mg'), 'Airway must calculate Rocuronium 10 mg');
+  assert(airwayCards.innerHTML.includes('Sugammadex') && airwayCards.innerHTML.includes('160 mg'), 'Airway must calculate Sugammadex 160 mg (16 mg/kg)');
+
+  const seizureCards = document.getElementById('v1CardsSeizure');
+  assert(seizureCards.innerHTML.includes('Midazolam') && seizureCards.innerHTML.includes('2 mg') && seizureCards.innerHTML.includes('0.40 mL'), 'Seizure must calculate Midazolam 2.0 mg (0.40 mL)');
+  assert(seizureCards.innerHTML.includes('Levetiracetam / Keppra') && seizureCards.innerHTML.includes('600 mg') && seizureCards.innerHTML.includes('6.0 mL'), 'Seizure must calculate Keppra 600 mg (6.0 mL)');
+  assert(seizureCards.innerHTML.includes('Phenytoin') && seizureCards.innerHTML.includes('200 mg') && seizureCards.innerHTML.includes('4.0 mL'), 'Seizure must calculate Phenytoin 200 mg (4.0 mL)');
+
+  const respCards = document.getElementById('v1CardsResp');
+  assert(respCards.innerHTML.includes('0.10 mL') && respCards.innerHTML.includes('0.10 mg') && respCards.innerHTML.includes('IM Thigh'), 'Resp must calculate Adrenaline 1:1,000 IM 0.10 mL (0.10 mg)');
+  assert(respCards.innerHTML.includes('Salbutamol') && respCards.innerHTML.includes('2.5 mg'), 'Resp must calculate Salbutamol 2.5 mg for < 20 kg');
+  assert(respCards.innerHTML.includes('Dexamethasone') && respCards.innerHTML.includes('6 mg') && respCards.innerHTML.includes('1.50 mL'), 'Resp must calculate Dexamethasone 6.0 mg (1.50 mL)');
+
+  const medsCards = document.getElementById('v1CardsMeds');
+  assert(medsCards.innerHTML.includes('Paracetamol Syrup (250 mg / 5 mL)') && medsCards.innerHTML.includes('150 mg') && medsCards.innerHTML.includes('3.0 mL'), 'Meds must calculate Paracetamol 250mg/5mL 150 mg (3.0 mL)');
+  assert(medsCards.innerHTML.includes('Paracetamol Syrup (120 mg / 5 mL)') && medsCards.innerHTML.includes('150 mg') && medsCards.innerHTML.includes('6.3 mL'), 'Meds must calculate Paracetamol 120mg/5mL 150 mg (6.3 mL)');
+  assert(medsCards.innerHTML.includes('Paracetamol IV (10 mg/mL)') && medsCards.innerHTML.includes('150 mg') && medsCards.innerHTML.includes('15.0 mL'), 'Meds must calculate Paracetamol IV 150 mg (15.0 mL)');
+  assert(medsCards.innerHTML.includes('Ibuprofen') && medsCards.innerHTML.includes('100 mg') && medsCards.innerHTML.includes('5.0 mL'), 'Meds must calculate Ibuprofen 100 mg (5.0 mL)');
+  assert(medsCards.innerHTML.includes('Ondansetron') && medsCards.innerHTML.includes('1.5 mg'), 'Meds must calculate Ondansetron 1.5 mg');
+  assert(medsCards.innerHTML.includes('Ceftriaxone') && medsCards.innerHTML.includes('500–1000 mg'), 'Meds must calculate Ceftriaxone 500-1000 mg');
+
+  const fluidsCards = document.getElementById('v1CardsFluids');
+  assert(fluidsCards.innerHTML.includes('40 mL/hr') && fluidsCards.innerHTML.includes('960 mL/day'), 'Fluids must calculate Holliday-Segar 40 mL/hr (960 mL/day) for 10 kg');
+});
+
+// 3. V1 Mode Safety Ceilings for High Weight & Adolescent Patients
+test('V1 Mode Safety Ceilings: adolescent and high weight patient safety caps', () => {
+  window.eval('applyQuickWeight(40)');
+  window.eval('calcV1Mode()');
+
+  const respCards = document.getElementById('v1CardsResp');
+  assert(respCards.innerHTML.includes('0.40 mL') && respCards.innerHTML.includes('0.40 mg'), 'Adrenaline IM must calculate 0.40 mL for 40 kg adolescent');
+  assert(respCards.innerHTML.includes('5.0 mg (1.0 mL)'), 'Salbutamol must trigger 5.0 mg for >= 20 kg child');
+
+  const medsCards = document.getElementById('v1CardsMeds');
+  assert(medsCards.innerHTML.includes('Max 400 mg/dose'), 'Ibuprofen must trigger Max 400 mg/dose cap for 40 kg');
+  assert(medsCards.innerHTML.includes('Max 2,000 mg'), 'Ceftriaxone must trigger Max 2,000 mg cap for 40 kg');
+
+  // Test 100 kg for Adult Maximum Ceilings (Adrenaline IV 10 mL, Adrenaline IM 0.5 mL, Amiodarone 300 mg, Fluid Bolus 1000 mL, Paracetamol 1000 mg)
+  window.eval('applyQuickWeight(100)');
+  window.eval('calcV1Mode()');
+
+  const respCards100 = document.getElementById('v1CardsResp');
+  assert(respCards100.innerHTML.includes('Max 0.5 mL (0.5 mg)'), 'Adrenaline IM must trigger Max 0.5 mL cap for 100 kg');
+
+  const palsCards100 = document.getElementById('v1CardsPals');
+  assert(palsCards100.innerHTML.includes('Max 10 mL (1.0 mg)'), 'Adrenaline IV/IO must trigger Max 10 mL (1.0 mg) cap for 100 kg');
+  assert(palsCards100.innerHTML.includes('Max 300 mg'), 'Amiodarone must trigger Max 300 mg cap for 100 kg');
+  assert(palsCards100.innerHTML.includes('Max 1,000 mL'), 'Fluid shock bolus must trigger Max 1,000 mL cap for 100 kg');
+
+  const medsCards100 = document.getElementById('v1CardsMeds');
+  assert(medsCards100.innerHTML.includes('Max 1,000 mg/dose'), 'Paracetamol must trigger Max 1,000 mg/dose cap for 100 kg');
+});
+
+// 4. Step Weight Engine & Boundary Checks
+test('Step Weight Engine: stepWeight +1, -1, +5, -5 and boundary guards', () => {
+  window.eval('applyQuickWeight(10)');
+  assert.strictEqual(window.eval('getWeight()'), 10, 'Initial weight must be 10');
+
+  window.eval('stepWeight(1)');
+  assert.strictEqual(window.eval('getWeight()'), 11, 'stepWeight(1) must increase to 11');
+
+  window.eval('stepWeight(5)');
+  assert.strictEqual(window.eval('getWeight()'), 16, 'stepWeight(5) must increase to 16');
+
+  window.eval('stepWeight(-1)');
+  assert.strictEqual(window.eval('getWeight()'), 15, 'stepWeight(-1) must decrease to 15');
+
+  window.eval('stepWeight(-5)');
+  assert.strictEqual(window.eval('getWeight()'), 10, 'stepWeight(-5) must decrease to 10');
+
+  // Test floor boundary (1 kg)
+  window.eval('stepWeight(-50)');
+  assert.strictEqual(window.eval('getWeight()'), 1, 'stepWeight must clamp to minimum 1 kg');
+
+  // Test ceiling boundary (100 kg)
+  window.eval('stepWeight(200)');
+  assert.strictEqual(window.eval('getWeight()'), 100, 'stepWeight must clamp to maximum 100 kg');
+});
+
+// 5. V1 Search and Filter Functionality
+test('V1 Search & Filter: searchV1Items and clearV1Search', () => {
+  window.eval('applyQuickWeight(10)');
+  window.eval('calcV1Mode()');
+
+  window.eval('searchV1Items("Adrenaline")');
+  const palsSec = document.getElementById('v1-sec-pals');
+  assert(palsSec.style.display !== 'none', 'PALS section must be visible for Adrenaline search');
+
+  const clearBtn = document.getElementById('v1SearchClear');
+  assert(clearBtn && clearBtn.style.display === 'block', 'Clear search button must be visible when query exists');
+
+  window.eval('clearV1Search()');
+  assert.strictEqual(document.getElementById('v1SearchInput').value, '', 'clearV1Search must clear input value');
 });
 
 console.log(`\n----------------------------------------`);
