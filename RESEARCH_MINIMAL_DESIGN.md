@@ -154,7 +154,7 @@ graph TD
 | **Meds** | **Ondansetron IV/PO** | $0.15\text{ mg/kg}$ | **`1.5 mg`** ($0.75\text{ mL}$ of $4\text{ mg/2 mL}$) | Max $4\text{–}8\text{ mg}$ |
 | **Meds** | **Ceftriaxone IV (1st Dose)** | $50\text{–}100\text{ mg/kg}$ IV over 30 min | **`500–1000 mg`** IV | Max $2000\text{ mg}$ |
 | **Fluids** | **Shock Fluid Bolus** | $20\text{ mL/kg}$ isotonic crystalloid | **`200 mL`** NSS/Acetar push over 15m | Repeat up to 40–60 mL/kg if shock |
-| **Fluids** | **Holliday-Segar Maintenance** | 4-2-1 rule | **`40 mL/hr`** ($1000\text{ mL/day}$) | D5/0.45% NaCl + KCl 20 mEq/L |
+| **Fluids** | **Holliday-Segar Maintenance** | 4-2-1 rule | **`40 mL/hr`** ($960\text{ mL/day}$) | D5/0.45% NaCl + KCl 20 mEq/L |
 
 ### 3.3 What Stays in PRO Mode Only
 The following 13+ modules and deep diagnostic workflows are preserved exclusively in **PRO Mode**:
@@ -177,10 +177,10 @@ The following 13+ modules and deep diagnostic workflows are preserved exclusivel
 ## 4. Technical Architecture for the Dual-Mode Switcher
 
 ### 4.1 State Management & Persistence
-- Global variable `gAppMode`: `'basic'` (default) or `'pro'`.
-- Synchronized with `localStorage.getItem('er_ped_app_mode') || 'basic'`.
+- Global variable `gAppMode`: `'v1'` (default) or `'v2'`.
+- Synchronized with `localStorage.getItem('er_ped_app_mode') || 'v1'`.
 - When switching modes:
-  - `setAppMode(mode)` updates the root DOM attribute `data-app-mode="basic|pro"`.
+  - `setAppMode(mode)` updates the root DOM attribute `data-app-mode="v1|v2"`.
   - Seamlessly transitions using the native **View Transitions API** (`document.startViewTransition()`).
   - Hides/shows the respective UI containers without page reloading or data loss.
 
@@ -192,25 +192,25 @@ The following 13+ modules and deep diagnostic workflows are preserved exclusivel
   <!-- Brand + Mode Switcher Capsule -->
   <div class="brand-group">
     <h1>ER-PED</h1>
-    <div class="mode-switch-pill" role="radiogroup" aria-label="Application Mode">
-      <button type="button" class="mode-btn active" data-mode="basic" onclick="setAppMode('basic')">⚡ BASIC</button>
-      <button type="button" class="mode-btn" data-mode="pro" onclick="setAppMode('pro')">💎 PRO</button>
+    <div class="mode-switch-pill" id="appModeSwitch" role="radiogroup" aria-label="Mode Switcher">
+      <button type="button" class="mode-switch-btn active" data-mode="v1" onclick="setAppMode('v1')" role="radio" aria-checked="true">V1</button>
+      <button type="button" class="mode-switch-btn" data-mode="v2" onclick="setAppMode('v2')" role="radio" aria-checked="false">V2</button>
     </div>
   </div>
   <!-- Biometric Quick Capsule (Shared across both modes) -->
   ...
 </header>
 
-<!-- MODE 1: BASIC CONTAINER (Active by default) -->
-<main id="basicModeContainer" class="basic-container" style="display:block;">
+<!-- MODE 1: V1 CONTAINER (Active by default) -->
+<main id="v1ModeContainer" class="v1-container" style="display:block;">
   <!-- 1-Tap Thumb Weight Stepper Strip -->
   <!-- Search / Quick Filter Bar -->
   <!-- Curated Emergency Cards Vertical Flow -->
   <!-- Sticky Bottom Thumb Category Dock -->
 </main>
 
-<!-- MODE 2: PRO CONTAINER (Full 19-module suite) -->
-<main id="proModeContainer" class="pro-container" style="display:none;">
+<!-- MODE 2: V2 CONTAINER (Full 19-module suite) -->
+<main id="v2ModeContainer" class="v2-container" style="display:none;">
   <!-- Category Jump Bar -->
   <!-- 19-Tab Navigation Rail -->
   <!-- Tabpanel 1..19 Cards -->

@@ -1476,6 +1476,7 @@ test('V1 Mode Safety Ceilings: adolescent and high weight patient safety caps', 
 
   const medsCards100 = document.getElementById('v1CardsMeds');
   assert(medsCards100.innerHTML.includes('Max 1,000 mg/dose'), 'Paracetamol must trigger Max 1,000 mg/dose cap for 100 kg');
+  assert(medsCards100.innerHTML.includes('2000–2000 mg') && medsCards100.innerHTML.includes('Max 2,000 mg'), 'Ceftriaxone must clamp both min and max to 2,000 mg at 100 kg');
 });
 
 // 4. Step Weight Engine & Boundary Checks

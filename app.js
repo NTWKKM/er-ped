@@ -97,7 +97,8 @@ function setAppMode(mode, triggerVT = true) {
     }
   };
 
-  if (triggerVT && typeof document !== 'undefined' && document.startViewTransition) {
+  const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (triggerVT && typeof document !== 'undefined' && typeof document.startViewTransition === 'function' && !prefersReducedMotion) {
     document.startViewTransition(() => {
       applyDomChanges();
       if (mode === 'v1') calcV1Mode();
@@ -1905,7 +1906,7 @@ function calcV1Mode() {
   const ondanVol = (ondanDose / 2).toFixed(2);
   const ondanCap = (bw * 0.15 >= 8.0) ? 'Max 8.0 mg' : '';
 
-  const cefMin = Math.round(bw * 50);
+  const cefMin = Math.min(Math.round(bw * 50), 2000);
   const cefMax = Math.min(Math.round(bw * 100), 2000);
   const cefCap = (bw * 100 >= 2000) ? 'Max 2,000 mg' : '';
 

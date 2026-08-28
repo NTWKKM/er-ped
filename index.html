@@ -815,7 +815,7 @@
     .v1-container {
       max-width: 860px;
       margin: 0 auto;
-      padding-bottom: 70px;
+      padding-bottom: calc(70px + env(safe-area-inset-bottom));
     }
     .v1-header-strip {
       background: var(--card);
@@ -2526,7 +2526,7 @@
 
         <!-- V1 Quick Search -->
         <div class="v1-search-box">
-          <input type="text" id="v1SearchInput" class="v1-search-input" placeholder="Search emergency drug / equipment (e.g. Epi, ETT, Defib)..." oninput="searchV1Items(this.value)" autocomplete="off" />
+          <input type="text" id="v1SearchInput" class="v1-search-input" placeholder="Search emergency drug / equipment (e.g. Epi, ETT, Defib)..." aria-label="Search emergency drug or equipment" oninput="searchV1Items(this.value)" autocomplete="off" />
           <button type="button" id="v1SearchClear" class="v1-search-clear" onclick="clearV1Search()" title="Clear search">✕</button>
         </div>
       </div>
