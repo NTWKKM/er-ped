@@ -1864,13 +1864,14 @@ function highlightFluidChips(){
 
 function calcFluids(){
   const w = getWeight();
-  const deg = document.getElementById('fDegree')?.value || 'Mild';
+  const degEl = document.getElementById('fDegree');
+  const pct = parseInt(degEl?.value, 10) || 3;
+  const degLabel = degEl?.options[degEl.selectedIndex]?.text || `${pct}%`;
   const plan = document.getElementById('fPlan')?.value || '24 h';
   const out = document.getElementById('fOut');
   if (!w){ if(out) out.textContent='Please enter patient weight in topbar ABW'; return; }
 
   const mnt = calcMaintenanceMlPerHr(w);
-  const pct = deg.includes('Mild') ? 4 : (deg.includes('Moderate') ? 8 : 10);
   const deficit = w * pct * 10;
   const hours = (plan === '24 h') ? 24 : 48;
   const replaceRate = deficit / hours;
@@ -1904,9 +1905,9 @@ function calcFluids(){
   blocks.push(heroCardHtml);
   blocks.push(`<strong>📋 Protocol Summary:</strong>`);
   blocks.push(`• <strong>Fluid Selected:</strong> ${gFluidType}`);
-  blocks.push(`• <strong>Dehydration Level:</strong> ${deg}`);
-  if (deg.includes('Severe') || deg.includes('Shock')) {
-    blocks.push(`• <strong>⛑️ Emergency Shock Bolus:</strong> ${shockBolus.toFixed(0)} mL (20 mL/kg NS/RL rapid IV bolus)`);
+  blocks.push(`• <strong>Dehydration Level:</strong> ${degLabel}`);
+  if (pct >= 10) {
+    blocks.push(`• <strong>⛑️ Severe Dehydration Protocol:</strong> ${shockBolus.toFixed(0)} mL (20 mL/kg NS/RL rapid IV bolus หากมีภาวะ shock หรือ hypovolemia/poor perfusion)`);
   }
   blocks.push(`• <strong>24-Hour Total Target:</strong> ${(mnt * 24 + (hours === 24 ? deficit : deficit / 2)).toFixed(0)} mL`);
   blocks.push(`• <strong>Clinical Note:</strong> Adjust rate according to clinical status, urine output (target > 1 mL/kg/hr), and serum electrolytes.`);
@@ -2102,8 +2103,8 @@ function copyEHROrder(module){
     }
   } else if (module === 'fluids') {
     const mnt = calcMaintenanceMlPerHr(w);
-    const deg = document.getElementById('fDegree')?.value || 'Mild';
-    const pct = deg.includes('Mild') ? 4 : (deg.includes('Moderate') ? 8 : 10);
+    const degEl = document.getElementById('fDegree');
+    const pct = parseInt(degEl?.value, 10) || 3;
     const deficit = w * pct * 10;
     const plan = document.getElementById('fPlan')?.value || '24 h';
     const replaceRate = deficit / (plan === '24 h' ? 24 : 48);
