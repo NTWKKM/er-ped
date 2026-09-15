@@ -430,7 +430,7 @@ test('copyEHROrder("pals"): 10 kg child pre-seeded in JSDOM', () => {
 test('copyEHROrder("fluids"): 10 kg child with mild dehydration', () => {
   document.getElementById('weight').value = '10';
   window.eval('onWeightChange()');
-  document.getElementById('fDegree').value = 'Mild (4-5%)';
+  document.getElementById('fDegree').value = '4';
   document.getElementById('fPlan').value = '24 h';
   
   window.eval('calcFluids()');
@@ -438,6 +438,28 @@ test('copyEHROrder("fluids"): 10 kg child with mild dehydration', () => {
   
   assert(orderStr.includes('[ER-PED] IV NS @'), 'Fluids EHR string check');
   assert(orderStr.includes('(Mnt: 41.7 mL/hr + Deficit: 16.7 mL/hr over 24 h)'), 'Fluids breakdown check');
+});
+
+test('copyEHROrder("fluids") & calcFluids(): Moderate (8%) and Severe (10%) dehydration protocols', () => {
+  document.getElementById('weight').value = '10';
+  window.eval('onWeightChange()');
+  
+  // Moderate 8%
+  document.getElementById('fDegree').value = '8';
+  document.getElementById('fPlan').value = '24 h';
+  window.eval('calcFluids()');
+  let orderStr = window.copyEHROrder('fluids');
+  assert(orderStr.includes('(Mnt: 41.7 mL/hr + Deficit: 33.3 mL/hr over 24 h)'), 'Moderate 8% fluids breakdown');
+
+  // Severe 10%
+  document.getElementById('fDegree').value = '10';
+  window.eval('calcFluids()');
+  orderStr = window.copyEHROrder('fluids');
+  assert(orderStr.includes('(Mnt: 41.7 mL/hr + Deficit: 41.7 mL/hr over 24 h)'), 'Severe 10% fluids breakdown');
+  
+  const fOutHtml = document.getElementById('fOut').innerHTML;
+  assert(fOutHtml.includes('Severe Dehydration Protocol'), 'Severe dehydration title in calcFluids output');
+  assert(fOutHtml.includes('200 mL (20 mL/kg NS/RL rapid IV bolus'), 'Severe dehydration bolus calculation');
 });
 
 test('copyEHROrder("drip"): Epinephrine drip 10 kg child', () => {
