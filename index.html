@@ -2332,11 +2332,16 @@
           <span class="evidence-badge" onclick="openEvidenceModal('fluids')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> AAP Isotonic CPG</span>
         </div>
         <div class="col-6">
-          <label>Dehydration Degree</label>
+          <label>% Deficit</label>
           <select id="fDegree" onchange="calcFluids()">
-            <option>Mild (3–5%) ปากแห้ง ปัสสาวะลดลง</option>
-            <option>Moderate (6–9%) ชีพจรเร็ว ตาโหล ซึม</option>
-            <option>Severe (≥10%) / Shock ความดันตก</option>
+            <option value="3">3% — Mild ปากแห้ง</option>
+            <option value="4">4% — Mild ปัสสาวะลดลง</option>
+            <option value="5">5% — Mild ผิวแห้ง</option>
+            <option value="6">6% — Moderate ตาโหล</option>
+            <option value="7">7% — Moderate ชีพจรเร็ว</option>
+            <option value="8">8% — Moderate ซึม turgor ลดลง</option>
+            <option value="9">9% — Moderate CRT >2s</option>
+            <option value="10">10% — Severe / Shock ความดันตก</option>
           </select>
         </div>
         <div class="col-6">
