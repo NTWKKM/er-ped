@@ -1552,6 +1552,189 @@ function calcAll(){
   calcTransfusion();
 }
 
+// --------- 🫘 Bedside Schwartz eGFR & Renal Dose Adjustment Engine ---------
+
+let gSerumCr = null;
+
+function getSerumCr() {
+  return gSerumCr;
+}
+
+function setSerumCr(val) {
+  gSerumCr = (val != null && !isNaN(parseFloat(val)) && parseFloat(val) > 0) ? parseFloat(val) : null;
+}
+
+function calcSchwartzEGFR(scr, ht) {
+  if (scr == null || ht == null) return null;
+  const s = parseFloat(scr);
+  const h = parseFloat(ht);
+  if (isNaN(s) || isNaN(h) || s <= 0 || h <= 0) return null;
+  // Bedside Schwartz 2009: eGFR (mL/min/1.73 m²) = 0.413 * Height (cm) / Serum Creatinine (mg/dL)
+  return (0.413 * h) / s;
+}
+
+function calcPatientRenalDose(tier, drug, bw) {
+  if (!bw || bw <= 0) return (tier.doseAdjustment || '') + (tier.freq ? ' ' + tier.freq : '');
+  const cap = drug.maxPerDoseMg || Infinity;
+
+  // Range in mg/kg (e.g. "20–40 mg/kg")
+  const mRange = (tier.doseAdjustment || '').match(/(\d+(?:\.\d+)?)\s*[–-]\s*(\d+(?:\.\d+)?)\s*mg\/kg/i);
+  if (mRange) {
+    const minMg = Math.min(bw * parseFloat(mRange[1]), cap);
+    const maxMg = Math.min(bw * parseFloat(mRange[2]), cap);
+    return `${fmtMg(minMg)}–${fmtMg(maxMg)} mg ${tier.freq || ''}`.trim();
+  }
+
+  // Single in mg/kg (e.g. "50 mg/kg")
+  const mSingle = (tier.doseAdjustment || '').match(/(\d+(?:\.\d+)?)\s*mg\/kg/i);
+  if (mSingle) {
+    const mg = Math.min(bw * parseFloat(mSingle[1]), cap);
+    return `${fmtMg(mg)} mg ${tier.freq || ''}`.trim();
+  }
+
+  // Percentage (e.g. "50%")
+  if (/50%/.test(tier.doseAdjustment || '') && drug.doseMinMgPerKg) {
+    const minMg = Math.min(bw * drug.doseMinMgPerKg * 0.5, cap);
+    const maxMg = Math.min(bw * (drug.doseMaxMgPerKg || drug.doseMinMgPerKg) * 0.5, cap);
+    return (minMg === maxMg ? `${fmtMg(minMg)} mg` : `${fmtMg(minMg)}–${fmtMg(maxMg)} mg`) + (tier.freq ? ` ${tier.freq}` : '');
+  }
+
+  return `${tier.doseAdjustment || ''} (${tier.freq || ''})`.trim();
+}
+
+function onRenalSCrInput(val) {
+  setSerumCr(val);
+  const scrInputs = document.querySelectorAll('.renal-scr-input');
+  scrInputs.forEach(input => {
+    if (input && input.value !== val) input.value = val || '';
+  });
+  calcDose();
+  calcATB();
+}
+
+function onRenalHtInput(val) {
+  const topLength = document.getElementById('length');
+  if (topLength && topLength.value !== val) {
+    topLength.value = val || '';
+    if (typeof updateIBW === 'function') updateIBW();
+  }
+  calcDose();
+  calcATB();
+}
+
+function renderRenalAdjustmentBox(drug, bw, context) {
+  if (!drug || !drug.renalAdjust) return '';
+  const renalTiers = drug.renalDosing || [];
+  const topHt = parseFloat(document.getElementById('length')?.value) || null;
+  const scr = gSerumCr;
+  const egfr = calcSchwartzEGFR(scr, topHt);
+
+  let gfrBadgeHtml = '';
+  if (egfr !== null) {
+    let statusText = '';
+    let statusColor = 'var(--good)';
+    if (egfr >= 50) {
+      statusText = 'การทำงานของไตปกติ / ลดลงเล็กน้อย (≥50)';
+      statusColor = 'var(--good)';
+    } else if (egfr >= 30) {
+      statusText = 'การทำงานของไตลดลงปานกลาง (30–49)';
+      statusColor = 'var(--warning)';
+    } else if (egfr >= 10) {
+      statusText = 'การทำงานของไตลดลงรุนแรง (10–29)';
+      statusColor = 'var(--danger)';
+    } else {
+      statusText = 'ไตวายระยะสุดท้าย / ฟอกไต (<10 หรือ HD)';
+      statusColor = 'var(--danger)';
+    }
+    gfrBadgeHtml = `
+      <span class="label">eGFR:</span>
+      <strong style="color:${statusColor}; font-size:14px;">${egfr.toFixed(1)}</strong>
+      <span class="unit" style="font-size:11px; color:var(--muted);">mL/min/1.73 m²</span>
+      <span style="font-weight:700; color:${statusColor}; font-size:11.5px; margin-left:4px;">(${statusText})</span>
+    `;
+  } else {
+    gfrBadgeHtml = `
+      <span style="color:var(--muted); font-size:12px;">กรอกค่า Cr (และส่วนสูง) เพื่อคำนวณ eGFR อัตโนมัติ</span>
+    `;
+  }
+
+  let rowsHtml = '';
+  if (renalTiers.length > 0) {
+    rowsHtml = renalTiers.map(t => {
+      const isMatch = (egfr !== null && egfr >= t.minGfr && egfr <= t.maxGfr);
+      const rowClass = isMatch ? 'active-tier' : '';
+      const patientDose = calcPatientRenalDose(t, drug, bw);
+      const matchBadge = isMatch ? '<span style="display:inline-block; padding:1px 6px; font-size:10.5px; font-weight:800; border-radius:4px; background:var(--warning); color:#fff; margin-right:4px;">✓ Tier ตรงกับ eGFR</span>' : '';
+      return `
+        <tr class="${rowClass}">
+          <td><strong>${escapeHtml(t.gfr)}</strong></td>
+          <td>${matchBadge}${escapeHtml(t.doseAdjustment)}</td>
+          <td><strong style="color:var(--accent);">${escapeHtml(patientDose)}</strong></td>
+          <td style="color:var(--muted);">${escapeHtml(t.clinicalNote)}</td>
+        </tr>
+      `;
+    }).join('');
+  } else {
+    rowsHtml = `
+      <tr>
+        <td colspan="4" style="text-align:center; color:var(--muted); padding:10px;">
+          ⚠️ ยานี้ต้องปรับขนาดยาตามระดับการทำงานของไต กรุณาปรึกษาเภสัชกรคลินิกหรือเปิดดูคู่มือเฉพาะทาง
+        </td>
+      </tr>
+    `;
+  }
+
+  const scrValStr = (scr != null) ? scr : '';
+  const htValStr = (topHt != null) ? topHt : '';
+
+  return `
+<details class="renal-adjust-details" id="renalDetails_${context}" open>
+  <summary class="renal-adjust-summary">
+    <span class="renal-adjust-badge">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      ⚠️ ตารางปรับขนาดยาตามระดับการทำงานของไต (Bedside Schwartz eGFR & Renal Adjustment)
+    </span>
+    <span class="renal-toggle-arrow" style="font-size:11px; color:var(--muted);">▾ คลี่/พับ</span>
+  </summary>
+  <div class="renal-adjust-content">
+    <div class="schwartz-calc-bar">
+      <div class="schwartz-input-group">
+        <label for="scr_${context}">Serum Cr:</label>
+        <input type="number" id="scr_${context}" class="renal-scr-input" placeholder="0.6" step="0.01" min="0.1" max="15" value="${scrValStr}" oninput="onRenalSCrInput(this.value)" />
+        <span style="font-size:11px; color:var(--muted);">mg/dL</span>
+      </div>
+      <div class="schwartz-input-group">
+        <label for="ht_${context}">Height (HT):</label>
+        <input type="number" id="ht_${context}" placeholder="cm" step="0.1" min="30" max="220" value="${htValStr}" oninput="onRenalHtInput(this.value)" />
+        <span style="font-size:11px; color:var(--muted);">cm</span>
+      </div>
+      <div class="schwartz-result-badge" id="gfrBadge_${context}">
+        ${gfrBadgeHtml}
+      </div>
+    </div>
+    <div class="schwartz-formula-hint">
+      สูตร Bedside Schwartz (2009): eGFR (mL/min/1.73 m²) = 0.413 × ส่วนสูง (cm) / Serum Creatinine (mg/dL) · ซิงก์ส่วนสูงกับแถบข้อมูลผู้ป่วยอัตโนมัติ
+    </div>
+    <div class="renal-table-wrapper">
+      <table class="renal-tier-table">
+        <thead>
+          <tr>
+            <th style="width:18%;">eGFR (mL/min)</th>
+            <th style="width:32%;">คำแนะนำการปรับขนาดยา</th>
+            <th style="width:28%;">ขนาดยาคำนวณสำหรับผู้ป่วย (${bw ? bw.toFixed(1) : '—'} kg)</th>
+            <th style="width:22%;">หมายเหตุทางคลินิก</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rowsHtml}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</details>
+  `;
+}
+
 // --------- 💊 Pediatric Dose Calculator ---------
 
 function calcDose(){
@@ -1725,6 +1908,9 @@ function calcDose(){
   let outHtml = heroCardHtml;
   if (bandNotice) outHtml += `<div style="margin-top:10px; padding:8px 12px; background:var(--accent-subtle); color:var(--accent); border-radius:6px; font-weight:700; font-size:13px;">${bandNotice}</div>`;
   outHtml += directivesHtml;
+  if (drug.renalAdjust) {
+    outHtml += renderRenalAdjustmentBox(drug, bw, 'dose');
+  }
 
   if (outEl) outEl.innerHTML = outHtml;
 }
@@ -1847,6 +2033,9 @@ function calcATB(){
   let outHtml = heroCardHtml;
   if (bandNotice) outHtml += `<div style="margin-top:10px; padding:8px 12px; background:var(--accent-subtle); color:var(--accent); border-radius:6px; font-weight:700; font-size:13px;">${bandNotice}</div>`;
   outHtml += directivesHtml;
+  if (drug.renalAdjust) {
+    outHtml += renderRenalAdjustmentBox(drug, bw, 'atb');
+  }
 
   if (outEl) outEl.innerHTML = outHtml;
 }
@@ -4888,6 +5077,13 @@ if (typeof module !== 'undefined' && module.exports) {
     openEvidenceModal,
     closeEvidenceModal,
     filterEvidenceList,
-    renderEvidenceList
+    renderEvidenceList,
+    calcSchwartzEGFR,
+    calcPatientRenalDose,
+    getSerumCr,
+    setSerumCr,
+    onRenalSCrInput,
+    onRenalHtInput,
+    renderRenalAdjustmentBox
   };
 }

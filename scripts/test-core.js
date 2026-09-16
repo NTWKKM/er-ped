@@ -356,6 +356,159 @@ test('General Pediatric Dose: PEG Maintenance 10 kg child (0.5–1 g/kg/day -> 5
   assert.strictEqual(item.unit, 'g/kg');
 });
 
+// Peddose.com Integration Tests
+test('Peddose ATB: Amikacin IV extended interval 10 kg vs 80 kg safety cap', () => {
+  const item = dataset.pediatricATB.find(d => d.key === 'amikacin-iv');
+  assert(item !== undefined, 'amikacin-iv must exist in pediatricATB');
+  assert.strictEqual(item.renalAdjust, true, 'Amikacin must have renalAdjust: true');
+  const w10 = 10;
+  assert.strictEqual(item.doseMinMgPerKg * w10, 150);
+  assert.strictEqual(item.doseMaxMgPerKg * w10, 200);
+
+  const w80 = 80;
+  const maxDose80 = Math.min(item.doseMaxMgPerKg * w80, item.maxPerDayMg);
+  assert.strictEqual(maxDose80, 1500, 'Amikacin daily dose for 80 kg must be capped at 1500 mg');
+});
+
+test('Peddose ATB: Meropenem IV 10 kg vs 60 kg meningitis safety cap', () => {
+  const item = dataset.pediatricATB.find(d => d.key === 'meropenem-iv');
+  assert(item !== undefined, 'meropenem-iv must exist in pediatricATB');
+  assert.strictEqual(item.renalAdjust, true, 'Meropenem must have renalAdjust: true');
+  const w10 = 10;
+  assert.strictEqual(item.doseMinMgPerKg * w10, 200);
+  assert.strictEqual(item.doseMaxMgPerKg * w10, 400);
+
+  const w60 = 60;
+  const maxDose60 = Math.min(item.doseMaxMgPerKg * w60, item.maxPerDoseMg);
+  assert.strictEqual(maxDose60, 2000, 'Meropenem per-dose for 60 kg must be capped at 2000 mg');
+});
+
+test('Peddose ATB: Cefepime IV 10 kg vs 50 kg safety cap', () => {
+  const item = dataset.pediatricATB.find(d => d.key === 'cefepime-iv');
+  assert(item !== undefined, 'cefepime-iv must exist in pediatricATB');
+  const w10 = 10;
+  assert.strictEqual(item.doseMinMgPerKg * w10, 500);
+
+  const w50 = 50;
+  const maxDose50 = Math.min(item.doseMaxMgPerKg * w50, item.maxPerDoseMg);
+  assert.strictEqual(maxDose50, 2000, 'Cefepime per-dose for 50 kg must be capped at 2000 mg');
+});
+
+test('Peddose ATB: Amox/Clav ES-600 high-dose AOM calculation (45 mg/kg/dose BID)', () => {
+  const item = dataset.pediatricATB.find(d => d.key === 'amoxicillin-clav-es-600');
+  assert(item !== undefined, 'amoxicillin-clav-es-600 must exist');
+  const w10 = 10;
+  const dose = item.doseMinMgPerKg * w10;
+  assert.strictEqual(dose, 450, '10 kg child must receive 450 mg of Amox component BID');
+});
+
+test('Peddose Dose: Paracetamol syrup 160 mg / 5 mL (10 kg vs 80 kg cap)', () => {
+  const item = dataset.pediatricDose.find(d => d.key === 'paracetamol-syrup-160-mg-5-ml');
+  assert(item !== undefined, 'paracetamol-syrup-160-mg-5-ml must exist');
+  const w10 = 10;
+  assert.strictEqual(item.doseMinMgPerKg * w10, 100);
+  assert.strictEqual(item.doseMaxMgPerKg * w10, 150);
+
+  const w80 = 80;
+  const cappedDose = Math.min(item.doseMaxMgPerKg * w80, item.maxPerDoseMg);
+  assert.strictEqual(cappedDose, 1000, 'Paracetamol for 80 kg must be capped at 1000 mg/dose');
+});
+
+test('Peddose Dose: Buscopan (Hyoscine-N-Butylbromide) 10 kg vs 90 kg cap', () => {
+  const item = dataset.pediatricDose.find(d => d.key === 'hyoscine-butylbromide-syrup-tab');
+  assert(item !== undefined, 'hyoscine-butylbromide-syrup-tab must exist');
+  const w10 = 10;
+  assert.strictEqual(item.doseMinMgPerKg * w10, 5);
+
+  const w90 = 90;
+  const cappedDose = Math.min(item.doseMaxMgPerKg * w90, item.maxPerDoseMg);
+  assert.strictEqual(cappedDose, 40, 'Buscopan for 90 kg must be capped at 40 mg/dose');
+});
+
+test('Peddose Dose: Loratadine & Desloratadine syrup age bands', () => {
+  const lrt = dataset.pediatricDose.find(d => d.key === 'loratadine-syrup-5-mg-5-ml');
+  assert(lrt !== undefined, 'loratadine-syrup-5-mg-5-ml must exist');
+  const band4yr = lrt.doseBands.find(b => 4 >= b.minAgeYr && 4 <= b.maxAgeYr);
+  assert.strictEqual(band4yr.doseMg, 5, '4 yr child gets 5 mg Loratadine');
+  const band8yr = lrt.doseBands.find(b => 8 >= b.minAgeYr && 8 <= b.maxAgeYr);
+  assert.strictEqual(band8yr.doseMg, 10, '8 yr child gets 10 mg Loratadine');
+
+  const dlr = dataset.pediatricDose.find(d => d.key === 'desloratadine-syrup-0-5-mg-ml');
+  assert(dlr !== undefined, 'desloratadine-syrup-0-5-mg-ml must exist');
+  const band8mo = dlr.doseBands.find(b => 0.67 >= b.minAgeYr && 0.67 <= b.maxAgeYr);
+  assert.strictEqual(band8mo.doseMg, 1, '8 mo infant gets 1 mg Desloratadine');
+});
+
+test('Peddose ATB: Praziquantel PO dosing for tapeworms vs liver fluke', () => {
+  const pzq = dataset.pediatricATB.find(d => d.key === 'praziquantel-po');
+  assert(pzq !== undefined, 'praziquantel-po must exist');
+  const w20 = 20;
+  const tapewormDose = pzq.doseMinMgPerKg * w20;
+  const flukeDose = pzq.doseMaxMgPerKg * w20;
+  assert.strictEqual(tapewormDose, 200, '20 kg child tapeworm dose: 10 mg/kg = 200 mg single dose');
+  assert.strictEqual(flukeDose, 500, '20 kg child liver fluke dose: 25 mg/kg = 500 mg TID');
+});
+
+// Bedside Schwartz eGFR & Renal Dose Adjustment Tests
+test('Bedside Schwartz eGFR Calculator: Accuracy and Edge Cases', () => {
+  const { calcSchwartzEGFR } = window;
+  // Standard test: Ht 100 cm, SCr 0.5 mg/dL -> 0.413 * 100 / 0.5 = 82.6
+  const egfr1 = calcSchwartzEGFR(0.5, 100);
+  assert.strictEqual(Math.round(egfr1 * 10) / 10, 82.6);
+
+  // Moderate impairment: Ht 100 cm, SCr 1.0 mg/dL -> 41.3
+  const egfr2 = calcSchwartzEGFR(1.0, 100);
+  assert.strictEqual(Math.round(egfr2 * 10) / 10, 41.3);
+
+  // Severe impairment: Ht 100 cm, SCr 2.0 mg/dL -> 20.65 -> 20.7
+  const egfr3 = calcSchwartzEGFR(2.0, 100);
+  assert.strictEqual(Math.round(egfr3 * 10) / 10, 20.7);
+
+  // Edge cases: null / 0 / negative
+  assert.strictEqual(calcSchwartzEGFR(0, 100), null);
+  assert.strictEqual(calcSchwartzEGFR(1.0, 0), null);
+  assert.strictEqual(calcSchwartzEGFR(null, 100), null);
+});
+
+test('Renal Dosing: calcPatientRenalDose for Meropenem & Cefepime 10 kg patient', () => {
+  const { calcPatientRenalDose } = window;
+  const mero = dataset.pediatricATB.find(d => d.key === 'meropenem-iv');
+  assert(mero && mero.renalDosing, 'Meropenem must have renalDosing');
+
+  const tierNorm = mero.renalDosing.find(t => t.minGfr >= 50);
+  const tierMod = mero.renalDosing.find(t => t.minGfr === 26);
+  const tierSev = mero.renalDosing.find(t => t.minGfr === 10);
+  const tierFail = mero.renalDosing.find(t => t.maxGfr < 10);
+
+  assert.strictEqual(calcPatientRenalDose(tierNorm, mero, 10), '200–400 mg q 8 hr');
+  assert.strictEqual(calcPatientRenalDose(tierMod, mero, 10), '200–400 mg q 12 hr');
+  assert.strictEqual(calcPatientRenalDose(tierSev, mero, 10), '100–200 mg q 12 hr');
+  assert.strictEqual(calcPatientRenalDose(tierFail, mero, 10), '100–200 mg q 24 hr');
+
+  const cefepime = dataset.pediatricATB.find(d => d.key === 'cefepime-iv');
+  assert(cefepime && cefepime.renalDosing, 'Cefepime must have renalDosing');
+  const cefFail = cefepime.renalDosing.find(t => t.maxGfr < 11);
+  assert.strictEqual(calcPatientRenalDose(cefFail, cefepime, 10), '250 mg q 24 hr');
+});
+
+test('Renal UI Engine: Meropenem renders expandable renal panel and highlights active tier with eGFR', () => {
+  document.getElementById('weight').value = '10';
+  document.getElementById('length').value = '100';
+  window.eval('onWeightChange()');
+  document.getElementById('atbDrug').value = 'meropenem-iv';
+  window.eval('calcATB()');
+
+  const atbOut = document.getElementById('atbOut');
+  assert(atbOut.innerHTML.includes('renal-adjust-details'), 'Renal adjust panel must be rendered for Meropenem');
+  assert(atbOut.innerHTML.includes('Bedside Schwartz'), 'Bedside Schwartz formula must be referenced');
+
+  // Input SCr = 1.0 mg/dL (eGFR = 41.3 mL/min/1.73 m² -> matches 26–50 tier)
+  window.eval('onRenalSCrInput("1.0")');
+  assert(atbOut.innerHTML.includes('active-tier'), 'Matching tier row must receive .active-tier class');
+  assert(atbOut.innerHTML.includes('41.3'), 'Calculated eGFR 41.3 must be displayed');
+  assert(atbOut.innerHTML.includes('Tier ตรงกับ eGFR'), 'Checkmark badge must be rendered on active tier');
+});
+
 // 10. Test Seizure Protocol Dosing
 test('Seizure Protocol Stage 1: IN Midazolam 10 kg child (0.2 mg/kg = 2.0 mg)', () => {
   const stage1 = dataset.seizureProtocol.find(s => s.stage === '5–10 min');
