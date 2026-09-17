@@ -2132,6 +2132,14 @@ function calcATB(){
   let perDoseMaxMg = resolved.doseMaxMg ?? null;
   let perDayMinMg = resolved.perDayMinMg ?? null;
   let perDayMaxMg = resolved.perDayMaxMg ?? null;
+  const perDoseMinUnits = resolved.doseMinUnits ?? null;
+  const perDoseMaxUnits = resolved.doseMaxUnits ?? null;
+  const perDayMinUnits = perDoseMinUnits != null && dosesPerDay
+    ? perDoseMinUnits * dosesPerDay
+    : null;
+  const perDayMaxUnits = perDoseMaxUnits != null && dosesPerDay
+    ? perDoseMaxUnits * dosesPerDay
+    : null;
   let bandNotice = '';
 
   if (Array.isArray(drug.doseBands) && !resolved.matchedBand && drug.doseBands.some(b => b.minAgeYr != null && b.minAgeYr >= 1.0) && (ageYr == null || ageYr < 1.0)) {
@@ -2146,8 +2154,20 @@ function calcATB(){
     return `${fmtMg(maxVal!=null?maxVal:minVal)} mg`;
   }
 
-  const perDoseMgTxt = atbRangeTxt(perDoseMinMg, perDoseMaxMg);
-  const perDayMgTxt  = atbRangeTxt(perDayMinMg,  perDayMaxMg);
+  function atbUnitRangeTxt(minVal, maxVal){
+    if (minVal == null && maxVal == null) return '—';
+    if (minVal != null && maxVal != null && minVal !== maxVal) {
+      return `${minVal.toLocaleString()}–${maxVal.toLocaleString()} U`;
+    }
+    return `${(maxVal ?? minVal).toLocaleString()} U`;
+  }
+
+  const perDoseMgTxt = perDoseMinUnits != null || perDoseMaxUnits != null
+    ? atbUnitRangeTxt(perDoseMinUnits, perDoseMaxUnits)
+    : atbRangeTxt(perDoseMinMg, perDoseMaxMg);
+  const perDayMgTxt = perDayMinUnits != null || perDayMaxUnits != null
+    ? atbUnitRangeTxt(perDayMinUnits, perDayMaxUnits)
+    : atbRangeTxt(perDayMinMg, perDayMaxMg);
   let perDoseMlTxt = '';
   if (form > 0 && (perDoseMinMg!=null || perDoseMaxMg!=null)) {
     const minMl = perDoseMinMg!=null ? perDoseMinMg / form : null;
@@ -2434,10 +2454,10 @@ function copyEHROrder(module){
         const u = resolved.doseUnits ?? resolved.doseMaxUnits;
         orderStr = `[ER-PED] ${drug.name || drug.drug} ${u.toLocaleString()} U ${drug.route || (isAtb ? 'IV' : 'PO')} ${drug.split || drug.freq || 'PRN'} [BW: ${w.toFixed(1)} kg]`;
       } else {
-        let doseMg = resolved?.doseMg;
+        const doseMg = resolved?.doseMg;
         if (doseMg == null) {
-          doseMg = (drug.doseMaxMgPerKg || drug.dose || 10) * w;
-          if (drug.maxPerDoseMg) doseMg = Math.min(doseMg, drug.maxPerDoseMg);
+          showToast('ยานี้ไม่มีขนาดยาคำนวณตามน้ำหนัก กรุณาสั่งยาตาม Clinical Note');
+          return;
         }
 
         let doseMlStr = '';

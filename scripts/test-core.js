@@ -676,6 +676,55 @@ test('Favipiravir Separated Regimens: Loading vs Maintenance safety caps in ATB 
   window.eval('onWeightChange();');
 });
 
+test('calcATB: Nystatin unit-based dose rendering in hero card and total daily dose', () => {
+  // Test child (age >= 1 month / 0.0833 yr): 400,000–600,000 U qid
+  document.getElementById('weight').value = '10';
+  document.getElementById('age').value = '2';
+  window.eval('gAgeUnit = "yr"; onWeightChange();');
+  document.getElementById('atbDrug').value = 'nystatin-oral-susp-100000u-ml';
+  window.eval('calcATB()');
+
+  const outHtml = document.getElementById('atbOut').innerHTML;
+  assert(outHtml.includes('400,000–600,000 U'), 'Nystatin child single dose must render 400,000–600,000 U');
+  assert(outHtml.includes('1,600,000–2,400,000 U'), 'Nystatin child total daily dose (qid) must render 1,600,000–2,400,000 U');
+  assert(!outHtml.includes('>—<'), 'Hero values must not show placeholder dashes when units resolved');
+
+  const orderStr = window.copyEHROrder('atb');
+  assert(orderStr.includes('600,000 U'), 'copyEHROrder for Nystatin must copy resolved units (600,000 U)');
+  assert(orderStr.includes('qid'), 'copyEHROrder for Nystatin must specify qid frequency');
+
+  // Test neonate < 2 kg: 100,000 U qid
+  document.getElementById('weight').value = '1.5';
+  document.getElementById('age').value = '7';
+  window.eval('gAgeUnit = "day"; onWeightChange();');
+  window.eval('calcATB()');
+  const neoHtml = document.getElementById('atbOut').innerHTML;
+  assert(neoHtml.includes('100,000 U'), 'Nystatin neonate < 2 kg must render 100,000 U per dose');
+  assert(neoHtml.includes('400,000 U'), 'Nystatin neonate < 2 kg daily dose must render 400,000 U');
+
+  // Reset inputs for test isolation
+  document.getElementById('age').value = '';
+  document.getElementById('weight').value = '';
+  window.eval('gAgeUnit = "yr"; onWeightChange();');
+});
+
+test('copyEHROrder("dose"): halts and displays toast when drug dose is unresolvable without weight fallback', () => {
+  document.getElementById('weight').value = '10';
+  window.eval('onWeightChange();');
+  document.getElementById('doseDrug').value = 'bromhexine-syrup-4-mg-5-ml';
+  window.eval('calcDose();');
+
+  const orderStr = window.copyEHROrder('dose');
+  assert(!orderStr, 'copyEHROrder must return falsy/undefined when doseMg cannot be resolved');
+  
+  const toastText = document.querySelector('#toast span')?.textContent || '';
+  assert(toastText.includes('ยานี้ไม่มีขนาดยาคำนวณตามน้ำหนัก กรุณาสั่งยาตาม Clinical Note'), 'Toast must alert clinician to order per Clinical Note instead of falling back to 10*w');
+
+  // Reset inputs for test isolation
+  document.getElementById('weight').value = '';
+  window.eval('onWeightChange();');
+});
+
 test('copyEHROrder("ncpr"): 3.0 kg newborn pre-seeded in JSDOM', () => {
   document.getElementById('nW').value = '3.0';
   
