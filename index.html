@@ -2092,6 +2092,142 @@
       padding: 6px 10px;
     }
 
+    /* Expandable Renal Dose Adjustment & Bedside Schwartz Panel */
+    .renal-adjust-details {
+      margin-top: 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      background: var(--panel);
+      overflow: hidden;
+      transition: border-color 0.15s ease;
+    }
+    .renal-adjust-details[open] {
+      border-color: var(--warning);
+    }
+    .renal-adjust-summary {
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      background: var(--panel);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+      list-style: none;
+    }
+    .renal-adjust-summary::-webkit-details-marker {
+      display: none;
+    }
+    .renal-adjust-summary:hover {
+      background: var(--card);
+    }
+    .renal-adjust-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--warning);
+    }
+    .renal-adjust-content {
+      padding: 10px 12px;
+      border-top: 1px solid var(--border);
+      background: var(--card);
+      font-size: 12.5px;
+    }
+    .schwartz-calc-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      margin-bottom: 8px;
+    }
+    .schwartz-input-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .schwartz-input-group label {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .schwartz-input-group input {
+      width: 75px;
+      padding: 4px 6px;
+      font-size: 13px;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      background: var(--card);
+      color: var(--ink);
+      text-align: right;
+    }
+    .schwartz-result-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: auto;
+      font-size: 12.5px;
+      padding: 4px 8px;
+      border-radius: var(--r-sm);
+      background: var(--card);
+      border: 1px solid var(--border);
+    }
+    .schwartz-formula-hint {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .renal-table-wrapper {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+    }
+    .renal-tier-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .renal-tier-table th {
+      padding: 6px 8px;
+      text-align: left;
+      font-weight: 700;
+      color: var(--muted);
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .renal-tier-table td {
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--border);
+      color: var(--ink);
+      vertical-align: middle;
+    }
+    .renal-tier-table tr.active-tier {
+      background: rgba(217, 119, 6, 0.15) !important;
+      font-weight: 700;
+    }
+    .renal-tier-table tr.active-tier td {
+      color: var(--warning);
+      border-top: 1px solid var(--warning);
+      border-bottom: 1px solid var(--warning);
+    }
+    [data-theme="mono"] .renal-tier-table tr.active-tier {
+      background: #EAEAE6 !important;
+      color: #121210 !important;
+      outline: 2px solid #FFFFFF;
+    }
+    [data-theme="mono"] .renal-tier-table tr.active-tier td {
+      color: #121210 !important;
+    }
+
   </style>
 </head>
 <body>

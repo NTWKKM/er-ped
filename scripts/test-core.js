@@ -356,6 +356,343 @@ test('General Pediatric Dose: PEG Maintenance 10 kg child (0.5–1 g/kg/day -> 5
   assert.strictEqual(item.unit, 'g/kg');
 });
 
+// Peddose.com Integration Tests
+test('Peddose ATB: Amikacin IV extended interval 10 kg vs 80 kg safety cap', () => {
+  const item = dataset.pediatricATB.find(d => d.key === 'amikacin-iv');
+  assert(item !== undefined, 'amikacin-iv must exist in pediatricATB');
+  assert.strictEqual(item.renalAdjust, true, 'Amikacin must have renalAdjust: true');
+  const w10 = 10;
+  assert.strictEqual(item.doseMinMgPerKg * w10, 150);
+  assert.strictEqual(item.doseMaxMgPerKg * w10, 200);
+
+  const w80 = 80;
+  const maxDose80 = Math.min(item.doseMaxMgPerKg * w80, item.maxPerDayMg);
+  assert.strictEqual(maxDose80, 1500, 'Amikacin daily dose for 80 kg must be capped at 1500 mg');
+});
+
+test('Peddose ATB: Meropenem IV 10 kg vs 60 kg meningitis safety cap', () => {
+  const item = dataset.pediatricATB.find(d => d.key === 'meropenem-iv');
+  assert(item !== undefined, 'meropenem-iv must exist in pediatricATB');
+  assert.strictEqual(item.renalAdjust, true, 'Meropenem must have renalAdjust: true');
+  const w10 = 10;
+  assert.strictEqual(item.doseMinMgPerKg * w10, 200);
+  assert.strictEqual(item.doseMaxMgPerKg * w10, 400);
+
+  const w60 = 60;
+  const maxDose60 = Math.min(item.doseMaxMgPerKg * w60, item.maxPerDoseMg);
+  assert.strictEqual(maxDose60, 2000, 'Meropenem per-dose for 60 kg must be capped at 2000 mg');
+});
+
+test('Peddose ATB: Cefepime IV 10 kg vs 50 kg safety cap', () => {
+  const item = dataset.pediatricATB.find(d => d.key === 'cefepime-iv');
+  assert(item !== undefined, 'cefepime-iv must exist in pediatricATB');
+  const w10 = 10;
+  assert.strictEqual(item.doseMinMgPerKg * w10, 500);
+
+  const w50 = 50;
+  const maxDose50 = Math.min(item.doseMaxMgPerKg * w50, item.maxPerDoseMg);
+  assert.strictEqual(maxDose50, 2000, 'Cefepime per-dose for 50 kg must be capped at 2000 mg');
+});
+
+test('Peddose ATB: Amox/Clav ES-600 high-dose AOM calculation (45 mg/kg/dose BID)', () => {
+  const item = dataset.pediatricATB.find(d => d.key === 'amoxicillin-clav-es-600');
+  assert(item !== undefined, 'amoxicillin-clav-es-600 must exist');
+  const w10 = 10;
+  const dose = item.doseMinMgPerKg * w10;
+  assert.strictEqual(dose, 450, '10 kg child must receive 450 mg of Amox component BID');
+});
+
+test('Peddose Dose: Paracetamol syrup 160 mg / 5 mL (10 kg vs 80 kg cap)', () => {
+  const item = dataset.pediatricDose.find(d => d.key === 'paracetamol-syrup-160-mg-5-ml');
+  assert(item !== undefined, 'paracetamol-syrup-160-mg-5-ml must exist');
+  const w10 = 10;
+  assert.strictEqual(item.doseMinMgPerKg * w10, 100);
+  assert.strictEqual(item.doseMaxMgPerKg * w10, 150);
+
+  const w80 = 80;
+  const cappedDose = Math.min(item.doseMaxMgPerKg * w80, item.maxPerDoseMg);
+  assert.strictEqual(cappedDose, 1000, 'Paracetamol for 80 kg must be capped at 1000 mg/dose');
+});
+
+test('Peddose Dose: Buscopan (Hyoscine-N-Butylbromide) 10 kg vs 90 kg cap', () => {
+  const item = dataset.pediatricDose.find(d => d.key === 'hyoscine-butylbromide-syrup-tab');
+  assert(item !== undefined, 'hyoscine-butylbromide-syrup-tab must exist');
+  assert.strictEqual(item.maxPerDayMg, undefined, 'Buscopan must not define unsupported maxPerDayMg');
+  const w10 = 10;
+  assert.strictEqual(item.doseMinMgPerKg * w10, 5);
+
+  const w90 = 90;
+  const cappedDose = Math.min(item.doseMaxMgPerKg * w90, item.maxPerDoseMg);
+  assert.strictEqual(cappedDose, 40, 'Buscopan for 90 kg must be capped at 40 mg/dose');
+
+  // Verify 30 kg child (8 yr): 0.5 mg/kg = 15 mg/dose, 3x/day = 45 mg/day (not capped at 40 mg/day)
+  document.getElementById('weight').value = '30';
+  document.getElementById('age').value = '8';
+  window.eval('gAgeUnit = "yr"; onWeightChange();');
+  document.getElementById('doseDrug').value = 'hyoscine-butylbromide-syrup-tab';
+  window.eval('calcDose()');
+  const outHtml = document.getElementById('doseOut').innerHTML;
+  assert(outHtml.includes('15 mg'), 'Single dose for 30 kg child must be 15 mg');
+  assert(outHtml.includes('45 mg'), 'Total daily dose for 30 kg child (q8h) must be 45 mg');
+  // Reset
+  document.getElementById('age').value = '';
+  document.getElementById('weight').value = '';
+  window.eval('onWeightChange();');
+});
+
+test('Peddose Dose: Loratadine & Desloratadine syrup age bands', () => {
+  const lrt = dataset.pediatricDose.find(d => d.key === 'loratadine-syrup-5-mg-5-ml');
+  assert(lrt !== undefined, 'loratadine-syrup-5-mg-5-ml must exist');
+  const band4yr = lrt.doseBands.find(b => 4 >= b.minAgeYr && 4 <= b.maxAgeYr);
+  assert.strictEqual(band4yr.doseMg, 5, '4 yr child gets 5 mg Loratadine');
+  const band8yr = lrt.doseBands.find(b => 8 >= b.minAgeYr && 8 <= b.maxAgeYr);
+  assert.strictEqual(band8yr.doseMg, 10, '8 yr child gets 10 mg Loratadine');
+
+  const dlr = dataset.pediatricDose.find(d => d.key === 'desloratadine-syrup-0-5-mg-ml');
+  assert(dlr !== undefined, 'desloratadine-syrup-0-5-mg-ml must exist');
+  const band8mo = dlr.doseBands.find(b => 0.67 >= b.minAgeYr && 0.67 <= b.maxAgeYr);
+  assert.strictEqual(band8mo.doseMg, 1, '8 mo infant gets 1 mg Desloratadine');
+});
+
+test('Peddose ATB: Praziquantel PO dosing for tapeworms vs liver fluke', () => {
+  const pzq = dataset.pediatricATB.find(d => d.key === 'praziquantel-po');
+  assert(pzq !== undefined, 'praziquantel-po must exist');
+  const w20 = 20;
+  const tapewormDose = pzq.doseMinMgPerKg * w20;
+  const flukeDose = pzq.doseMaxMgPerKg * w20;
+  assert.strictEqual(tapewormDose, 200, '20 kg child tapeworm dose: 10 mg/kg = 200 mg single dose');
+  assert.strictEqual(flukeDose, 500, '20 kg child liver fluke dose: 25 mg/kg = 500 mg TID');
+});
+
+// Bedside Schwartz eGFR & Renal Dose Adjustment Tests
+test('Bedside Schwartz eGFR Calculator: Accuracy and Edge Cases', () => {
+  const { calcSchwartzEGFR } = window;
+  // Standard test: Ht 100 cm, SCr 0.5 mg/dL -> 0.413 * 100 / 0.5 = 82.6
+  const egfr1 = calcSchwartzEGFR(0.5, 100);
+  assert.strictEqual(Math.round(egfr1 * 10) / 10, 82.6);
+
+  // Moderate impairment: Ht 100 cm, SCr 1.0 mg/dL -> 41.3
+  const egfr2 = calcSchwartzEGFR(1.0, 100);
+  assert.strictEqual(Math.round(egfr2 * 10) / 10, 41.3);
+
+  // Severe impairment: Ht 100 cm, SCr 2.0 mg/dL -> 20.65 -> 20.7
+  const egfr3 = calcSchwartzEGFR(2.0, 100);
+  assert.strictEqual(Math.round(egfr3 * 10) / 10, 20.7);
+
+  // Edge cases: null / 0 / negative
+  assert.strictEqual(calcSchwartzEGFR(0, 100), null);
+  assert.strictEqual(calcSchwartzEGFR(1.0, 0), null);
+  assert.strictEqual(calcSchwartzEGFR(null, 100), null);
+});
+
+test('Renal Dosing: calcPatientRenalDose for Meropenem & Cefepime 10 kg patient', () => {
+  const { calcPatientRenalDose } = window;
+  const mero = dataset.pediatricATB.find(d => d.key === 'meropenem-iv');
+  assert(mero && mero.renalDosing, 'Meropenem must have renalDosing');
+
+  const tierNorm = mero.renalDosing.find(t => t.minGfr >= 50);
+  const tierMod = mero.renalDosing.find(t => t.minGfr === 26);
+  const tierSev = mero.renalDosing.find(t => t.minGfr === 10);
+  const tierFail = mero.renalDosing.find(t => t.minGfr === 0);
+
+  assert.strictEqual(calcPatientRenalDose(tierNorm, mero, 10), '200–400 mg q 8 hr');
+  assert.strictEqual(calcPatientRenalDose(tierMod, mero, 10), '200–400 mg q 12 hr');
+  assert.strictEqual(calcPatientRenalDose(tierSev, mero, 10), '100–200 mg q 12 hr');
+  assert.strictEqual(calcPatientRenalDose(tierFail, mero, 10), '100–200 mg q 24 hr');
+
+  const cefepime = dataset.pediatricATB.find(d => d.key === 'cefepime-iv');
+  assert(cefepime && cefepime.renalDosing, 'Cefepime must have renalDosing');
+  const cefFail = cefepime.renalDosing.find(t => t.minGfr === 0);
+  assert.strictEqual(calcPatientRenalDose(cefFail, cefepime, 10), '250 mg q 24 hr');
+
+  // Ceftazidime: 50 kg in q 8 hr tier -> bw * 50 = 2500 mg, but maxPerDayMg = 6000 mg / 3 = 2000 mg cap
+  const ceftaz = dataset.pediatricATB.find(d => d.key === 'ceftazidime-iv-im');
+  assert(ceftaz && ceftaz.renalDosing, 'Ceftazidime must have renalDosing');
+  const ceftazTierNormal = ceftaz.renalDosing.find(t => t.minGfr >= 50);
+  assert.strictEqual(calcPatientRenalDose(ceftazTierNormal, ceftaz, 50), '1665–2000 mg q 8 hr');
+});
+
+test('Renal Dosing: Piperacillin/Tazobactam honors tier-level maxPerDoseMg cap (2000 mg) in renal impairment', () => {
+  const { calcPatientRenalDose } = window;
+  const pipTazo = dataset.pediatricATB.find(d => d.key === 'piperacillin-tazobactam-iv');
+  assert(pipTazo && pipTazo.renalDosing, 'Piperacillin/Tazobactam must have renalDosing');
+
+  const tierNorm = pipTazo.renalDosing.find(t => t.minGfr >= 50);
+  const tierMod = pipTazo.renalDosing.find(t => t.gfr === '20–50');
+  const tierSev = pipTazo.renalDosing.find(t => t.gfr === '< 20 / HD');
+
+  assert(tierMod && tierMod.maxPerDoseMg === 2000, 'Tier 20-50 must specify maxPerDoseMg: 2000');
+  assert(tierSev && tierSev.maxPerDoseMg === 2000, 'Tier < 20 / HD must specify maxPerDoseMg: 2000');
+
+  // 10 kg patient (uncapped)
+  assert.strictEqual(calcPatientRenalDose(tierNorm, pipTazo, 10), '666–1000 mg q 8 hr');
+  assert.strictEqual(calcPatientRenalDose(tierMod, pipTazo, 10), '666–800 mg q 8 hr');
+  assert.strictEqual(calcPatientRenalDose(tierSev, pipTazo, 10), '500–666 mg q 8 hr');
+
+  // 50 kg patient:
+  // Normal tier (>50): 66.6-100 mg/kg -> 3330-5000 mg, capped by drug.maxPerDoseMg (4000 mg)
+  assert.strictEqual(calcPatientRenalDose(tierNorm, pipTazo, 50), '3330–4000 mg q 8 hr');
+  // Impaired tier (20-50): 66.6-80 mg/kg -> 3330-4000 mg, capped by tier.maxPerDoseMg (2000 mg), min===max collapse
+  assert.strictEqual(calcPatientRenalDose(tierMod, pipTazo, 50), '2000 mg q 8 hr');
+  // Impaired tier (<20 / HD): 50-66.6 mg/kg -> 2500-3330 mg, capped by tier.maxPerDoseMg (2000 mg), min===max collapse
+  assert.strictEqual(calcPatientRenalDose(tierSev, pipTazo, 50), '2000 mg q 8 hr');
+});
+
+test('Renal Dosing & Regimens: Ranitidine IV vs PO separated catalog entries and safety caps', () => {
+  const { calcPatientRenalDose } = window;
+  const ranitidineIv = dataset.pediatricDose.find(d => d.key === 'ranitidine-iv-50-mg');
+  const ranitidinePo = dataset.pediatricDose.find(d => d.key === 'ranitidine-tab-150-mg-po');
+
+  assert(ranitidineIv && ranitidineIv.renalDosing, 'Ranitidine IV must exist and have renalDosing');
+  assert(ranitidinePo && ranitidinePo.renalDosing, 'Ranitidine PO must exist and have renalDosing');
+
+  // Check IV: 1–2 mg/kg/dose IV q8h, max 50 mg/dose (150 mg/day)
+  const ivNorm = ranitidineIv.renalDosing.find(t => t.minGfr >= 50);
+  const ivImpaired = ranitidineIv.renalDosing.find(t => t.minGfr === 0);
+  assert.strictEqual(calcPatientRenalDose(ivNorm, ranitidineIv, 10), '10–20 mg q 8 hr');
+  assert.strictEqual(calcPatientRenalDose(ivImpaired, ranitidineIv, 10), '5–10 mg q 12–24 hr');
+  // High weight: 60 kg -> 60-120 mg capped at 50 mg
+  assert.strictEqual(calcPatientRenalDose(ivNorm, ranitidineIv, 60), '50 mg q 8 hr');
+
+  // Check PO: 2–4 mg/kg/dose PO q12h, max 150 mg/dose (300 mg/day)
+  const poNorm = ranitidinePo.renalDosing.find(t => t.minGfr >= 50);
+  const poImpaired = ranitidinePo.renalDosing.find(t => t.minGfr === 0);
+  assert.strictEqual(calcPatientRenalDose(poNorm, ranitidinePo, 10), '20–40 mg q 12 hr');
+  assert.strictEqual(calcPatientRenalDose(poImpaired, ranitidinePo, 10), '10–20 mg q 24 hr');
+  // High weight: 60 kg -> 120-240 mg capped at 150 mg max
+  assert.strictEqual(calcPatientRenalDose(poNorm, ranitidinePo, 60), '120–150 mg q 12 hr');
+
+  // Test copyEHROrder for Ranitidine IV and PO
+  document.getElementById('weight').value = '10';
+  document.getElementById('age').value = '2';
+  window.eval('gAgeUnit = "yr"; onWeightChange();');
+
+  document.getElementById('doseDrug').value = 'ranitidine-iv-50-mg';
+  window.eval('calcDose()');
+  const ivOrder = window.copyEHROrder('dose');
+  assert(ivOrder.includes('Ranitidine IV 20 mg') && ivOrder.includes('(0.80 mL)'), 'Ranitidine IV order must calculate 20 mg (0.80 mL) for 10 kg');
+  assert(ivOrder.includes('IV q 8 hr'), 'Ranitidine IV order must specify IV route and q 8 hr freq');
+
+  document.getElementById('doseDrug').value = 'ranitidine-tab-150-mg-po';
+  window.eval('calcDose()');
+  const poOrder = window.copyEHROrder('dose');
+  assert(poOrder.includes('Ranitidine PO 40 mg') && poOrder.includes('(2.67 mL)'), 'Ranitidine PO order must calculate 40 mg (2.67 mL) for 10 kg');
+  assert(poOrder.includes('PO q 12 hr'), 'Ranitidine PO order must specify PO route and q 12 hr freq');
+
+  // Reset inputs
+  document.getElementById('age').value = '';
+  document.getElementById('weight').value = '';
+  window.eval('onWeightChange();');
+});
+
+test('Renal Dosing: All renal drugs have contiguous eGFR tiers without gaps', () => {
+  const allDrugs = [...dataset.pediatricDose, ...dataset.pediatricATB];
+  const renalDrugs = allDrugs.filter(d => d.renalDosing && d.renalDosing.length > 0);
+  assert.strictEqual(renalDrugs.length, 14, 'Must have exactly 14 renal-adjusted drugs');
+
+  renalDrugs.forEach(drug => {
+    const tiers = drug.renalDosing;
+    for (let i = 0; i < tiers.length - 1; i++) {
+      const higher = tiers[i];
+      const lower = tiers[i + 1];
+      assert.strictEqual(
+        lower.maxGfr,
+        higher.minGfr,
+        `Drug ${drug.key} tier [${i + 1}] maxGfr (${lower.maxGfr}) must equal tier [${i}] minGfr (${higher.minGfr})`
+      );
+    }
+  });
+
+  // Verify continuous intermediate eGFR values match without gap
+  document.getElementById('weight').value = '10';
+  document.getElementById('length').value = '100';
+  window.eval('onWeightChange()');
+
+  // Cefepime: eGFR = 10.95 (Ht 100, SCr 3.77168 -> 0.413 * 100 / 3.77168 = 10.95 mL/min/1.73m2)
+  document.getElementById('atbDrug').value = 'cefepime-iv';
+  window.eval('onRenalSCrInput("3.77168")');
+  const atbOutCef = document.getElementById('atbOut');
+  assert(atbOutCef.innerHTML.includes('active-tier'), 'Cefepime at eGFR 10.95 must match active tier (< 11 / HD)');
+  assert(atbOutCef.querySelector('tr.active-tier')?.textContent.includes('< 11 / HD'), 'Active row must be < 11 / HD tier');
+
+  // Ceftazidime: eGFR = 29.95 (Ht 100, SCr 1.37896 -> 0.413 * 100 / 1.37896 = 29.95 mL/min/1.73m2)
+  document.getElementById('atbDrug').value = 'ceftazidime-iv-im';
+  window.eval('onRenalSCrInput("1.37896")');
+  const atbOutCeftaz = document.getElementById('atbOut');
+  assert(atbOutCeftaz.innerHTML.includes('active-tier'), 'Ceftazidime at eGFR 29.95 must match active tier (10–29)');
+  assert(atbOutCeftaz.querySelector('tr.active-tier')?.textContent.includes('10–29'), 'Active row must be 10–29 tier');
+});
+
+test('Renal UI Engine: Meropenem renders expandable renal panel and highlights active tier with eGFR', () => {
+  document.getElementById('weight').value = '10';
+  document.getElementById('length').value = '100';
+  window.eval('onWeightChange()');
+  document.getElementById('atbDrug').value = 'meropenem-iv';
+  window.eval('calcATB()');
+
+  const atbOut = document.getElementById('atbOut');
+  assert(atbOut.innerHTML.includes('renal-adjust-details'), 'Renal adjust panel must be rendered for Meropenem');
+  assert(atbOut.innerHTML.includes('Bedside Schwartz'), 'Bedside Schwartz formula must be referenced');
+
+  // Input SCr = 1.0 mg/dL (eGFR = 41.3 mL/min/1.73 m² -> matches 26–50 tier)
+  window.eval('onRenalSCrInput("1.0")');
+  assert(atbOut.innerHTML.includes('active-tier'), 'Matching tier row must receive .active-tier class');
+  assert(atbOut.innerHTML.includes('41.3'), 'Calculated eGFR 41.3 must be displayed');
+  assert(atbOut.innerHTML.includes('Tier ตรงกับ eGFR'), 'Checkmark badge must be rendered on active tier');
+});
+
+test('Renal UI Engine: eGFR 50.0 boundary matches only the first tier without dual highlight', () => {
+  document.getElementById('weight').value = '10';
+  document.getElementById('length').value = '100';
+  window.eval('onWeightChange()');
+  document.getElementById('atbDrug').value = 'ceftazidime-iv-im';
+  // Ht 100, SCr 0.826 -> eGFR = 0.413 * 100 / 0.826 = 50.0
+  window.eval('onRenalSCrInput("0.826")');
+  const atbOut = document.getElementById('atbOut');
+  const matches = (atbOut.innerHTML.match(/active-tier/g) || []).length;
+  assert.strictEqual(matches, 1, 'Only one tier must have active-tier class at eGFR boundary 50.0');
+  const activeRow = atbOut.querySelector('tr.active-tier');
+  assert(activeRow, 'Active tier row must exist in DOM');
+  assert.strictEqual(activeRow.querySelector('td')?.textContent.trim(), '> 50', 'Active tier at boundary 50.0 must be the first normal-function tier (> 50)');
+  assert(activeRow.textContent.includes('ขนาดยาปกติ'), 'Active tier must correspond to normal-function dose adjustment');
+});
+
+test('Medication Age Limit: Ambroxol for patient < 2 yr suppresses dose and shows contraindication warning', () => {
+  document.getElementById('weight').value = '10';
+  document.getElementById('age').value = '1';
+  window.eval('gAgeUnit = "yr"');
+  window.eval('estimateFromAge()');
+  document.getElementById('doseDrug').value = 'ambroxol-syrup-30-mg-5-ml';
+  window.eval('calcDose()');
+  const doseOut = document.getElementById('doseOut');
+  assert(doseOut.innerHTML.includes('Age Restriction / Contraindicated'), 'Contraindication warning must be displayed');
+  assert(!doseOut.innerHTML.includes('DOSE PER SINGLE DOSE'), 'Calculated dosage cards must be suppressed');
+});
+
+test('Dose Bands: Desloratadine for 5.92 yr child matches 1.25 mg band without gap', () => {
+  document.getElementById('weight').value = '20';
+  document.getElementById('age').value = '5.92';
+  window.eval('gAgeUnit = "yr"');
+  window.eval('estimateFromAge()');
+  document.getElementById('doseDrug').value = 'desloratadine-syrup-0-5-mg-ml';
+  window.eval('calcDose()');
+  const doseOut = document.getElementById('doseOut');
+  assert(doseOut.innerHTML.includes('1.25 mg'), '5.92 yr child must match 1.25 mg dose band');
+});
+
+test('Dose Bands: Simethicone / Dicyclomine renders volume in mL (not mg)', () => {
+  document.getElementById('weight').value = '12';
+  document.getElementById('age').value = '2';
+  window.eval('gAgeUnit = "yr"');
+  window.eval('estimateFromAge()');
+  document.getElementById('doseDrug').value = 'simethicone-dicyclomine-syrup';
+  window.eval('calcDose()');
+  const doseOut = document.getElementById('doseOut');
+  assert(doseOut.innerHTML.includes('2.5 mL'), 'Simethicone for 2 yr old must render 2.5 mL');
+  assert(!doseOut.innerHTML.includes('2.5 mg'), 'Simethicone must NOT render 2.5 mg');
+  assert(doseOut.innerHTML.includes('10.0 mL'), 'Total daily volume for QID must be 10.0 mL');
+});
+
 // 10. Test Seizure Protocol Dosing
 test('Seizure Protocol Stage 1: IN Midazolam 10 kg child (0.2 mg/kg = 2.0 mg)', () => {
   const stage1 = dataset.seizureProtocol.find(s => s.stage === '5–10 min');
@@ -403,6 +740,123 @@ test('copyEHROrder("atb"): Ampicillin 10 kg patient pre-seeded in JSDOM', () => 
   assert(orderStr.includes('Ampicillin'), 'EHR order must contain Ampicillin');
   assert(orderStr.includes('500 mg'), 'EHR order for 10 kg ampicillin (50 mg/kg max) must be 500 mg');
   assert(orderStr.includes('[BW: 10.0 kg]'), 'EHR order must state weight');
+});
+
+test('copyEHROrder("dose"): Loratadine doseBand (doseMg) matches 5 mg for 4-year-old child', () => {
+  document.getElementById('weight').value = '15';
+  document.getElementById('age').value = '4';
+  window.eval('gAgeUnit = "yr"; onWeightChange();');
+  document.getElementById('doseDrug').value = 'loratadine-syrup-5-mg-5-ml';
+  
+  window.eval('calcDose()');
+  const orderStr = window.copyEHROrder('dose');
+  
+  assert(orderStr.includes('5 mg'), 'Loratadine for 4 yr child must copy 5 mg (not fall through to weight math)');
+  assert(orderStr.includes('5.00 mL'), 'Loratadine syrup 5 mg / 5 mL must calculate 5.00 mL');
+});
+
+test('copyEHROrder("atb"): Albendazole fixedDose matches 400 mg regardless of weight', () => {
+  document.getElementById('weight').value = '12';
+  document.getElementById('age').value = '3';
+  window.eval('gAgeUnit = "yr"; onWeightChange();');
+  document.getElementById('atbDrug').value = 'albendazole-syrup-200mg-5ml-tab-200mg';
+  
+  window.eval('calcATB()');
+  const orderStr = window.copyEHROrder('atb');
+  
+  assert(orderStr.includes('400 mg'), 'Albendazole must copy fixed 400 mg dose');
+});
+
+test('copyEHROrder("atb"): Oseltamivir doseBands matches 30 mg for 10 kg child', () => {
+  document.getElementById('weight').value = '10';
+  document.getElementById('age').value = '3';
+  window.eval('gAgeUnit = "yr"; onWeightChange();');
+  document.getElementById('atbDrug').value = 'oseltamivir-weight-based';
+  
+  window.eval('calcATB()');
+  const orderStr = window.copyEHROrder('atb');
+  
+  assert(orderStr.includes('30 mg'), 'Oseltamivir for 10 kg child must copy 30 mg doseBand');
+});
+
+test('Favipiravir Separated Regimens: Loading vs Maintenance safety caps in ATB and EHR copy', () => {
+  document.getElementById('weight').value = '60'; // High weight to test safety caps
+  document.getElementById('age').value = '14';
+  window.eval('gAgeUnit = "yr"; onWeightChange();');
+  
+  // Day 1 Loading: 35 mg/kg * 60 = 2100 mg -> capped at 1800 mg
+  document.getElementById('atbDrug').value = 'favipiravir-day1-loading-po';
+  window.eval('calcATB()');
+  const loadOrder = window.copyEHROrder('atb');
+  assert(loadOrder.includes('1800 mg'), 'Day 1 loading dose for 60 kg must be capped at 1800 mg/dose');
+
+  // Days 2-5 Maintenance: 15 mg/kg * 60 = 900 mg -> capped at 800 mg
+  document.getElementById('atbDrug').value = 'favipiravir-days2-5-maint-po';
+  window.eval('calcATB()');
+  const maintOrder = window.copyEHROrder('atb');
+  assert(maintOrder.includes('800 mg'), 'Days 2-5 maintenance dose for 60 kg must be capped at 800 mg/dose');
+
+  // Reset inputs for test isolation
+  document.getElementById('age').value = '';
+  document.getElementById('weight').value = '';
+  window.eval('onWeightChange();');
+});
+
+test('calcATB: Nystatin unit-based dose rendering in hero card and total daily dose', () => {
+  // Test child (age >= 1 month / 0.0833 yr): 400,000–600,000 U qid
+  document.getElementById('weight').value = '10';
+  document.getElementById('age').value = '2';
+  window.eval('gAgeUnit = "yr"; onWeightChange();');
+  document.getElementById('atbDrug').value = 'nystatin-oral-susp-100000u-ml';
+  window.eval('calcATB()');
+
+  const outHtml = document.getElementById('atbOut').innerHTML;
+  assert(outHtml.includes('400,000–600,000 U'), 'Nystatin child single dose must render 400,000–600,000 U');
+  assert(outHtml.includes('1,600,000–2,400,000 U'), 'Nystatin child total daily dose (qid) must render 1,600,000–2,400,000 U');
+  assert(!outHtml.includes('>—<'), 'Hero values must not show placeholder dashes when units resolved');
+
+  const orderStr = window.copyEHROrder('atb');
+  assert(orderStr.includes('600,000 U'), 'copyEHROrder for Nystatin must copy resolved units (600,000 U)');
+  assert(orderStr.includes('qid'), 'copyEHROrder for Nystatin must specify qid frequency');
+
+  // Test neonate < 2 kg: 100,000 U qid
+  document.getElementById('weight').value = '1.5';
+  document.getElementById('age').value = String(7 / 30.4375);
+  window.eval('gAgeUnit = "mo"; onWeightChange();');
+  window.eval('calcATB()');
+  const neoHtml = document.getElementById('atbOut').innerHTML;
+  assert(neoHtml.includes('100,000 U'), 'Nystatin neonate < 2 kg must render 100,000 U per dose');
+  assert(neoHtml.includes('400,000 U'), 'Nystatin neonate < 2 kg daily dose must render 400,000 U');
+
+  // Test neonate > 2 kg: 200,000 U qid
+  document.getElementById('weight').value = '2.5';
+  window.eval('onWeightChange();');
+  window.eval('calcATB()');
+  const neo2Html = document.getElementById('atbOut').innerHTML;
+  assert(neo2Html.includes('200,000 U'), 'Nystatin neonate > 2 kg must render 200,000 U per dose');
+  assert(neo2Html.includes('800,000 U'), 'Nystatin neonate > 2 kg daily dose must render 800,000 U');
+
+  // Reset inputs for test isolation
+  document.getElementById('age').value = '';
+  document.getElementById('weight').value = '';
+  window.eval('gAgeUnit = "yr"; onWeightChange();');
+});
+
+test('copyEHROrder("dose"): halts and displays toast when drug dose is unresolvable without weight fallback', () => {
+  document.getElementById('weight').value = '10';
+  window.eval('onWeightChange();');
+  document.getElementById('doseDrug').value = 'bromhexine-syrup-4-mg-5-ml';
+  window.eval('calcDose();');
+
+  const orderStr = window.copyEHROrder('dose');
+  assert(!orderStr, 'copyEHROrder must return falsy/undefined when doseMg cannot be resolved');
+  
+  const toastText = document.querySelector('#toast span')?.textContent || '';
+  assert(toastText.includes('ยานี้ไม่มีขนาดยาคำนวณตามน้ำหนัก กรุณาสั่งยาตาม Clinical Note'), 'Toast must alert clinician to order per Clinical Note instead of falling back to 10*w');
+
+  // Reset inputs for test isolation
+  document.getElementById('weight').value = '';
+  window.eval('onWeightChange();');
 });
 
 test('copyEHROrder("ncpr"): 3.0 kg newborn pre-seeded in JSDOM', () => {

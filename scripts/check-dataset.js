@@ -159,7 +159,7 @@ tables.forEach(tableName => {
     // DoseBands structure check
     if (Array.isArray(item.doseBands)) {
       item.doseBands.forEach((band, bIdx) => {
-        if (typeof band.doseMg !== 'number' && typeof band.doseUnits !== 'number' && (!band.minUnits || !band.maxUnits)) {
+        if (typeof band.doseMg !== 'number' && typeof band.doseMl !== 'number' && typeof band.doseUnits !== 'number' && (!band.minUnits || !band.maxUnits)) {
           logErr(`${ctx} doseBands[${bIdx}] missing valid dose amount`);
         }
       });

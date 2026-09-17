@@ -761,23 +761,91 @@
       "aliases": []
     },
     {
-      "key": "ranitidine-tab-150-mg-iv-50-mg",
-      "drug": "Ranitidine",
-      "name": "Ranitidine IV/PO",
-      "preparation": "Tab 150 mg ; IV 50 mg/amp",
-      "note": "2–4 mg/kg/day PO q12h / IV q8h ⚠️ Max 50 mg/dose IV ; many centers avoid now **",
+      "key": "ranitidine-iv-50-mg",
+      "drug": "Ranitidine IV",
+      "name": "Ranitidine IV (50 mg/amp)",
+      "preparation": "IV 50 mg/2 mL (25 mg/mL)",
+      "note": "1–2 mg/kg/dose IV q8h (3–6 mg/kg/day) ⚠️ Max 50 mg/dose (150 mg/day) ; many centers avoid now due to NDMA **",
       "unit": "mg/kg",
-      "unitType": "perDay",
-      "doseMinMgPerKg": 2,
-      "doseMaxMgPerKg": 4,
-      "freq": "PO q12h / IV q8h",
-      "route": "PO/IV",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 1,
+      "doseMaxMgPerKg": 2,
+      "maxPerDoseMg": 50,
+      "maxPerDayMg": 150,
+      "freq": "q 8 hr",
+      "route": "IV",
       "renalAdjust": true,
       "minAgeYr": null,
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [
+        "Ranitidine Injection",
+        "Zantac IV",
+        "ranitidine-tab-150-mg-iv-50-mg"
+      ],
+      "renalDosing": [
+        {
+          "gfr": "> 50",
+          "minGfr": 50,
+          "maxGfr": 999,
+          "doseAdjustment": "ขนาดยาปกติ 1–2 mg/kg/dose IV",
+          "freq": "q 8 hr",
+          "clinicalNote": "ระยะเวลาการให้ยาปกติ"
+        },
+        {
+          "gfr": "< 50 / HD",
+          "minGfr": 0,
+          "maxGfr": 50,
+          "doseAdjustment": "ลดขนาดยาลง 50% หรือขยายเวลา",
+          "freq": "q 12–24 hr",
+          "clinicalNote": "ลดขนาดลง 50% หรือให้ทุก 12–24 ชม."
+        }
+      ]
+    },
+    {
+      "key": "ranitidine-tab-150-mg-po",
+      "drug": "Ranitidine PO",
+      "name": "Ranitidine PO (Tab 150 mg / Syrup)",
+      "preparation": "Tab 150 mg ; Syrup 75 mg/5 mL (15 mg/mL)",
+      "note": "2–4 mg/kg/dose PO q12h (4–8 mg/kg/day) ⚠️ Max 150 mg/dose (300 mg/day) ; many centers avoid now due to NDMA **",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 2,
+      "doseMaxMgPerKg": 4,
+      "maxPerDoseMg": 150,
+      "maxPerDayMg": 300,
+      "freq": "q 12 hr",
+      "route": "PO",
+      "renalAdjust": true,
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Ranitidine Oral",
+        "Ranitidine Syrup",
+        "Zantac PO",
+        "ranitidine-tab-150-mg-iv-50-mg"
+      ],
+      "renalDosing": [
+        {
+          "gfr": "> 50",
+          "minGfr": 50,
+          "maxGfr": 999,
+          "doseAdjustment": "ขนาดยาปกติ 2–4 mg/kg/dose PO",
+          "freq": "q 12 hr",
+          "clinicalNote": "ระยะเวลาการให้ยาปกติ"
+        },
+        {
+          "gfr": "< 50 / HD",
+          "minGfr": 0,
+          "maxGfr": 50,
+          "doseAdjustment": "ลดขนาดยาลง 50% หรือขยายเวลา",
+          "freq": "q 24 hr",
+          "clinicalNote": "ลดขนาดลง 50% หรือให้ทุก 24 ชม."
+        }
+      ]
     },
     {
       "key": "famotidine-tab-20-mg",
@@ -1458,6 +1526,322 @@
       "aliases": [
         "MTV"
       ]
+    },
+    {
+      "key": "paracetamol-syrup-160-mg-5-ml",
+      "drug": "Paracetamol",
+      "name": "Paracetamol syrup (160 mg / 5 mL)",
+      "preparation": "160 mg / 5 mL",
+      "note": "10–15 mg/kg/dose q4–6h PRN fever/pain (Tempra / Calpol standard concentration) ⚠️ Max 1000 mg/dose or 4000 mg/day (max 90 mg/kg/day)",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 10,
+      "doseMaxMgPerKg": 15,
+      "maxPerDoseMg": 1000,
+      "maxPerDayMg": 4000,
+      "freq": "prn q 6 hr",
+      "route": "PO",
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Tempra",
+        "Calpol 160",
+        "Acetaminophen 160"
+      ]
+    },
+    {
+      "key": "ambroxol-syrup-30-mg-5-ml",
+      "drug": "Ambroxol",
+      "name": "Ambroxol syrup (30 mg / 5 mL)",
+      "preparation": "30 mg / 5 mL",
+      "note": "Mucolytic: 1.2–1.6 mg/kg/day divided BID–TID. Or by age: 2–6 yr: 2.5 mL (15 mg) TID ; 6–12 yr: 5 mL (30 mg) BID–TID ; >12 yr: 5–10 mL BID–TID ⚠️ Max 120 mg/day",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 1.2,
+      "doseMaxMgPerKg": 1.6,
+      "maxPerDayMg": 120,
+      "freq": "tid",
+      "route": "PO",
+      "minAgeYr": 2,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Mucosolvan",
+        "Ambroxol syr",
+        "Ambroxol 30"
+      ]
+    },
+    {
+      "key": "loratadine-syrup-5-mg-5-ml",
+      "drug": "Loratadine",
+      "name": "Loratadine syrup (5 mg / 5 mL)",
+      "preparation": "5 mg / 5 mL",
+      "note": "2nd gen non-sedating antihistamine: Age 2–5 yr (or <30 kg): 5 mg (5 mL) OD ; Age >=6 yr (or >30 kg): 10 mg (10 mL) OD ⚠️ Max 10 mg/day",
+      "unit": "fixed",
+      "unitType": "perDose",
+      "doseBands": [
+        {
+          "minAgeYr": 2,
+          "maxAgeYr": 6,
+          "maxKg": 30,
+          "doseMg": 5
+        },
+        {
+          "minAgeYr": 6,
+          "maxAgeYr": 15,
+          "doseMg": 10
+        },
+        {
+          "minKg": 30,
+          "doseMg": 10
+        }
+      ],
+      "maxPerDayMg": 10,
+      "freq": "OD",
+      "route": "PO",
+      "minAgeYr": 2,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Claritin",
+        "Lorano",
+        "Antihistamine"
+      ]
+    },
+    {
+      "key": "desloratadine-syrup-0-5-mg-ml",
+      "drug": "Desloratadine",
+      "name": "Desloratadine syrup (0.5 mg / mL)",
+      "preparation": "0.5 mg / mL",
+      "note": "Non-sedating antihistamine: 6–11 mo: 1 mg (2 mL) OD ; 1–5 yr: 1.25 mg (2.5 mL) OD ; 6–11 yr: 2.5 mg (5 mL) OD ; >=12 yr: 5 mg (10 mL) OD ⚠️ Max 5 mg/day",
+      "unit": "fixed",
+      "unitType": "perDose",
+      "doseBands": [
+        {
+          "minAgeYr": 0.5,
+          "maxAgeYr": 1,
+          "doseMg": 1
+        },
+        {
+          "minAgeYr": 1,
+          "maxAgeYr": 6,
+          "doseMg": 1.25
+        },
+        {
+          "minAgeYr": 6,
+          "maxAgeYr": 12,
+          "doseMg": 2.5
+        },
+        {
+          "minAgeYr": 12,
+          "maxAgeYr": 15,
+          "doseMg": 5
+        }
+      ],
+      "maxPerDayMg": 5,
+      "freq": "OD",
+      "route": "PO",
+      "minAgeYr": 0.5,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Aerius",
+        "Desloratadine syr"
+      ]
+    },
+    {
+      "key": "fexofenadine-syrup-30-mg-5-ml",
+      "drug": "Fexofenadine",
+      "name": "Fexofenadine syrup (30 mg / 5 mL)",
+      "preparation": "30 mg / 5 mL",
+      "note": "2nd gen antihistamine: 6 mo–2 yr: 15 mg (2.5 mL) BID ; 2–11 yr: 30 mg (5 mL) BID ; >=12 yr: 60 mg (10 mL) BID ⚠️ Max 120 mg/day",
+      "unit": "fixed",
+      "unitType": "perDose",
+      "doseBands": [
+        {
+          "minAgeYr": 0.5,
+          "maxAgeYr": 2,
+          "doseMg": 15
+        },
+        {
+          "minAgeYr": 2,
+          "maxAgeYr": 12,
+          "doseMg": 30
+        },
+        {
+          "minAgeYr": 12,
+          "maxAgeYr": 15,
+          "doseMg": 60
+        }
+      ],
+      "maxPerDayMg": 120,
+      "freq": "bid",
+      "route": "PO",
+      "minAgeYr": 0.5,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Telfast",
+        "Allegra",
+        "Fexofenadine 30"
+      ]
+    },
+    {
+      "key": "hyoscine-butylbromide-syrup-tab",
+      "drug": "Hyoscine-N-Butylbromide",
+      "name": "Hyoscine-N-Butylbromide (Buscopan)",
+      "preparation": "Syrup 5 mg / 5 mL ; Tab 10 mg",
+      "note": "Antispasmodic for visceral / GI cramp: 0.5 mg/kg/dose PO q6–8h ⚠️ Max 40 mg/dose",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.5,
+      "doseMaxMgPerKg": 0.5,
+      "maxPerDoseMg": 40,
+      "freq": "q 8 hr",
+      "route": "PO",
+      "minAgeYr": 1,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Buscopan",
+        "Hyoscine butylbromide",
+        "Scopolamine butylbromide"
+      ]
+    },
+    {
+      "key": "terbutaline-syrup-1-5mg-5ml",
+      "drug": "Terbutaline (oral syrup)",
+      "name": "Terbutaline oral syrup (1.5 mg / 5 mL)",
+      "preparation": "1.5 mg / 5 mL",
+      "note": "Bronchodilator: 0.075–0.1 mg/kg/dose PO q6–8h ⚠️ Max 2.5 mg/dose ; Max 7.5 mg/day",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.075,
+      "doseMaxMgPerKg": 0.1,
+      "maxPerDoseMg": 2.5,
+      "maxPerDayMg": 7.5,
+      "freq": "q 8 hr",
+      "route": "PO",
+      "minAgeYr": 1,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Bricanyl syrup",
+        "Bricanyl oral",
+        "Terbutaline syr"
+      ]
+    },
+    {
+      "key": "terbutaline-guaifenesin-syrup",
+      "drug": "Terbutaline / Guaifenesin",
+      "name": "Terbutaline / Guaifenesin syrup (0.3 / 13.3 mg/mL)",
+      "preparation": "0.3 mg Terbu + 13.3 mg GG per mL",
+      "note": "Bronchodilator + Expectorant (based on Terbutaline): 0.075–0.1 mg/kg/dose PO q6–8h ⚠️ Max 2.5 mg/dose (Terbutaline) ; Max 7.5 mg/day",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.075,
+      "doseMaxMgPerKg": 0.1,
+      "maxPerDoseMg": 2.5,
+      "maxPerDayMg": 7.5,
+      "freq": "q 8 hr",
+      "route": "PO",
+      "minAgeYr": 1,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Bricanyl Expectorant",
+        "Terbu GG",
+        "Terbutaline expectorant"
+      ]
+    },
+    {
+      "key": "brompheniramine-guaifenesin-syrup",
+      "drug": "Brompheniramine / Guaifenesin",
+      "name": "Brompheniramine / Guaifenesin syrup (2 / 100 mg per 5 mL)",
+      "preparation": "2 mg BPM + 100 mg GG per 5 mL",
+      "note": "Antihistamine + Expectorant: 0.17 mL/kg/dose PO TID–QID (BPM ~0.07 mg/kg/dose) ⚠️ Max 16 mg/day (<6 yr: max 8 mg/day)",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.07,
+      "doseMaxMgPerKg": 0.07,
+      "maxPerDoseMg": 4,
+      "maxPerDayMg": 16,
+      "freq": "tid",
+      "route": "PO",
+      "minAgeYr": 2,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "BPM GG",
+        "Dimetapp expectorant",
+        "Brompheniramine GG"
+      ]
+    },
+    {
+      "key": "diphenhydramine-tab-50-mg",
+      "drug": "Diphenhydramine",
+      "name": "Diphenhydramine tab (50 mg)",
+      "preparation": "50 mg / tab",
+      "note": "1st gen antihistamine: 1–1.25 mg/kg/dose PO q6h ⚠️ Max 50 mg/dose or 300 mg/day ; Sedation / sleep induction 25–50 mg at bedtime",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 1,
+      "doseMaxMgPerKg": 1.25,
+      "maxPerDoseMg": 50,
+      "maxPerDayMg": 300,
+      "freq": "qid",
+      "route": "PO",
+      "minAgeYr": 2,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Benadryl tab",
+        "Dimenhydrinate parent",
+        "Diphenhydramine 50"
+      ]
+    },
+    {
+      "key": "simethicone-dicyclomine-syrup",
+      "drug": "Simethicone / Dicyclomine",
+      "name": "Simethicone / Dicyclomine syrup (50 / 5 mg per 5 mL)",
+      "preparation": "50 mg Simethicone + 5 mg Dicyclomine per 5 mL",
+      "note": "Antispasmodic + Antiflatulent for infantile colic & abdominal cramps: Age < 4 yr: 2.5 mL TID–QID AC ; Age 4–12 yr: 5 mL TID–QID AC. (Contraindicated in infants < 6 months)",
+      "unit": "fixed",
+      "unitType": "perDose",
+      "doseBands": [
+        {
+          "minAgeYr": 0.5,
+          "maxAgeYr": 4,
+          "doseMl": 2.5
+        },
+        {
+          "minAgeYr": 4,
+          "maxAgeYr": 12,
+          "doseMl": 5
+        }
+      ],
+      "freq": "qid",
+      "route": "PO",
+      "minAgeYr": 0.5,
+      "maxAgeYr": 12,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Disento",
+        "Simethicone Dicyclomine",
+        "Baby colic drop"
+      ]
     }
   ],
   "pediatricATB": [
@@ -1478,7 +1862,41 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "renalDosing": [
+        {
+          "gfr": "> 50",
+          "minGfr": 50,
+          "maxGfr": 999,
+          "doseAdjustment": "ขนาดยาปกติ 10–20 mg/kg",
+          "freq": "q 8 hr",
+          "clinicalNote": "ระยะเวลาการให้ยาปกติ (ต้อง hydrate ผู้ป่วยให้เพียงพอป้องกันผลึกตกตะกอนในไต)"
+        },
+        {
+          "gfr": "25–50",
+          "minGfr": 25,
+          "maxGfr": 50,
+          "doseAdjustment": "10–20 mg/kg",
+          "freq": "q 12 hr",
+          "clinicalNote": "ขยายระยะห่างเป็นทุก 12 ชม."
+        },
+        {
+          "gfr": "10–24",
+          "minGfr": 10,
+          "maxGfr": 25,
+          "doseAdjustment": "10–20 mg/kg",
+          "freq": "q 24 hr",
+          "clinicalNote": "ขยายระยะห่างเป็นทุก 24 ชม."
+        },
+        {
+          "gfr": "< 10 / HD",
+          "minGfr": 0,
+          "maxGfr": 10,
+          "doseAdjustment": "ลดขนาดยาลง 50% (5–10 mg/kg)",
+          "freq": "q 24 hr",
+          "clinicalNote": "ลดขนาด 50% ทุก 24 ชม. (ให้ยาหลังฟอกไต HD)"
+        }
+      ]
     },
     {
       "key": "oseltamivir-weight-based",
@@ -1985,6 +2403,40 @@
       "maxWeightKg": null,
       "aliases": [
         "3rd gen ceph"
+      ],
+      "renalDosing": [
+        {
+          "gfr": "> 50",
+          "minGfr": 50,
+          "maxGfr": 999,
+          "doseAdjustment": "ขนาดยาปกติ 25–50 mg/kg",
+          "freq": "q 6–8 hr",
+          "clinicalNote": "ระยะเวลาการให้ยาปกติ"
+        },
+        {
+          "gfr": "30–50",
+          "minGfr": 30,
+          "maxGfr": 50,
+          "doseAdjustment": "25–50 mg/kg",
+          "freq": "q 8–12 hr",
+          "clinicalNote": "ขยายระยะห่างเป็นทุก 8–12 ชม."
+        },
+        {
+          "gfr": "10–29",
+          "minGfr": 10,
+          "maxGfr": 30,
+          "doseAdjustment": "25–50 mg/kg",
+          "freq": "q 12 hr",
+          "clinicalNote": "ขยายระยะห่างเป็นทุก 12 ชม."
+        },
+        {
+          "gfr": "< 10 / HD",
+          "minGfr": 0,
+          "maxGfr": 10,
+          "doseAdjustment": "25–50 mg/kg",
+          "freq": "q 24 hr",
+          "clinicalNote": "ขยายระยะห่างเป็นทุก 24 ชม. (ให้ยาหลังฟอกไต HD)"
+        }
       ]
     },
     {
@@ -2007,6 +2459,40 @@
       "maxWeightKg": null,
       "aliases": [
         "Antipseudomonal ceph"
+      ],
+      "renalDosing": [
+        {
+          "gfr": "> 50",
+          "minGfr": 50,
+          "maxGfr": 999,
+          "doseAdjustment": "ขนาดยาปกติ 33.3–50 mg/kg",
+          "freq": "q 8 hr",
+          "clinicalNote": "ระยะเวลาการให้ยาปกติ"
+        },
+        {
+          "gfr": "30–50",
+          "minGfr": 30,
+          "maxGfr": 50,
+          "doseAdjustment": "33.3–50 mg/kg",
+          "freq": "q 12 hr",
+          "clinicalNote": "ขยายระยะห่างเป็นทุก 12 ชม."
+        },
+        {
+          "gfr": "10–29",
+          "minGfr": 10,
+          "maxGfr": 30,
+          "doseAdjustment": "33.3–50 mg/kg",
+          "freq": "q 24 hr",
+          "clinicalNote": "ขยายระยะห่างเป็นทุก 24 ชม."
+        },
+        {
+          "gfr": "< 10 / HD",
+          "minGfr": 0,
+          "maxGfr": 10,
+          "doseAdjustment": "ลดขนาด 50% (16.6–25 mg/kg)",
+          "freq": "q 24–48 hr",
+          "clinicalNote": "ลดขนาด 50% ทุก 24–48 ชม. (ให้ยาหลังฟอกไต HD)"
+        }
       ]
     },
     {
@@ -2167,6 +2653,32 @@
       "maxWeightKg": null,
       "aliases": [
         "Quinolone"
+      ],
+      "renalDosing": [
+        {
+          "gfr": "> 50",
+          "minGfr": 50,
+          "maxGfr": 999,
+          "doseAdjustment": "ขนาดยาปกติ 10–20 mg/kg",
+          "freq": "q 12 hr",
+          "clinicalNote": "ระยะเวลาการให้ยาปกติ"
+        },
+        {
+          "gfr": "30–50",
+          "minGfr": 30,
+          "maxGfr": 50,
+          "doseAdjustment": "ให้ 50–75% ของขนาดปกติ",
+          "freq": "q 12 hr",
+          "clinicalNote": "ลดขนาดยาลงเหลือ 50–75%"
+        },
+        {
+          "gfr": "< 30 / HD",
+          "minGfr": 0,
+          "maxGfr": 30,
+          "doseAdjustment": "ให้ 50% ของขนาดปกติ",
+          "freq": "q 18–24 hr",
+          "clinicalNote": "ลดขนาดลง 50% และขยายระยะห่างเป็นทุก 18–24 ชม."
+        }
       ]
     },
     {
@@ -2308,6 +2820,576 @@
       "maxWeightKg": null,
       "aliases": [
         "EMB"
+      ]
+    },
+    {
+      "key": "amikacin-iv",
+      "drug": "Amikacin",
+      "name": "Amikacin IV",
+      "preparation": "Vials 100 mg / 2 mL ; 500 mg / 2 mL",
+      "note": "15–20 mg/kg/day IV OD (once daily extended interval) infused over 30–60 min ⚠️ Max 1500 mg/day ; Monitor serum peak & trough. CrCl adjustment required.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 15,
+      "doseMaxMgPerKg": 20,
+      "maxPerDoseMg": 1500,
+      "maxPerDayMg": 1500,
+      "freq": "OD",
+      "route": "IV",
+      "renalAdjust": true,
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Amikin",
+        "Aminoglycoside"
+      ],
+      "renalDosing": [
+        {
+          "gfr": "> 50",
+          "minGfr": 50,
+          "maxGfr": 999,
+          "doseAdjustment": "ขนาดยาปกติ 15–20 mg/kg",
+          "freq": "q 24 hr",
+          "clinicalNote": "Extended interval วันละ 1 ครั้ง"
+        },
+        {
+          "gfr": "30–50",
+          "minGfr": 30,
+          "maxGfr": 50,
+          "doseAdjustment": "15–20 mg/kg",
+          "freq": "q 36–48 hr",
+          "clinicalNote": "ขยายระยะห่างเป็นทุก 36–48 ชม. (หรือตรวจระดับ TDM Trough < 5 mcg/mL)"
+        },
+        {
+          "gfr": "10–29",
+          "minGfr": 10,
+          "maxGfr": 30,
+          "doseAdjustment": "15–20 mg/kg (Single dose)",
+          "freq": "ตามระดับ TDM",
+          "clinicalNote": "ให้ single dose แล้วเจาะระดับยาก่อนให้ dose ถัดไป (Trough < 2.5–5 mcg/mL)"
+        },
+        {
+          "gfr": "< 10 / HD",
+          "minGfr": 0,
+          "maxGfr": 10,
+          "doseAdjustment": "7.5–10 mg/kg หลัง HD",
+          "freq": "ตามระดับ TDM",
+          "clinicalNote": "ให้ยาหลังฟอกไต HD และติดตามระดับยาอย่างใกล้ชิด"
+        }
+      ]
+    },
+    {
+      "key": "gentamicin-iv",
+      "drug": "Gentamicin",
+      "name": "Gentamicin IV",
+      "preparation": "Vials 20 mg / 2 mL ; 80 mg / 2 mL (40 mg/mL)",
+      "note": "5–7.5 mg/kg/day IV OD (extended interval once daily) or 2–2.5 mg/kg q8h ⚠️ Max 300 mg/day ; Therapeutic drug monitoring required. Adjust for renal impairment.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 5,
+      "doseMaxMgPerKg": 7.5,
+      "maxPerDoseMg": 300,
+      "maxPerDayMg": 300,
+      "freq": "OD",
+      "route": "IV",
+      "renalAdjust": true,
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Garamycin",
+        "Aminoglycoside"
+      ],
+      "renalDosing": [
+        {
+          "gfr": "> 50",
+          "minGfr": 50,
+          "maxGfr": 999,
+          "doseAdjustment": "ขนาดยาปกติ 5–7.5 mg/kg (หรือ 2–2.5 mg/kg q8h)",
+          "freq": "q 24 hr",
+          "clinicalNote": "Extended interval วันละ 1 ครั้ง"
+        },
+        {
+          "gfr": "30–50",
+          "minGfr": 30,
+          "maxGfr": 50,
+          "doseAdjustment": "5–7.5 mg/kg",
+          "freq": "q 36–48 hr",
+          "clinicalNote": "ขยายระยะห่างเป็นทุก 36–48 ชม. (หรือตรวจระดับ TDM Trough < 1 mcg/mL)"
+        },
+        {
+          "gfr": "10–29",
+          "minGfr": 10,
+          "maxGfr": 30,
+          "doseAdjustment": "5–7.5 mg/kg (Single dose)",
+          "freq": "ตามระดับ TDM",
+          "clinicalNote": "ให้ single dose แล้วเจาะระดับยาก่อนให้ dose ถัดไป (Trough < 1 mcg/mL)"
+        },
+        {
+          "gfr": "< 10 / HD",
+          "minGfr": 0,
+          "maxGfr": 10,
+          "doseAdjustment": "1–2 mg/kg หลัง HD",
+          "freq": "ตามระดับ TDM",
+          "clinicalNote": "ให้ยาหลังฟอกไต HD และติดตามระดับยาอย่างใกล้ชิด"
+        }
+      ]
+    },
+    {
+      "key": "ampicillin-iv",
+      "drug": "Ampicillin",
+      "name": "Ampicillin IV",
+      "preparation": "Vials 500 mg, 1 g",
+      "note": "25–50 mg/kg/dose IV q6h (100–200 mg/kg/day) ; Meningitis / Severe Listeria 50–100 mg/kg/dose q6h (200–400 mg/kg/day) ⚠️ Max 2000 mg/dose",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 25,
+      "doseMaxMgPerKg": 50,
+      "maxPerDoseMg": 2000,
+      "maxPerDayMg": 12000,
+      "freq": "q 6 hr",
+      "route": "IV",
+      "renalAdjust": true,
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Omnipen",
+        "Ampicillin sodium"
+      ],
+      "renalDosing": [
+        {
+          "gfr": "> 50",
+          "minGfr": 50,
+          "maxGfr": 999,
+          "doseAdjustment": "ขนาดยาปกติ 25–50 mg/kg",
+          "freq": "q 6 hr",
+          "clinicalNote": "ระยะเวลาการให้ยาปกติ (เยื่อหุ้มสมองอักเสบให้ 50–100 mg/kg q6h)"
+        },
+        {
+          "gfr": "30–50",
+          "minGfr": 30,
+          "maxGfr": 50,
+          "doseAdjustment": "25–50 mg/kg",
+          "freq": "q 6–8 hr",
+          "clinicalNote": "ขยายระยะห่างเป็นทุก 6–8 ชม."
+        },
+        {
+          "gfr": "10–29",
+          "minGfr": 10,
+          "maxGfr": 30,
+          "doseAdjustment": "25–50 mg/kg",
+          "freq": "q 8–12 hr",
+          "clinicalNote": "ขยายระยะห่างเป็นทุก 8–12 ชม."
+        },
+        {
+          "gfr": "< 10 / HD",
+          "minGfr": 0,
+          "maxGfr": 10,
+          "doseAdjustment": "25–50 mg/kg",
+          "freq": "q 12–24 hr",
+          "clinicalNote": "ขยายระยะห่างเป็นทุก 12–24 ชม. (ให้ยาหลังฟอกไต HD)"
+        }
+      ]
+    },
+    {
+      "key": "cefepime-iv",
+      "drug": "Cefepime",
+      "name": "Cefepime IV",
+      "preparation": "Vials 1 g, 2 g",
+      "note": "50 mg/kg/dose IV q8h (150 mg/kg/day) for febrile neutropenia, Pseudomonas, severe pneumonia, meningitis ⚠️ Max 2000 mg/dose",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 50,
+      "doseMaxMgPerKg": 50,
+      "maxPerDoseMg": 2000,
+      "maxPerDayMg": 6000,
+      "freq": "q 8 hr",
+      "route": "IV",
+      "renalAdjust": true,
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Maxipime",
+        "4th gen ceph"
+      ],
+      "renalDosing": [
+        {
+          "gfr": "> 50",
+          "minGfr": 50,
+          "maxGfr": 999,
+          "doseAdjustment": "ขนาดยาปกติ 50 mg/kg",
+          "freq": "q 8 hr",
+          "clinicalNote": "ขนาดยาและระยะเวลาปกติ"
+        },
+        {
+          "gfr": "30–50",
+          "minGfr": 30,
+          "maxGfr": 50,
+          "doseAdjustment": "50 mg/kg",
+          "freq": "q 12 hr",
+          "clinicalNote": "ขยายระยะห่างเป็นทุก 12 ชม."
+        },
+        {
+          "gfr": "11–29",
+          "minGfr": 11,
+          "maxGfr": 30,
+          "doseAdjustment": "50 mg/kg",
+          "freq": "q 24 hr",
+          "clinicalNote": "ขยายระยะห่างเป็นทุก 24 ชม."
+        },
+        {
+          "gfr": "< 11 / HD",
+          "minGfr": 0,
+          "maxGfr": 11,
+          "doseAdjustment": "ลดขนาดยาเหลือ 25 mg/kg",
+          "freq": "q 24 hr",
+          "clinicalNote": "ลดขนาดเหลือ 25 mg/kg ทุก 24 ชม. (ให้ supplemental dose หลัง HD)"
+        }
+      ]
+    },
+    {
+      "key": "meropenem-iv",
+      "drug": "Meropenem",
+      "name": "Meropenem IV",
+      "preparation": "Vials 500 mg, 1 g",
+      "note": "10–20 mg/kg/dose IV q8h (mild/mod infections, max 1000 mg/dose) ; 40 mg/kg/dose IV q8h (120 mg/kg/day for meningitis, severe sepsis, pseudomonas) ⚠️ Max 2000 mg/dose",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 20,
+      "doseMaxMgPerKg": 40,
+      "maxPerDoseMg": 2000,
+      "maxPerDayMg": 6000,
+      "freq": "q 8 hr",
+      "route": "IV",
+      "renalAdjust": true,
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Meronem",
+        "Carbapenem"
+      ],
+      "renalDosing": [
+        {
+          "gfr": "> 50",
+          "minGfr": 50,
+          "maxGfr": 999,
+          "doseAdjustment": "ขนาดยาปกติ 100% (20–40 mg/kg)",
+          "freq": "q 8 hr",
+          "clinicalNote": "ระยะเวลาการให้ยาปกติ"
+        },
+        {
+          "gfr": "26–50",
+          "minGfr": 26,
+          "maxGfr": 50,
+          "doseAdjustment": "ขนาดยาปกติ 100% (20–40 mg/kg)",
+          "freq": "q 12 hr",
+          "clinicalNote": "ขยายระยะห่างเป็นทุก 12 ชม."
+        },
+        {
+          "gfr": "10–25",
+          "minGfr": 10,
+          "maxGfr": 26,
+          "doseAdjustment": "ลดขนาดยาลง 50% (10–20 mg/kg)",
+          "freq": "q 12 hr",
+          "clinicalNote": "ลดขนาดยาลง 50% และให้ทุก 12 ชม."
+        },
+        {
+          "gfr": "< 10 / HD",
+          "minGfr": 0,
+          "maxGfr": 10,
+          "doseAdjustment": "ลดขนาดยาลง 50% (10–20 mg/kg)",
+          "freq": "q 24 hr",
+          "clinicalNote": "ลดขนาด 50% ทุก 24 ชม. (ให้ยาหลังฟอกไต HD)"
+        }
+      ]
+    },
+    {
+      "key": "imipenem-cilastatin-iv",
+      "drug": "Imipenem/Cilastatin",
+      "name": "Imipenem/Cilastatin IV",
+      "preparation": "Vials 500 mg / 500 mg",
+      "note": "15–25 mg/kg/dose IV q6h (60–100 mg/kg/day) ⚠️ Max 4000 mg/day ; Avoid in CNS infection / seizure risk (use Meropenem instead)",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 15,
+      "doseMaxMgPerKg": 25,
+      "maxPerDoseMg": 1000,
+      "maxPerDayMg": 4000,
+      "freq": "q 6 hr",
+      "route": "IV",
+      "renalAdjust": true,
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Tienam",
+        "Carbapenem"
+      ],
+      "renalDosing": [
+        {
+          "gfr": "> 50",
+          "minGfr": 50,
+          "maxGfr": 999,
+          "doseAdjustment": "ขนาดยาปกติ 15–25 mg/kg",
+          "freq": "q 6 hr",
+          "clinicalNote": "ระยะเวลาการให้ยาปกติ (ระวังชักหากระดับยาสะสมสูง)"
+        },
+        {
+          "gfr": "30–50",
+          "minGfr": 30,
+          "maxGfr": 50,
+          "doseAdjustment": "10–15 mg/kg",
+          "freq": "q 8 hr",
+          "clinicalNote": "ลดขนาดยาและขยายระยะห่างเป็นทุก 8 ชม."
+        },
+        {
+          "gfr": "10–29",
+          "minGfr": 10,
+          "maxGfr": 30,
+          "doseAdjustment": "7.5–12.5 mg/kg",
+          "freq": "q 12 hr",
+          "clinicalNote": "ลดขนาดยาและขยายระยะห่างเป็นทุก 12 ชม."
+        },
+        {
+          "gfr": "< 10 / HD",
+          "minGfr": 0,
+          "maxGfr": 10,
+          "doseAdjustment": "7.5 mg/kg",
+          "freq": "q 12–24 hr",
+          "clinicalNote": "ลดขนาดยา (ให้ยาหลังฟอกไต HD)"
+        }
+      ]
+    },
+    {
+      "key": "piperacillin-tazobactam-iv",
+      "drug": "Piperacillin/Tazobactam",
+      "name": "Piperacillin/Tazobactam IV",
+      "preparation": "Vials 2.25 g (2g Piperacillin / 0.25g Tazobactam), 4.5 g (4g Piperacillin / 0.5g Tazobactam)",
+      "note": "Dose based on Piperacillin component: 66.6–100 mg/kg/dose IV q8h (200–300 mg/kg/day) ; Severe sepsis/Pseudomonas: 100 mg/kg/dose q8h ⚠️ Max 4000 mg Piperacillin/dose (4.5 g total product)",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 66.6,
+      "doseMaxMgPerKg": 100,
+      "maxPerDoseMg": 4000,
+      "maxPerDayMg": 12000,
+      "freq": "q 8 hr",
+      "route": "IV",
+      "renalAdjust": true,
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Tazocin",
+        "Pip-Tazo",
+        "Zosyn"
+      ],
+      "renalDosing": [
+        {
+          "gfr": "> 50",
+          "minGfr": 50,
+          "maxGfr": 999,
+          "doseAdjustment": "ขนาดยาปกติ 66.6–100 mg/kg (Piperacillin)",
+          "freq": "q 8 hr",
+          "clinicalNote": "ระยะเวลาการให้ยาปกติ (สูงสุด 4000 mg Piperacillin/dose [4.5 g total product])"
+        },
+        {
+          "gfr": "20–50",
+          "minGfr": 20,
+          "maxGfr": 50,
+          "doseAdjustment": "66.6–80 mg/kg (Piperacillin) (200 mg/kg/day)",
+          "freq": "q 8 hr",
+          "maxPerDoseMg": 2000,
+          "clinicalNote": "ลดขนาดลง (สูงสุด 2000 mg Piperacillin/dose [2.25 g total product] ทุก 8 ชม.)"
+        },
+        {
+          "gfr": "< 20 / HD",
+          "minGfr": 0,
+          "maxGfr": 20,
+          "doseAdjustment": "50–66.6 mg/kg (Piperacillin) (150 mg/kg/day)",
+          "freq": "q 8 hr",
+          "maxPerDoseMg": 2000,
+          "clinicalNote": "ลดขนาดลง (สูงสุด 2000 mg Piperacillin/dose [2.25 g total product] ทุก 8 ชม. ; วันที่ฟอกไตให้เพิ่ม 667 mg Piperacillin [0.75 g total product] หลัง HD)"
+        }
+      ]
+    },
+    {
+      "key": "amoxicillin-clav-es-600",
+      "drug": "Amoxicillin/Clavulanate ES-600",
+      "name": "Amox/Clav ES-600 syrup (600/42.9 mg per 5 mL)",
+      "preparation": "600 mg Amox / 5 mL (120 mg/mL)",
+      "note": "High-dose Amox for Acute Otitis Media (AOM): 45 mg/kg/dose of Amox PO BID (90 mg/kg/day) × 10 days ⚠️ Max 4000 mg/day of Amox",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 45,
+      "doseMaxMgPerKg": 45,
+      "maxPerDoseMg": 2000,
+      "maxPerDayMg": 4000,
+      "freq": "bid",
+      "route": "PO",
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Augmentin ES",
+        "Augmentin 600",
+        "Amox-clav 600"
+      ]
+    },
+    {
+      "key": "cotrimoxazole-iv",
+      "drug": "Co-trimoxazole IV",
+      "name": "Co-trimoxazole IV (TMP/SMX)",
+      "preparation": "Ampoule 5 mL (80 mg TMP + 400 mg SMX = 16 mg/mL TMP)",
+      "note": "Dose based on TMP component: 4–6 mg/kg/dose IV q12h (8–12 mg/kg/day TMP) ; PJP treatment: 15–20 mg/kg/day TMP divided q6–8h ⚠️ Max 320 mg/day of TMP",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 4,
+      "doseMaxMgPerKg": 6,
+      "maxPerDoseMg": 160,
+      "maxPerDayMg": 320,
+      "freq": "q 12 hr",
+      "route": "IV",
+      "renalAdjust": true,
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Bactrim IV",
+        "Septra IV",
+        "TMP-SMX IV"
+      ],
+      "renalDosing": [
+        {
+          "gfr": "> 30",
+          "minGfr": 30,
+          "maxGfr": 999,
+          "doseAdjustment": "ขนาดยาปกติ 4–6 mg/kg (TMP)",
+          "freq": "q 12 hr",
+          "clinicalNote": "ระยะเวลาการให้ยาปกติ (PJP 15–20 mg/kg/day แบ่ง q6–8h)"
+        },
+        {
+          "gfr": "15–30",
+          "minGfr": 15,
+          "maxGfr": 30,
+          "doseAdjustment": "ลดขนาดยาลง 50% (2–3 mg/kg TMP)",
+          "freq": "q 12 hr",
+          "clinicalNote": "ลดขนาดยาลง 50% หรือให้ 4–6 mg/kg ทุก 24 ชม."
+        },
+        {
+          "gfr": "< 15 / HD",
+          "minGfr": 0,
+          "maxGfr": 15,
+          "doseAdjustment": "ลดขนาดยาลง 50–75% หรือหลีกเลี่ยง",
+          "freq": "q 24 hr",
+          "clinicalNote": "ไม่แนะนำให้ใช้ ยกเว้นจำเป็นอย่างยิ่ง (ให้ยาหลัง HD)"
+        }
+      ]
+    },
+    {
+      "key": "mebendazole-po",
+      "drug": "Mebendazole",
+      "name": "Mebendazole PO (Syrup / Tab)",
+      "preparation": "Syrup 100 mg / 5 mL ; Tab 100 mg, 500 mg",
+      "note": "Age > 2 yr: 100 mg (5 mL) with meal single dose for Enterobius (pinworm, repeat in 2 wk) ; 100 mg BID × 3 days for Ascaris, Hookworm, Trichuris. (Contraindicated in pregnancy / age < 1 yr)",
+      "unit": "mg",
+      "unitType": "perDose",
+      "fixedDose": {
+        "doseMg": 100
+      },
+      "freq": "single dose or bid",
+      "route": "PO",
+      "minAgeYr": 2,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Fugacar",
+        "Anthelmintic"
+      ]
+    },
+    {
+      "key": "praziquantel-po",
+      "drug": "Praziquantel",
+      "name": "Praziquantel PO (Tab 600 mg)",
+      "preparation": "Tab 600 mg",
+      "note": "Tapeworms (Taenia): 10 mg/kg single dose ; Liver fluke (Opisthorchiasis): 25 mg/kg/dose TID × 1 day ; Cysticercosis: 25 mg/kg/dose TID × 10–14 days. Take with water and meals. ⚠️ Max 6000 mg/day",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 10,
+      "doseMaxMgPerKg": 25,
+      "maxPerDoseMg": 2000,
+      "maxPerDayMg": 6000,
+      "freq": "tid",
+      "route": "PO",
+      "minAgeYr": 4,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Biltricide",
+        "Distocide",
+        "Anthelmintic"
+      ]
+    },
+    {
+      "key": "favipiravir-day1-loading-po",
+      "drug": "Favipiravir (Day 1 Loading)",
+      "name": "Favipiravir (Day 1 Loading) PO",
+      "preparation": "Tab 200 mg",
+      "note": "Pediatric Influenza/Viral (Thai DMS): Day 1 loading 30–35 mg/kg/dose BID (2 doses 12 hr apart) ⚠️ Max 1800 mg/dose (3600 mg/day). Crush in water or syrup. Switch to maintenance on Day 2.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 30,
+      "doseMaxMgPerKg": 35,
+      "maxPerDoseMg": 1800,
+      "maxPerDayMg": 3600,
+      "freq": "bid (Day 1 load, then switch to maint)",
+      "route": "PO",
+      "minAgeYr": 1,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Avigan Loading",
+        "Favi Loading",
+        "favipiravir-po"
+      ]
+    },
+    {
+      "key": "favipiravir-days2-5-maint-po",
+      "drug": "Favipiravir (Days 2–5 Maint)",
+      "name": "Favipiravir (Days 2–5 Maint) PO",
+      "preparation": "Tab 200 mg",
+      "note": "Pediatric Influenza/Viral (Thai DMS): Days 2–5 maintenance 15 mg/kg/dose BID (total 4 days) ⚠️ Max 800 mg/dose (1600 mg/day). Crush in water or syrup.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 15,
+      "doseMaxMgPerKg": 15,
+      "maxPerDoseMg": 800,
+      "maxPerDayMg": 1600,
+      "freq": "bid (Days 2–5)",
+      "route": "PO",
+      "minAgeYr": 1,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Avigan Maint",
+        "Favi Maint",
+        "favipiravir-po"
       ]
     }
   ],
@@ -4510,6 +5592,15 @@
       "loe": "Class I / IIa (Level of Evidence B-NR / C-LD)",
       "category": "Hematology & Critical Care",
       "summary": "Pediatric blood component transfusion: Estimated Blood Volume (EBV) by age; PRBC transfusion volume = Weight (kg) x (Target Hb - Current Hb) x 3 mL/kg; Platelet transfusion 5–10 mL/kg; FFP 10–15 mL/kg; Cryoprecipitate 5–10 mL/kg; Balanced Massive Transfusion Protocol (MTP 1:1:1) + early Tranexamic Acid (TXA 15 mg/kg loading, then 2 mg/kg/hr over 8 hr)."
+    },
+    "peddose": {
+      "title": "Pediatric Medication Dosing Reference (Peddose.com) & Khon Kaen University Drug Practice Committee (DPC-KKU)",
+      "organization": "Peddose.com / Faculty of Medicine Khon Kaen University (DPC-KKU) / Thai DMS",
+      "year": 2026,
+      "journal": "Peddose.com Clinical Formulary / DPC-KKU Pediatric Handbook",
+      "loe": "Class I / IIa (Level of Evidence B)",
+      "category": "Pediatric Medication Formulary",
+      "summary": "Comprehensive Thai hospital pediatric medication preparations and dosing regimens: Standard local syrup strengths (Amox/Clav ES-600, Paracetamol 160 mg/5 mL, Buscopan 5 mg/5 mL, Ambroxol 30 mg/5 mL) and acute inpatient/ED antimicrobials (Amikacin extended interval, Gentamicin OD, Cefepime, Meropenem, Pip/Tazo, Ampicillin IV)."
     }
   },
   "airway": {
