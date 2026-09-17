@@ -489,6 +489,12 @@ test('Renal Dosing: calcPatientRenalDose for Meropenem & Cefepime 10 kg patient'
   assert(cefepime && cefepime.renalDosing, 'Cefepime must have renalDosing');
   const cefFail = cefepime.renalDosing.find(t => t.maxGfr < 11);
   assert.strictEqual(calcPatientRenalDose(cefFail, cefepime, 10), '250 mg q 24 hr');
+
+  // Ceftazidime: 50 kg in q 8 hr tier -> bw * 50 = 2500 mg, but maxPerDayMg = 6000 mg / 3 = 2000 mg cap
+  const ceftaz = dataset.pediatricATB.find(d => d.key === 'ceftazidime-iv-im');
+  assert(ceftaz && ceftaz.renalDosing, 'Ceftazidime must have renalDosing');
+  const ceftazTierNormal = ceftaz.renalDosing.find(t => t.minGfr >= 50);
+  assert.strictEqual(calcPatientRenalDose(ceftazTierNormal, ceftaz, 50), '1665–2000 mg q 8 hr');
 });
 
 test('Renal UI Engine: Meropenem renders expandable renal panel and highlights active tier with eGFR', () => {
@@ -507,6 +513,54 @@ test('Renal UI Engine: Meropenem renders expandable renal panel and highlights a
   assert(atbOut.innerHTML.includes('active-tier'), 'Matching tier row must receive .active-tier class');
   assert(atbOut.innerHTML.includes('41.3'), 'Calculated eGFR 41.3 must be displayed');
   assert(atbOut.innerHTML.includes('Tier ตรงกับ eGFR'), 'Checkmark badge must be rendered on active tier');
+});
+
+test('Renal UI Engine: eGFR 50.0 boundary matches only the first tier without dual highlight', () => {
+  document.getElementById('weight').value = '10';
+  document.getElementById('length').value = '100';
+  window.eval('onWeightChange()');
+  document.getElementById('atbDrug').value = 'ceftazidime-iv-im';
+  // Ht 100, SCr 0.826 -> eGFR = 0.413 * 100 / 0.826 = 50.0
+  window.eval('onRenalSCrInput("0.826")');
+  const atbOut = document.getElementById('atbOut');
+  const matches = (atbOut.innerHTML.match(/active-tier/g) || []).length;
+  assert.strictEqual(matches, 1, 'Only one tier must have active-tier class at eGFR boundary 50.0');
+});
+
+test('Medication Age Limit: Ambroxol for patient < 2 yr suppresses dose and shows contraindication warning', () => {
+  document.getElementById('weight').value = '10';
+  document.getElementById('age').value = '1';
+  window.eval('gAgeUnit = "yr"');
+  window.eval('estimateFromAge()');
+  document.getElementById('doseDrug').value = 'ambroxol-syrup-30-mg-5-ml';
+  window.eval('calcDose()');
+  const doseOut = document.getElementById('doseOut');
+  assert(doseOut.innerHTML.includes('Age Restriction / Contraindicated'), 'Contraindication warning must be displayed');
+  assert(!doseOut.innerHTML.includes('DOSE PER SINGLE DOSE'), 'Calculated dosage cards must be suppressed');
+});
+
+test('Dose Bands: Desloratadine for 5.92 yr child matches 1.25 mg band without gap', () => {
+  document.getElementById('weight').value = '20';
+  document.getElementById('age').value = '5.92';
+  window.eval('gAgeUnit = "yr"');
+  window.eval('estimateFromAge()');
+  document.getElementById('doseDrug').value = 'desloratadine-syrup-0-5-mg-ml';
+  window.eval('calcDose()');
+  const doseOut = document.getElementById('doseOut');
+  assert(doseOut.innerHTML.includes('1.25 mg'), '5.92 yr child must match 1.25 mg dose band');
+});
+
+test('Dose Bands: Simethicone / Dicyclomine renders volume in mL (not mg)', () => {
+  document.getElementById('weight').value = '12';
+  document.getElementById('age').value = '2';
+  window.eval('gAgeUnit = "yr"');
+  window.eval('estimateFromAge()');
+  document.getElementById('doseDrug').value = 'simethicone-dicyclomine-syrup';
+  window.eval('calcDose()');
+  const doseOut = document.getElementById('doseOut');
+  assert(doseOut.innerHTML.includes('2.5 mL'), 'Simethicone for 2 yr old must render 2.5 mL');
+  assert(!doseOut.innerHTML.includes('2.5 mg'), 'Simethicone must NOT render 2.5 mg');
+  assert(doseOut.innerHTML.includes('10.0 mL'), 'Total daily volume for QID must be 10.0 mL');
 });
 
 // 10. Test Seizure Protocol Dosing

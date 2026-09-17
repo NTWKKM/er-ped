@@ -1535,7 +1535,7 @@
       "doseBands": [
         {
           "minAgeYr": 2,
-          "maxAgeYr": 5.9,
+          "maxAgeYr": 6,
           "maxKg": 30,
           "doseMg": 5
         },
@@ -1573,17 +1573,17 @@
       "doseBands": [
         {
           "minAgeYr": 0.5,
-          "maxAgeYr": 0.99,
+          "maxAgeYr": 1,
           "doseMg": 1
         },
         {
           "minAgeYr": 1,
-          "maxAgeYr": 5.9,
+          "maxAgeYr": 6,
           "doseMg": 1.25
         },
         {
           "minAgeYr": 6,
-          "maxAgeYr": 11.9,
+          "maxAgeYr": 12,
           "doseMg": 2.5
         },
         {
@@ -1615,12 +1615,12 @@
       "doseBands": [
         {
           "minAgeYr": 0.5,
-          "maxAgeYr": 1.99,
+          "maxAgeYr": 2,
           "doseMg": 15
         },
         {
           "minAgeYr": 2,
-          "maxAgeYr": 11.9,
+          "maxAgeYr": 12,
           "doseMg": 30
         },
         {
@@ -1773,13 +1773,13 @@
       "doseBands": [
         {
           "minAgeYr": 0.5,
-          "maxAgeYr": 3.99,
-          "doseMg": 2.5
+          "maxAgeYr": 4,
+          "doseMl": 2.5
         },
         {
           "minAgeYr": 4,
           "maxAgeYr": 12,
-          "doseMg": 5
+          "doseMl": 5
         }
       ],
       "freq": "qid",

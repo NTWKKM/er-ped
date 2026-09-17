@@ -1575,7 +1575,13 @@ function calcSchwartzEGFR(scr, ht) {
 
 function calcPatientRenalDose(tier, drug, bw) {
   if (!bw || bw <= 0) return (tier.doseAdjustment || '') + (tier.freq ? ' ' + tier.freq : '');
-  const cap = drug.maxPerDoseMg || Infinity;
+  let cap = drug.maxPerDoseMg || Infinity;
+  if (drug.maxPerDayMg && tier.freq) {
+    const n = dosesPerDayFromFreq(tier.freq);
+    if (n && n > 0) {
+      cap = Math.min(cap, drug.maxPerDayMg / n);
+    }
+  }
 
   // Range in mg/kg (e.g. "20–40 mg/kg")
   const mRange = (tier.doseAdjustment || '').match(/(\d+(?:\.\d+)?)\s*[–-]\s*(\d+(?:\.\d+)?)\s*mg\/kg/i);
@@ -1660,8 +1666,11 @@ function renderRenalAdjustmentBox(drug, bw, context) {
 
   let rowsHtml = '';
   if (renalTiers.length > 0) {
-    rowsHtml = renalTiers.map(t => {
-      const isMatch = (egfr !== null && egfr >= t.minGfr && egfr <= t.maxGfr);
+    const matchedTierIndex = (egfr !== null)
+      ? renalTiers.findIndex(t => egfr >= t.minGfr && egfr <= t.maxGfr)
+      : -1;
+    rowsHtml = renalTiers.map((t, idx) => {
+      const isMatch = (idx === matchedTierIndex);
       const rowClass = isMatch ? 'active-tier' : '';
       const patientDose = calcPatientRenalDose(t, drug, bw);
       const matchBadge = isMatch ? '<span style="display:inline-block; padding:1px 6px; font-size:10.5px; font-weight:800; border-radius:4px; background:var(--warning); color:#fff; margin-right:4px;">✓ Tier ตรงกับ eGFR</span>' : '';
@@ -1700,12 +1709,12 @@ function renderRenalAdjustmentBox(drug, bw, context) {
     <div class="schwartz-calc-bar">
       <div class="schwartz-input-group">
         <label for="scr_${context}">Serum Cr:</label>
-        <input type="number" id="scr_${context}" class="renal-scr-input" placeholder="0.6" step="0.01" min="0.1" max="15" value="${scrValStr}" oninput="onRenalSCrInput(this.value)" />
+        <input type="number" id="scr_${context}" class="renal-scr-input" placeholder="0.6" step="0.01" min="0.1" max="15" value="${scrValStr}" onchange="onRenalSCrInput(this.value)" />
         <span style="font-size:11px; color:var(--muted);">mg/dL</span>
       </div>
       <div class="schwartz-input-group">
         <label for="ht_${context}">Height (HT):</label>
-        <input type="number" id="ht_${context}" placeholder="cm" step="0.1" min="30" max="220" value="${htValStr}" oninput="onRenalHtInput(this.value)" />
+        <input type="number" id="ht_${context}" placeholder="cm" step="0.1" min="30" max="220" value="${htValStr}" onchange="onRenalHtInput(this.value)" />
         <span style="font-size:11px; color:var(--muted);">cm</span>
       </div>
       <div class="schwartz-result-badge" id="gfrBadge_${context}">
@@ -1747,6 +1756,40 @@ function calcDose(){
   const outEl = document.getElementById('doseOut');
   if (!drug){ if(outEl) outEl.textContent='No dataset available'; return; }
 
+  const ageMismatch = (ageYr != null) && (
+    (drug.minAgeYr != null && ageYr < drug.minAgeYr) ||
+    (drug.maxAgeYr != null && ageYr > drug.maxAgeYr)
+  );
+
+  if (ageMismatch) {
+    let reqStr = '';
+    if (drug.minAgeYr != null && drug.maxAgeYr != null) {
+      reqStr = `${drug.minAgeYr}–${drug.maxAgeYr} ปี`;
+    } else if (drug.minAgeYr != null) {
+      reqStr = `≥ ${drug.minAgeYr} ปี`;
+    } else if (drug.maxAgeYr != null) {
+      reqStr = `≤ ${drug.maxAgeYr} ปี`;
+    }
+    const curAgeStr = ageYr >= 1 ? `${ageYr.toFixed(1)} ปี` : `${(ageYr * 12).toFixed(1)} เดือน`;
+
+    const warningCardHtml = `
+<div style="margin-bottom:10px;">
+  <strong style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--danger);"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ${escapeHtml(drug.name || drug.drug)}</strong>
+</div>
+<div class="card" style="border: 2px solid var(--danger); background: var(--danger-subtle, rgba(239, 68, 68, 0.08)); padding: 14px 16px; border-radius: 8px;">
+  <div style="color: var(--danger); font-weight: 800; font-size: 14px; margin-bottom: 6px;">
+    ⚠️ ไม่แนะนำให้ใช้ในผู้ป่วยช่วงอายุนี้ (Age Restriction / Contraindicated)
+  </div>
+  <div style="font-size: 13px; color: var(--text); line-height: 1.5;">
+    ยานี้มีข้อบ่งใช้เฉพาะผู้ป่วยอายุ <strong>${reqStr}</strong> (อายุปัจจุบันของผู้ป่วย: <strong>${curAgeStr}</strong>)
+  </div>
+  ${drug.note ? `<div style="margin-top: 8px; font-size: 12px; color: var(--muted); border-top: 1px dashed var(--border); padding-top: 6px;"><strong>Clinical Note:</strong> ${escapeHtml(drug.note)}</div>` : ''}
+</div>
+    `;
+    if (outEl) outEl.innerHTML = warningCardHtml;
+    return;
+  }
+
   const unit = drug.unit || 'mg/kg';
   let minPerKg = drug.doseMinMgPerKg ?? drug.dose ?? null;
   let maxPerKg = drug.doseMaxMgPerKg ?? drug.dose ?? null;
@@ -1756,6 +1799,7 @@ function calcDose(){
   const mgPerTab = strength.mgPerTab || null;
 
   let perDoseMinMg = null, perDoseMaxMg = null, perDayMinMg = null, perDayMaxMg = null;
+  let perDoseMinMl = null, perDoseMaxMl = null;
   let perDoseMinUnits = null, perDoseMaxUnits = null;
   let isCappedPerDose = false, isCappedPerDay = false;
   let bandNotice = '';
@@ -1766,11 +1810,14 @@ function calcDose(){
       perDoseMinMg = perDoseMaxMg = drug.fixedDose.doseMg;
     }
   }
-  // 2. Handle Dose Bands (e.g. Oseltamivir, Nystatin)
+  // 2. Handle Dose Bands (e.g. Oseltamivir, Nystatin, Antihistamines)
   else if (Array.isArray(drug.doseBands)) {
-    const matchedBand = drug.doseBands.find(b => {
+    const matchedBand = drug.doseBands.find((b, idx, arr) => {
       if (b.minAgeYr != null && (ageYr == null || ageYr < b.minAgeYr)) return false;
-      if (b.maxAgeYr != null && ageYr != null && ageYr > b.maxAgeYr) return false;
+      if (b.maxAgeYr != null && ageYr != null) {
+        const hasNextAdjacent = arr.some(other => other.minAgeYr === b.maxAgeYr);
+        if (hasNextAdjacent ? ageYr >= b.maxAgeYr : ageYr > b.maxAgeYr) return false;
+      }
       if (b.minKg != null && (bw == null || bw < b.minKg)) return false;
       if (b.maxKg != null && bw != null && bw > b.maxKg) return false;
       return true;
@@ -1780,6 +1827,11 @@ function calcDose(){
       if (matchedBand.doseMg != null) {
         perDoseMinMg = perDoseMaxMg = matchedBand.doseMg;
       }
+      if (matchedBand.doseMl != null) {
+        perDoseMinMl = perDoseMaxMl = matchedBand.doseMl;
+      }
+      if (matchedBand.minMl != null) perDoseMinMl = matchedBand.minMl;
+      if (matchedBand.maxMl != null) perDoseMaxMl = matchedBand.maxMl;
       if (matchedBand.doseUnits != null) {
         perDoseMinUnits = perDoseMaxUnits = matchedBand.doseUnits;
       }
@@ -1851,6 +1903,10 @@ function calcDose(){
     const mlTxt = toRangeTxt(minMl, maxMl, n=>fmtMl(n));
     if (mlTxt !== '—') perDoseMlTxt = `${mlTxt} mL`;
   }
+  if (perDoseMinMl != null || perDoseMaxMl != null) {
+    const mlTxt = toRangeTxt(perDoseMinMl, perDoseMaxMl, n=>fmtMl(n));
+    if (mlTxt !== '—') perDoseMlTxt = `${mlTxt} mL`;
+  }
   if (mgPerTab){
     const minTab = (perDoseMinMg!=null)? perDoseMinMg / mgPerTab : null;
     const maxTab = (perDoseMaxMg!=null)? perDoseMaxMg / mgPerTab : null;
@@ -1861,9 +1917,21 @@ function calcDose(){
   let perDoseMgTxt = toRangeTxt(perDoseMinMg, perDoseMaxMg, n=>`${fmtMg(n)} mg`);
   if (unit === 'units' || perDoseMinUnits != null || perDoseMaxUnits != null) {
     perDoseMgTxt = toRangeTxt(perDoseMinUnits, perDoseMaxUnits, n=>`${n.toLocaleString()} U`);
+  } else if (perDoseMinMg == null && perDoseMaxMg == null && (perDoseMinMl != null || perDoseMaxMl != null)) {
+    perDoseMgTxt = perDoseMlTxt;
+    perDoseMlTxt = '';
   }
 
-  const perDayMgTxt  = toRangeTxt(perDayMinMg,  perDayMaxMg,  n=>`${fmtMg(n)} mg`);
+  let perDayMgTxt  = toRangeTxt(perDayMinMg,  perDayMaxMg,  n=>`${fmtMg(n)} mg`);
+  if (perDayMinMg == null && perDayMaxMg == null && (perDoseMinMl != null || perDoseMaxMl != null)) {
+    const nPerDay = dosesPerDayFromFreq(drug.freq);
+    if (nPerDay) {
+      const minDayMl = perDoseMinMl != null ? perDoseMinMl * nPerDay : null;
+      const maxDayMl = perDoseMaxMl != null ? perDoseMaxMl * nPerDay : null;
+      const dayMlTxt = toRangeTxt(minDayMl, maxDayMl, n => fmtMl(n));
+      if (dayMlTxt !== '—') perDayMgTxt = `${dayMlTxt} mL`;
+    }
+  }
 
   // Build Hero Metric Cards
   const title = (drug.name || drug.drug) || 'Medication';
@@ -1927,6 +1995,40 @@ function calcATB(){
   const outEl = document.getElementById('atbOut');
   if (!drug){ if(outEl) outEl.textContent='No dataset available'; return; }
 
+  const ageMismatch = (ageYr != null) && (
+    (drug.minAgeYr != null && ageYr < drug.minAgeYr) ||
+    (drug.maxAgeYr != null && ageYr > drug.maxAgeYr)
+  );
+
+  if (ageMismatch) {
+    let reqStr = '';
+    if (drug.minAgeYr != null && drug.maxAgeYr != null) {
+      reqStr = `${drug.minAgeYr}–${drug.maxAgeYr} ปี`;
+    } else if (drug.minAgeYr != null) {
+      reqStr = `≥ ${drug.minAgeYr} ปี`;
+    } else if (drug.maxAgeYr != null) {
+      reqStr = `≤ ${drug.maxAgeYr} ปี`;
+    }
+    const curAgeStr = ageYr >= 1 ? `${ageYr.toFixed(1)} ปี` : `${(ageYr * 12).toFixed(1)} เดือน`;
+
+    const warningCardHtml = `
+<div style="margin-bottom:10px;">
+  <strong style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--danger);"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ${escapeHtml(drug.name || drug.drug || 'Antibiotic')}</strong>
+</div>
+<div class="card" style="border: 2px solid var(--danger); background: var(--danger-subtle, rgba(239, 68, 68, 0.08)); padding: 14px 16px; border-radius: 8px;">
+  <div style="color: var(--danger); font-weight: 800; font-size: 14px; margin-bottom: 6px;">
+    ⚠️ ไม่แนะนำให้ใช้ในผู้ป่วยช่วงอายุนี้ (Age Restriction / Contraindicated)
+  </div>
+  <div style="font-size: 13px; color: var(--text); line-height: 1.5;">
+    ยานี้มีข้อบ่งใช้เฉพาะผู้ป่วยอายุ <strong>${reqStr}</strong> (อายุปัจจุบันของผู้ป่วย: <strong>${curAgeStr}</strong>)
+  </div>
+  ${drug.note ? `<div style="margin-top: 8px; font-size: 12px; color: var(--muted); border-top: 1px dashed var(--border); padding-top: 6px;"><strong>Clinical Note:</strong> ${escapeHtml(drug.note)}</div>` : ''}
+</div>
+    `;
+    if (outEl) outEl.innerHTML = warningCardHtml;
+    return;
+  }
+
   const minPerKg = (drug.doseMinMgPerKg != null) ? Number(drug.doseMinMgPerKg) : null;
   const maxPerKg = (drug.doseMaxMgPerKg != null) ? Number(drug.doseMaxMgPerKg) : null;
 
@@ -1942,9 +2044,12 @@ function calcATB(){
   if (drug.fixedDose && drug.fixedDose.doseMg != null) {
     perDoseMinMg = perDoseMaxMg = drug.fixedDose.doseMg;
   } else if (Array.isArray(drug.doseBands)) {
-    const matchedBand = drug.doseBands.find(b => {
+    const matchedBand = drug.doseBands.find((b, idx, arr) => {
       if (b.minAgeYr != null && (ageYr == null || ageYr < b.minAgeYr)) return false;
-      if (b.maxAgeYr != null && ageYr != null && ageYr > b.maxAgeYr) return false;
+      if (b.maxAgeYr != null && ageYr != null) {
+        const hasNextAdjacent = arr.some(other => other.minAgeYr === b.maxAgeYr);
+        if (hasNextAdjacent ? ageYr >= b.maxAgeYr : ageYr > b.maxAgeYr) return false;
+      }
       if (b.minKg != null && (bw == null || bw < b.minKg)) return false;
       if (b.maxKg != null && bw != null && bw > b.maxKg) return false;
       return true;
@@ -2252,6 +2357,31 @@ function copyEHROrder(module){
     const key = document.getElementById('doseDrug')?.value;
     const drug = (DS?.pediatricDose||[]).find(d=>d.key===key);
     if (drug) {
+      const ageYr = getAgeInYears();
+      if (ageYr != null && ((drug.minAgeYr != null && ageYr < drug.minAgeYr) || (drug.maxAgeYr != null && ageYr > drug.maxAgeYr))) {
+        showToast('คำเตือน: ผู้ป่วยอยู่นอกเกณฑ์อายุของยานี้ ไม่สามารถคัดลอกคำสั่งรักษาได้');
+        return;
+      }
+
+      if (Array.isArray(drug.doseBands)) {
+        const matchedBand = drug.doseBands.find((b, idx, arr) => {
+          if (b.minAgeYr != null && (ageYr == null || ageYr < b.minAgeYr)) return false;
+          if (b.maxAgeYr != null && ageYr != null) {
+            const hasNextAdjacent = arr.some(other => other.minAgeYr === b.maxAgeYr);
+            if (hasNextAdjacent ? ageYr >= b.maxAgeYr : ageYr > b.maxAgeYr) return false;
+          }
+          if (b.minKg != null && w < b.minKg) return false;
+          if (b.maxKg != null && w > b.maxKg) return false;
+          return true;
+        });
+        if (matchedBand && matchedBand.doseMl != null) {
+          orderStr = `[ER-PED] ${drug.drug || drug.name} ${fmtMl(matchedBand.doseMl)} mL ${drug.route || 'PO'} ${drug.freq || 'PRN'} [BW: ${w.toFixed(1)} kg]`;
+          copyToClipboard(orderStr);
+          showToast(`คัดลอกคำสั่ง ${drug.drug || drug.name} (${fmtMl(matchedBand.doseMl)} mL) แล้ว`);
+          return;
+        }
+      }
+
       const concOverride = parseFloat(document.getElementById('doseConc')?.value);
       const strength = parseStrength(drug.preparation || drug.name || '');
       const mgPerMl = concOverride > 0 ? concOverride : (strength.mgPerMl || null);
@@ -2278,6 +2408,12 @@ function copyEHROrder(module){
     const key = document.getElementById('atbDrug')?.value;
     const drug = (DS?.pediatricATB||[]).find(d=>d.key===key);
     if (drug) {
+      const ageYr = getAgeInYears();
+      if (ageYr != null && ((drug.minAgeYr != null && ageYr < drug.minAgeYr) || (drug.maxAgeYr != null && ageYr > drug.maxAgeYr))) {
+        showToast('คำเตือน: ผู้ป่วยอยู่นอกเกณฑ์อายุของยานี้ ไม่สามารถคัดลอกคำสั่งรักษาได้');
+        return;
+      }
+
       const form = parseFloat(document.getElementById('atbForm')?.value);
       // doseMaxMgPerKg is already a per-dose value in the ATB table (see calcATB
       // note above) — do not divide by frequency here.
