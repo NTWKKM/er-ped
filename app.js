@@ -46,7 +46,8 @@ let gUserABW = null;
 let gIBWSource = null; // 'length', 'age', 'bw', or null
 let gWeightSource = null; // 'manual' (real measured/reported ABW) or 'estimated' (Weech age-based)
 let gFluidType = 'NS';
-let gAgeUnit = 'yr'; // 'yr' or 'mo'
+var gAgeUnit = 'yr'; // 'yr' or 'mo'
+if (typeof window !== 'undefined') window.gAgeUnit = gAgeUnit;
 var gSex = 'male';
 if (typeof window !== 'undefined') window.gSex = gSex;
 var gSepsisMode = 'phoenix';

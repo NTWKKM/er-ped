@@ -695,12 +695,20 @@ test('calcATB: Nystatin unit-based dose rendering in hero card and total daily d
 
   // Test neonate < 2 kg: 100,000 U qid
   document.getElementById('weight').value = '1.5';
-  document.getElementById('age').value = '7';
-  window.eval('gAgeUnit = "day"; onWeightChange();');
+  document.getElementById('age').value = String(7 / 30.4375);
+  window.eval('gAgeUnit = "mo"; onWeightChange();');
   window.eval('calcATB()');
   const neoHtml = document.getElementById('atbOut').innerHTML;
   assert(neoHtml.includes('100,000 U'), 'Nystatin neonate < 2 kg must render 100,000 U per dose');
   assert(neoHtml.includes('400,000 U'), 'Nystatin neonate < 2 kg daily dose must render 400,000 U');
+
+  // Test neonate > 2 kg: 200,000 U qid
+  document.getElementById('weight').value = '2.5';
+  window.eval('onWeightChange();');
+  window.eval('calcATB()');
+  const neo2Html = document.getElementById('atbOut').innerHTML;
+  assert(neo2Html.includes('200,000 U'), 'Nystatin neonate > 2 kg must render 200,000 U per dose');
+  assert(neo2Html.includes('800,000 U'), 'Nystatin neonate > 2 kg daily dose must render 800,000 U');
 
   // Reset inputs for test isolation
   document.getElementById('age').value = '';
