@@ -512,10 +512,57 @@ test('Renal Dosing: calcPatientRenalDose for Meropenem & Cefepime 10 kg patient'
   assert.strictEqual(calcPatientRenalDose(ceftazTierNormal, ceftaz, 50), '1665–2000 mg q 8 hr');
 });
 
+test('Renal Dosing & Regimens: Ranitidine IV vs PO separated catalog entries and safety caps', () => {
+  const { calcPatientRenalDose } = window;
+  const ranitidineIv = dataset.pediatricDose.find(d => d.key === 'ranitidine-iv-50-mg');
+  const ranitidinePo = dataset.pediatricDose.find(d => d.key === 'ranitidine-tab-150-mg-po');
+
+  assert(ranitidineIv && ranitidineIv.renalDosing, 'Ranitidine IV must exist and have renalDosing');
+  assert(ranitidinePo && ranitidinePo.renalDosing, 'Ranitidine PO must exist and have renalDosing');
+
+  // Check IV: 1–2 mg/kg/dose IV q8h, max 50 mg/dose (150 mg/day)
+  const ivNorm = ranitidineIv.renalDosing.find(t => t.minGfr >= 50);
+  const ivImpaired = ranitidineIv.renalDosing.find(t => t.minGfr === 0);
+  assert.strictEqual(calcPatientRenalDose(ivNorm, ranitidineIv, 10), '10–20 mg q 8 hr');
+  assert.strictEqual(calcPatientRenalDose(ivImpaired, ranitidineIv, 10), '5–10 mg q 12–24 hr');
+  // High weight: 60 kg -> 60-120 mg capped at 50 mg
+  assert.strictEqual(calcPatientRenalDose(ivNorm, ranitidineIv, 60), '50 mg q 8 hr');
+
+  // Check PO: 2–4 mg/kg/dose PO q12h, max 150 mg/dose (300 mg/day)
+  const poNorm = ranitidinePo.renalDosing.find(t => t.minGfr >= 50);
+  const poImpaired = ranitidinePo.renalDosing.find(t => t.minGfr === 0);
+  assert.strictEqual(calcPatientRenalDose(poNorm, ranitidinePo, 10), '20–40 mg q 12 hr');
+  assert.strictEqual(calcPatientRenalDose(poImpaired, ranitidinePo, 10), '10–20 mg q 24 hr');
+  // High weight: 60 kg -> 120-240 mg capped at 150 mg max
+  assert.strictEqual(calcPatientRenalDose(poNorm, ranitidinePo, 60), '120–150 mg q 12 hr');
+
+  // Test copyEHROrder for Ranitidine IV and PO
+  document.getElementById('weight').value = '10';
+  document.getElementById('age').value = '2';
+  window.eval('gAgeUnit = "yr"; onWeightChange();');
+
+  document.getElementById('doseDrug').value = 'ranitidine-iv-50-mg';
+  window.eval('calcDose()');
+  const ivOrder = window.copyEHROrder('dose');
+  assert(ivOrder.includes('Ranitidine IV 20 mg') && ivOrder.includes('(0.80 mL)'), 'Ranitidine IV order must calculate 20 mg (0.80 mL) for 10 kg');
+  assert(ivOrder.includes('IV q 8 hr'), 'Ranitidine IV order must specify IV route and q 8 hr freq');
+
+  document.getElementById('doseDrug').value = 'ranitidine-tab-150-mg-po';
+  window.eval('calcDose()');
+  const poOrder = window.copyEHROrder('dose');
+  assert(poOrder.includes('Ranitidine PO 40 mg') && poOrder.includes('(2.67 mL)'), 'Ranitidine PO order must calculate 40 mg (2.67 mL) for 10 kg');
+  assert(poOrder.includes('PO q 12 hr'), 'Ranitidine PO order must specify PO route and q 12 hr freq');
+
+  // Reset inputs
+  document.getElementById('age').value = '';
+  document.getElementById('weight').value = '';
+  window.eval('onWeightChange();');
+});
+
 test('Renal Dosing: All renal drugs have contiguous eGFR tiers without gaps', () => {
   const allDrugs = [...dataset.pediatricDose, ...dataset.pediatricATB];
   const renalDrugs = allDrugs.filter(d => d.renalDosing && d.renalDosing.length > 0);
-  assert.strictEqual(renalDrugs.length, 13, 'Must have exactly 13 renal-adjusted drugs');
+  assert.strictEqual(renalDrugs.length, 14, 'Must have exactly 14 renal-adjusted drugs');
 
   renalDrugs.forEach(drug => {
     const tiers = drug.renalDosing;

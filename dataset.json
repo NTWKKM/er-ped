@@ -761,23 +761,29 @@
       "aliases": []
     },
     {
-      "key": "ranitidine-tab-150-mg-iv-50-mg",
-      "drug": "Ranitidine",
-      "name": "Ranitidine IV/PO",
-      "preparation": "Tab 150 mg ; IV 50 mg/amp",
-      "note": "2–4 mg/kg/day PO q12h / IV q8h ⚠️ Max 50 mg/dose IV ; many centers avoid now **",
+      "key": "ranitidine-iv-50-mg",
+      "drug": "Ranitidine IV",
+      "name": "Ranitidine IV (50 mg/amp)",
+      "preparation": "IV 50 mg/2 mL (25 mg/mL)",
+      "note": "1–2 mg/kg/dose IV q8h (3–6 mg/kg/day) ⚠️ Max 50 mg/dose (150 mg/day) ; many centers avoid now due to NDMA **",
       "unit": "mg/kg",
-      "unitType": "perDay",
-      "doseMinMgPerKg": 2,
-      "doseMaxMgPerKg": 4,
-      "freq": "PO q12h / IV q8h",
-      "route": "PO/IV",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 1,
+      "doseMaxMgPerKg": 2,
+      "maxPerDoseMg": 50,
+      "maxPerDayMg": 150,
+      "freq": "q 8 hr",
+      "route": "IV",
       "renalAdjust": true,
       "minAgeYr": null,
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": [],
+      "aliases": [
+        "Ranitidine Injection",
+        "Zantac IV",
+        "ranitidine-tab-150-mg-iv-50-mg"
+      ],
       "renalDosing": [
         {
           "gfr": "> 50",
@@ -794,6 +800,50 @@
           "doseAdjustment": "ลดขนาดยาลง 50% หรือขยายเวลา",
           "freq": "q 12–24 hr",
           "clinicalNote": "ลดขนาดลง 50% หรือให้ทุก 12–24 ชม."
+        }
+      ]
+    },
+    {
+      "key": "ranitidine-tab-150-mg-po",
+      "drug": "Ranitidine PO",
+      "name": "Ranitidine PO (Tab 150 mg / Syrup)",
+      "preparation": "Tab 150 mg ; Syrup 75 mg/5 mL (15 mg/mL)",
+      "note": "2–4 mg/kg/dose PO q12h (4–8 mg/kg/day) ⚠️ Max 150 mg/dose (300 mg/day) ; many centers avoid now due to NDMA **",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 2,
+      "doseMaxMgPerKg": 4,
+      "maxPerDoseMg": 150,
+      "maxPerDayMg": 300,
+      "freq": "q 12 hr",
+      "route": "PO",
+      "renalAdjust": true,
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Ranitidine Oral",
+        "Ranitidine Syrup",
+        "Zantac PO",
+        "ranitidine-tab-150-mg-iv-50-mg"
+      ],
+      "renalDosing": [
+        {
+          "gfr": "> 50",
+          "minGfr": 50,
+          "maxGfr": 999,
+          "doseAdjustment": "ขนาดยาปกติ 2–4 mg/kg/dose PO",
+          "freq": "q 12 hr",
+          "clinicalNote": "ระยะเวลาการให้ยาปกติ"
+        },
+        {
+          "gfr": "< 50 / HD",
+          "minGfr": 0,
+          "maxGfr": 50,
+          "doseAdjustment": "ลดขนาดยาลง 50% หรือขยายเวลา",
+          "freq": "q 24 hr",
+          "clinicalNote": "ลดขนาดลง 50% หรือให้ทุก 24 ชม."
         }
       ]
     },

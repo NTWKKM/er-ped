@@ -1749,7 +1749,8 @@ function calcPatientRenalDose(tier, drug, bw) {
   if (mRange) {
     const minMg = Math.min(bw * parseFloat(mRange[1]), cap);
     const maxMg = Math.min(bw * parseFloat(mRange[2]), cap);
-    return `${fmtMg(minMg)}–${fmtMg(maxMg)} mg ${tier.freq || ''}`.trim();
+    const rangeTxt = (minMg === maxMg) ? `${fmtMg(minMg)} mg` : `${fmtMg(minMg)}–${fmtMg(maxMg)} mg`;
+    return `${rangeTxt} ${tier.freq || ''}`.trim();
   }
 
   // Single in mg/kg (e.g. "50 mg/kg")
