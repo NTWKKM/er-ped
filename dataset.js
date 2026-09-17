@@ -3174,8 +3174,8 @@ window.ER_PED_DATASET = {
       "key": "piperacillin-tazobactam-iv",
       "drug": "Piperacillin/Tazobactam",
       "name": "Piperacillin/Tazobactam IV",
-      "preparation": "Vials 2.25 g (2g/0.25g), 4.5 g (4g/0.5g)",
-      "note": "Dose based on Piperacillin component: 66.6–100 mg/kg/dose IV q8h (200–300 mg/kg/day) ; Severe sepsis/Pseudomonas: 100 mg/kg/dose q8h ⚠️ Max 4000 mg/dose (4 g Piperacillin/dose)",
+      "preparation": "Vials 2.25 g (2g Piperacillin / 0.25g Tazobactam), 4.5 g (4g Piperacillin / 0.5g Tazobactam)",
+      "note": "Dose based on Piperacillin component: 66.6–100 mg/kg/dose IV q8h (200–300 mg/kg/day) ; Severe sepsis/Pseudomonas: 100 mg/kg/dose q8h ⚠️ Max 4000 mg Piperacillin/dose (4.5 g total product)",
       "unit": "mg/kg",
       "unitType": "perDose",
       "doseMinMgPerKg": 66.6,
@@ -3201,25 +3201,25 @@ window.ER_PED_DATASET = {
           "maxGfr": 999,
           "doseAdjustment": "ขนาดยาปกติ 66.6–100 mg/kg (Piperacillin)",
           "freq": "q 8 hr",
-          "clinicalNote": "ระยะเวลาการให้ยาปกติ (สูงสุด 4 g/dose)"
+          "clinicalNote": "ระยะเวลาการให้ยาปกติ (สูงสุด 4000 mg Piperacillin/dose [4.5 g total product])"
         },
         {
           "gfr": "20–50",
           "minGfr": 20,
           "maxGfr": 50,
-          "doseAdjustment": "66.6–80 mg/kg (200 mg/kg/day)",
+          "doseAdjustment": "66.6–80 mg/kg (Piperacillin) (200 mg/kg/day)",
           "freq": "q 8 hr",
           "maxPerDoseMg": 2000,
-          "clinicalNote": "ลดขนาดลง (สูงสุด 2.25 g ทุก 8 ชม.)"
+          "clinicalNote": "ลดขนาดลง (สูงสุด 2000 mg Piperacillin/dose [2.25 g total product] ทุก 8 ชม.)"
         },
         {
           "gfr": "< 20 / HD",
           "minGfr": 0,
           "maxGfr": 20,
-          "doseAdjustment": "50–66.6 mg/kg (150 mg/kg/day)",
+          "doseAdjustment": "50–66.6 mg/kg (Piperacillin) (150 mg/kg/day)",
           "freq": "q 8 hr",
           "maxPerDoseMg": 2000,
-          "clinicalNote": "ลดขนาดลง (สูงสุด 2.25 g ทุก 8 ชม. ; วันที่ฟอกไตให้เพิ่ม 0.75 g หลัง HD)"
+          "clinicalNote": "ลดขนาดลง (สูงสุด 2000 mg Piperacillin/dose [2.25 g total product] ทุก 8 ชม. ; วันที่ฟอกไตให้เพิ่ม 667 mg Piperacillin [0.75 g total product] หลัง HD)"
         }
       ]
     },
