@@ -525,6 +525,10 @@ test('Renal UI Engine: eGFR 50.0 boundary matches only the first tier without du
   const atbOut = document.getElementById('atbOut');
   const matches = (atbOut.innerHTML.match(/active-tier/g) || []).length;
   assert.strictEqual(matches, 1, 'Only one tier must have active-tier class at eGFR boundary 50.0');
+  const activeRow = atbOut.querySelector('tr.active-tier');
+  assert(activeRow, 'Active tier row must exist in DOM');
+  assert.strictEqual(activeRow.querySelector('td')?.textContent.trim(), '> 50', 'Active tier at boundary 50.0 must be the first normal-function tier (> 50)');
+  assert(activeRow.textContent.includes('ขนาดยาปกติ'), 'Active tier must correspond to normal-function dose adjustment');
 });
 
 test('Medication Age Limit: Ambroxol for patient < 2 yr suppresses dose and shows contraindication warning', () => {
