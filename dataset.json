@@ -3294,26 +3294,51 @@
       ]
     },
     {
-      "key": "favipiravir-po",
-      "drug": "Favipiravir",
-      "name": "Favipiravir PO (Influenza/Viral)",
+      "key": "favipiravir-day1-loading-po",
+      "drug": "Favipiravir (Day 1 Loading)",
+      "name": "Favipiravir (Day 1 Loading) PO",
       "preparation": "Tab 200 mg",
-      "note": "Pediatric Influenza/Viral (Thai DMS): Day 1 loading ~30–35 mg/kg/dose BID ; Days 2–5 maint ~15 mg/kg/dose BID. Max loading 1800 mg/dose BID (3600 mg/day), maint 800 mg/dose BID ⚠️ Max 3600 mg/day. Crush in water or syrup.",
+      "note": "Pediatric Influenza/Viral (Thai DMS): Day 1 loading 30–35 mg/kg/dose BID (2 doses 12 hr apart) ⚠️ Max 1800 mg/dose (3600 mg/day). Crush in water or syrup. Switch to maintenance on Day 2.",
       "unit": "mg/kg",
       "unitType": "perDose",
-      "doseMinMgPerKg": 15,
+      "doseMinMgPerKg": 30,
       "doseMaxMgPerKg": 35,
       "maxPerDoseMg": 1800,
       "maxPerDayMg": 3600,
-      "freq": "bid (load Day 1, then maint Days 2–5)",
+      "freq": "bid (Day 1 load, then switch to maint)",
       "route": "PO",
       "minAgeYr": 1,
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
       "aliases": [
-        "Avigan",
-        "Favi"
+        "Avigan Loading",
+        "Favi Loading",
+        "favipiravir-po"
+      ]
+    },
+    {
+      "key": "favipiravir-days2-5-maint-po",
+      "drug": "Favipiravir (Days 2–5 Maint)",
+      "name": "Favipiravir (Days 2–5 Maint) PO",
+      "preparation": "Tab 200 mg",
+      "note": "Pediatric Influenza/Viral (Thai DMS): Days 2–5 maintenance 15 mg/kg/dose BID (total 4 days) ⚠️ Max 800 mg/dose (1600 mg/day). Crush in water or syrup.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 15,
+      "doseMaxMgPerKg": 15,
+      "maxPerDoseMg": 800,
+      "maxPerDayMg": 1600,
+      "freq": "bid (Days 2–5)",
+      "route": "PO",
+      "minAgeYr": 1,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "aliases": [
+        "Avigan Maint",
+        "Favi Maint",
+        "favipiravir-po"
       ]
     }
   ],

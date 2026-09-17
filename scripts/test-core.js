@@ -616,6 +616,66 @@ test('copyEHROrder("atb"): Ampicillin 10 kg patient pre-seeded in JSDOM', () => 
   assert(orderStr.includes('[BW: 10.0 kg]'), 'EHR order must state weight');
 });
 
+test('copyEHROrder("dose"): Loratadine doseBand (doseMg) matches 5 mg for 4-year-old child', () => {
+  document.getElementById('weight').value = '15';
+  document.getElementById('age').value = '4';
+  window.eval('gAgeUnit = "yr"; onWeightChange();');
+  document.getElementById('doseDrug').value = 'loratadine-syrup-5-mg-5-ml';
+  
+  window.eval('calcDose()');
+  const orderStr = window.copyEHROrder('dose');
+  
+  assert(orderStr.includes('5 mg'), 'Loratadine for 4 yr child must copy 5 mg (not fall through to weight math)');
+  assert(orderStr.includes('5.00 mL'), 'Loratadine syrup 5 mg / 5 mL must calculate 5.00 mL');
+});
+
+test('copyEHROrder("atb"): Albendazole fixedDose matches 400 mg regardless of weight', () => {
+  document.getElementById('weight').value = '12';
+  document.getElementById('age').value = '3';
+  window.eval('gAgeUnit = "yr"; onWeightChange();');
+  document.getElementById('atbDrug').value = 'albendazole-syrup-200mg-5ml-tab-200mg';
+  
+  window.eval('calcATB()');
+  const orderStr = window.copyEHROrder('atb');
+  
+  assert(orderStr.includes('400 mg'), 'Albendazole must copy fixed 400 mg dose');
+});
+
+test('copyEHROrder("atb"): Oseltamivir doseBands matches 30 mg for 10 kg child', () => {
+  document.getElementById('weight').value = '10';
+  document.getElementById('age').value = '3';
+  window.eval('gAgeUnit = "yr"; onWeightChange();');
+  document.getElementById('atbDrug').value = 'oseltamivir-weight-based';
+  
+  window.eval('calcATB()');
+  const orderStr = window.copyEHROrder('atb');
+  
+  assert(orderStr.includes('30 mg'), 'Oseltamivir for 10 kg child must copy 30 mg doseBand');
+});
+
+test('Favipiravir Separated Regimens: Loading vs Maintenance safety caps in ATB and EHR copy', () => {
+  document.getElementById('weight').value = '60'; // High weight to test safety caps
+  document.getElementById('age').value = '14';
+  window.eval('gAgeUnit = "yr"; onWeightChange();');
+  
+  // Day 1 Loading: 35 mg/kg * 60 = 2100 mg -> capped at 1800 mg
+  document.getElementById('atbDrug').value = 'favipiravir-day1-loading-po';
+  window.eval('calcATB()');
+  const loadOrder = window.copyEHROrder('atb');
+  assert(loadOrder.includes('1800 mg'), 'Day 1 loading dose for 60 kg must be capped at 1800 mg/dose');
+
+  // Days 2-5 Maintenance: 15 mg/kg * 60 = 900 mg -> capped at 800 mg
+  document.getElementById('atbDrug').value = 'favipiravir-days2-5-maint-po';
+  window.eval('calcATB()');
+  const maintOrder = window.copyEHROrder('atb');
+  assert(maintOrder.includes('800 mg'), 'Days 2-5 maintenance dose for 60 kg must be capped at 800 mg/dose');
+
+  // Reset inputs for test isolation
+  document.getElementById('age').value = '';
+  document.getElementById('weight').value = '';
+  window.eval('onWeightChange();');
+});
+
 test('copyEHROrder("ncpr"): 3.0 kg newborn pre-seeded in JSDOM', () => {
   document.getElementById('nW').value = '3.0';
   

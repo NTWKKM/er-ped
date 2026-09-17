@@ -1529,6 +1529,166 @@ function dosesPerDayFromFreq(freq){
   return null;
 }
 
+function findMatchedDoseBand(bands, w, ageYr) {
+  if (!Array.isArray(bands)) return null;
+  return bands.find((b, idx, arr) => {
+    if (b.minAgeYr != null && (ageYr == null || ageYr < b.minAgeYr)) return false;
+    if (b.maxAgeYr != null && ageYr != null) {
+      const hasNextAdjacent = arr.some(other => other.minAgeYr === b.maxAgeYr);
+      if (hasNextAdjacent ? ageYr >= b.maxAgeYr : ageYr > b.maxAgeYr) return false;
+    }
+    if (b.minKg != null && (w == null || w < b.minKg)) return false;
+    if (b.maxKg != null && w != null && w > b.maxKg) return false;
+    return true;
+  }) || null;
+}
+
+function resolveDrugDose(drug, w, ageYr, isAtb = false) {
+  if (!drug) return null;
+  const isAtbDrug = isAtb || ((typeof DS !== 'undefined' && Array.isArray(DS?.pediatricATB)) ? DS.pediatricATB.some(d => d.key === drug.key) : false);
+  const weight = (w != null && w > 0) ? Number(w) : null;
+  const age = (ageYr != null) ? Number(ageYr) : null;
+
+  const isAgeRestricted = (age != null) && (
+    (drug.minAgeYr != null && age < drug.minAgeYr) ||
+    (drug.maxAgeYr != null && age > drug.maxAgeYr)
+  );
+
+  const nPerDay = dosesPerDayFromFreq(drug.freq || drug.split);
+
+  // 1. Fixed Dose (e.g. Albendazole 400 mg, Mebendazole 100 mg)
+  if (drug.fixedDose) {
+    const doseMg = drug.fixedDose.doseMg ?? null;
+    const doseUnits = drug.fixedDose.doseUnits ?? null;
+    const perDayMg = (doseMg != null && nPerDay) ? doseMg * nPerDay : doseMg;
+    return {
+      type: 'fixed',
+      isAgeRestricted,
+      matchedBand: null,
+      doseMg,
+      doseMinMg: doseMg,
+      doseMaxMg: doseMg,
+      doseMl: null,
+      doseMinMl: null,
+      doseMaxMl: null,
+      doseUnits,
+      doseMinUnits: doseUnits,
+      doseMaxUnits: doseUnits,
+      perDayMinMg: perDayMg,
+      perDayMaxMg: perDayMg,
+      isCappedPerDose: false,
+      isCappedPerDay: false
+    };
+  }
+
+  // 2. Dose Bands (e.g. Oseltamivir, Antihistamines, Simethicone, Nystatin)
+  if (Array.isArray(drug.doseBands) && drug.doseBands.length > 0) {
+    const matchedBand = findMatchedDoseBand(drug.doseBands, weight, age);
+    if (matchedBand) {
+      const doseMg = matchedBand.doseMg ?? null;
+      const minMg = matchedBand.minMg ?? doseMg;
+      const maxMg = matchedBand.maxMg ?? doseMg;
+
+      const doseMl = matchedBand.doseMl ?? null;
+      const minMl = matchedBand.minMl ?? doseMl;
+      const maxMl = matchedBand.maxMl ?? doseMl;
+
+      const doseUnits = matchedBand.doseUnits ?? null;
+      const minUnits = matchedBand.minUnits ?? doseUnits;
+      const maxUnits = matchedBand.maxUnits ?? doseUnits;
+
+      const perDayMinMg = (minMg != null && nPerDay) ? minMg * nPerDay : minMg;
+      const perDayMaxMg = (maxMg != null && nPerDay) ? maxMg * nPerDay : maxMg;
+
+      return {
+        type: 'band',
+        isAgeRestricted,
+        matchedBand,
+        doseMg: maxMg ?? minMg,
+        doseMinMg: minMg,
+        doseMaxMg: maxMg,
+        doseMl: maxMl ?? minMl,
+        doseMinMl: minMl,
+        doseMaxMl: maxMl,
+        doseUnits: maxUnits ?? minUnits,
+        doseMinUnits: minUnits,
+        doseMaxUnits: maxUnits,
+        perDayMinMg,
+        perDayMaxMg,
+        isCappedPerDose: false,
+        isCappedPerDay: false
+      };
+    }
+  }
+
+  // 3. Weight-Based
+  const unit = drug.unit || 'mg/kg';
+  // In pediatricATB, doseMinMgPerKg and doseMaxMgPerKg are ALWAYS per-dose values
+  const isPerDay = !isAtbDrug && (/mg\/kg\/day/i.test(unit) || drug.unitType === 'perDay');
+  const minPerKg = drug.doseMinMgPerKg ?? drug.dose ?? null;
+  const maxPerKg = drug.doseMaxMgPerKg ?? drug.dose ?? null;
+
+  let perDoseMinMg = null, perDoseMaxMg = null;
+  let perDayMinMg = null, perDayMaxMg = null;
+  let isCappedPerDose = false, isCappedPerDay = false;
+
+  if (weight != null) {
+    if (isPerDay) {
+      if (minPerKg != null) perDayMinMg = weight * minPerKg;
+      if (maxPerKg != null) perDayMaxMg = weight * maxPerKg;
+      if (drug.maxPerDayMg && perDayMaxMg > drug.maxPerDayMg) {
+        isCappedPerDay = true;
+        if (perDayMinMg != null) perDayMinMg = Math.min(perDayMinMg, drug.maxPerDayMg);
+        if (perDayMaxMg != null) perDayMaxMg = Math.min(perDayMaxMg, drug.maxPerDayMg);
+      }
+      const freqDiv = nPerDay || 1;
+      if (perDayMinMg != null) perDoseMinMg = perDayMinMg / freqDiv;
+      if (perDayMaxMg != null) perDoseMaxMg = perDayMaxMg / freqDiv;
+      if (drug.maxPerDoseMg && perDoseMaxMg > drug.maxPerDoseMg) {
+        isCappedPerDose = true;
+        if (perDoseMinMg != null) perDoseMinMg = Math.min(perDoseMinMg, drug.maxPerDoseMg);
+        if (perDoseMaxMg != null) perDoseMaxMg = Math.min(perDoseMaxMg, drug.maxPerDoseMg);
+      }
+    } else {
+      if (minPerKg != null) perDoseMinMg = weight * minPerKg;
+      if (maxPerKg != null) perDoseMaxMg = weight * maxPerKg;
+      if (drug.maxPerDoseMg && perDoseMaxMg > drug.maxPerDoseMg) {
+        isCappedPerDose = true;
+        if (perDoseMinMg != null) perDoseMinMg = Math.min(perDoseMinMg, drug.maxPerDoseMg);
+        if (perDoseMaxMg != null) perDoseMaxMg = Math.min(perDoseMaxMg, drug.maxPerDoseMg);
+      }
+      if (nPerDay) {
+        if (perDoseMinMg != null) perDayMinMg = perDoseMinMg * nPerDay;
+        if (perDoseMaxMg != null) perDayMaxMg = perDoseMaxMg * nPerDay;
+      }
+      if (drug.maxPerDayMg && perDayMaxMg > drug.maxPerDayMg) {
+        isCappedPerDay = true;
+        if (perDayMinMg != null) perDayMinMg = Math.min(perDayMinMg, drug.maxPerDayMg);
+        if (perDayMaxMg != null) perDayMaxMg = Math.min(perDayMaxMg, drug.maxPerDayMg);
+      }
+    }
+  }
+
+  return {
+    type: 'weight',
+    isAgeRestricted,
+    matchedBand: null,
+    doseMg: perDoseMaxMg ?? perDoseMinMg,
+    doseMinMg: perDoseMinMg,
+    doseMaxMg: perDoseMaxMg,
+    doseMl: null,
+    doseMinMl: null,
+    doseMaxMl: null,
+    doseUnits: null,
+    doseMinUnits: null,
+    doseMaxUnits: null,
+    perDayMinMg,
+    perDayMaxMg,
+    isCappedPerDose,
+    isCappedPerDay
+  };
+}
+
 function calcAll(){
   calcGrowthZScores();
   calcDose();
@@ -1798,92 +1958,21 @@ function calcDose(){
   const mgPerMl  = concOverride > 0 ? concOverride : (strength.mgPerMl || null);
   const mgPerTab = strength.mgPerTab || null;
 
-  let perDoseMinMg = null, perDoseMaxMg = null, perDayMinMg = null, perDayMaxMg = null;
-  let perDoseMinMl = null, perDoseMaxMl = null;
-  let perDoseMinUnits = null, perDoseMaxUnits = null;
-  let isCappedPerDose = false, isCappedPerDay = false;
+  const resolved = resolveDrugDose(drug, bw, ageYr) || {};
+  let perDoseMinMg = resolved.doseMinMg ?? null;
+  let perDoseMaxMg = resolved.doseMaxMg ?? null;
+  let perDoseMinMl = resolved.doseMinMl ?? null;
+  let perDoseMaxMl = resolved.doseMaxMl ?? null;
+  let perDoseMinUnits = resolved.doseMinUnits ?? null;
+  let perDoseMaxUnits = resolved.doseMaxUnits ?? null;
+  let perDayMinMg = resolved.perDayMinMg ?? null;
+  let perDayMaxMg = resolved.perDayMaxMg ?? null;
+  let isCappedPerDose = resolved.isCappedPerDose ?? false;
+  let isCappedPerDay = resolved.isCappedPerDay ?? false;
   let bandNotice = '';
 
-  // 1. Handle Fixed Dose (e.g. Albendazole 400 mg)
-  if (drug.fixedDose) {
-    if (drug.fixedDose.doseMg != null) {
-      perDoseMinMg = perDoseMaxMg = drug.fixedDose.doseMg;
-    }
-  }
-  // 2. Handle Dose Bands (e.g. Oseltamivir, Nystatin, Antihistamines)
-  else if (Array.isArray(drug.doseBands)) {
-    const matchedBand = drug.doseBands.find((b, idx, arr) => {
-      if (b.minAgeYr != null && (ageYr == null || ageYr < b.minAgeYr)) return false;
-      if (b.maxAgeYr != null && ageYr != null) {
-        const hasNextAdjacent = arr.some(other => other.minAgeYr === b.maxAgeYr);
-        if (hasNextAdjacent ? ageYr >= b.maxAgeYr : ageYr > b.maxAgeYr) return false;
-      }
-      if (b.minKg != null && (bw == null || bw < b.minKg)) return false;
-      if (b.maxKg != null && bw != null && bw > b.maxKg) return false;
-      return true;
-    });
-
-    if (matchedBand) {
-      if (matchedBand.doseMg != null) {
-        perDoseMinMg = perDoseMaxMg = matchedBand.doseMg;
-      }
-      if (matchedBand.doseMl != null) {
-        perDoseMinMl = perDoseMaxMl = matchedBand.doseMl;
-      }
-      if (matchedBand.minMl != null) perDoseMinMl = matchedBand.minMl;
-      if (matchedBand.maxMl != null) perDoseMaxMl = matchedBand.maxMl;
-      if (matchedBand.doseUnits != null) {
-        perDoseMinUnits = perDoseMaxUnits = matchedBand.doseUnits;
-      }
-      if (matchedBand.minUnits != null) perDoseMinUnits = matchedBand.minUnits;
-      if (matchedBand.maxUnits != null) perDoseMaxUnits = matchedBand.maxUnits;
-    } else if (drug.doseBands.some(b => b.minAgeYr != null && b.minAgeYr >= 1.0) && (ageYr == null || ageYr < 1.0)) {
-      bandNotice = 'ℹ️ ขนาดยาสำหรับทารกอายุ < 1 ปี อ้างอิงตามอายุครรภ์/อายุทารกใน Clinical Note ด้านล่าง';
-    }
-  }
-  // 3. Handle Standard mg/kg calculation
-  else if (/mg\/kg\/day/i.test(unit) || drug.unitType === 'perDay') {
-    if (bw && minPerKg!=null) perDayMinMg = bw * minPerKg;
-    if (bw && maxPerKg!=null) perDayMaxMg = bw * maxPerKg;
-
-    if (drug.maxPerDayMg && perDayMaxMg > drug.maxPerDayMg){
-      isCappedPerDay = true;
-      if (perDayMinMg!=null) perDayMinMg = Math.min(perDayMinMg, drug.maxPerDayMg);
-      if (perDayMaxMg!=null) perDayMaxMg = Math.min(perDayMaxMg, drug.maxPerDayMg);
-    }
-
-    const nPerDay = dosesPerDayFromFreq(drug.freq);
-    if (nPerDay){
-      if (perDayMinMg!=null) perDoseMinMg = perDayMinMg / nPerDay;
-      if (perDayMaxMg!=null) perDoseMaxMg = perDayMaxMg / nPerDay;
-    }
-
-    if (drug.maxPerDoseMg && perDoseMaxMg > drug.maxPerDoseMg){
-      isCappedPerDose = true;
-      if (perDoseMinMg!=null) perDoseMinMg = Math.min(perDoseMinMg, drug.maxPerDoseMg);
-      if (perDoseMaxMg!=null) perDoseMaxMg = Math.min(perDoseMaxMg, drug.maxPerDoseMg);
-    }
-  } else {
-    if (bw && minPerKg!=null) perDoseMinMg = bw * minPerKg;
-    if (bw && maxPerKg!=null) perDoseMaxMg = bw * maxPerKg;
-
-    if (drug.maxPerDoseMg && perDoseMaxMg > drug.maxPerDoseMg){
-      isCappedPerDose = true;
-      if (perDoseMinMg!=null) perDoseMinMg = Math.min(perDoseMinMg, drug.maxPerDoseMg);
-      if (perDoseMaxMg!=null) perDoseMaxMg = Math.min(perDoseMaxMg, drug.maxPerDoseMg);
-    }
-
-    const nPerDay = dosesPerDayFromFreq(drug.freq);
-    if (nPerDay){
-      if (perDoseMinMg!=null) perDayMinMg = perDoseMinMg * nPerDay;
-      if (perDoseMaxMg!=null) perDayMaxMg = perDoseMaxMg * nPerDay;
-    }
-
-    if (drug.maxPerDayMg && perDayMaxMg > drug.maxPerDayMg){
-      isCappedPerDay = true;
-      if (perDayMinMg!=null) perDayMinMg = Math.min(perDayMinMg, drug.maxPerDayMg);
-      if (perDayMaxMg!=null) perDayMaxMg = Math.min(perDayMaxMg, drug.maxPerDayMg);
-    }
+  if (Array.isArray(drug.doseBands) && !resolved.matchedBand && drug.doseBands.some(b => b.minAgeYr != null && b.minAgeYr >= 1.0) && (ageYr == null || ageYr < 1.0)) {
+    bandNotice = 'ℹ️ ขนาดยาสำหรับทารกอายุ < 1 ปี อ้างอิงตามอายุครรภ์/อายุทารกใน Clinical Note ด้านล่าง';
   }
 
   function toRangeTxt(minVal, maxVal, fmtFn){
@@ -2038,43 +2127,15 @@ function calcATB(){
 
   const dosesPerDay = dosesPerDayFromFreq(drug.split || drug.freq);
 
-  let perDoseMinMg = null, perDoseMaxMg = null, perDayMinMg = null, perDayMaxMg = null;
+  const resolved = resolveDrugDose(drug, bw, ageYr) || {};
+  let perDoseMinMg = resolved.doseMinMg ?? null;
+  let perDoseMaxMg = resolved.doseMaxMg ?? null;
+  let perDayMinMg = resolved.perDayMinMg ?? null;
+  let perDayMaxMg = resolved.perDayMaxMg ?? null;
   let bandNotice = '';
 
-  if (drug.fixedDose && drug.fixedDose.doseMg != null) {
-    perDoseMinMg = perDoseMaxMg = drug.fixedDose.doseMg;
-  } else if (Array.isArray(drug.doseBands)) {
-    const matchedBand = drug.doseBands.find((b, idx, arr) => {
-      if (b.minAgeYr != null && (ageYr == null || ageYr < b.minAgeYr)) return false;
-      if (b.maxAgeYr != null && ageYr != null) {
-        const hasNextAdjacent = arr.some(other => other.minAgeYr === b.maxAgeYr);
-        if (hasNextAdjacent ? ageYr >= b.maxAgeYr : ageYr > b.maxAgeYr) return false;
-      }
-      if (b.minKg != null && (bw == null || bw < b.minKg)) return false;
-      if (b.maxKg != null && bw != null && bw > b.maxKg) return false;
-      return true;
-    });
-    if (matchedBand) {
-      if (matchedBand.doseMg != null) perDoseMinMg = perDoseMaxMg = matchedBand.doseMg;
-    } else if (drug.doseBands.some(b => b.minAgeYr != null && b.minAgeYr >= 1.0) && (ageYr == null || ageYr < 1.0)) {
-      bandNotice = 'ℹ️ ขนาดยาสำหรับทารกอายุ < 1 ปี อ้างอิงตามอายุครรภ์/อายุทารกใน Clinical Note ด้านล่าง';
-    }
-  } else {
-    if (bw && minPerKg!=null) perDoseMinMg = bw * minPerKg;
-    if (bw && maxPerKg!=null) perDoseMaxMg = bw * maxPerKg;
-  }
-
-  if (limitMaxDose) {
-    if (perDoseMinMg!=null) perDoseMinMg = cap(perDoseMinMg, limitMaxDose);
-    if (perDoseMaxMg!=null) perDoseMaxMg = cap(perDoseMaxMg, limitMaxDose);
-  }
-  if (dosesPerDay) {
-    if (perDoseMinMg!=null) perDayMinMg = perDoseMinMg * dosesPerDay;
-    if (perDoseMaxMg!=null) perDayMaxMg = perDoseMaxMg * dosesPerDay;
-  }
-  if (limitMaxDay) {
-    if (perDayMinMg!=null) perDayMinMg = cap(perDayMinMg, limitMaxDay);
-    if (perDayMaxMg!=null) perDayMaxMg = cap(perDayMaxMg, limitMaxDay);
+  if (Array.isArray(drug.doseBands) && !resolved.matchedBand && drug.doseBands.some(b => b.minAgeYr != null && b.minAgeYr >= 1.0) && (ageYr == null || ageYr < 1.0)) {
+    bandNotice = 'ℹ️ ขนาดยาสำหรับทารกอายุ < 1 ปี อ้างอิงตามอายุครรภ์/อายุทารกใน Clinical Note ด้านล่าง';
   }
 
   function atbRangeTxt(minVal, maxVal){
@@ -2353,78 +2414,50 @@ function copyEHROrder(module){
   const w = Number(rawW);
   let orderStr = '';
 
-  if (module === 'dose') {
-    const key = document.getElementById('doseDrug')?.value;
-    const drug = (DS?.pediatricDose||[]).find(d=>d.key===key);
+  if (module === 'dose' || module === 'atb') {
+    const isAtb = (module === 'atb');
+    const selectId = isAtb ? 'atbDrug' : 'doseDrug';
+    const key = document.getElementById(selectId)?.value;
+    const table = isAtb ? (DS?.pediatricATB || []) : (DS?.pediatricDose || []);
+    const drug = table.find(d => d.key === key);
     if (drug) {
       const ageYr = getAgeInYears();
-      if (ageYr != null && ((drug.minAgeYr != null && ageYr < drug.minAgeYr) || (drug.maxAgeYr != null && ageYr > drug.maxAgeYr))) {
+      const resolved = resolveDrugDose(drug, w, ageYr);
+      if (resolved?.isAgeRestricted) {
         showToast('คำเตือน: ผู้ป่วยอยู่นอกเกณฑ์อายุของยานี้ ไม่สามารถคัดลอกคำสั่งรักษาได้');
         return;
       }
 
-      if (Array.isArray(drug.doseBands)) {
-        const matchedBand = drug.doseBands.find((b, idx, arr) => {
-          if (b.minAgeYr != null && (ageYr == null || ageYr < b.minAgeYr)) return false;
-          if (b.maxAgeYr != null && ageYr != null) {
-            const hasNextAdjacent = arr.some(other => other.minAgeYr === b.maxAgeYr);
-            if (hasNextAdjacent ? ageYr >= b.maxAgeYr : ageYr > b.maxAgeYr) return false;
+      if (resolved?.doseMl != null) {
+        orderStr = `[ER-PED] ${drug.name || drug.drug} ${fmtMl(resolved.doseMl)} mL ${drug.route || (isAtb ? 'IV' : 'PO')} ${drug.split || drug.freq || 'PRN'} [BW: ${w.toFixed(1)} kg]`;
+      } else if (resolved?.doseUnits != null || resolved?.doseMaxUnits != null) {
+        const u = resolved.doseUnits ?? resolved.doseMaxUnits;
+        orderStr = `[ER-PED] ${drug.name || drug.drug} ${u.toLocaleString()} U ${drug.route || (isAtb ? 'IV' : 'PO')} ${drug.split || drug.freq || 'PRN'} [BW: ${w.toFixed(1)} kg]`;
+      } else {
+        let doseMg = resolved?.doseMg;
+        if (doseMg == null) {
+          doseMg = (drug.doseMaxMgPerKg || drug.dose || 10) * w;
+          if (drug.maxPerDoseMg) doseMg = Math.min(doseMg, drug.maxPerDoseMg);
+        }
+
+        let doseMlStr = '';
+        if (isAtb) {
+          const form = parseFloat(document.getElementById('atbForm')?.value);
+          if (form > 0) {
+            doseMlStr = ` (${fmtMl(doseMg / form)} mL)`;
           }
-          if (b.minKg != null && w < b.minKg) return false;
-          if (b.maxKg != null && w > b.maxKg) return false;
-          return true;
-        });
-        if (matchedBand && matchedBand.doseMl != null) {
-          orderStr = `[ER-PED] ${drug.drug || drug.name} ${fmtMl(matchedBand.doseMl)} mL ${drug.route || 'PO'} ${drug.freq || 'PRN'} [BW: ${w.toFixed(1)} kg]`;
-          copyToClipboard(orderStr);
-          showToast(`คัดลอกคำสั่ง ${drug.drug || drug.name} (${fmtMl(matchedBand.doseMl)} mL) แล้ว`);
-          return;
+          orderStr = `[ER-PED] ${drug.name || drug.drug} ${fmtMg(doseMg)} mg${doseMlStr} ${drug.route || 'IV'} ${drug.split || drug.freq || ''} [BW: ${w.toFixed(1)} kg]`;
+        } else {
+          const concOverride = parseFloat(document.getElementById('doseConc')?.value);
+          const strength = parseStrength(drug.preparation || drug.name || '');
+          const mgPerMl = concOverride > 0 ? concOverride : (strength.mgPerMl || null);
+          if (mgPerMl) {
+            const ml = doseMg / mgPerMl;
+            doseMlStr = ` (${fmtMl(ml)} mL)`;
+          }
+          orderStr = `[ER-PED] ${drug.drug || drug.name} ${fmtMg(doseMg)} mg${doseMlStr} ${drug.route || 'PO'} ${drug.freq || 'PRN'} [BW: ${w.toFixed(1)} kg]`;
         }
       }
-
-      const concOverride = parseFloat(document.getElementById('doseConc')?.value);
-      const strength = parseStrength(drug.preparation || drug.name || '');
-      const mgPerMl = concOverride > 0 ? concOverride : (strength.mgPerMl || null);
-
-      const unit = drug.unit || 'mg/kg';
-      const isPerDay = /mg\/kg\/day/i.test(unit) || drug.unitType === 'perDay';
-      let doseMg = (drug.doseMaxMgPerKg || drug.dose || 10) * w;
-      if (isPerDay) {
-        if (drug.maxPerDayMg) doseMg = Math.min(doseMg, drug.maxPerDayMg);
-        const nPerDay = dosesPerDayFromFreq(drug.freq) || 1;
-        doseMg = doseMg / nPerDay;
-      }
-      if (drug.maxPerDoseMg) doseMg = Math.min(doseMg, drug.maxPerDoseMg);
-      
-      let doseMlStr = '';
-      if (mgPerMl) {
-        const ml = doseMg / mgPerMl;
-        doseMlStr = ` (${fmtMl(ml)} mL)`;
-      }
-      
-      orderStr = `[ER-PED] ${drug.drug || drug.name} ${fmtMg(doseMg)} mg${doseMlStr} ${drug.route || 'PO'} ${drug.freq || 'PRN'} [BW: ${w.toFixed(1)} kg]`;
-    }
-  } else if (module === 'atb') {
-    const key = document.getElementById('atbDrug')?.value;
-    const drug = (DS?.pediatricATB||[]).find(d=>d.key===key);
-    if (drug) {
-      const ageYr = getAgeInYears();
-      if (ageYr != null && ((drug.minAgeYr != null && ageYr < drug.minAgeYr) || (drug.maxAgeYr != null && ageYr > drug.maxAgeYr))) {
-        showToast('คำเตือน: ผู้ป่วยอยู่นอกเกณฑ์อายุของยานี้ ไม่สามารถคัดลอกคำสั่งรักษาได้');
-        return;
-      }
-
-      const form = parseFloat(document.getElementById('atbForm')?.value);
-      // doseMaxMgPerKg is already a per-dose value in the ATB table (see calcATB
-      // note above) — do not divide by frequency here.
-      let doseMg = (drug.doseMaxMgPerKg || drug.dose || 10) * w;
-      if (drug.maxPerDoseMg) doseMg = Math.min(doseMg, drug.maxPerDoseMg);
-      
-      let doseMlStr = '';
-      if (form > 0) {
-        doseMlStr = ` (${fmtMl(doseMg / form)} mL)`;
-      }
-      orderStr = `[ER-PED] ${drug.name || drug.drug} ${fmtMg(doseMg)} mg${doseMlStr} ${drug.route || 'IV'} ${drug.split || drug.freq || ''} [BW: ${w.toFixed(1)} kg]`;
     }
   } else if (module === 'fluids') {
     const mnt = calcMaintenanceMlPerHr(w);
@@ -5220,6 +5253,8 @@ if (typeof module !== 'undefined' && module.exports) {
     setSerumCr,
     onRenalSCrInput,
     onRenalHtInput,
-    renderRenalAdjustmentBox
+    renderRenalAdjustmentBox,
+    findMatchedDoseBand,
+    resolveDrugDose
   };
 }
