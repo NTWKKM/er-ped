@@ -417,12 +417,27 @@ test('Peddose Dose: Paracetamol syrup 160 mg / 5 mL (10 kg vs 80 kg cap)', () =>
 test('Peddose Dose: Buscopan (Hyoscine-N-Butylbromide) 10 kg vs 90 kg cap', () => {
   const item = dataset.pediatricDose.find(d => d.key === 'hyoscine-butylbromide-syrup-tab');
   assert(item !== undefined, 'hyoscine-butylbromide-syrup-tab must exist');
+  assert.strictEqual(item.maxPerDayMg, undefined, 'Buscopan must not define unsupported maxPerDayMg');
   const w10 = 10;
   assert.strictEqual(item.doseMinMgPerKg * w10, 5);
 
   const w90 = 90;
   const cappedDose = Math.min(item.doseMaxMgPerKg * w90, item.maxPerDoseMg);
   assert.strictEqual(cappedDose, 40, 'Buscopan for 90 kg must be capped at 40 mg/dose');
+
+  // Verify 30 kg child (8 yr): 0.5 mg/kg = 15 mg/dose, 3x/day = 45 mg/day (not capped at 40 mg/day)
+  document.getElementById('weight').value = '30';
+  document.getElementById('age').value = '8';
+  window.eval('gAgeUnit = "yr"; onWeightChange();');
+  document.getElementById('doseDrug').value = 'hyoscine-butylbromide-syrup-tab';
+  window.eval('calcDose()');
+  const outHtml = document.getElementById('doseOut').innerHTML;
+  assert(outHtml.includes('15 mg'), 'Single dose for 30 kg child must be 15 mg');
+  assert(outHtml.includes('45 mg'), 'Total daily dose for 30 kg child (q8h) must be 45 mg');
+  // Reset
+  document.getElementById('age').value = '';
+  document.getElementById('weight').value = '';
+  window.eval('onWeightChange();');
 });
 
 test('Peddose Dose: Loratadine & Desloratadine syrup age bands', () => {
@@ -478,7 +493,7 @@ test('Renal Dosing: calcPatientRenalDose for Meropenem & Cefepime 10 kg patient'
   const tierNorm = mero.renalDosing.find(t => t.minGfr >= 50);
   const tierMod = mero.renalDosing.find(t => t.minGfr === 26);
   const tierSev = mero.renalDosing.find(t => t.minGfr === 10);
-  const tierFail = mero.renalDosing.find(t => t.maxGfr < 10);
+  const tierFail = mero.renalDosing.find(t => t.minGfr === 0);
 
   assert.strictEqual(calcPatientRenalDose(tierNorm, mero, 10), '200–400 mg q 8 hr');
   assert.strictEqual(calcPatientRenalDose(tierMod, mero, 10), '200–400 mg q 12 hr');
@@ -487,7 +502,7 @@ test('Renal Dosing: calcPatientRenalDose for Meropenem & Cefepime 10 kg patient'
 
   const cefepime = dataset.pediatricATB.find(d => d.key === 'cefepime-iv');
   assert(cefepime && cefepime.renalDosing, 'Cefepime must have renalDosing');
-  const cefFail = cefepime.renalDosing.find(t => t.maxGfr < 11);
+  const cefFail = cefepime.renalDosing.find(t => t.minGfr === 0);
   assert.strictEqual(calcPatientRenalDose(cefFail, cefepime, 10), '250 mg q 24 hr');
 
   // Ceftazidime: 50 kg in q 8 hr tier -> bw * 50 = 2500 mg, but maxPerDayMg = 6000 mg / 3 = 2000 mg cap
@@ -495,6 +510,44 @@ test('Renal Dosing: calcPatientRenalDose for Meropenem & Cefepime 10 kg patient'
   assert(ceftaz && ceftaz.renalDosing, 'Ceftazidime must have renalDosing');
   const ceftazTierNormal = ceftaz.renalDosing.find(t => t.minGfr >= 50);
   assert.strictEqual(calcPatientRenalDose(ceftazTierNormal, ceftaz, 50), '1665–2000 mg q 8 hr');
+});
+
+test('Renal Dosing: All renal drugs have contiguous eGFR tiers without gaps', () => {
+  const allDrugs = [...dataset.pediatricDose, ...dataset.pediatricATB];
+  const renalDrugs = allDrugs.filter(d => d.renalDosing && d.renalDosing.length > 0);
+  assert.strictEqual(renalDrugs.length, 13, 'Must have exactly 13 renal-adjusted drugs');
+
+  renalDrugs.forEach(drug => {
+    const tiers = drug.renalDosing;
+    for (let i = 0; i < tiers.length - 1; i++) {
+      const higher = tiers[i];
+      const lower = tiers[i + 1];
+      assert.strictEqual(
+        lower.maxGfr,
+        higher.minGfr,
+        `Drug ${drug.key} tier [${i + 1}] maxGfr (${lower.maxGfr}) must equal tier [${i}] minGfr (${higher.minGfr})`
+      );
+    }
+  });
+
+  // Verify continuous intermediate eGFR values match without gap
+  document.getElementById('weight').value = '10';
+  document.getElementById('length').value = '100';
+  window.eval('onWeightChange()');
+
+  // Cefepime: eGFR = 10.95 (Ht 100, SCr 3.77168 -> 0.413 * 100 / 3.77168 = 10.95 mL/min/1.73m2)
+  document.getElementById('atbDrug').value = 'cefepime-iv';
+  window.eval('onRenalSCrInput("3.77168")');
+  const atbOutCef = document.getElementById('atbOut');
+  assert(atbOutCef.innerHTML.includes('active-tier'), 'Cefepime at eGFR 10.95 must match active tier (< 11 / HD)');
+  assert(atbOutCef.querySelector('tr.active-tier')?.textContent.includes('< 11 / HD'), 'Active row must be < 11 / HD tier');
+
+  // Ceftazidime: eGFR = 29.95 (Ht 100, SCr 1.37896 -> 0.413 * 100 / 1.37896 = 29.95 mL/min/1.73m2)
+  document.getElementById('atbDrug').value = 'ceftazidime-iv-im';
+  window.eval('onRenalSCrInput("1.37896")');
+  const atbOutCeftaz = document.getElementById('atbOut');
+  assert(atbOutCeftaz.innerHTML.includes('active-tier'), 'Ceftazidime at eGFR 29.95 must match active tier (10–29)');
+  assert(atbOutCeftaz.querySelector('tr.active-tier')?.textContent.includes('10–29'), 'Active row must be 10–29 tier');
 });
 
 test('Renal UI Engine: Meropenem renders expandable renal panel and highlights active tier with eGFR', () => {

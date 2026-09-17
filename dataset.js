@@ -790,7 +790,7 @@ window.ER_PED_DATASET = {
         {
           "gfr": "< 50 / HD",
           "minGfr": 0,
-          "maxGfr": 49.9,
+          "maxGfr": 50,
           "doseAdjustment": "ลดขนาดยาลง 50% หรือขยายเวลา",
           "freq": "q 12–24 hr",
           "clinicalNote": "ลดขนาดลง 50% หรือให้ทุก 12–24 ชม."
@@ -1653,7 +1653,6 @@ window.ER_PED_DATASET = {
       "doseMinMgPerKg": 0.5,
       "doseMaxMgPerKg": 0.5,
       "maxPerDoseMg": 40,
-      "maxPerDayMg": 40,
       "freq": "q 8 hr",
       "route": "PO",
       "minAgeYr": 1,
@@ -1834,7 +1833,7 @@ window.ER_PED_DATASET = {
         {
           "gfr": "10–24",
           "minGfr": 10,
-          "maxGfr": 24.9,
+          "maxGfr": 25,
           "doseAdjustment": "10–20 mg/kg",
           "freq": "q 24 hr",
           "clinicalNote": "ขยายระยะห่างเป็นทุก 24 ชม."
@@ -1842,7 +1841,7 @@ window.ER_PED_DATASET = {
         {
           "gfr": "< 10 / HD",
           "minGfr": 0,
-          "maxGfr": 9.9,
+          "maxGfr": 10,
           "doseAdjustment": "ลดขนาดยาลง 50% (5–10 mg/kg)",
           "freq": "q 24 hr",
           "clinicalNote": "ลดขนาด 50% ทุก 24 ชม. (ให้ยาหลังฟอกไต HD)"
@@ -2375,7 +2374,7 @@ window.ER_PED_DATASET = {
         {
           "gfr": "10–29",
           "minGfr": 10,
-          "maxGfr": 29.9,
+          "maxGfr": 30,
           "doseAdjustment": "25–50 mg/kg",
           "freq": "q 12 hr",
           "clinicalNote": "ขยายระยะห่างเป็นทุก 12 ชม."
@@ -2383,7 +2382,7 @@ window.ER_PED_DATASET = {
         {
           "gfr": "< 10 / HD",
           "minGfr": 0,
-          "maxGfr": 9.9,
+          "maxGfr": 10,
           "doseAdjustment": "25–50 mg/kg",
           "freq": "q 24 hr",
           "clinicalNote": "ขยายระยะห่างเป็นทุก 24 ชม. (ให้ยาหลังฟอกไต HD)"
@@ -2431,7 +2430,7 @@ window.ER_PED_DATASET = {
         {
           "gfr": "10–29",
           "minGfr": 10,
-          "maxGfr": 29.9,
+          "maxGfr": 30,
           "doseAdjustment": "33.3–50 mg/kg",
           "freq": "q 24 hr",
           "clinicalNote": "ขยายระยะห่างเป็นทุก 24 ชม."
@@ -2439,7 +2438,7 @@ window.ER_PED_DATASET = {
         {
           "gfr": "< 10 / HD",
           "minGfr": 0,
-          "maxGfr": 9.9,
+          "maxGfr": 10,
           "doseAdjustment": "ลดขนาด 50% (16.6–25 mg/kg)",
           "freq": "q 24–48 hr",
           "clinicalNote": "ลดขนาด 50% ทุก 24–48 ชม. (ให้ยาหลังฟอกไต HD)"
@@ -2625,7 +2624,7 @@ window.ER_PED_DATASET = {
         {
           "gfr": "< 30 / HD",
           "minGfr": 0,
-          "maxGfr": 29.9,
+          "maxGfr": 30,
           "doseAdjustment": "ให้ 50% ของขนาดปกติ",
           "freq": "q 18–24 hr",
           "clinicalNote": "ลดขนาดลง 50% และขยายระยะห่างเป็นทุก 18–24 ชม."
@@ -2816,7 +2815,7 @@ window.ER_PED_DATASET = {
         {
           "gfr": "10–29",
           "minGfr": 10,
-          "maxGfr": 29.9,
+          "maxGfr": 30,
           "doseAdjustment": "15–20 mg/kg (Single dose)",
           "freq": "ตามระดับ TDM",
           "clinicalNote": "ให้ single dose แล้วเจาะระดับยาก่อนให้ dose ถัดไป (Trough < 2.5–5 mcg/mL)"
@@ -2824,7 +2823,7 @@ window.ER_PED_DATASET = {
         {
           "gfr": "< 10 / HD",
           "minGfr": 0,
-          "maxGfr": 9.9,
+          "maxGfr": 10,
           "doseAdjustment": "7.5–10 mg/kg หลัง HD",
           "freq": "ตามระดับ TDM",
           "clinicalNote": "ให้ยาหลังฟอกไต HD และติดตามระดับยาอย่างใกล้ชิด"
@@ -2874,7 +2873,7 @@ window.ER_PED_DATASET = {
         {
           "gfr": "10–29",
           "minGfr": 10,
-          "maxGfr": 29.9,
+          "maxGfr": 30,
           "doseAdjustment": "5–7.5 mg/kg (Single dose)",
           "freq": "ตามระดับ TDM",
           "clinicalNote": "ให้ single dose แล้วเจาะระดับยาก่อนให้ dose ถัดไป (Trough < 1 mcg/mL)"
@@ -2882,7 +2881,7 @@ window.ER_PED_DATASET = {
         {
           "gfr": "< 10 / HD",
           "minGfr": 0,
-          "maxGfr": 9.9,
+          "maxGfr": 10,
           "doseAdjustment": "1–2 mg/kg หลัง HD",
           "freq": "ตามระดับ TDM",
           "clinicalNote": "ให้ยาหลังฟอกไต HD และติดตามระดับยาอย่างใกล้ชิด"
@@ -2932,7 +2931,7 @@ window.ER_PED_DATASET = {
         {
           "gfr": "10–29",
           "minGfr": 10,
-          "maxGfr": 29.9,
+          "maxGfr": 30,
           "doseAdjustment": "25–50 mg/kg",
           "freq": "q 8–12 hr",
           "clinicalNote": "ขยายระยะห่างเป็นทุก 8–12 ชม."
@@ -2940,7 +2939,7 @@ window.ER_PED_DATASET = {
         {
           "gfr": "< 10 / HD",
           "minGfr": 0,
-          "maxGfr": 9.9,
+          "maxGfr": 10,
           "doseAdjustment": "25–50 mg/kg",
           "freq": "q 12–24 hr",
           "clinicalNote": "ขยายระยะห่างเป็นทุก 12–24 ชม. (ให้ยาหลังฟอกไต HD)"
@@ -2990,7 +2989,7 @@ window.ER_PED_DATASET = {
         {
           "gfr": "11–29",
           "minGfr": 11,
-          "maxGfr": 29.9,
+          "maxGfr": 30,
           "doseAdjustment": "50 mg/kg",
           "freq": "q 24 hr",
           "clinicalNote": "ขยายระยะห่างเป็นทุก 24 ชม."
@@ -2998,7 +2997,7 @@ window.ER_PED_DATASET = {
         {
           "gfr": "< 11 / HD",
           "minGfr": 0,
-          "maxGfr": 10.9,
+          "maxGfr": 11,
           "doseAdjustment": "ลดขนาดยาเหลือ 25 mg/kg",
           "freq": "q 24 hr",
           "clinicalNote": "ลดขนาดเหลือ 25 mg/kg ทุก 24 ชม. (ให้ supplemental dose หลัง HD)"
@@ -3048,7 +3047,7 @@ window.ER_PED_DATASET = {
         {
           "gfr": "10–25",
           "minGfr": 10,
-          "maxGfr": 25.9,
+          "maxGfr": 26,
           "doseAdjustment": "ลดขนาดยาลง 50% (10–20 mg/kg)",
           "freq": "q 12 hr",
           "clinicalNote": "ลดขนาดยาลง 50% และให้ทุก 12 ชม."
@@ -3056,7 +3055,7 @@ window.ER_PED_DATASET = {
         {
           "gfr": "< 10 / HD",
           "minGfr": 0,
-          "maxGfr": 9.9,
+          "maxGfr": 10,
           "doseAdjustment": "ลดขนาดยาลง 50% (10–20 mg/kg)",
           "freq": "q 24 hr",
           "clinicalNote": "ลดขนาด 50% ทุก 24 ชม. (ให้ยาหลังฟอกไต HD)"
@@ -3106,7 +3105,7 @@ window.ER_PED_DATASET = {
         {
           "gfr": "10–29",
           "minGfr": 10,
-          "maxGfr": 29.9,
+          "maxGfr": 30,
           "doseAdjustment": "7.5–12.5 mg/kg",
           "freq": "q 12 hr",
           "clinicalNote": "ลดขนาดยาและขยายระยะห่างเป็นทุก 12 ชม."
@@ -3114,7 +3113,7 @@ window.ER_PED_DATASET = {
         {
           "gfr": "< 10 / HD",
           "minGfr": 0,
-          "maxGfr": 9.9,
+          "maxGfr": 10,
           "doseAdjustment": "7.5 mg/kg",
           "freq": "q 12–24 hr",
           "clinicalNote": "ลดขนาดยา (ให้ยาหลังฟอกไต HD)"
@@ -3165,7 +3164,7 @@ window.ER_PED_DATASET = {
         {
           "gfr": "< 20 / HD",
           "minGfr": 0,
-          "maxGfr": 19.9,
+          "maxGfr": 20,
           "doseAdjustment": "50–66.6 mg/kg (150 mg/kg/day)",
           "freq": "q 8 hr",
           "clinicalNote": "ลดขนาดลง (สูงสุด 2.25 g ทุก 8 ชม. ; วันที่ฟอกไตให้เพิ่ม 0.75 g หลัง HD)"
@@ -3232,7 +3231,7 @@ window.ER_PED_DATASET = {
         {
           "gfr": "15–30",
           "minGfr": 15,
-          "maxGfr": 29.9,
+          "maxGfr": 30,
           "doseAdjustment": "ลดขนาดยาลง 50% (2–3 mg/kg TMP)",
           "freq": "q 12 hr",
           "clinicalNote": "ลดขนาดยาลง 50% หรือให้ 4–6 mg/kg ทุก 24 ชม."
@@ -3240,7 +3239,7 @@ window.ER_PED_DATASET = {
         {
           "gfr": "< 15 / HD",
           "minGfr": 0,
-          "maxGfr": 14.9,
+          "maxGfr": 15,
           "doseAdjustment": "ลดขนาดยาลง 50–75% หรือหลีกเลี่ยง",
           "freq": "q 24 hr",
           "clinicalNote": "ไม่แนะนำให้ใช้ ยกเว้นจำเป็นอย่างยิ่ง (ให้ยาหลัง HD)"
