@@ -512,6 +512,32 @@ test('Renal Dosing: calcPatientRenalDose for Meropenem & Cefepime 10 kg patient'
   assert.strictEqual(calcPatientRenalDose(ceftazTierNormal, ceftaz, 50), '1665–2000 mg q 8 hr');
 });
 
+test('Renal Dosing: Piperacillin/Tazobactam honors tier-level maxPerDoseMg cap (2000 mg) in renal impairment', () => {
+  const { calcPatientRenalDose } = window;
+  const pipTazo = dataset.pediatricATB.find(d => d.key === 'piperacillin-tazobactam-iv');
+  assert(pipTazo && pipTazo.renalDosing, 'Piperacillin/Tazobactam must have renalDosing');
+
+  const tierNorm = pipTazo.renalDosing.find(t => t.minGfr >= 50);
+  const tierMod = pipTazo.renalDosing.find(t => t.gfr === '20–50');
+  const tierSev = pipTazo.renalDosing.find(t => t.gfr === '< 20 / HD');
+
+  assert(tierMod && tierMod.maxPerDoseMg === 2000, 'Tier 20-50 must specify maxPerDoseMg: 2000');
+  assert(tierSev && tierSev.maxPerDoseMg === 2000, 'Tier < 20 / HD must specify maxPerDoseMg: 2000');
+
+  // 10 kg patient (uncapped)
+  assert.strictEqual(calcPatientRenalDose(tierNorm, pipTazo, 10), '666–1000 mg q 8 hr');
+  assert.strictEqual(calcPatientRenalDose(tierMod, pipTazo, 10), '666–800 mg q 8 hr');
+  assert.strictEqual(calcPatientRenalDose(tierSev, pipTazo, 10), '500–666 mg q 8 hr');
+
+  // 50 kg patient:
+  // Normal tier (>50): 66.6-100 mg/kg -> 3330-5000 mg, capped by drug.maxPerDoseMg (4000 mg)
+  assert.strictEqual(calcPatientRenalDose(tierNorm, pipTazo, 50), '3330–4000 mg q 8 hr');
+  // Impaired tier (20-50): 66.6-80 mg/kg -> 3330-4000 mg, capped by tier.maxPerDoseMg (2000 mg), min===max collapse
+  assert.strictEqual(calcPatientRenalDose(tierMod, pipTazo, 50), '2000 mg q 8 hr');
+  // Impaired tier (<20 / HD): 50-66.6 mg/kg -> 2500-3330 mg, capped by tier.maxPerDoseMg (2000 mg), min===max collapse
+  assert.strictEqual(calcPatientRenalDose(tierSev, pipTazo, 50), '2000 mg q 8 hr');
+});
+
 test('Renal Dosing & Regimens: Ranitidine IV vs PO separated catalog entries and safety caps', () => {
   const { calcPatientRenalDose } = window;
   const ranitidineIv = dataset.pediatricDose.find(d => d.key === 'ranitidine-iv-50-mg');

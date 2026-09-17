@@ -3209,6 +3209,7 @@ window.ER_PED_DATASET = {
           "maxGfr": 50,
           "doseAdjustment": "66.6–80 mg/kg (200 mg/kg/day)",
           "freq": "q 8 hr",
+          "maxPerDoseMg": 2000,
           "clinicalNote": "ลดขนาดลง (สูงสุด 2.25 g ทุก 8 ชม.)"
         },
         {
@@ -3217,6 +3218,7 @@ window.ER_PED_DATASET = {
           "maxGfr": 20,
           "doseAdjustment": "50–66.6 mg/kg (150 mg/kg/day)",
           "freq": "q 8 hr",
+          "maxPerDoseMg": 2000,
           "clinicalNote": "ลดขนาดลง (สูงสุด 2.25 g ทุก 8 ชม. ; วันที่ฟอกไตให้เพิ่ม 0.75 g หลัง HD)"
         }
       ]

@@ -1737,10 +1737,19 @@ function calcSchwartzEGFR(scr, ht) {
 function calcPatientRenalDose(tier, drug, bw) {
   if (!bw || bw <= 0) return (tier.doseAdjustment || '') + (tier.freq ? ' ' + tier.freq : '');
   let cap = drug.maxPerDoseMg || Infinity;
+  if (tier.maxPerDoseMg) {
+    cap = Math.min(cap, tier.maxPerDoseMg);
+  }
   if (drug.maxPerDayMg && tier.freq) {
     const n = dosesPerDayFromFreq(tier.freq);
     if (n && n > 0) {
       cap = Math.min(cap, drug.maxPerDayMg / n);
+    }
+  }
+  if (tier.maxPerDayMg && tier.freq) {
+    const n = dosesPerDayFromFreq(tier.freq);
+    if (n && n > 0) {
+      cap = Math.min(cap, tier.maxPerDayMg / n);
     }
   }
 
