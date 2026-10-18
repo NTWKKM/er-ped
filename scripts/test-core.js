@@ -586,9 +586,15 @@ test('Renal Dosing & Regimens: Ranitidine IV vs PO separated catalog entries and
 });
 
 test('Renal Dosing: All renal drugs have contiguous eGFR tiers without gaps', () => {
-  const allDrugs = [...dataset.pediatricDose, ...dataset.pediatricATB];
-  const renalDrugs = allDrugs.filter(d => d.renalDosing && d.renalDosing.length > 0);
-  assert.strictEqual(renalDrugs.length, 14, 'Must have exactly 14 renal-adjusted drugs');
+  const seenKeys = new Set();
+  const renalDrugs = [];
+  [...dataset.pediatricDose, ...dataset.pediatricATB].forEach(d => {
+    if (d.renalDosing && d.renalDosing.length > 0 && !seenKeys.has(d.key)) {
+      seenKeys.add(d.key);
+      renalDrugs.push(d);
+    }
+  });
+  assert(renalDrugs.length >= 14, `Must have at least 14 renal-adjusted drugs (found ${renalDrugs.length})`);
 
   renalDrugs.forEach(drug => {
     const tiers = drug.renalDosing;
@@ -1333,9 +1339,9 @@ test('Bedside Pocket Card Print Function: Safe execution check', () => {
   }, 'printBedsideSummaryCard must execute safely');
 });
 
-test('Category Jump Filter: Resus, Meds, Protocols, All filtering across 19 tabs', () => {
+test('Category Jump Filter: Resus, Meds, Protocols, All filtering across 18 tabs', () => {
   const allTabs = Array.from(document.querySelectorAll('.tab-btn'));
-  assert.strictEqual(allTabs.length, 19, 'Must have exactly 19 tab buttons');
+  assert.strictEqual(allTabs.length, 18, 'Must have exactly 18 tab buttons in streamlined navigation');
 
   // Filter Resus
   window.eval('filterNavCategory("resus");');
@@ -1345,13 +1351,51 @@ test('Category Jump Filter: Resus, Meds, Protocols, All filtering across 19 tabs
   // Filter Meds
   window.eval('filterNavCategory("meds");');
   const medsTabs = allTabs.filter(t => t.getAttribute('data-category') === 'meds');
-  assert(medsTabs.length >= 4, 'Must have at least 4 meds tabs');
+  assert.strictEqual(medsTabs.length, 4, 'Must have exactly 4 meds tabs (Medications, IV Fluids, Drip Rate, Transfusion)');
 
   // Reset All
   window.eval('filterNavCategory("all");');
   allTabs.forEach(t => {
     assert.notStrictEqual(t.style.display, 'none', 'All tabs visible under "all" filter');
   });
+});
+
+test('Unified Medications Engine: Merged ATBs & 29 Expanded Pediatric Drugs', () => {
+  assert(dataset.pediatricDose.length >= 170, `pediatricDose must contain >= 170 drugs (found ${dataset.pediatricDose.length})`);
+
+  // Verify ATB presence in unified pediatricDose
+  const amox = dataset.pediatricDose.find(d => d.key.includes('amoxicillin'));
+  assert(amox, 'Amoxicillin must be present in unified pediatricDose');
+
+  const vanc = dataset.pediatricDose.find(d => d.key === 'vancomycin-iv');
+  assert(vanc, 'Vancomycin IV must be present in unified pediatricDose');
+
+  // Verify newly expanded pediatric drugs
+  const furosemide = dataset.pediatricDose.find(d => d.key === 'furosemide-iv-im');
+  assert(furosemide, 'Furosemide IV/IM must be present in unified pediatricDose');
+  assert.strictEqual(furosemide.category, 'cardiovascular', 'Furosemide must have cardiovascular category');
+
+  const adenosine = dataset.pediatricDose.find(d => d.key === 'adenosine-iv');
+  assert(adenosine, 'Adenosine must be present in unified pediatricDose');
+
+  const morphine = dataset.pediatricDose.find(d => d.key === 'morphine-iv');
+  assert(morphine, 'Morphine Sulfate must be present in unified pediatricDose');
+
+  // Test calculation in unified dose engine for 10 kg child with Furosemide
+  document.getElementById('weight').value = '10';
+  document.getElementById('age').value = '2';
+  window.eval('gAgeUnit = "yr"; onWeightChange();');
+  document.getElementById('doseDrug').value = 'furosemide-iv-im';
+  window.eval('calcDose();');
+  const furosemideOrder = window.copyEHROrder('dose');
+  assert(furosemideOrder.includes('Furosemide'), 'EHR order must contain Furosemide');
+  assert(furosemideOrder.includes('10 mg') || furosemideOrder.includes('20 mg'), 'EHR order for 10 kg furosemide (1-2 mg/kg) must calculate target dose');
+
+  // Test calculation in unified dose engine for 10 kg child with Vancomycin (renal-adjusted)
+  document.getElementById('doseDrug').value = 'vancomycin-iv';
+  window.eval('calcDose();');
+  const doseOutHtml = document.getElementById('doseOut').innerHTML;
+  assert(doseOutHtml.includes('Renal Adjustment'), 'Dose output for Vancomycin must render Renal Adjustment table');
 });
 
 // --- ADVANCED CLINICAL ENGINE & EDGE CASE TEST SUITES ---

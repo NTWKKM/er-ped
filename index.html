@@ -7,115 +7,117 @@
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.webmanifest" />
-  <meta name="theme-color" content="#9E3D24" />
+  <meta name="theme-color" content="#0284C7" />
   <!-- Inline favicon: prevents the browser's automatic /favicon.ico 404. -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%239E3D24'/><text x='16' y='23' font-size='19' font-family='Georgia,serif' fill='%23F0EEE6' text-anchor='middle'>P</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230284C7'/><text x='16' y='22' font-size='18' font-weight='800' font-family='-apple-system,BlinkMacSystemFont,sans-serif' fill='%23FFFFFF' text-anchor='middle'>P</text></svg>" />
 
-  <!-- Fonts: Sarabun + JetBrains Mono -->
+  <!-- High-Precision Clinical Fonts: Sarabun + JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Sarabun:wght@300;400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      /* Light — Refined Warm Organic Ivory Canvas & Terracotta Clay Accent */
-      --bg: #F7F6F2;
+      /* Light — Clinical Precision Slate & Sky Medical Palette */
+      --bg: #F8FAFC;
       --card: #FFFFFF;
-      --panel: #F1EEE7;
-      --panel-subtle: #FAF9F6;
-      --ink: #181716;
-      --muted: #66625A;
-      --border: #E6E2D8;
-      --border-strong: #D5CEBF;
-      --accent: #9E3D24;
-      --accent-hover: #7D2E1A;
-      --accent-soft: #F9ECE6;
-      --accent-subtle: #FCF6F3;
-      --good: #15803D;
-      --good-soft: #ECFDF5;
-      --warning: #B45309;
+      --panel: #F1F5F9;
+      --panel-subtle: #F8FAFC;
+      --ink: #0F172A;
+      --muted: #475569;
+      --border: #E2E8F0;
+      --border-strong: #CBD5E1;
+      --accent: #0284C7;
+      --accent-hover: #0369A1;
+      --accent-soft: #E0F2FE;
+      --accent-subtle: #F0F9FF;
+      --good: #16A34A;
+      --good-soft: #F0FDF4;
+      --warning: #D97706;
       --warning-soft: #FFFBEB;
       --danger: #DC2626;
       --danger-soft: #FEF2F2;
-      --dark-btn: #242220;
-      --ring: rgba(158, 61, 36, 0.22);
+      --dark-btn: #0F172A;
+      --ring: rgba(2, 132, 199, 0.22);
       --danger-subtle: rgba(220, 38, 38, 0.08);
-      --warning-subtle: rgba(180, 83, 9, 0.08);
+      --warning-subtle: rgba(217, 119, 6, 0.08);
 
-      /* Radii Tokens */
+      /* Radii Tokens (Consistent, surgical scale) */
       --r-xs: 4px;
-      --r-sm: 7px;
-      --r-md: 10px;
-      --r-lg: 14px;
-      --r-xl: 18px;
+      --r-sm: 6px;
+      --r-md: 8px;
+      --r-lg: 12px;
+      --r-xl: 16px;
       --r-full: 9999px;
 
-      /* Refined Elevation Shadows */
-      --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02);
-      --shadow-2: 0 4px 16px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03);
-      --shadow-3: 0 12px 32px rgba(0, 0, 0, 0.10), 0 2px 6px rgba(0, 0, 0, 0.04);
+      /* Refined Ambient Elevation Shadows */
+      --shadow-1: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+      --shadow-2: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+      --shadow-3: 0 16px 24px -4px rgba(15, 23, 42, 0.10), 0 6px 10px -4px rgba(15, 23, 42, 0.05);
 
-      --font-display: 'Newsreader', Georgia, serif;
-      --t-fast: 120ms cubic-bezier(.2,.7,.2,1);
+      --font-sans: 'Sarabun', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --font-display: var(--font-sans);
+      --t-fast: 120ms cubic-bezier(.16, 1, .3, 1);
       --topbar-h: 52px;
     }
 
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) {
-        --bg: #11100E;
-        --card: #1A1815;
-        --panel: #23201B;
-        --panel-subtle: #161412;
-        --ink: #ECE7DF;
-        --muted: #9B9488;
-        --border: #322E27;
-        --border-strong: #443F35;
-        --accent: #E28E70;
-        --accent-hover: #EEA58B;
-        --accent-soft: #2B1D17;
-        --accent-subtle: #211611;
+        --bg: #0B0F17;
+        --card: #111827;
+        --panel: #1E293B;
+        --panel-subtle: #0F172A;
+        --ink: #F8FAFC;
+        --muted: #94A3B8;
+        --border: #1E293B;
+        --border-strong: #334155;
+        --accent: #38BDF8;
+        --accent-hover: #7DD3FC;
+        --accent-soft: #0C2B47;
+        --accent-subtle: #081E33;
         --good: #4ADE80;
-        --good-soft: #132717;
+        --good-soft: #052E16;
         --warning: #FBBF24;
-        --warning-soft: #2B210E;
+        --warning-soft: #451A03;
         --danger: #F87171;
-        --danger-soft: #2C1313;
-        --dark-btn: #2A2723;
-        --ring: rgba(226, 142, 112, 0.32);
+        --danger-soft: #450A0A;
+        --dark-btn: #1E293B;
+        --ring: rgba(56, 189, 248, 0.32);
         --danger-subtle: rgba(248, 113, 113, 0.15);
         --warning-subtle: rgba(251, 191, 36, 0.15);
-        --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3);
-        --shadow-2: 0 4px 16px rgba(0, 0, 0, 0.4);
-        --shadow-3: 0 12px 32px rgba(0, 0, 0, 0.6);
+        --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-2: 0 4px 16px rgba(0, 0, 0, 0.5);
+        --shadow-3: 0 12px 32px rgba(0, 0, 0, 0.7);
       }
     }
 
     :root[data-theme="dark"] {
-      --bg: #11100E;
-      --card: #1A1815;
-      --panel: #23201B;
-      --panel-subtle: #161412;
-      --ink: #ECE7DF;
-      --muted: #9B9488;
-      --border: #322E27;
-      --border-strong: #443F35;
-      --accent: #E28E70;
-      --accent-hover: #EEA58B;
-      --accent-soft: #2B1D17;
-      --accent-subtle: #211611;
+      --bg: #0B0F17;
+      --card: #111827;
+      --panel: #1E293B;
+      --panel-subtle: #0F172A;
+      --ink: #F8FAFC;
+      --muted: #94A3B8;
+      --border: #1E293B;
+      --border-strong: #334155;
+      --accent: #38BDF8;
+      --accent-hover: #7DD3FC;
+      --accent-soft: #0C2B47;
+      --accent-subtle: #081E33;
       --good: #4ADE80;
-      --good-soft: #132717;
+      --good-soft: #052E16;
       --warning: #FBBF24;
-      --warning-soft: #2B210E;
+      --warning-soft: #451A03;
       --danger: #F87171;
-      --danger-soft: #2C1313;
-      --dark-btn: #2A2723;
-      --ring: rgba(226, 142, 112, 0.32);
+      --danger-soft: #450A0A;
+      --dark-btn: #1E293B;
+      --ring: rgba(56, 189, 248, 0.32);
       --danger-subtle: rgba(248, 113, 113, 0.15);
       --warning-subtle: rgba(251, 191, 36, 0.15);
-      --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3);
-      --shadow-2: 0 4px 16px rgba(0, 0, 0, 0.4);
-      --shadow-3: 0 12px 32px rgba(0, 0, 0, 0.6);
+      --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-2: 0 4px 16px rgba(0, 0, 0, 0.5);
+      --shadow-3: 0 12px 32px rgba(0, 0, 0, 0.7);
     }
 
     /* Monochrome / Grayscale Theme (JVC Hospital Displays) */
@@ -221,8 +223,8 @@
       border-radius: 3px;
     }
     :root[data-theme="dark"] .search-match {
-      background: #3A2518;
-      color: #EEA58B;
+      background: #0C2B47;
+      color: #38BDF8;
     }
     :root[data-theme="mono"] .search-match {
       background: #FFFFFF;
@@ -233,15 +235,43 @@
       color: #FF8585;
     }
 
-    /* Unified Category Jump & Broselow Triage Navigation Row */
-    .category-bar-wrapper {
+    /* 2-Tier Cockpit Navigation */
+    .cockpit-nav {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 7px 10px 0 10px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-1);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .cockpit-tier-1 {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
+      gap: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
     }
+    .cockpit-tier-1::-webkit-scrollbar { display: none; }
+    .cockpit-tier-2 {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .cockpit-tier-2::-webkit-scrollbar { display: none; }
+    .cockpit-tier-2 .tabs {
+      margin-bottom: 0 !important;
+      border-bottom: none !important;
+      padding-bottom: 0 !important;
+    }
+
     .category-bar, .category-pills-group {
       display: flex;
       align-items: center;
@@ -249,16 +279,16 @@
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
-      padding: 2px 0;
+      padding: 1px 0;
       flex-shrink: 0;
     }
     .category-bar::-webkit-scrollbar, .category-pills-group::-webkit-scrollbar { display: none; }
     .category-pill {
       flex: 0 0 auto;
-      padding: 5px 12px;
+      padding: 4px 11px;
       border-radius: var(--r-full);
       border: 1px solid var(--border);
-      background: var(--card);
+      background: var(--panel-subtle);
       color: var(--muted);
       font: 600 12px 'Sarabun', sans-serif;
       cursor: pointer;
@@ -268,7 +298,6 @@
       transition: all 0.15s ease;
       white-space: nowrap;
       user-select: none;
-      box-shadow: var(--shadow-1);
     }
     .category-pill:hover {
       background: var(--panel);
@@ -289,16 +318,37 @@
       font-weight: 800;
     }
 
+    /* Topbar Integrated Quick-Weight Triage Cluster */
+    .topbar-triage {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 8px 3px;
+      background: var(--panel-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      box-shadow: var(--shadow-1);
+      flex: 0 1 auto;
+      max-width: 100%;
+    }
+    :root[data-theme="dark"] .topbar-triage {
+      background: #0F172A;
+      border-color: #1E293B;
+    }
+    :root[data-theme="mono"] .topbar-triage {
+      background: #181816;
+      border-color: #383834;
+    }
+    :root[data-theme="red"] .topbar-triage {
+      background: #140303;
+      border-color: #380808;
+    }
     .triage-strip-wrapper {
       display: flex;
       flex-direction: column;
-      gap: 3px;
-      flex: 0 0 auto;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--r-md);
-      padding: 3px 8px 4px;
-      box-shadow: var(--shadow-1);
+      gap: 2px;
       max-width: 100%;
     }
 
@@ -453,13 +503,13 @@
     }
 
     :root[data-theme="dark"] .topbar {
-      background: rgba(17, 16, 14, 0.92);
+      background: rgba(11, 15, 23, 0.92);
       border-bottom: 1px solid var(--border);
       box-shadow: none;
     }
     :root:not([data-theme="dark"]):not([data-theme="mono"]) option {
       background: #FFFFFF;
-      color: #181716;
+      color: #0F172A;
     }
 
     :root[data-theme="dark"] input, 
@@ -467,28 +517,28 @@
     :root[data-theme="dark"] .combobox-input,
     :root[data-theme="dark"] .bio-fields input[type="number"],
     :root[data-theme="dark"] .chip input[type="number"] {
-      background: #211E1A;
-      color: #ECE7DF;
-      border-color: #322E27;
+      background: #1E293B;
+      color: #F8FAFC;
+      border-color: #334155;
     }
     :root[data-theme="dark"] input:focus,
     :root[data-theme="dark"] select:focus,
     :root[data-theme="dark"] .combobox-input:focus {
-      background: #211E1A;
+      background: #1E293B;
       color: #FFFFFF;
       border-color: var(--accent);
     }
     :root[data-theme="dark"] option {
-      background: #1A1815;
-      color: #ECE7DF;
+      background: #111827;
+      color: #F8FAFC;
     }
     :root[data-theme="dark"] .combobox-dropdown {
-      background: #1A1815;
-      border-color: #322E27;
+      background: #111827;
+      border-color: #334155;
     }
     :root[data-theme="dark"] .combobox-item:hover,
     :root[data-theme="dark"] .combobox-item.kb-active {
-      background: #24201B;
+      background: #1E293B;
       color: #FFFFFF;
     }
 
@@ -752,17 +802,28 @@
       height: 17px;
     }
 
-    h1, h2, h3 { margin: 0 0 8px; font-weight: 700; }
-    /* Display type: Newsreader serif headings on module titles */
-    h1, h2 {
-      font-family: var(--font-display);
-      font-weight: 500;
-      letter-spacing: -0.015em;
-      line-height: 1.25;
+    h1, h2, h3 { 
+      margin: 0 0 8px; 
+      font-weight: 700; 
+      font-family: var(--font-sans);
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      color: var(--ink);
     }
-    h2 { font-size: 20px; }
+    h1 { font-size: 22px; }
+    h2 { font-size: 18px; }
+    h3 { font-size: 15px; }
+    .module-title {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
     code, .mono { 
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--font-mono);
       font-variant-numeric: tabular-nums;
     }
 
@@ -773,7 +834,7 @@
       left: 0; 
       right: 0; 
       z-index: 60; 
-      background: rgba(247, 246, 242, 0.90); 
+      background: rgba(248, 250, 252, 0.92); 
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
       border-bottom: 1px solid var(--border); 
@@ -946,10 +1007,13 @@
       background: var(--accent-soft);
       box-shadow: 0 0 0 3px var(--ring);
     }
-    :root[data-theme="dark"] .chip input[type="number"].highlight-input,
-    :root[data-theme="mono"] .chip input[type="number"].highlight-input {
-      background: #362D24;
+    :root[data-theme="dark"] .chip input[type="number"].highlight-input {
+      background: var(--accent-soft);
       color: var(--ink);
+    }
+    :root[data-theme="mono"] .chip input[type="number"].highlight-input {
+      background: #262624;
+      color: #FFFFFF;
     }
 
     .unit-toggle-btn {
@@ -1190,50 +1254,76 @@
       background: color-mix(in srgb, var(--danger-soft) 35%, var(--card));
     }
     .hero-metric.blue { 
-      border-left-color: var(--ink); 
-      background: var(--panel-subtle);
+      border-left-color: var(--accent); 
+      background: color-mix(in srgb, var(--accent-soft) 35%, var(--card));
     }
 
     /* Shape-coded prefixes */
-    .hero-metric.good .hero-label::before { content: "\2713\FE0E  "; color: var(--good); }
-    .hero-metric.warning .hero-label::before { content: "\25B2\FE0E  "; color: var(--warning); }
-    .hero-metric.danger .hero-label::before { content: "\2716\FE0E  "; color: var(--danger); }
-    .hero-metric.blue .hero-label::before { content: "\2139\FE0E  "; color: var(--muted); }
+    .hero-metric.good .hero-label::before,
+    .hero-metric.good .hero-metric-label::before { content: "\2713\FE0E  "; color: var(--good); }
+    .hero-metric.warning .hero-label::before,
+    .hero-metric.warning .hero-metric-label::before { content: "\25B2\FE0E  "; color: var(--warning); }
+    .hero-metric.danger .hero-label::before,
+    .hero-metric.danger .hero-metric-label::before { content: "\2716\FE0E  "; color: var(--danger); }
+    .hero-metric.blue .hero-label::before,
+    .hero-metric.blue .hero-metric-label::before { content: "\2139\FE0E  "; color: var(--accent); }
 
-    .hero-metric .hero-label {
+    .hero-metric .hero-label,
+    .hero-metric-label {
       font-size: 10.5px;
       letter-spacing: 0.05em;
       text-transform: uppercase;
       color: var(--muted);
-      font-family: 'Sarabun', sans-serif;
+      font-family: var(--font-sans);
       font-weight: 700;
     }
 
-    .hero-metric .hero-val {
+    .hero-metric .hero-val,
+    .hero-metric-value {
       font-size: 21px;
       font-weight: 800;
       color: var(--ink);
       line-height: 1.15;
       letter-spacing: -0.02em;
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
     }
 
-    .hero-metric .hero-val span.unit {
+    .hero-metric .hero-val span.unit,
+    .hero-metric-value span.unit,
+    .hero-metric-value span {
       font-size: 12.5px;
       color: var(--accent);
       font-weight: 700;
       margin-left: 4px;
     }
-    :root[data-theme="mono"] .hero-metric .hero-val span.unit {
+    :root[data-theme="mono"] .hero-metric .hero-val span.unit,
+    :root[data-theme="mono"] .hero-metric-value span.unit,
+    :root[data-theme="mono"] .hero-metric-value span {
       color: var(--ink);
     }
 
-    .hero-metric .hero-sub {
+    .hero-metric .hero-sub,
+    .hero-metric-sub {
       font-size: 11.5px;
       color: var(--muted);
-      font-family: 'Sarabun', sans-serif;
+      font-family: var(--font-sans);
       font-weight: 500;
       margin-top: 2px;
       line-height: 1.35;
+    }
+
+    /* Clinical Protocol Stage Cards */
+    .stage-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 12px 14px;
+      box-shadow: var(--shadow-1);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .stage-card:hover {
+      border-color: var(--border-strong);
     }
 
     .badge-cap {
@@ -1410,7 +1500,7 @@
     }
     :root[data-theme="dark"] .broselow-spectrum-seg.active {
       border-color: #FFFFFF;
-      box-shadow: 0 0 0 2px #EEA58B, 0 2px 8px rgba(0,0,0,0.5);
+      box-shadow: 0 0 0 2px var(--accent), 0 2px 8px rgba(0,0,0,0.5);
     }
     :root[data-theme="mono"] .broselow-spectrum-seg {
       background: #262624 !important;
@@ -1818,10 +1908,23 @@
         padding: 8px;
         padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
       }
-      .category-bar-wrapper {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 6px;
+      .cockpit-nav {
+        padding: 6px 8px 0 8px;
+        margin-bottom: 10px;
+        border-radius: var(--r-sm);
+      }
+      .cockpit-tier-1 {
+        padding-bottom: 4px;
+        gap: 4px;
+      }
+      .cockpit-tier-2 .tab, .cockpit-tier-2 .tab-btn {
+        padding: 5px 8px;
+        font-size: 12px;
+        min-height: 34px;
+      }
+      .topbar-triage {
+        width: 100%;
+        box-sizing: border-box;
       }
       .category-pills-group {
         width: 100%;
@@ -2267,6 +2370,34 @@
         </div>
       </div>
 
+      <!-- Center: 1-Tap Broselow Quick Weight Triage Strip (Integrated into Topbar) -->
+      <div class="topbar-triage triage-strip-wrapper" id="topbarTriage">
+        <div class="quick-weight-strip" id="quickWeightStrip" role="group" aria-label="Broselow-Aligned Quick Weight Triage Presets">
+          <button type="button" class="quick-weight-btn" data-color="Grey" onclick="applyQuickWeight(5)" title="Grey (3–5.9 kg, ~1 mo)"><span class="qw-dot" style="background:#B0B0B0;"></span>5k</button>
+          <button type="button" class="quick-weight-btn" data-color="Pink" onclick="applyQuickWeight(7)" title="Pink (6–7.9 kg, ~4 mo)"><span class="qw-dot" style="background:#FF80AB;"></span>7k</button>
+          <button type="button" class="quick-weight-btn" data-color="Red" onclick="applyQuickWeight(9)" title="Red (8–9.9 kg, ~9 mo)"><span class="qw-dot" style="background:#FF5252;"></span>9k</button>
+          <button type="button" class="quick-weight-btn" data-color="Purple" onclick="applyQuickWeight(10)" title="Purple (10–11.9 kg, ~1 yr)"><span class="qw-dot" style="background:#B388FF;"></span>10k</button>
+          <button type="button" class="quick-weight-btn" data-color="Yellow" onclick="applyQuickWeight(13)" title="Yellow (12–14.9 kg, ~2.5 yr)"><span class="qw-dot" style="background:#FFEE58;"></span>13k</button>
+          <button type="button" class="quick-weight-btn" data-color="White" onclick="applyQuickWeight(17)" title="White (15–18.9 kg, ~4.5 yr)"><span class="qw-dot" style="background:#FFFFFF; border:1px solid rgba(0,0,0,0.3);"></span>17k</button>
+          <button type="button" class="quick-weight-btn" data-color="Blue" onclick="applyQuickWeight(21)" title="Blue (19–23.9 kg, ~6.5 yr)"><span class="qw-dot" style="background:#40C4FF;"></span>21k</button>
+          <button type="button" class="quick-weight-btn" data-color="Orange" onclick="applyQuickWeight(27)" title="Orange (24–29.9 kg, ~8.5 yr)"><span class="qw-dot" style="background:#FFAB40;"></span>27k</button>
+          <button type="button" class="quick-weight-btn" data-color="Green" onclick="applyQuickWeight(33)" title="Green (30–36 kg, ~10 yr)"><span class="qw-dot" style="background:#69F0AE;"></span>33k</button>
+          <button type="button" class="quick-weight-btn" data-color="Adolescent" onclick="applyQuickWeight(40)" title="Adolescent (>36 kg, ~12 yr)">40k</button>
+        </div>
+        <!-- Interactive Broselow Mini-Spectrum Bar -->
+        <div class="broselow-mini-strip" id="broselowMiniStrip" title="Broselow 9-Zone Spectrum (คลิกเพื่อคำนวณและพรีวิวโซน)">
+          <div class="broselow-mini-seg" style="background:#B0B0B0;" onclick="previewBroselowZone('Grey', event)" title="Grey (3–5.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#FF80AB;" onclick="previewBroselowZone('Pink', event)" title="Pink (6–7.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#FF5252;" onclick="previewBroselowZone('Red', event)" title="Red (8–9.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#B388FF;" onclick="previewBroselowZone('Purple', event)" title="Purple (10–11.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#FFEE58;" onclick="previewBroselowZone('Yellow', event)" title="Yellow (12–14.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#FFFFFF;" onclick="previewBroselowZone('White', event)" title="White (15–18.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#40C4FF;" onclick="previewBroselowZone('Blue', event)" title="Blue (19–23.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#FFAB40;" onclick="previewBroselowZone('Orange', event)" title="Orange (24–29.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#69F0AE;" onclick="previewBroselowZone('Green', event)" title="Green (30–36 kg)"></div>
+        </div>
+      </div>
+
       <!-- Right: In-Use Active Weight & Action Cluster -->
       <div class="topbar-actions">
         <!-- IN USE: the weight the dose engine is actually running on -->
@@ -2323,93 +2454,70 @@
   <!-- MAIN APP CONTAINER -->
   <div class="container" id="app">
     
-    <!-- Category Jump Bar & Broselow Triage Navigation Row (Option 1: Inline Split Row) -->
-    <div class="category-bar-wrapper">
-      <div class="category-bar category-pills-group" role="group" aria-label="Module categories">
-        <button type="button" class="category-pill active" data-cat="meds" onclick="filterNavCategory('meds', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg> <span>💊 Meds & Transfusion (5)</span></button>
-        <button type="button" class="category-pill" data-cat="resus" onclick="filterNavCategory('resus', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> <span>🚨 Emergency Resus (7)</span></button>
-        <button type="button" class="category-pill" data-cat="protocols" onclick="filterNavCategory('protocols', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg> <span>📋 Protocols & CDS (7)</span></button>
-        <button type="button" class="category-pill" data-cat="all" onclick="filterNavCategory('all', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg> <span>🌐 All (19)</span></button>
-      </div>
-
-      <!-- 1-Tap Broselow-Aligned Quick Weight Triage Strip -->
-      <div class="triage-strip-wrapper">
-        <div class="quick-weight-strip" id="quickWeightStrip" role="group" aria-label="Broselow-Aligned Quick Weight Triage Presets">
-          <button type="button" class="quick-weight-btn" data-color="Grey" onclick="applyQuickWeight(5)" title="Grey (3–5.9 kg, ~1 mo)"><span class="qw-dot" style="background:#B0B0B0;"></span>5k</button>
-          <button type="button" class="quick-weight-btn" data-color="Pink" onclick="applyQuickWeight(7)" title="Pink (6–7.9 kg, ~4 mo)"><span class="qw-dot" style="background:#FF80AB;"></span>7k</button>
-          <button type="button" class="quick-weight-btn" data-color="Red" onclick="applyQuickWeight(9)" title="Red (8–9.9 kg, ~9 mo)"><span class="qw-dot" style="background:#FF5252;"></span>9k</button>
-          <button type="button" class="quick-weight-btn" data-color="Purple" onclick="applyQuickWeight(10)" title="Purple (10–11.9 kg, ~1 yr)"><span class="qw-dot" style="background:#B388FF;"></span>10k</button>
-          <button type="button" class="quick-weight-btn" data-color="Yellow" onclick="applyQuickWeight(13)" title="Yellow (12–14.9 kg, ~2.5 yr)"><span class="qw-dot" style="background:#FFEE58;"></span>13k</button>
-          <button type="button" class="quick-weight-btn" data-color="White" onclick="applyQuickWeight(17)" title="White (15–18.9 kg, ~4.5 yr)"><span class="qw-dot" style="background:#FFFFFF; border:1px solid rgba(0,0,0,0.3);"></span>17k</button>
-          <button type="button" class="quick-weight-btn" data-color="Blue" onclick="applyQuickWeight(21)" title="Blue (19–23.9 kg, ~6.5 yr)"><span class="qw-dot" style="background:#40C4FF;"></span>21k</button>
-          <button type="button" class="quick-weight-btn" data-color="Orange" onclick="applyQuickWeight(27)" title="Orange (24–29.9 kg, ~8.5 yr)"><span class="qw-dot" style="background:#FFAB40;"></span>27k</button>
-          <button type="button" class="quick-weight-btn" data-color="Green" onclick="applyQuickWeight(33)" title="Green (30–36 kg, ~10 yr)"><span class="qw-dot" style="background:#69F0AE;"></span>33k</button>
-          <button type="button" class="quick-weight-btn" data-color="Adolescent" onclick="applyQuickWeight(40)" title="Adolescent (>36 kg, ~12 yr)">40k</button>
-        </div>
-        <!-- Interactive Broselow Mini-Spectrum Bar -->
-        <div class="broselow-mini-strip" id="broselowMiniStrip" title="Broselow 9-Zone Spectrum (คลิกเพื่อคำนวณและพรีวิวโซน)">
-          <div class="broselow-mini-seg" style="background:#B0B0B0;" onclick="previewBroselowZone('Grey', event)" title="Grey (3–5.9 kg)"></div>
-          <div class="broselow-mini-seg" style="background:#FF80AB;" onclick="previewBroselowZone('Pink', event)" title="Pink (6–7.9 kg)"></div>
-          <div class="broselow-mini-seg" style="background:#FF5252;" onclick="previewBroselowZone('Red', event)" title="Red (8–9.9 kg)"></div>
-          <div class="broselow-mini-seg" style="background:#B388FF;" onclick="previewBroselowZone('Purple', event)" title="Purple (10–11.9 kg)"></div>
-          <div class="broselow-mini-seg" style="background:#FFEE58;" onclick="previewBroselowZone('Yellow', event)" title="Yellow (12–14.9 kg)"></div>
-          <div class="broselow-mini-seg" style="background:#FFFFFF;" onclick="previewBroselowZone('White', event)" title="White (15–18.9 kg)"></div>
-          <div class="broselow-mini-seg" style="background:#40C4FF;" onclick="previewBroselowZone('Blue', event)" title="Blue (19–23.9 kg)"></div>
-          <div class="broselow-mini-seg" style="background:#FFAB40;" onclick="previewBroselowZone('Orange', event)" title="Orange (24–29.9 kg)"></div>
-          <div class="broselow-mini-seg" style="background:#69F0AE;" onclick="previewBroselowZone('Green', event)" title="Green (30–36 kg)"></div>
+    <!-- 2-Tier Cockpit Navigation: Tier 1 Category Bar + Tier 2 Scoped Tab Rail -->
+    <nav class="cockpit-nav category-bar-wrapper" aria-label="Clinical navigation">
+      <!-- Tier 1: Category Segmented Switcher -->
+      <div class="cockpit-tier-1">
+        <div class="category-bar category-pills-group" role="group" aria-label="Module categories">
+          <button type="button" class="category-pill active" data-cat="meds" onclick="filterNavCategory('meds', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg> <span>Meds & Transfusion (4)</span></button>
+          <button type="button" class="category-pill" data-cat="resus" onclick="filterNavCategory('resus', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> <span>Emergency Resus (7)</span></button>
+          <button type="button" class="category-pill" data-cat="protocols" onclick="filterNavCategory('protocols', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg> <span>Protocols & CDS (7)</span></button>
+          <button type="button" class="category-pill" data-cat="all" onclick="filterNavCategory('all', this)" title="Show all 18 clinical modules in one rail [Alt+J]"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg> <span>All Modules (18)</span></button>
         </div>
       </div>
-    </div>
 
-    <!-- Flat Underline Navigation Tabs (Single Responsive Rail) -->
-    <div role="tablist" aria-label="Clinical Calculators & Protocols" style="margin-bottom:14px;">
-      <div class="tabs" id="mainTabRail" style="overflow-x:auto;">
-        <!-- 💊 Meds & Transfusion (5 Modules — Default) -->
-        <button type="button" class="tab tab-btn active" data-tab="dose" data-category="meds" onclick="showTab('dose', this)" title="Pediatric Dose Calculator [Alt+1]" aria-keyshortcuts="Alt+1" role="tab" aria-selected="true" aria-controls="dose" aria-label="Pediatric Dose Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg><span class="tab-label"> Dose</span></button>
-        <button type="button" class="tab tab-btn" data-tab="atb" data-category="meds" onclick="showTab('atb', this)" title="Antibiotic Dosing Calculator [Alt+2]" aria-keyshortcuts="Alt+2" role="tab" aria-selected="false" aria-controls="atb" aria-label="Antibiotic Dosing Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3 3 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6Z"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 9.8 3 11.4 3 14"/><path d="M6 17H2"/><path d="M17.47 9c1.93.8 3.53 2.4 3.53 5"/><path d="M18 17h4"/></svg><span class="tab-label"> ATB</span></button>
-        <button type="button" class="tab tab-btn" data-tab="fluids" data-category="meds" onclick="showTab('fluids', this)" title="IV Maintenance & Deficit Calculator [Alt+3]" aria-keyshortcuts="Alt+3" role="tab" aria-selected="false" aria-controls="fluids" aria-label="IV Maintenance & Deficit Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg><span class="tab-label"> IV Fluids</span></button>
-        <button type="button" class="tab tab-btn" data-tab="drip" data-category="meds" onclick="showTab('drip', this)" title="Continuous Vasoactive Infusion Calculator [Alt+6]" aria-keyshortcuts="Alt+6" role="tab" aria-selected="false" aria-controls="drip" aria-label="Continuous Vasoactive Infusion Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span class="tab-label"> Drip Rate</span></button>
-        <button type="button" class="tab tab-btn" data-tab="transfusion" data-category="meds" onclick="showTab('transfusion', this)" title="Blood Component Transfusion Calculator [Alt+B]" aria-keyshortcuts="Alt+B" role="tab" aria-selected="false" aria-controls="transfusion" aria-label="Blood Component Transfusion Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span class="tab-label"> Transfusion</span></button>
+      <!-- Tier 2: Scoped Module Tabs Rail -->
+      <div class="cockpit-tier-2" role="tablist" aria-label="Clinical Calculators & Protocols">
+        <div class="tabs" id="mainTabRail" style="overflow-x:auto;">
+          <!-- 💊 Meds & Transfusion (4 Modules — Default) -->
+          <button type="button" class="tab tab-btn active" data-tab="dose" data-category="meds" onclick="showTab('dose', this)" title="Pediatric Medications Calculator [Alt+1]" aria-keyshortcuts="Alt+1" role="tab" aria-selected="true" aria-controls="dose" aria-label="Pediatric Medications Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg><span class="tab-label"> Medications</span></button>
+          <button type="button" class="tab tab-btn" data-tab="fluids" data-category="meds" onclick="showTab('fluids', this)" title="IV Maintenance & Deficit Calculator [Alt+3]" aria-keyshortcuts="Alt+3" role="tab" aria-selected="false" aria-controls="fluids" aria-label="IV Maintenance & Deficit Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg><span class="tab-label"> IV Fluids</span></button>
+          <button type="button" class="tab tab-btn" data-tab="drip" data-category="meds" onclick="showTab('drip', this)" title="Continuous Vasoactive Infusion Calculator [Alt+6]" aria-keyshortcuts="Alt+6" role="tab" aria-selected="false" aria-controls="drip" aria-label="Continuous Vasoactive Infusion Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span class="tab-label"> Drip Rate</span></button>
+          <button type="button" class="tab tab-btn" data-tab="transfusion" data-category="meds" onclick="showTab('transfusion', this)" title="Blood Component Transfusion Calculator [Alt+B]" aria-keyshortcuts="Alt+B" role="tab" aria-selected="false" aria-controls="transfusion" aria-label="Blood Component Transfusion Calculator"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span class="tab-label"> Transfusion</span></button>
 
-        <!-- 🚨 Emergency Resus (7 Modules) -->
-        <button type="button" class="tab tab-btn" data-tab="airway" data-category="resus" style="display:none;" onclick="showTab('airway', this)" title="Pediatric Airway & RSI Protocol [Alt+W]" aria-keyshortcuts="Alt+W" role="tab" aria-selected="false" aria-controls="airway" aria-label="Pediatric Airway & RSI Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg><span class="tab-label"> Airway / RSI</span></button>
-        <button type="button" class="tab tab-btn" data-tab="pals" data-category="resus" style="display:none;" onclick="showTab('pals', this)" title="Pediatric Advanced Life Support Protocol [Alt+4]" aria-keyshortcuts="Alt+4" role="tab" aria-selected="false" aria-controls="pals" aria-label="Pediatric Advanced Life Support Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg><span class="tab-label"> PALS</span></button>
-        <button type="button" class="tab tab-btn" data-tab="ncpr" data-category="resus" style="display:none;" onclick="showTab('ncpr', this)" title="Neonatal Resuscitation Program Protocol [Alt+5]" aria-keyshortcuts="Alt+5" role="tab" aria-selected="false" aria-controls="ncpr" aria-label="Neonatal Resuscitation Program Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 5 6.3"/><path d="M12 2a4 4 0 0 0-4 4c0 .7.2 1.4.5 2"/><path d="M12 2a4 4 0 0 1 4 4c0 .7-.2 1.4-.5 2"/></svg><span class="tab-label"> NCPR</span></button>
-        <button type="button" class="tab tab-btn" data-tab="sepsis" data-category="resus" style="display:none;" onclick="showTab('sepsis', this)" title="Pediatric Sepsis & Phoenix Score [Alt+S]" aria-keyshortcuts="Alt+S" role="tab" aria-selected="false" aria-controls="sepsis" aria-label="Pediatric Sepsis & Phoenix Score"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg><span class="tab-label"> Sepsis</span></button>
-        <button type="button" class="tab tab-btn" data-tab="anaphylaxis" data-category="resus" style="display:none;" onclick="showTab('anaphylaxis', this)" title="Pediatric Anaphylaxis Protocol [Alt+N]" aria-keyshortcuts="Alt+N" role="tab" aria-selected="false" aria-controls="anaphylaxis" aria-label="Pediatric Anaphylaxis Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg><span class="tab-label"> Anaphylaxis</span></button>
-        <button type="button" class="tab tab-btn" data-tab="trauma" data-category="resus" style="display:none;" onclick="showTab('trauma', this)" title="Pediatric Trauma & Burns Protocol [Alt+T]" aria-keyshortcuts="Alt+T" role="tab" aria-selected="false" aria-controls="trauma" aria-label="Pediatric Trauma & Burns Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m19 14-7 7-7-7"/><path d="M12 3v18"/></svg><span class="tab-label"> Trauma & Burns</span></button>
-        <button type="button" class="tab tab-btn" data-tab="seizure" data-category="resus" style="display:none;" onclick="showTab('seizure', this)" title="Status Epilepticus Resuscitation Protocol [Alt+7]" aria-keyshortcuts="Alt+7" role="tab" aria-selected="false" aria-controls="seizure" aria-label="Status Epilepticus Resuscitation Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg><span class="tab-label"> Seizure</span></button>
+          <!-- 🚨 Emergency Resus (7 Modules) -->
+          <button type="button" class="tab tab-btn" data-tab="airway" data-category="resus" style="display:none;" onclick="showTab('airway', this)" title="Pediatric Airway & RSI Protocol [Alt+W]" aria-keyshortcuts="Alt+W" role="tab" aria-selected="false" aria-controls="airway" aria-label="Pediatric Airway & RSI Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg><span class="tab-label"> Airway / RSI</span></button>
+          <button type="button" class="tab tab-btn" data-tab="pals" data-category="resus" style="display:none;" onclick="showTab('pals', this)" title="Pediatric Advanced Life Support Protocol [Alt+4]" aria-keyshortcuts="Alt+4" role="tab" aria-selected="false" aria-controls="pals" aria-label="Pediatric Advanced Life Support Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg><span class="tab-label"> PALS</span></button>
+          <button type="button" class="tab tab-btn" data-tab="ncpr" data-category="resus" style="display:none;" onclick="showTab('ncpr', this)" title="Neonatal Resuscitation Program Protocol [Alt+5]" aria-keyshortcuts="Alt+5" role="tab" aria-selected="false" aria-controls="ncpr" aria-label="Neonatal Resuscitation Program Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 5 6.3"/><path d="M12 2a4 4 0 0 0-4 4c0 .7.2 1.4.5 2"/><path d="M12 2a4 4 0 0 1 4 4c0 .7-.2 1.4-.5 2"/></svg><span class="tab-label"> NCPR</span></button>
+          <button type="button" class="tab tab-btn" data-tab="sepsis" data-category="resus" style="display:none;" onclick="showTab('sepsis', this)" title="Pediatric Sepsis & Phoenix Score [Alt+S]" aria-keyshortcuts="Alt+S" role="tab" aria-selected="false" aria-controls="sepsis" aria-label="Pediatric Sepsis & Phoenix Score"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg><span class="tab-label"> Sepsis</span></button>
+          <button type="button" class="tab tab-btn" data-tab="anaphylaxis" data-category="resus" style="display:none;" onclick="showTab('anaphylaxis', this)" title="Pediatric Anaphylaxis Protocol [Alt+N]" aria-keyshortcuts="Alt+N" role="tab" aria-selected="false" aria-controls="anaphylaxis" aria-label="Pediatric Anaphylaxis Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg><span class="tab-label"> Anaphylaxis</span></button>
+          <button type="button" class="tab tab-btn" data-tab="trauma" data-category="resus" style="display:none;" onclick="showTab('trauma', this)" title="Pediatric Trauma & Burns Protocol [Alt+T]" aria-keyshortcuts="Alt+T" role="tab" aria-selected="false" aria-controls="trauma" aria-label="Pediatric Trauma & Burns Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m19 14-7 7-7-7"/><path d="M12 3v18"/></svg><span class="tab-label"> Trauma & Burns</span></button>
+          <button type="button" class="tab tab-btn" data-tab="seizure" data-category="resus" style="display:none;" onclick="showTab('seizure', this)" title="Status Epilepticus Resuscitation Protocol [Alt+7]" aria-keyshortcuts="Alt+7" role="tab" aria-selected="false" aria-controls="seizure" aria-label="Status Epilepticus Resuscitation Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg><span class="tab-label"> Seizure</span></button>
 
-        <!-- 📋 Protocols & CDS (7 Modules) -->
-        <button type="button" class="tab tab-btn" data-tab="asthma" data-category="protocols" style="display:none;" onclick="showTab('asthma', this)" title="Acute Asthmatic Attack Protocol [Alt+A]" aria-keyshortcuts="Alt+A" role="tab" aria-selected="false" aria-controls="asthma" aria-label="Acute Asthmatic Attack Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg><span class="tab-label"> Asthma</span></button>
-        <button type="button" class="tab tab-btn" data-tab="dka" data-category="protocols" style="display:none;" onclick="showTab('dka', this)" title="Pediatric DKA Protocol Engine [Alt+K]" aria-keyshortcuts="Alt+K" role="tab" aria-selected="false" aria-controls="dka" aria-label="Pediatric DKA Protocol Engine"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.8 2.3A.3.3 0 0 0 4.5 2H3.5a.3.3 0 0 0-.3.3v4.2a6 6 0 0 0 12 0V2.3a.3.3 0 0 0-.3-.3h-1a.3.3 0 0 0-.3.3v4.2a4 4 0 0 1-8 0V2.3z"/><path d="M11 12.5v1.5a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/></svg><span class="tab-label"> DKA</span></button>
-        <button type="button" class="tab tab-btn" data-tab="croup" data-category="protocols" style="display:none;" onclick="showTab('croup', this)" title="Croup & Stridor Protocol [Alt+U]" aria-keyshortcuts="Alt+U" role="tab" aria-selected="false" aria-controls="croup" aria-label="Croup & Stridor Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/></svg><span class="tab-label"> Croup</span></button>
-        <button type="button" class="tab tab-btn" data-tab="electrolytes" data-category="protocols" style="display:none;" onclick="showTab('electrolytes', this)" title="Pediatric Electrolytes & Corrected Imbalance [Alt+E]" aria-keyshortcuts="Alt+E" role="tab" aria-selected="false" aria-controls="electrolytes" aria-label="Pediatric Electrolytes & Corrected Imbalance"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 2v17.5c0 1.4-1.1 2.5-2.5 2.5h0c-1.4 0-2.5-1.1-2.5-2.5V2"/><path d="M8.5 2h7"/><path d="M14.5 16h-5"/></svg><span class="tab-label"> Electrolytes</span></button>
-        <button type="button" class="tab tab-btn" data-tab="psa" data-category="protocols" style="display:none;" onclick="showTab('psa', this)" title="Procedural Sedation & Analgesia [Alt+9]" aria-keyshortcuts="Alt+9" role="tab" aria-selected="false" aria-controls="psa" aria-label="Procedural Sedation & Analgesia"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"/><path d="m9 11 4 4"/><path d="m5 19-3 3"/><path d="m14 4 6 6"/></svg><span class="tab-label"> Sedation</span></button>
-        <button type="button" class="tab tab-btn" data-tab="tox" data-category="protocols" style="display:none;" onclick="showTab('tox', this)" title="Antidotes & Overdose Protocol [Alt+8]" aria-keyshortcuts="Alt+8" role="tab" aria-selected="false" aria-controls="tox" aria-label="Antidotes & Overdose Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v7.31L4.75 18.1A2 2 0 0 0 6.47 21h11.06a2 2 0 0 0 1.72-2.9L14 9.31V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg><span class="tab-label"> Toxicology</span></button>
-        <button type="button" class="tab tab-btn" data-tab="vitals" data-category="protocols" style="display:none;" onclick="showTab('vitals', this)" title="Age-Banded Physiological Normal Ranges [Alt+0]" aria-keyshortcuts="Alt+0" role="tab" aria-selected="false" aria-controls="vitals" aria-label="Age-Banded Physiological Normal Ranges"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M17 12h-2l-2 5-3-10-2 5H7"/></svg><span class="tab-label"> Vitals</span></button>
+          <!-- 📋 Protocols & CDS (7 Modules) -->
+          <button type="button" class="tab tab-btn" data-tab="asthma" data-category="protocols" style="display:none;" onclick="showTab('asthma', this)" title="Acute Asthmatic Attack Protocol [Alt+A]" aria-keyshortcuts="Alt+A" role="tab" aria-selected="false" aria-controls="asthma" aria-label="Acute Asthmatic Attack Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg><span class="tab-label"> Asthma</span></button>
+          <button type="button" class="tab tab-btn" data-tab="dka" data-category="protocols" style="display:none;" onclick="showTab('dka', this)" title="Pediatric DKA Protocol Engine [Alt+K]" aria-keyshortcuts="Alt+K" role="tab" aria-selected="false" aria-controls="dka" aria-label="Pediatric DKA Protocol Engine"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.8 2.3A.3.3 0 0 0 4.5 2H3.5a.3.3 0 0 0-.3.3v4.2a6 6 0 0 0 12 0V2.3a.3.3 0 0 0-.3-.3h-1a.3.3 0 0 0-.3.3v4.2a4 4 0 0 1-8 0V2.3z"/><path d="M11 12.5v1.5a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/></svg><span class="tab-label"> DKA</span></button>
+          <button type="button" class="tab tab-btn" data-tab="croup" data-category="protocols" style="display:none;" onclick="showTab('croup', this)" title="Croup & Stridor Protocol [Alt+U]" aria-keyshortcuts="Alt+U" role="tab" aria-selected="false" aria-controls="croup" aria-label="Croup & Stridor Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/></svg><span class="tab-label"> Croup</span></button>
+          <button type="button" class="tab tab-btn" data-tab="electrolytes" data-category="protocols" style="display:none;" onclick="showTab('electrolytes', this)" title="Pediatric Electrolytes & Corrected Imbalance [Alt+E]" aria-keyshortcuts="Alt+E" role="tab" aria-selected="false" aria-controls="electrolytes" aria-label="Pediatric Electrolytes & Corrected Imbalance"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 2v17.5c0 1.4-1.1 2.5-2.5 2.5h0c-1.4 0-2.5-1.1-2.5-2.5V2"/><path d="M8.5 2h7"/><path d="M14.5 16h-5"/></svg><span class="tab-label"> Electrolytes</span></button>
+          <button type="button" class="tab tab-btn" data-tab="psa" data-category="protocols" style="display:none;" onclick="showTab('psa', this)" title="Procedural Sedation & Analgesia [Alt+9]" aria-keyshortcuts="Alt+9" role="tab" aria-selected="false" aria-controls="psa" aria-label="Procedural Sedation & Analgesia"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"/><path d="m9 11 4 4"/><path d="m5 19-3 3"/><path d="m14 4 6 6"/></svg><span class="tab-label"> Sedation</span></button>
+          <button type="button" class="tab tab-btn" data-tab="tox" data-category="protocols" style="display:none;" onclick="showTab('tox', this)" title="Antidotes & Overdose Protocol [Alt+8]" aria-keyshortcuts="Alt+8" role="tab" aria-selected="false" aria-controls="tox" aria-label="Antidotes & Overdose Protocol"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v7.31L4.75 18.1A2 2 0 0 0 6.47 21h11.06a2 2 0 0 0 1.72-2.9L14 9.31V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg><span class="tab-label"> Toxicology</span></button>
+          <button type="button" class="tab tab-btn" data-tab="vitals" data-category="protocols" style="display:none;" onclick="showTab('vitals', this)" title="Age-Banded Physiological Normal Ranges [Alt+0]" aria-keyshortcuts="Alt+0" role="tab" aria-selected="false" aria-controls="vitals" aria-label="Age-Banded Physiological Normal Ranges"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M17 12h-2l-2 5-3-10-2 5H7"/></svg><span class="tab-label"> Vitals</span></button>
+        </div>
       </div>
-    </div>
+    </nav>
 
-    <!-- Pediatric Dose Calculator -->
+    <!-- Pediatric Medications Calculator (Unified General Meds + Antibiotics) -->
     <section id="dose" class="card" role="tabpanel">
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
-            <label style="margin:0;">Drug Selection & Search (Combobox)</label>
-            <span class="evidence-badge" onclick="openEvidenceModal('dose')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> Harriet Lane 24th ed</span>
+            <h2 class="module-title" style="margin:0;">Pediatric Medications <span class="module-subtitle">(ขนาดยาเด็ก &amp; ยาปฏิชีวนะ)</span></h2>
+            <span class="evidence-badge" onclick="openEvidenceModal('dose')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> Harriet Lane 24th ed / Red Book</span>
           </div>
           <div class="drug-category-filter" id="doseCategoryFilter">
             <button type="button" class="drug-filter-pill active" onclick="setDoseCategoryFilter('all', this)">All</button>
-            <button type="button" class="drug-filter-pill" onclick="setDoseCategoryFilter('antipyretic', this)">Antipyretic / NSAID</button>
+            <button type="button" class="drug-filter-pill" onclick="setDoseCategoryFilter('antibiotic', this)">Antibiotics (ATB)</button>
+            <button type="button" class="drug-filter-pill" onclick="setDoseCategoryFilter('antipyretic', this)">Antipyretic / Analgesic</button>
             <button type="button" class="drug-filter-pill" onclick="setDoseCategoryFilter('respiratory', this)">Respiratory</button>
             <button type="button" class="drug-filter-pill" onclick="setDoseCategoryFilter('gi', this)">GI / Antiemetic</button>
             <button type="button" class="drug-filter-pill" onclick="setDoseCategoryFilter('steroid', this)">Steroid</button>
-            <button type="button" class="drug-filter-pill" onclick="setDoseCategoryFilter('anticonvulsant', this)">Anticonvulsant</button>
+            <button type="button" class="drug-filter-pill" onclick="setDoseCategoryFilter('neuro', this)">Neurology / Anticonvulsant</button>
+            <button type="button" class="drug-filter-pill" onclick="setDoseCategoryFilter('cv', this)">Cardiovascular / Diuretic</button>
+            <button type="button" class="drug-filter-pill" onclick="setDoseCategoryFilter('topical', this)">Topical / Skin</button>
           </div>
           <div class="combobox-wrapper">
             <span class="combobox-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
-            <input type="text" id="doseSearch" class="combobox-input" placeholder="พิมพ์ชื่อยาเพื่อค้นหา (e.g. Paracetamol, Ibuprofen, Diazepam)..." oninput="onDoseSearchInput()" onfocus="openDoseCombobox()" onkeydown="onComboboxKeydown(event,'dose')" role="combobox" aria-expanded="false" aria-controls="doseComboboxDropdown" aria-autocomplete="list" aria-label="ค้นหายา (Search medication)" />
+            <input type="text" id="doseSearch" class="combobox-input" placeholder="พิมพ์ชื่อยาเพื่อค้นหา (e.g. Paracetamol, Amoxicillin, Furosemide, Diazepam)..." oninput="onDoseSearchInput()" onfocus="openDoseCombobox()" onkeydown="onComboboxKeydown(event,'dose')" role="combobox" aria-expanded="false" aria-controls="doseComboboxDropdown" aria-autocomplete="list" aria-label="ค้นหายา (Search medication)" />
             <button type="button" id="doseSearchClear" class="combobox-clear-btn" onclick="clearDoseSearch()" title="ล้างคำค้นหา" aria-label="Clear search">✕</button>
             <div id="doseComboboxDropdown" class="combobox-dropdown" role="listbox"></div>
           </div>
@@ -2431,7 +2539,7 @@
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
-            <label style="margin:0;">Antibiotic Selection & Search (Combobox)</label>
+            <h2 class="module-title" style="margin:0;">Pediatric Antibiotic Dosing <span class="module-subtitle">(ยาปฏิชีวนะเด็ก)</span></h2>
             <span class="evidence-badge" onclick="openEvidenceModal('atb')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> Red Book / PIDS</span>
           </div>
           <div class="drug-category-filter" id="atbCategoryFilter">
@@ -2464,7 +2572,7 @@
     <section id="fluids" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:4px;">
-          <label style="margin:0;">Dehydration Assessment & Maintenance</label>
+          <h2 class="module-title" style="margin:0;">IV Maintenance & Deficit Fluids <span class="module-subtitle">(สารน้ำทางหลอดเลือดดำ)</span></h2>
           <span class="evidence-badge" onclick="openEvidenceModal('fluids')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> AAP Isotonic CPG</span>
         </div>
         <div class="col-6">
@@ -2511,9 +2619,10 @@
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
-            <label style="margin:0;">Patient Age (yr) <span style="font-size:10.5px; font-weight:400; color:var(--muted); text-transform:none;">(Optional — คำนวณขนาด ETT)</span></label>
+            <h2 class="module-title" style="margin:0;">Pediatric Advanced Life Support (PALS) <span class="module-subtitle">(การกู้ชีพขั้นสูงในเด็ก)</span></h2>
             <span class="evidence-badge" onclick="openEvidenceModal('pals')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> AHA PALS 2025</span>
           </div>
+          <label for="pAge">Patient Age (yr) <span style="font-size:10.5px; font-weight:400; color:var(--muted); text-transform:none;">(Optional — คำนวณขนาด ETT / Blade)</span></label>
           <input type="number" id="pAge" min="0" max="15" step="0.1" placeholder="อายุเพื่อคำนวณ ETT (e.g. 4)" oninput="onPALSAgeChange()">
         </div>
         <div class="col-12">
@@ -2527,7 +2636,7 @@
     <section id="ncpr" class="card" role="tabpanel" style="display:none;">
       <div class="grid">
         <div class="col-12" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:4px;">
-          <label style="margin:0;">Neonatal Resuscitation Program (NCPR)</label>
+          <h2 class="module-title" style="margin:0;">Neonatal Resuscitation Program (NCPR) <span class="module-subtitle">(การกู้ชีพทารกแรกเกิด)</span></h2>
           <span class="evidence-badge" onclick="openEvidenceModal('ncpr')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> NRP 9th Edition</span>
         </div>
         <div class="col-6">
@@ -2557,7 +2666,7 @@
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
-            <label style="margin:0;">Vasoactive & Continuous Infusion Selection</label>
+            <h2 class="module-title" style="margin:0;">Continuous Vasoactive Infusions <span class="module-subtitle">(คำนวณอัตราหยดยากระตุ้นหัวใจ)</span></h2>
             <span class="evidence-badge" onclick="openEvidenceModal('drips')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> SCCM / PALS Standards</span>
           </div>
           <select id="dripDrug" style="width:100%; padding:9px 12px; border-radius:var(--r-sm); border:1px solid var(--border); font-size:13.5px; font-weight:700; background:var(--panel); color:var(--ink);" onchange="calcDrip()"></select>
@@ -2586,7 +2695,7 @@
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
-            <h2 style="margin:0;">Status Epilepticus Resuscitation Protocol</h2>
+            <h2 class="module-title" style="margin:0;">Status Epilepticus Resuscitation <span class="module-subtitle">(ภาวะชักต่อเนื่องในเด็ก)</span></h2>
             <span class="evidence-badge" onclick="openEvidenceModal('seizure')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> AES / ESETT Trial</span>
           </div>
 
@@ -2615,7 +2724,7 @@
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
-            <h2 style="margin:0;">Toxicology & Antidote Dosing</h2>
+            <h2 class="module-title" style="margin:0;">Toxicology & Antidote Dosing <span class="module-subtitle">(สารพิษและยาต้านพิษ)</span></h2>
             <span class="evidence-badge" onclick="openEvidenceModal('toxicology')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> Goldfrank's 12th ed</span>
           </div>
           <div class="note" style="margin-bottom:14px; font-weight:500;">
@@ -2631,11 +2740,11 @@
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
-            <h2 style="margin:0;">Procedural Sedation & Analgesia (PSA)</h2>
+            <h2 class="module-title" style="margin:0;">Procedural Sedation & Analgesia (PSA) <span class="module-subtitle">(การระงับความรู้สึกและแก้ปวด)</span></h2>
             <span class="evidence-badge" onclick="openEvidenceModal('sedation')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> ACEP / AAP Guidelines</span>
           </div>
           <div class="note" style="margin-bottom:14px; font-weight:500;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>เตรียมความพร้อม:</strong> เตรียมอุปกรณ์ Suction, Bag-Valve-Mask และ Suction พร้อมก่อนเริ่ม Procedural Sedation เสมอ
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><strong>เตรียมความพร้อม:</strong> เตรียมอุปกรณ์ Suction, Bag-Valve-Mask และ Oxygen พร้อมก่อนเริ่ม Procedural Sedation เสมอ
           </div>
           <div id="psaOut" class="summary"></div>
         </div>
@@ -2648,7 +2757,7 @@
         <div class="col-12">
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
             <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-              <h2 style="margin:0;">Pediatric Vital Signs by Age Reference</h2>
+              <h2 class="module-title" style="margin:0;">Pediatric Vital Signs by Age <span class="module-subtitle">(เกณฑ์สัญญาณชีพปกติแยกตามอายุ)</span></h2>
               <span id="vitalsQuickText" style="font-size:12px; font-weight:600; color:var(--muted); font-family:'JetBrains Mono',monospace; background:var(--panel-subtle); padding:2px 8px; border-radius:var(--r-full); border:1px solid var(--border);"></span>
             </div>
             <span class="evidence-badge" onclick="openEvidenceModal('vitals')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> AHA PALS Vitals</span>
@@ -2664,7 +2773,7 @@
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
-            <h2 style="margin:0;">Pediatric DKA Protocol & Fluid Management</h2>
+            <h2 class="module-title" style="margin:0;">Diabetic Ketoacidosis (DKA) <span class="module-subtitle">(ภาวะน้ำตาลสูงและเลือดเป็นกรด)</span></h2>
             <span class="evidence-badge" onclick="openEvidenceModal('dka')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> ISPAD 2024 Guidelines</span>
           </div>
           <div class="note" style="margin-bottom:14px; font-weight:500;">
@@ -2698,7 +2807,7 @@
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
-            <h2 style="margin:0;">Acute Asthmatic Attack Protocol</h2>
+            <h2 class="module-title" style="margin:0;">Acute Asthmatic Attack Protocol <span class="module-subtitle">(โรคหอบหืดเฉียบพลัน)</span></h2>
             <span class="evidence-badge" onclick="openEvidenceModal('asthma')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> GINA 2026 + TAC 2025</span>
           </div>
           <div class="note" style="margin-bottom:14px; font-weight:500;">
@@ -2714,7 +2823,7 @@
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
-            <h2 style="margin:0;">Pediatric Electrolytes & Corrected Imbalance</h2>
+            <h2 class="module-title" style="margin:0;">Pediatric Electrolytes & Deficit <span class="module-subtitle">(เกลือแร่และสภาวะกรดด่าง)</span></h2>
             <span class="evidence-badge" onclick="openEvidenceModal('electrolytes')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> Harriet Lane & Nelson</span>
           </div>
           <div class="note" style="margin-bottom:14px; font-weight:500;">
@@ -2828,7 +2937,7 @@
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
-            <h2 style="margin:0;">Pediatric Airway Management & Rapid Sequence Intubation (RSI)</h2>
+            <h2 class="module-title" style="margin:0;">Airway Management & RSI <span class="module-subtitle">(การจัดการทางเดินหายใจและใส่ท่อช่วยหายใจ)</span></h2>
             <span class="evidence-badge" onclick="openEvidenceModal('airway')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> PALS / DAS Airway</span>
           </div>
           <div class="note" style="margin-bottom:14px; font-weight:500;">
@@ -2844,7 +2953,7 @@
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
-            <h2 style="margin:0;">Pediatric Sepsis & Septic Shock (Phoenix Criteria 2024 / SSC 2026)</h2>
+            <h2 class="module-title" style="margin:0;">Sepsis & Septic Shock <span class="module-subtitle">(ภาวะติดเชื้อในกระแสเลือดและช็อก)</span></h2>
             <span class="evidence-badge" onclick="openEvidenceModal('sepsis')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> Phoenix 2024 / SSC 2026</span>
           </div>
           <div class="drug-category-filter" style="margin-bottom:12px;">
@@ -2921,7 +3030,7 @@
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
-            <h2 style="margin:0;">Pediatric Anaphylaxis Emergency Protocol</h2>
+            <h2 class="module-title" style="margin:0;">Anaphylaxis Protocol <span class="module-subtitle">(ภาวะแพ้รุนแรงเฉียบพลัน)</span></h2>
             <span class="evidence-badge" onclick="openEvidenceModal('anaphylaxis')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> EAACI / WAO 2025</span>
           </div>
           <div class="note" style="margin-bottom:14px; font-weight:500;">
@@ -2937,7 +3046,7 @@
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
-            <h2 style="margin:0;">Pediatric Trauma & Burn Resuscitation (ATLS 11th Ed 2025)</h2>
+            <h2 class="module-title" style="margin:0;">Trauma & Burn Resuscitation <span class="module-subtitle">(การบาดเจ็บและแผลไฟไหม้)</span></h2>
             <span class="evidence-badge" onclick="openEvidenceModal('trauma')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> ATLS 11th Ed 2025</span>
           </div>
           <div class="note" style="margin-bottom:14px; font-weight:500;">
@@ -2972,7 +3081,7 @@
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
-            <h2 style="margin:0;">Pediatric Croup (Laryngotracheobronchitis) & Stridor Protocol</h2>
+            <h2 class="module-title" style="margin:0;">Croup & Stridor Protocol <span class="module-subtitle">(โรคครูปและทางเดินหายใจส่วนบนอุดกั้น)</span></h2>
             <span class="evidence-badge" onclick="openEvidenceModal('croup')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> Westley / AAP Guidelines</span>
           </div>
           <div class="note" style="margin-bottom:14px; font-weight:500;">
@@ -3034,7 +3143,7 @@
       <div class="grid">
         <div class="col-12">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
-            <h2 style="margin:0;">Pediatric Blood Component Transfusion & MTP Protocol</h2>
+            <h2 class="module-title" style="margin:0;">Blood Transfusion & MTP <span class="module-subtitle">(การให้เลือดและส่วนประกอบของเลือด)</span></h2>
             <span class="evidence-badge" onclick="openEvidenceModal('transfusion')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> TAXI Guidelines 2024</span>
           </div>
           <div class="note" style="margin-bottom:14px; font-weight:500;">
@@ -3066,7 +3175,7 @@
 
     <!-- Standalone Footer -->
     <footer class="app-footer">
-      <div><strong>ER-PED Workstation</strong> — Braun Clinical Instrument <span class="version-chip" id="footerVersionChip" onclick="openChangelogModal()" title="ดูบันทึกการเปลี่ยนแปลง v1.10.0">v1.10.0</span></div>
+      <div><strong>ER-PED Workstation</strong> — Clinical Precision Cockpit <span class="version-chip" id="footerVersionChip" onclick="openChangelogModal()" title="ดูบันทึกการเปลี่ยนแปลง">v2.2.0</span></div>
       <div style="font-size:11px; margin-top:4px; color:var(--muted);">
         พัฒนาและอ้างอิงจาก <a href="https://ped-tsh.web.app/" target="_blank" rel="noopener" style="color:var(--accent); font-weight:700; text-decoration:underline;">Pediatric Emergency Workstation (ped-tsh.web.app)</a>
       </div>
@@ -3148,11 +3257,27 @@
   <div id="changelogBackdrop" class="drawer-backdrop hidden" onclick="if(event.target.id==='changelogBackdrop') closeChangelogModal()">
     <div class="drawer" onclick="event.stopPropagation()">
       <div class="drawer-header">
-        <strong id="changelogHeaderTitle" style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg> ER-PED Version <span id="changelogVersionNumber">1.11.0</span> Changelog</strong>
+        <strong id="changelogHeaderTitle" style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg> ER-PED Version <span id="changelogVersionNumber">2.2.0</span> Changelog</strong>
         <button type="button" class="btn" style="padding:4px 10px; font-size:12px; display:inline-flex; align-items:center; gap:4px;" onclick="closeChangelogModal()">Close <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> (Esc)</button>
       </div>
       <div class="drawer-body" style="font-size:13px; line-height:1.6;">
-        <h3 style="color:var(--accent); margin-top:4px;">What's New in v<span id="changelogWhatsNewVersion">1.11.0</span> (August 2026):</h3>
+        <h3 style="color:var(--accent); margin-top:4px;">What's New in v<span id="changelogWhatsNewVersion">2.2.0</span> (October 2026):</h3>
+        <ul>
+          <li><strong>💊 Unified Pediatric Formulary Engine (รวมขนาดยาเด็กและยาปฏิชีวนะในแท็บเดียว)</strong>: ผสานระบบคำนวณขนาดยาเด็กทั่วไปและยาปฏิชีวนะ (Pediatric Antibiotics) ทั้งหมดเข้าด้วยกันในแท็บ <strong>Medications (ขนาดยาเด็ก &amp; ยาปฏิชีวนะ)</strong> ค้นหาและคำนวณได้ทันทีจากช่องค้นหาเดียว</li>
+          <li><strong>🏥 Expanded Pediatric Medication Library (+29 ตัวยาจำเป็นสำหรับผู้ป่วยเด็ก)</strong>: เพิ่มรายการยาสำคัญทั้งในภาวะฉุกเฉิน หอผู้ป่วยเด็ก และ OPD เช่น Furosemide (IV/PO), Spironolactone, Captopril, Propranolol, Digoxin, Adenosine, Atropine, Amiodarone, Morphine, Ketamine, Tramadol, Clonazepam, Topiramate, Baclofen, Levothyroxine, Glucagon, UDCA, Zinc Sulfate, Liquid Paraffin, Vancomycin, Fluconazole, Linezolid, Colistin, Amphotericin B, Levofloxacin, Calamine, Hydrocortisone 1% cream, Budesonide respules ขยายคลังยาสู่ 170 รายการครอบคลุมทุกระบบ</li>
+          <li><strong>🧭 Streamlined 18-Module Cockpit Navigation</strong>: ปรับลดความซ้ำซ้อนของแท็บบน Navigation Rail เหลือ 18 โมดูลหลักที่กระชับและเข้าถึงได้รวดเร็ว (Meds &amp; Transfusion 4 โมดูล, Resus 7 โมดูล, Protocols 7 โมดูล) พร้อมปุ่มลัดคีย์บอร์ด <code>Alt+1</code> (ยาทั่วไป) และ <code>Alt+2</code> (ตัวกรองยาปฏิชีวนะ)</li>
+          <li><strong>🔍 Multicategory Quick Filter Pills</strong>: เพิ่มแถบกรองประเภทยา 9 หมวดหมู่ (All, Antibiotics, Antipyretic/Analgesic, Respiratory, GI/Antiemetic, Steroid, Neurology/Anticonvulsant, Cardiovascular/Diuretic, Topical/Skin) คัดกรองยาได้ในสัมผัสเดียว</li>
+        </ul>
+        <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;" />
+        <h4 style="color:var(--ink); margin-top:4px;">📜 Version 2.1.0 Highlights:</h4>
+        <ul>
+          <li><strong>🎯 Clinical Precision Cockpit UI/UX</strong>: ออกแบบอินเทอร์เฟซใหม่ตามมาตรฐาน taste-skill ไร้ AI-slop — อัปเกรดสู่ Slate & Medical Sky Palette (WCAG AAA contrast), นำเข้า Sarabun neo-grotesque sans display และ JetBrains Mono tabular numbers เพื่อการอ่านค่าตัวเลขขนาดยาข้างเตียงผู้ป่วยที่แม่นยำสูงสุด</li>
+          <li><strong>🏷️ Standardized Bilingual Module Architecture</strong>: ปรับหัวข้อทั้ง 19 โมดูลคลินิกเป็นระบบสองภาษามาตรฐาน (English Title + Thai Subtitle) พร้อม Evidence Badge ลิงก์ตรงสู่เอกสารอ้างอิงระดับสากล</li>
+          <li><strong>⚡ Seamless Theme System</strong>: ผสานโทนสี Light, Dark (Obsidian), Red Night (รักษาสายตาในห้องฉุกเฉิน) และ Monochrome (สำหรับจอภาพ ED/JVC) ด้วย CSS tokens ไร้สีฮาร์ดโค้ดตกค้าง</li>
+          <li><strong>🛡️ Ergonomic & Safety Polish</strong>: ปรับปรุงฉลากยาและคำเตือนให้กระชับ ชัดเจน รองรับการใช้งานผ่านหน้าจอสัมผัสขณะสวมถุงมือแพทย์อย่างสมบูรณ์แบบ</li>
+        </ul>
+        <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;" />
+        <h4 style="color:var(--ink); margin-top:4px;">📜 Version 1.11.0 Highlights (August 2026):</h4>
         <ul>
           <li><strong>📚 Offline Clinical Evidence & Reference Registry</strong>: เพิ่มระบบสืบค้นและแสดงเอกสารอ้างอิงทางการแพทย์ ระดับหลักฐาน (LOE/COR) และลิงก์ DOI/PMID ครอบคลุม 14 หมวดหมู่คลินิก ปลอดภัยและทำงานแบบ Offline 100%</li>
           <li><strong>📖 Interactive In-Card Citation Badges</strong>: เพิ่มป้ายอ้างอิงบนหัวการ์ดทั้ง 13 โมดูลคลินิก (เช่น <code>📖 AHA PALS 2025</code>, <code>📖 GINA 2026</code>, <code>📖 ISPAD 2024</code>, <code>📖 NRP 9th Ed</code>) สามารถกดเปิดดูรายละเอียดหลักฐานได้ทันทีข้างเตียง</li>

@@ -785,8 +785,18 @@ function showTab(id, btn) {
 function setupKeyboardShortcuts(){
   document.addEventListener('keydown', (e) => {
     if (e.altKey) {
-      if (e.key === '1') { e.preventDefault(); showTab('dose'); }
-      if (e.key === '2') { e.preventDefault(); showTab('atb'); }
+      if (e.key === '1') {
+        e.preventDefault();
+        showTab('dose');
+        const allBtn = document.querySelector('#doseCategoryFilter button[onclick*="all"]');
+        setDoseCategoryFilter('all', allBtn);
+      }
+      if (e.key === '2') {
+        e.preventDefault();
+        showTab('dose');
+        const atbBtn = document.querySelector('#doseCategoryFilter button[onclick*="antibiotic"]');
+        setDoseCategoryFilter('antibiotic', atbBtn);
+      }
       if (e.key === '3') { e.preventDefault(); showTab('fluids'); }
       if (e.key === '4') { e.preventDefault(); showTab('pals'); }
       if (e.key === '5') { e.preventDefault(); showTab('ncpr'); }
@@ -1077,20 +1087,42 @@ function initComboboxes(){
   }
 }
 
-function openDoseCombobox(){
+function openDoseCombobox(query){
   closeAllComboboxes();
   const dropdown = document.getElementById('doseComboboxDropdown');
   if (dropdown) dropdown.classList.add('open');
   document.getElementById('doseSearch')?.setAttribute('aria-expanded', 'true');
-  renderDoseComboboxDropdown(document.getElementById('doseSearch').value);
+  if (query !== undefined) {
+    renderDoseComboboxDropdown(query);
+  } else {
+    const input = document.getElementById('doseSearch');
+    const currentKey = document.getElementById('doseDrug')?.value;
+    const currentDrug = (DS?.pediatricDose || []).find(d => d.key === currentKey);
+    let q = input ? input.value : '';
+    if (currentDrug && q === currentDrug.name) {
+      q = '';
+    }
+    renderDoseComboboxDropdown(q);
+  }
 }
 
-function openATBCombobox(){
+function openATBCombobox(query){
   closeAllComboboxes();
   const dropdown = document.getElementById('atbComboboxDropdown');
   if (dropdown) dropdown.classList.add('open');
   document.getElementById('atbSearch')?.setAttribute('aria-expanded', 'true');
-  renderATBComboboxDropdown(document.getElementById('atbSearch').value);
+  if (query !== undefined) {
+    renderATBComboboxDropdown(query);
+  } else {
+    const input = document.getElementById('atbSearch');
+    const currentKey = document.getElementById('atbDrug')?.value;
+    const currentDrug = (DS?.pediatricATB || []).find(d => d.key === currentKey);
+    let q = input ? input.value : '';
+    if (currentDrug && q === currentDrug.name) {
+      q = '';
+    }
+    renderATBComboboxDropdown(q);
+  }
 }
 
 function closeAllComboboxes(){
@@ -1202,8 +1234,12 @@ function setDoseCategoryFilter(cat, btn) {
   }
   if (btn) btn.classList.add('active');
   const input = document.getElementById('doseSearch');
-  renderDoseComboboxDropdown(input ? input.value : '');
-  openDoseCombobox();
+  let filterTxt = (input ? input.value : '').trim();
+  const isExistingDrug = (DS?.pediatricDose || []).some(d => d.name.toLowerCase() === filterTxt.toLowerCase());
+  if (isExistingDrug) {
+    filterTxt = '';
+  }
+  openDoseCombobox(filterTxt);
 }
 
 function setATBCategoryFilter(cat, btn) {
@@ -1214,8 +1250,12 @@ function setATBCategoryFilter(cat, btn) {
   }
   if (btn) btn.classList.add('active');
   const input = document.getElementById('atbSearch');
-  renderATBComboboxDropdown(input ? input.value : '');
-  openATBCombobox();
+  let filterTxt = (input ? input.value : '').trim();
+  const isExistingATB = (DS?.pediatricATB || []).some(d => d.name.toLowerCase() === filterTxt.toLowerCase());
+  if (isExistingATB) {
+    filterTxt = '';
+  }
+  openATBCombobox(filterTxt);
 }
 
 function filterNavCategory(cat, btn) {
@@ -1267,13 +1307,43 @@ function highlightMatch(text, query) {
 
 function matchesDoseCategory(d, cat) {
   if (!cat || cat === 'all') return true;
-  const n = ((d.name || '') + ' ' + (d.key || '') + ' ' + (d.drug || '')).toLowerCase();
-  if (cat === 'antipyretic') return n.includes('paracetamol') || n.includes('ibuprofen') || n.includes('mefenamic') || n.includes('aspirin');
-  if (cat === 'respiratory') return n.includes('salbutamol') || n.includes('budesonide') || n.includes('ipratropium') || n.includes('cetirizine') || n.includes('chlorpheniramine') || n.includes('loratadine') || n.includes('berodual');
-  if (cat === 'gi') return n.includes('domperidone') || n.includes('ondansetron') || n.includes('ors') || n.includes('alum') || n.includes('lactulose') || n.includes('forlax') || n.includes('peg') || n.includes('hyoscine');
-  if (cat === 'steroid') return n.includes('prednisolone') || n.includes('dexamethasone') || n.includes('hydrocortisone') || n.includes('methylprednisolone');
-  if (cat === 'anticonvulsant') return n.includes('diazepam') || n.includes('midazolam') || n.includes('phenobarbital') || n.includes('phenytoin') || n.includes('valproate') || n.includes('levetiracetam');
-  return true;
+  if (cat === 'antibiotic') return Boolean(d.isAtb || d.category === 'antibiotic' || d.category === 'atb');
+  if (cat === 'antipyretic') {
+    if (d.category === 'antipyretic' || d.category === 'analgesia') return true;
+    const n = ((d.name || '') + ' ' + (d.key || '') + ' ' + (d.drug || '')).toLowerCase();
+    return n.includes('paracetamol') || n.includes('ibuprofen') || n.includes('mefenamic') || n.includes('aspirin') || n.includes('tramadol') || n.includes('morphine') || n.includes('ketamine') || n.includes('fentanyl');
+  }
+  if (cat === 'respiratory') {
+    if (d.category === 'respiratory') return true;
+    const n = ((d.name || '') + ' ' + (d.key || '') + ' ' + (d.drug || '')).toLowerCase();
+    return n.includes('salbutamol') || n.includes('budesonide') || n.includes('ipratropium') || n.includes('cetirizine') || n.includes('chlorpheniramine') || n.includes('loratadine') || n.includes('berodual') || n.includes('adrenaline') || n.includes('epinephrine');
+  }
+  if (cat === 'gi') {
+    if (d.category === 'gi') return true;
+    const n = ((d.name || '') + ' ' + (d.key || '') + ' ' + (d.drug || '')).toLowerCase();
+    return n.includes('domperidone') || n.includes('ondansetron') || n.includes('ors') || n.includes('alum') || n.includes('lactulose') || n.includes('forlax') || n.includes('peg') || n.includes('hyoscine') || n.includes('zinc') || n.includes('paraffin') || n.includes('udca') || n.includes('ursodeoxycholic');
+  }
+  if (cat === 'steroid') {
+    if (d.category === 'steroid') return true;
+    const n = ((d.name || '') + ' ' + (d.key || '') + ' ' + (d.drug || '')).toLowerCase();
+    return n.includes('prednisolone') || n.includes('dexamethasone') || n.includes('hydrocortisone') || n.includes('methylprednisolone');
+  }
+  if (cat === 'anticonvulsant' || cat === 'neuro') {
+    if (d.category === 'neuro' || d.category === 'anticonvulsant') return true;
+    const n = ((d.name || '') + ' ' + (d.key || '') + ' ' + (d.drug || '')).toLowerCase();
+    return n.includes('diazepam') || n.includes('midazolam') || n.includes('phenobarbital') || n.includes('phenytoin') || n.includes('valproate') || n.includes('levetiracetam') || n.includes('clonazepam') || n.includes('topiramate') || n.includes('baclofen');
+  }
+  if (cat === 'cv' || cat === 'cardiovascular') {
+    if (d.category === 'cardiovascular' || d.category === 'diuretic' || d.category === 'antiarrhythmic') return true;
+    const n = ((d.name || '') + ' ' + (d.key || '') + ' ' + (d.drug || '')).toLowerCase();
+    return n.includes('furosemide') || n.includes('spironolactone') || n.includes('captopril') || n.includes('propranolol') || n.includes('digoxin') || n.includes('adenosine') || n.includes('atropine') || n.includes('amiodarone') || n.includes('adrenaline') || n.includes('dopamine') || n.includes('dobutamine') || n.includes('norepinephrine');
+  }
+  if (cat === 'topical' || cat === 'skin') {
+    if (d.category === 'skin' || d.category === 'topical') return true;
+    const n = ((d.name || '') + ' ' + (d.key || '') + ' ' + (d.drug || '')).toLowerCase();
+    return n.includes('calamine') || n.includes('cream') || n.includes('ointment') || n.includes('lotion') || n.includes('gel');
+  }
+  return false;
 }
 
 function matchesATBCategory(d, cat) {
@@ -1286,14 +1356,29 @@ function matchesATBCategory(d, cat) {
   return true;
 }
 
-function getDrugCategory(name){
+function getDrugCategory(name, drugObj){
+  if (drugObj?.category) {
+    const c = drugObj.category;
+    if (c === 'antibiotic') return 'Antibiotic';
+    if (c === 'cardiovascular' || c === 'diuretic' || c === 'antiarrhythmic') return 'Cardiovascular';
+    if (c === 'analgesia' || c === 'antipyretic') return 'Analgesic / Antipyretic';
+    if (c === 'neuro' || c === 'anticonvulsant') return 'Anticonvulsant / Neuro';
+    if (c === 'skin' || c === 'topical') return 'Topical / Skin';
+    if (c === 'gi') return 'GI / Antiemetic';
+    if (c === 'respiratory') return 'Respiratory';
+    if (c === 'endocrine') return 'Endocrine';
+    if (c === 'steroid') return 'Steroid';
+  }
+  if (drugObj?.isAtb) return 'Antibiotic';
   const n = (name || '').toLowerCase();
-  if (n.includes('paracetamol') || n.includes('ibuprofen')) return 'Antipyretic / Analgesic';
-  if (n.includes('diazepam') || n.includes('midazolam') || n.includes('phenobarbital') || n.includes('phenytoin')) return 'Anticonvulsant';
+  if (n.includes('paracetamol') || n.includes('ibuprofen') || n.includes('tramadol') || n.includes('morphine') || n.includes('ketamine')) return 'Antipyretic / Analgesic';
+  if (n.includes('diazepam') || n.includes('midazolam') || n.includes('phenobarbital') || n.includes('phenytoin') || n.includes('clonazepam') || n.includes('topiramate') || n.includes('baclofen')) return 'Anticonvulsant / Neuro';
+  if (n.includes('furosemide') || n.includes('spironolactone') || n.includes('captopril') || n.includes('propranolol') || n.includes('digoxin') || n.includes('adenosine') || n.includes('atropine') || n.includes('amiodarone')) return 'Cardiovascular / Diuretic';
   if (n.includes('salbutamol') || n.includes('budesonide') || n.includes('prednisolone') || n.includes('dexamethasone')) return 'Respiratory / Steroid';
-  if (n.includes('domperidone') || n.includes('ondansetron') || n.includes('ors') || n.includes('alum') || n.includes('lactulose') || n.includes('forlax')) return 'GI / Anti-emetic';
+  if (n.includes('domperidone') || n.includes('ondansetron') || n.includes('ors') || n.includes('alum') || n.includes('lactulose') || n.includes('forlax') || n.includes('zinc') || n.includes('paraffin')) return 'GI / Anti-emetic';
   if (n.includes('cetirizine') || n.includes('chlorpheniramine') || n.includes('loratadine')) return 'Antihistamine';
-  if (n.includes('amoxicillin') || n.includes('ceftriaxone') || n.includes('azithromycin') || n.includes('ampicillin')) return 'Antibiotic';
+  if (n.includes('calamine') || n.includes('cream')) return 'Topical / Skin';
+  if (n.includes('amoxicillin') || n.includes('ceftriaxone') || n.includes('azithromycin') || n.includes('ampicillin') || n.includes('vancomycin') || n.includes('colistin') || n.includes('fluconazole') || n.includes('linezolid') || n.includes('amphotericin')) return 'Antibiotic';
   return 'Medication';
 }
 
@@ -1325,7 +1410,7 @@ function renderDoseComboboxDropdown(filterTxt){
       html += `<div style="padding:6px 10px; font-size:11px; font-weight:800; color:var(--accent); background:var(--accent-subtle); letter-spacing:0.05em;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> RECENTLY USED</div>`;
       html += recentItems.map(d => {
         const selectedClass = (d.key === currentKey) ? 'selected' : '';
-        const cat = getDrugCategory(d.name);
+        const cat = getDrugCategory(d.name, d);
         return `
           <div class="combobox-item ${selectedClass}" role="option" data-key="${d.key}" data-name="${escapeHtml(d.name)}" onclick="selectDoseItem('${d.key}', '${d.name.replace(/'/g, "\\'")}')">
             <div>
@@ -1342,7 +1427,7 @@ function renderDoseComboboxDropdown(filterTxt){
 
   html += filtered.map(d => {
     const selectedClass = (d.key === currentKey) ? 'selected' : '';
-    const cat = getDrugCategory(d.name);
+    const cat = getDrugCategory(d.name, d);
     const highlightedName = highlightMatch(d.name, q);
     return `
       <div class="combobox-item ${selectedClass}" role="option" data-key="${d.key}" data-name="${escapeHtml(d.name)}" onclick="selectDoseItem('${d.key}', '${d.name.replace(/'/g, "\\'")}')">
@@ -4521,7 +4606,7 @@ function calcAirway() {
             <td>5 mg/mL amp<br>IV/IO slow</td>
             <td>ยาทางเลือก ระวังความดันตกในผู้ป่วยขาดสารน้ำ</td>
           </tr>
-          <tr style="background:rgba(158,61,36,0.06);">
+          <tr style="background:var(--accent-subtle);">
             <td><strong>Rocuronium</strong><br><span style="font-size:10.5px; color:var(--accent); font-weight:700;">1st-Line Paralytic</span></td>
             <td><span class="dose-badge" style="background:var(--accent); color:#fff;">${rocuroniumDose} mg</span> (1.0 mg/kg)</td>
             <td><strong>${rocuroniumVol} mL</strong></td>
@@ -4535,7 +4620,7 @@ function calcAirway() {
             <td>50 mg/mL vial<br>IV/IO push</td>
             <td>ออกฤทธิ์ 30 วินาที ห้ามใช้ใน Hyperkalemia, Crush/Burn &gt;24h, กล้ามเนื้ออ่อนแรง</td>
           </tr>
-          <tr style="background:rgba(220,38,38,0.06);">
+          <tr style="background:var(--danger-subtle);">
             <td><strong>Sugammadex</strong><br><span style="font-size:10.5px; color:var(--danger); font-weight:700;">🚨 CICO Rescue Reversal</span></td>
             <td><span class="dose-badge" style="background:var(--danger); color:#fff;">${sugammadexRescueDose} mg</span> (16 mg/kg)</td>
             <td><strong>${sugammadexRescueVol} mL</strong></td>
@@ -4695,7 +4780,7 @@ function calcSepsis() {
             <td><strong>Isotonic Crystalloid Bolus</strong></td>
             <td>ให้ <strong>0.9% NS หรือ Balanced Crystalloid ${bolus20} mL</strong> ใน 10–20 นาที และประเมินซ้ำ</td>
           </tr>
-          <tr style="background:rgba(220,38,38,0.06);">
+          <tr style="background:var(--danger-subtle);">
             <td><strong>Step 4</strong></td>
             <td><strong>Vasoactive Escalation</strong></td>
             <td>หากได้รับสารน้ำครบ ${bolus40}–${bolus60} mL แล้วยัง Shock → <strong>เริ่ม Epinephrine หรือ Norepinephrine 0.05–0.3 mcg/kg/min</strong></td>
@@ -4808,7 +4893,7 @@ function calcAnaphylaxis() {
             <td>40 mg/mL vial<br>IV slow</td>
             <td>ป้องกัน Biphasic Reaction (เริ่มออกฤทธิ์หลังฉีด 4–6 ชม.)</td>
           </tr>
-          <tr style="background:rgba(220,38,38,0.06);">
+          <tr style="background:var(--danger-subtle);">
             <td><strong>Epinephrine IV Drip</strong><br><span style="font-size:10.5px; color:var(--danger); font-weight:700;">Refractory Shock</span></td>
             <td><span class="dose-badge" style="background:var(--danger); color:#fff;">0.05–1.0 mcg/kg/min</span></td>
             <td><strong>Rate by pump</strong></td>
@@ -4885,7 +4970,7 @@ function calcTrauma() {
           </tr>
         </thead>
         <tbody>
-          <tr style="background:rgba(220,38,38,0.06);">
+          <tr style="background:var(--danger-subtle);">
             <td><strong style="color:var(--danger); font-size:16px;">x</strong></td>
             <td><strong style="color:var(--danger);">eXsanguinating Hemorrhage</strong></td>
             <td>ขัน Tourniquet แขน/ขาที่เลือดพุ่ง, แพ็คแผลด้วย Hemostatic Gauze และกดทันที</td>
@@ -4929,7 +5014,7 @@ function calcTrauma() {
         <div class="hero-metric-sub">3 mL × ${w.toFixed(1)}kg × ${tbsa}% TBSA</div>
       </div>
       <div class="hero-metric" style="border-color:var(--accent);">
-        <div class="hero-metric-label">1st 8h Rate (เหลือนม ${hoursRemainingFirst8h}h)</div>
+        <div class="hero-metric-label">1st 8h Rate (เหลือ ${hoursRemainingFirst8h}h)</div>
         <div class="hero-metric-value" style="color:var(--accent);">${rateFirst8h} <span style="font-size:13px;">mL/hr</span></div>
         <div class="hero-metric-sub">ยอด 50%: ${parklandFirst8h.toFixed(0)} mL LRS</div>
       </div>
@@ -5165,7 +5250,7 @@ function calcTransfusion() {
             <td>5–10 mL/kg (หรือ 1 unit/5 kg)</td>
             <td>รักษา Fibrinogen &lt; 100–150 mg/dL</td>
           </tr>
-          <tr style="background:rgba(158,61,36,0.06);">
+          <tr style="background:var(--accent-subtle);">
             <td><strong>Tranexamic Acid (TXA)</strong><br><span style="font-size:10.5px; color:var(--accent); font-weight:700;">Antifibrinolytic</span></td>
             <td><span class="dose-badge" style="background:var(--accent); color:#fff;">${txaLoadingMg} mg</span> Load</td>
             <td>15 mg/kg IV in 10m (max 1g)<br>then ${txaInfusionRate} mg/hr</td>
