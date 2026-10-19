@@ -237,6 +237,22 @@ flowchart TD
     - **Dynamic Color Telemetry**: Real-time Broselow zone synchronization (`renderBroselowMiniSpectrum()`) dynamically tints the pulsing HUD dot (`#triageHudDot`), updates the zone label (`#triageHudLabel`), and formats tabular quick-weight figures (`#triageHudVal`).
     - **Interactive Scroll-Down Deck (`#triagePopoverMenu`)**: A 2-column scrollable quick-weight matrix displaying target weights (`5k`..`40k`), color badges, weight intervals, and estimated ages with 1-tap clinical adoption and seamless auto-dismissal.
     - **Preserved Invariants & 128 Passing Tests**: Kept `#quickWeightStrip`, `#broselowMiniStrip`, `.quick-weight-btn`, `.broselow-mini-seg`, `previewBroselowZone()`, and `applyQuickWeight()` intact with 100% green test pass.
-    - Service worker cache version bumped to `er-ped-v2.3.1-20261019`.
+64. **Dedicated Broselow & Reference Floating Action Cluster (`.fab`) (v2.3.2 - October 2026)**:
+    - **Ultra-Clean Topbar**: Relocated all Broselow triage controls (`#triageDropdownBtn`, `#triagePopoverMenu`, `#broselowMiniStrip`, `#quickWeightStrip`, and `#broselow` active color chip) as well as the Reference popover (`#refPopoverBtn`, `#refPopoverMenu`: *Evidence & References*, *Vital Signs by Age*, *Broselow Tape*) and Overflow menu (`#overflowBtn`, `#overflowMenu`: *Install App*, *Print Active Tab*, *Print Pocket Card*, *TH/EN*, *Reload*) entirely out of the topbar into the unified bottom-right Floating Action Button cluster (`#fabCluster` / `.fab`).
+    - **Prominent Broselow Emergency FAB (`.broselow-fab`)**: Broselow now features a dedicated high-visibility floating pill button alongside the PALS button (`.pals-fab`). It displays the real-time pulsing color dot (`#triageHudDot`), zone name (`#triageHudLabel`), active weight readout (`#triageHudVal`), and an upward expansion chevron. When a Broselow zone is active, the button border and telemetry dot dynamically adopt the zone's vibrant emergency tape color.
+    - **Upward-Expanding Popover Architecture**: Floating popovers (`.fab-popover`, `.triage-popover-menu`, `.popover-menu`) are engineered with `bottom: calc(100% + 8px); right: 0; transform-origin: bottom right;` to smoothly fly upward within the mobile/desktop viewport without overflowing screen boundaries.
+    - **Mobile Bottom-Dock Coexistence**: Configured `@media (max-width: 680px)` rules positioning `.fab` at `bottom: calc(64px + env(safe-area-inset-bottom))` to float comfortably above the sticky `#mobileBottomDock`.
+65. **De-duplication & Surface Role Separation under `/taste-skill` (v2.3.2 - October 2026)**:
+    - **Surface Hierarchy & Zero-Redundancy Contract**: Resolved visual clutter and competing CTAs across Topbar, FAB cluster, Mobile Bottom Dock, and Footer by establishing strict single-source-of-truth surface roles:
+      - *Topbar*: Exclusively holds patient biometrics, active weight input, and provenance badges.
+      - *Navigation Rail*: Clinical domain navigation (e.g. Vitals tab `Alt+0`).
+      - *Floating Action Cluster (`.fab`)*: Emergency rapid-access fast tracks (`PALS`, `Broselow`), 1-tap direct `Evidence` modal trigger (`#refPopoverBtn`), and grouped `Options` overflow (`#overflowMenu`).
+      - *Mobile Bottom Dock (`#mobileBottomDock`)*: Primary thumb-zone emergency actions on screens $\le 680\text{px}$. The floating `.fab button.pals-fab` is hidden on mobile to eliminate double-PALS touch collisions.
+      - *Footer*: System metadata attribution, single version pill (`#footerVersionChip` triggering changelog), and secondary offline utilities.
+    - **Surgical Redundancy Removals**:
+      - Eliminated duplicate `Changelog` link in footer, leaving `#footerVersionChip` as the single interactive version pill.
+      - Replaced redundant `#refPopoverMenu` (which previously duplicated Broselow drawer and Vitals tab shortcuts) with direct 1-tap access to `openEvidenceModal()`.
+      - Partitioned `#overflowMenu` into semantic sections (`Print & Cards`, `Tools & Settings`) with `.popover-section-label`.
+    - **100% Invariant Verification**: Maintained all required footer DOM assertions (`assert(footer.innerHTML.includes('triggerPrintCard'))`, etc.) and verified all 128 tests pass green.
 
 
