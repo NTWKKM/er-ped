@@ -244,7 +244,7 @@ flowchart TD
     - **Mobile Bottom-Dock Coexistence**: Configured `@media (max-width: 680px)` rules positioning `.fab` at `bottom: calc(64px + env(safe-area-inset-bottom))` to float comfortably above the sticky `#mobileBottomDock`.
 65. **De-duplication & Surface Role Separation under `/taste-skill` (v2.3.2 - October 2026)**:
     - **Surface Hierarchy & Zero-Redundancy Contract**: Resolved visual clutter and competing CTAs across Topbar, FAB cluster, Mobile Bottom Dock, and Footer by establishing strict single-source-of-truth surface roles:
-      - *Topbar*: Exclusively holds patient biometrics, active weight input, and provenance badges.
+      - *Topbar*: Exclusively holds patient biometrics, active weight input, provenance badges, and the theme toggle control.
       - *Navigation Rail*: Clinical domain navigation (e.g. Vitals tab `Alt+0`).
       - *Floating Action Cluster (`.fab`)*: Emergency rapid-access fast tracks (`PALS`, `Broselow`), 1-tap direct `Evidence` modal trigger (`#refPopoverBtn`), and grouped `Options` overflow (`#overflowMenu`).
       - *Mobile Bottom Dock (`#mobileBottomDock`)*: Primary thumb-zone emergency actions on screens $\le 680\text{px}$. The floating `.fab button.pals-fab` is hidden on mobile to eliminate double-PALS touch collisions.
