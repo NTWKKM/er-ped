@@ -1446,6 +1446,8 @@ function getDrugCategory(name, drugObj){
   if (n.includes('cetirizine') || n.includes('chlorpheniramine') || n.includes('loratadine')) return 'Antihistamine';
   if (n.includes('calamine') || n.includes('cream')) return 'Topical / Skin';
   if (n.includes('amoxicillin') || n.includes('ceftriaxone') || n.includes('azithromycin') || n.includes('ampicillin') || n.includes('vancomycin') || n.includes('colistin') || n.includes('fluconazole') || n.includes('linezolid') || n.includes('amphotericin')) return 'Antibiotic';
+  if (n.includes('adenosine') || n.includes('amiodarone') || n.includes('atropine') || n.includes('glucagon') || n.includes('adrenaline') || n.includes('epinephrine')) return 'Emergency';
+  if (n.includes('levothyroxine') || n.includes('thyroid') || n.includes('insulin') || n.includes('glucagon')) return 'Endocrine';
   return 'Medication';
 }
 
