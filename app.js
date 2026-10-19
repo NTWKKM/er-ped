@@ -115,14 +115,36 @@ function toggleTheme() {
   setTheme(THEMES[nextIndex]);
 }
 
+function toggleTriagePopover(e) {
+  if (e) e.stopPropagation();
+  const btn = document.getElementById('triageDropdownBtn');
+  const menu = document.getElementById('triagePopoverMenu');
+  const refBtn = document.getElementById('refPopoverBtn');
+  const refMenu = document.getElementById('refPopoverMenu');
+  const overflowBtn = document.getElementById('overflowBtn');
+  const overflowMenu = document.getElementById('overflowMenu');
+  if (refMenu) refMenu.classList.remove('open');
+  if (refBtn) refBtn.setAttribute('aria-expanded', 'false');
+  if (overflowMenu) overflowMenu.classList.remove('open');
+  if (overflowBtn) overflowBtn.setAttribute('aria-expanded', 'false');
+  if (menu) {
+    const isOpen = menu.classList.toggle('open');
+    if (btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  }
+}
+
 function toggleRefPopover(e) {
   if (e) e.stopPropagation();
   const btn = document.getElementById('refPopoverBtn');
   const menu = document.getElementById('refPopoverMenu');
   const overflowBtn = document.getElementById('overflowBtn');
   const overflowMenu = document.getElementById('overflowMenu');
+  const triageBtn = document.getElementById('triageDropdownBtn');
+  const triageMenu = document.getElementById('triagePopoverMenu');
   if (overflowMenu) overflowMenu.classList.remove('open');
   if (overflowBtn) overflowBtn.setAttribute('aria-expanded', 'false');
+  if (triageMenu) triageMenu.classList.remove('open');
+  if (triageBtn) triageBtn.setAttribute('aria-expanded', 'false');
   if (menu) {
     const isOpen = menu.classList.toggle('open');
     if (btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
@@ -135,8 +157,12 @@ function toggleOverflowMenu(e) {
   const menu = document.getElementById('overflowMenu');
   const refBtn = document.getElementById('refPopoverBtn');
   const refMenu = document.getElementById('refPopoverMenu');
+  const triageBtn = document.getElementById('triageDropdownBtn');
+  const triageMenu = document.getElementById('triagePopoverMenu');
   if (refMenu) refMenu.classList.remove('open');
   if (refBtn) refBtn.setAttribute('aria-expanded', 'false');
+  if (triageMenu) triageMenu.classList.remove('open');
+  if (triageBtn) triageBtn.setAttribute('aria-expanded', 'false');
   if (menu) {
     const isOpen = menu.classList.toggle('open');
     if (btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
@@ -146,12 +172,16 @@ function toggleOverflowMenu(e) {
 function closeAllPopovers() {
   const refMenu = document.getElementById('refPopoverMenu');
   const overflowMenu = document.getElementById('overflowMenu');
+  const triageMenu = document.getElementById('triagePopoverMenu');
   const refBtn = document.getElementById('refPopoverBtn');
   const overflowBtn = document.getElementById('overflowBtn');
+  const triageBtn = document.getElementById('triageDropdownBtn');
   if (refMenu) refMenu.classList.remove('open');
   if (overflowMenu) overflowMenu.classList.remove('open');
+  if (triageMenu) triageMenu.classList.remove('open');
   if (refBtn) refBtn.setAttribute('aria-expanded', 'false');
   if (overflowBtn) overflowBtn.setAttribute('aria-expanded', 'false');
+  if (triageBtn) triageBtn.setAttribute('aria-expanded', 'false');
 }
 
 if (typeof window !== 'undefined') {
@@ -534,6 +564,18 @@ function applyQuickWeight(kg) {
   updateBiometricUIState();
 }
 
+const BROSELOW_COLOR_MAP = {
+  'Grey':   { bg: '#E5E7EB', fg: '#374151' },
+  'Pink':   { bg: '#FCE7F3', fg: '#9D174D' },
+  'Red':    { bg: '#FEE2E2', fg: '#991B1B' },
+  'Purple': { bg: '#F3E8FF', fg: '#6B21A8' },
+  'Yellow': { bg: '#FEF3C7', fg: '#92400E' },
+  'White':  { bg: '#FFFFFF', fg: '#1F2937' },
+  'Blue':   { bg: '#DBEAFE', fg: '#1E40AF' },
+  'Orange': { bg: '#FFEDD5', fg: '#9A3412' },
+  'Green':  { bg: '#DCFCE7', fg: '#166534' }
+};
+
 function renderBroselowMiniSpectrum() {
   const w = getWeight();
   const zone = getBroselowZone(w);
@@ -562,6 +604,31 @@ function renderBroselowMiniSpectrum() {
       }
       btn.classList.toggle('active', isActive);
     });
+
+    // Update Futuristic Topbar HUD Capsule Readout
+    const hudDot = document.getElementById('triageHudDot');
+    const hudLabel = document.getElementById('triageHudLabel');
+    const hudVal = document.getElementById('triageHudVal');
+    if (hudLabel && hudVal) {
+      if (zone && zoneColor && w > 0) {
+        hudLabel.textContent = zoneColor;
+        hudVal.textContent = `${w.toFixed(0)}k`;
+        if (hudDot) {
+          const palette = BROSELOW_COLOR_MAP[zoneColor] || null;
+          hudDot.style.background = palette ? palette.bg : 'var(--accent)';
+          hudDot.style.boxShadow = palette ? `0 0 6px ${palette.fg}` : '0 0 6px var(--accent)';
+          hudDot.classList.add('active');
+        }
+      } else {
+        hudLabel.textContent = 'Broselow';
+        hudVal.textContent = '—';
+        if (hudDot) {
+          hudDot.style.background = 'var(--muted)';
+          hudDot.style.boxShadow = 'none';
+          hudDot.classList.remove('active');
+        }
+      }
+    }
   }
 }
 
@@ -837,18 +904,6 @@ function setupKeyboardShortcuts(){
 
 // --------- Broselow Tape Reference Panel ---------
 
-const BROSELOW_COLOR_MAP = {
-  'Grey':   { bg: '#E5E7EB', fg: '#374151' },
-  'Pink':   { bg: '#FCE7F3', fg: '#9D174D' },
-  'Red':    { bg: '#FEE2E2', fg: '#991B1B' },
-  'Purple': { bg: '#F3E8FF', fg: '#6B21A8' },
-  'Yellow': { bg: '#FEF3C7', fg: '#92400E' },
-  'White':  { bg: '#FFFFFF', fg: '#1F2937' },
-  'Blue':   { bg: '#DBEAFE', fg: '#1E40AF' },
-  'Orange': { bg: '#FFEDD5', fg: '#9A3412' },
-  'Green':  { bg: '#DCFCE7', fg: '#166534' }
-};
-
 function broselowColor(w){
   if (!w || !DS || !DS.broselow) return '—';
   for (const b of DS.broselow){ if (w>=b.min && w<=b.max) return b.color; }
@@ -905,7 +960,8 @@ function handleBroselowBackdropClick(e){
   }
 }
 
-function previewBroselowZone(colorName) {
+function previewBroselowZone(colorName, event) {
+  if (event && event.stopPropagation) event.stopPropagation();
   const bands = (DS && DS.broselow) || [];
   const cleanName = (colorName || '').toString().trim().toLowerCase();
   const entry = bands.find(b => b.color && b.color.toLowerCase().includes(cleanName));
@@ -5371,6 +5427,7 @@ if (typeof module !== 'undefined' && module.exports) {
     onRenalHtInput,
     renderRenalAdjustmentBox,
     findMatchedDoseBand,
-    resolveDrugDose
+    resolveDrugDose,
+    toggleTriagePopover
   };
 }

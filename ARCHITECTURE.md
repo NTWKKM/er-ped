@@ -232,3 +232,11 @@ flowchart TD
     - **Deterministic Invariants & Tests**: Preserved all 18 tab buttons, 54 essential DOM element IDs, and 127 passing automated tests.
     - Service worker cache version bumped to `er-ped-v2.3.0-20261019`.
 
+63. **Broselow Futuristic Triage HUD Capsule & Scroll-Down Popover Deck (v2.3.1 - October 2026)**:
+    - **Space-Saving Cockpit HUD Capsule**: Reclaimed >270px of horizontal topbar width by transitioning from 10 flat inline buttons to a 140px cybernetic telemetry capsule (`#triageDropdownBtn` within `#topbarTriage`).
+    - **Dynamic Color Telemetry**: Real-time Broselow zone synchronization (`renderBroselowMiniSpectrum()`) dynamically tints the pulsing HUD dot (`#triageHudDot`), updates the zone label (`#triageHudLabel`), and formats tabular quick-weight figures (`#triageHudVal`).
+    - **Interactive Scroll-Down Deck (`#triagePopoverMenu`)**: A 2-column scrollable quick-weight matrix displaying target weights (`5k`..`40k`), color badges, weight intervals, and estimated ages with 1-tap clinical adoption and seamless auto-dismissal.
+    - **Preserved Invariants & 128 Passing Tests**: Kept `#quickWeightStrip`, `#broselowMiniStrip`, `.quick-weight-btn`, `.broselow-mini-seg`, `previewBroselowZone()`, and `applyQuickWeight()` intact with 100% green test pass.
+    - Service worker cache version bumped to `er-ped-v2.3.1-20261019`.
+
+

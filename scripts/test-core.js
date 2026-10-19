@@ -1894,6 +1894,35 @@ test('Evidence Modal UI Engine: openEvidenceModal, filterEvidenceList, and DOM R
   assert(backdrop.classList.contains('hidden'), 'evidenceBackdrop must have hidden class after closeEvidenceModal');
 });
 
+test('Broselow Futuristic Triage HUD & Dropdown Engine: Capsule telemetry sync and popover toggle', () => {
+  const triageBtn = document.getElementById('triageDropdownBtn');
+  const triageMenu = document.getElementById('triagePopoverMenu');
+  const hudDot = document.getElementById('triageHudDot');
+  const hudLabel = document.getElementById('triageHudLabel');
+  const hudVal = document.getElementById('triageHudVal');
+
+  assert(triageBtn !== null, '#triageDropdownBtn must exist');
+  assert(triageMenu !== null, '#triagePopoverMenu must exist');
+  assert(hudDot !== null, '#triageHudDot must exist');
+
+  // Test Popover Toggle
+  window.eval('toggleTriagePopover()');
+  assert(triageMenu.classList.contains('open'), 'Triage popover must be open after toggleTriagePopover');
+  assert.strictEqual(triageBtn.getAttribute('aria-expanded'), 'true');
+
+  // Test applyQuickWeight from within dropdown closes popover and updates HUD telemetry
+  window.eval('applyQuickWeight(10); closeAllPopovers();');
+  assert(!triageMenu.classList.contains('open'), 'Triage popover must close on closeAllPopovers');
+  assert.strictEqual(hudLabel.textContent, 'Purple', 'HUD label must display Purple for 10 kg');
+  assert.strictEqual(hudVal.textContent, '10k', 'HUD value must display 10k for 10 kg');
+  assert(hudDot.classList.contains('active'), 'HUD dot must have active class');
+
+  // Test previewBroselowZone with Pink (6.5 kg)
+  window.eval('previewBroselowZone("Pink")');
+  assert.strictEqual(hudLabel.textContent, 'Pink', 'HUD label must display Pink for 6.5 kg');
+  assert.strictEqual(hudVal.textContent, '7k', 'HUD value must display 7k for 6.5 kg (rounded)');
+});
+
 console.log(`\n----------------------------------------`);
 console.log(`Test Results: ${passed} Passed, ${failed} Failed`);
 console.log(`----------------------------------------\n`);
