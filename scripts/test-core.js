@@ -968,6 +968,20 @@ test('Combobox Category Filtering: Dose & ATB category filter updates dropdown o
   assert(dropdown.innerHTML.includes('Paracetamol') || dropdown.innerHTML.includes('Ibuprofen'), 'Dropdown should contain antipyretics');
   assert(!dropdown.innerHTML.includes('Salbutamol'), 'Dropdown should NOT contain Salbutamol under antipyretic category');
 
+  // Verify Emergency filter pill & matching
+  const emergencyPill = document.querySelector('#doseCategoryFilter button[onclick*="emergency"]');
+  assert(emergencyPill !== null, 'Emergency category filter pill must exist in #doseCategoryFilter');
+  window.eval('setDoseCategoryFilter("emergency")');
+  assert(dropdown.innerHTML.includes('Adenosine') || dropdown.innerHTML.includes('Glucagon'), 'Dropdown should contain emergency medications under emergency category');
+  assert(!dropdown.innerHTML.includes('Paracetamol'), 'Dropdown should NOT contain Paracetamol under emergency category');
+
+  // Verify Endocrine filter pill & matching
+  const endocrinePill = document.querySelector('#doseCategoryFilter button[onclick*="endocrine"]');
+  assert(endocrinePill !== null, 'Endocrine category filter pill must exist in #doseCategoryFilter');
+  window.eval('setDoseCategoryFilter("endocrine")');
+  assert(dropdown.innerHTML.includes('Levothyroxine'), 'Dropdown should contain endocrine medications under endocrine category');
+  assert(!dropdown.innerHTML.includes('Paracetamol'), 'Dropdown should NOT contain Paracetamol under endocrine category');
+
   window.eval('setDoseCategoryFilter("all")');
 });
 

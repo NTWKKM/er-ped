@@ -1399,6 +1399,16 @@ function matchesDoseCategory(d, cat) {
     const n = ((d.name || '') + ' ' + (d.key || '') + ' ' + (d.drug || '')).toLowerCase();
     return n.includes('calamine') || n.includes('cream') || n.includes('ointment') || n.includes('lotion') || n.includes('gel');
   }
+  if (cat === 'emergency' || cat === 'resus') {
+    if (d.category === 'emergency') return true;
+    const n = ((d.name || '') + ' ' + (d.key || '') + ' ' + (d.drug || '')).toLowerCase();
+    return n.includes('adenosine') || n.includes('amiodarone') || n.includes('atropine') || n.includes('glucagon') || n.includes('adrenaline') || n.includes('epinephrine');
+  }
+  if (cat === 'endocrine') {
+    if (d.category === 'endocrine') return true;
+    const n = ((d.name || '') + ' ' + (d.key || '') + ' ' + (d.drug || '')).toLowerCase();
+    return n.includes('levothyroxine') || n.includes('thyroid') || n.includes('insulin') || n.includes('glucagon');
+  }
   return false;
 }
 
@@ -1424,6 +1434,7 @@ function getDrugCategory(name, drugObj){
     if (c === 'respiratory') return 'Respiratory';
     if (c === 'endocrine') return 'Endocrine';
     if (c === 'steroid') return 'Steroid';
+    if (c === 'emergency') return 'Emergency';
   }
   if (drugObj?.isAtb) return 'Antibiotic';
   const n = (name || '').toLowerCase();
