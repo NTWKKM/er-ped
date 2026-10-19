@@ -50,10 +50,10 @@
       --r-xl: 16px;
       --r-full: 9999px;
 
-      /* Refined Ambient Elevation Shadows */
-      --shadow-1: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
-      --shadow-2: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
-      --shadow-3: 0 16px 24px -4px rgba(15, 23, 42, 0.10), 0 6px 10px -4px rgba(15, 23, 42, 0.05);
+      /* Refined Ambient Elevation Shadows — Clean & Subtle */
+      --shadow-1: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.03);
+      --shadow-2: 0 4px 8px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+      --shadow-3: 0 12px 24px -4px rgba(15, 23, 42, 0.08), 0 4px 8px -2px rgba(15, 23, 42, 0.04);
 
       --font-sans: 'Sarabun', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -235,17 +235,17 @@
       color: #FF8585;
     }
 
-    /* 2-Tier Cockpit Navigation */
+    /* 2-Tier Cockpit Navigation — Clean & Minimalist */
     .cockpit-nav {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--r-md);
-      padding: 7px 10px 0 10px;
+      padding: 6px 10px 0 10px;
       margin-bottom: 14px;
       box-shadow: var(--shadow-1);
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 2px;
     }
     .cockpit-tier-1 {
       display: flex;
@@ -279,13 +279,13 @@
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
-      padding: 1px 0;
+      padding: 2px 0;
       flex-shrink: 0;
     }
     .category-bar::-webkit-scrollbar, .category-pills-group::-webkit-scrollbar { display: none; }
     .category-pill {
       flex: 0 0 auto;
-      padding: 4px 11px;
+      padding: 5px 12px;
       border-radius: var(--r-full);
       border: 1px solid var(--border);
       background: var(--panel-subtle);
@@ -295,7 +295,7 @@
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      transition: all 0.15s ease;
+      transition: all 0.15s cubic-bezier(.16, 1, .3, 1);
       white-space: nowrap;
       user-select: none;
     }
@@ -309,7 +309,7 @@
       color: #FFFFFF;
       border-color: var(--accent);
       font-weight: 700;
-      box-shadow: 0 2px 8px var(--ring);
+      box-shadow: 0 1px 4px var(--ring);
     }
     :root[data-theme="mono"] .category-pill.active {
       background: #ECECE8;
@@ -322,10 +322,10 @@
     .topbar-triage {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 3px;
       align-items: center;
       justify-content: center;
-      padding: 2px 8px 3px;
+      padding: 3px 8px;
       background: var(--panel-subtle);
       border: 1px solid var(--border);
       border-radius: var(--r-md);
@@ -827,16 +827,16 @@
       font-variant-numeric: tabular-nums;
     }
 
-    /* Top Bar Instrument Cluster */
+    /* Top Bar Instrument Cluster — Clean, Modern, Bedside Ergonomic */
     .topbar { 
       position: fixed; 
       top: 0; 
       left: 0; 
       right: 0; 
       z-index: 60; 
-      background: rgba(248, 250, 252, 0.92); 
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+      background: rgba(248, 250, 252, 0.94); 
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border); 
       box-shadow: var(--shadow-1);
     }
@@ -870,7 +870,7 @@
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--r-md);
-      padding: 3px 8px 4px;
+      padding: 4px 9px;
       display: flex;
       flex-direction: column;
       gap: 2px;
@@ -880,9 +880,9 @@
       transition: border-color 0.15s ease;
     }
     .bio-group-title {
-      font-size: 8.5px;
+      font-size: 9px;
       font-weight: 700;
-      letter-spacing: 0.10em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--muted);
       line-height: 1;
@@ -895,13 +895,13 @@
       white-space: nowrap;
     }
     .bio-derived-val {
-      font-size: 13.5px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--ink);
       min-width: 40px;
     }
     .bio-derived-src {
-      font-size: 10px;
+      font-size: 10.5px;
       color: var(--muted);
       letter-spacing: 0.01em;
     }
@@ -911,7 +911,7 @@
       gap: 4px;
       margin: 0 0 0 2px;
       cursor: pointer;
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 600;
       color: var(--muted);
       white-space: nowrap;
@@ -919,25 +919,28 @@
     }
     .bio-use-toggle:hover { color: var(--ink); }
 
-    /* IN USE — the weight the dose engine runs on. */
+    /* IN USE — Authoritative Clinical Weight Readout */
     .active-weight {
       border-left: 3px solid var(--accent);
       background: var(--accent-subtle);
-      min-width: 140px;
-      padding: 3px 10px 4px;
+      border-radius: var(--r-md);
+      min-width: 145px;
+      padding: 4px 11px;
       flex-shrink: 0;
+      box-shadow: var(--shadow-1);
     }
     .active-weight #activeWeightVal {
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 800;
-      line-height: 1.1;
+      line-height: 1.15;
       color: var(--ink);
       letter-spacing: -0.02em;
+      font-family: var(--font-mono);
     }
     .active-weight-src {
-      font-size: 9.5px;
+      font-size: 10px;
       font-weight: 600;
-      color: color-mix(in srgb, var(--ink) 78%, transparent);
+      color: var(--muted);
       letter-spacing: 0.01em;
     }
     .active-weight.is-derived {
@@ -965,24 +968,25 @@
     .bio-fields label.chip-label {
       font-size: 11px;
       font-weight: 800;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
       text-transform: uppercase;
       color: var(--muted);
     }
 
     .bio-fields input[type="number"],
     .chip input[type="number"] { 
-      width: 68px; 
-      padding: 4px 7px; 
+      width: 70px; 
+      padding: 4px 8px; 
       border: 1px solid var(--border); 
       border-radius: var(--r-sm); 
       outline: none; 
       font-family: 'JetBrains Mono', monospace;
       font-weight: 700;
-      font-size: 13.5px;
+      font-size: 14px;
       background: var(--panel-subtle);
       color: var(--ink);
       transition: all 0.15s ease;
+      text-align: center;
     }
 
     .bio-fields input[type="number"]:focus,
@@ -1017,13 +1021,13 @@
     }
 
     .unit-toggle-btn {
-      padding: 3px 7px;
-      min-height: 24px;
-      min-width: 28px;
-      font-size: 11px;
-      font-weight: 800;
+      padding: 3px 8px;
+      min-height: 25px;
+      min-width: 30px;
+      font-size: 11.5px;
+      font-weight: 700;
       border-radius: var(--r-xs);
-      border: 1px solid var(--border-strong);
+      border: 1px solid var(--border);
       background: var(--panel);
       color: var(--ink);
       cursor: pointer;
@@ -1032,9 +1036,9 @@
     }
 
     .unit-toggle-btn:hover {
-      background: var(--dark-btn);
-      color: #FFFFFF;
-      border-color: var(--dark-btn);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-color: var(--accent);
     }
 
     /* Toggle Switch */
@@ -2344,9 +2348,9 @@
         <div class="bio-group">
           <div class="bio-fields">
             <label class="chip-label" for="weight">BW</label>
-            <input type="number" id="weight" min="0" step="0.1" placeholder="kg" oninput="onWeightChange()"/>
+            <input type="number" id="weight" min="0" step="0.1" inputmode="decimal" autocomplete="off" placeholder="kg" oninput="onWeightChange()"/>
 
-            <input type="number" id="age" min="0" max="15" step="0.1" placeholder="Age" oninput="estimateFromAge()"/>
+            <input type="number" id="age" min="0" max="15" step="0.1" inputmode="decimal" autocomplete="off" placeholder="Age" oninput="estimateFromAge()"/>
             <button type="button" id="ageUnitBtn" class="unit-toggle-btn" onclick="toggleAgeUnit()" title="คลิกเพื่อสลับหน่วยปี/เดือน">yr</button>
             <button type="button" id="sexToggleBtn" class="unit-toggle-btn" onclick="toggleSex()" title="สลับเพศ ♂ / ♀ สำหรับ Growth Z-Score">♂</button>
           </div>
@@ -2356,7 +2360,7 @@
         <div class="bio-group">
           <div class="bio-fields">
             <label class="chip-label" for="length">HT</label>
-            <input type="number" id="length" min="0" step="0.1" placeholder="cm" oninput="updateIBW()"/>
+            <input type="number" id="length" min="0" step="0.1" inputmode="decimal" autocomplete="off" placeholder="cm" oninput="updateIBW()"/>
 
             <label class="chip-label">Wt for Ht</label>
             <strong id="ibwVal" class="mono bio-derived-val">—</strong>
@@ -2459,10 +2463,10 @@
       <!-- Tier 1: Category Segmented Switcher -->
       <div class="cockpit-tier-1">
         <div class="category-bar category-pills-group" role="group" aria-label="Module categories">
-          <button type="button" class="category-pill active" data-cat="meds" onclick="filterNavCategory('meds', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg> <span>Meds & Transfusion (4)</span></button>
-          <button type="button" class="category-pill" data-cat="resus" onclick="filterNavCategory('resus', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> <span>Emergency Resus (7)</span></button>
-          <button type="button" class="category-pill" data-cat="protocols" onclick="filterNavCategory('protocols', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg> <span>Protocols & CDS (7)</span></button>
-          <button type="button" class="category-pill" data-cat="all" onclick="filterNavCategory('all', this)" title="Show all 18 clinical modules in one rail [Alt+J]"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg> <span>All Modules (18)</span></button>
+          <button type="button" class="category-pill active" data-cat="meds" onclick="filterNavCategory('meds', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg> <span>Meds &amp; Fluids</span></button>
+          <button type="button" class="category-pill" data-cat="resus" onclick="filterNavCategory('resus', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> <span>Emergency Resus</span></button>
+          <button type="button" class="category-pill" data-cat="protocols" onclick="filterNavCategory('protocols', this)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg> <span>Protocols &amp; CDS</span></button>
+          <button type="button" class="category-pill" data-cat="all" onclick="filterNavCategory('all', this)" title="Show all 18 clinical modules in one rail [Alt+J]"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg> <span>All Modules</span></button>
         </div>
       </div>
 
@@ -2517,15 +2521,15 @@
           </div>
           <div class="combobox-wrapper">
             <span class="combobox-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
-            <input type="text" id="doseSearch" class="combobox-input" placeholder="พิมพ์ชื่อยาเพื่อค้นหา (e.g. Paracetamol, Amoxicillin, Furosemide, Diazepam)..." oninput="onDoseSearchInput()" onfocus="openDoseCombobox()" onkeydown="onComboboxKeydown(event,'dose')" role="combobox" aria-expanded="false" aria-controls="doseComboboxDropdown" aria-autocomplete="list" aria-label="ค้นหายา (Search medication)" />
+            <input type="text" id="doseSearch" class="combobox-input" placeholder="พิมพ์ชื่อยาเพื่อค้นหา (e.g. Paracetamol, Amoxicillin, Furosemide, Diazepam)..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" oninput="onDoseSearchInput()" onfocus="openDoseCombobox()" onkeydown="onComboboxKeydown(event,'dose')" role="combobox" aria-expanded="false" aria-controls="doseComboboxDropdown" aria-autocomplete="list" aria-label="ค้นหายา (Search medication)" />
             <button type="button" id="doseSearchClear" class="combobox-clear-btn" onclick="clearDoseSearch()" title="ล้างคำค้นหา" aria-label="Clear search">✕</button>
             <div id="doseComboboxDropdown" class="combobox-dropdown" role="listbox"></div>
           </div>
           <select id="doseDrug" style="display:none;" onchange="calcDose()"></select>
         </div>
         <div class="col-12">
-          <label>Form Strength Override (mg/mL, mg/tab) <span style="font-size:10.5px; font-weight:400; color:var(--muted); text-transform:none;">(ระบุเมื่อต้องการปรับความเข้มข้นยาจากค่าเริ่มต้น)</span></label>
-          <input type="number" id="doseConc" min="0" step="0.01" placeholder="ความเข้มข้นยา (e.g. 120 mg/5 mL = 24)" oninput="calcDose()">
+          <label for="doseConc">Form Strength Override (mg/mL, mg/tab) <span style="font-size:11px; font-weight:400; color:var(--muted); text-transform:none;">(ปรับความเข้มข้นยาจากค่าเริ่มต้น)</span></label>
+          <input type="number" id="doseConc" min="0" step="0.01" inputmode="decimal" autocomplete="off" placeholder="ความเข้มข้นยา (e.g. 120 mg/5 mL = 24)" oninput="calcDose()">
         </div>
         <div class="col-12">
           <div id="doseOut" class="summary"></div>
@@ -2551,15 +2555,15 @@
           </div>
           <div class="combobox-wrapper">
             <span class="combobox-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
-            <input type="text" id="atbSearch" class="combobox-input" placeholder="พิมพ์ชื่อยาปฏิชีวนะเพื่อค้นหา (e.g. Amoxicillin, Augmentin, Ceftriaxone)..." oninput="onATBSearchInput()" onfocus="openATBCombobox()" onkeydown="onComboboxKeydown(event,'atb')" role="combobox" aria-expanded="false" aria-controls="atbComboboxDropdown" aria-autocomplete="list" aria-label="ค้นหายาปฏิชีวนะ (Search antibiotic)" />
+            <input type="text" id="atbSearch" class="combobox-input" placeholder="พิมพ์ชื่อยาปฏิชีวนะเพื่อค้นหา (e.g. Amoxicillin, Augmentin, Ceftriaxone)..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" oninput="onATBSearchInput()" onfocus="openATBCombobox()" onkeydown="onComboboxKeydown(event,'atb')" role="combobox" aria-expanded="false" aria-controls="atbComboboxDropdown" aria-autocomplete="list" aria-label="ค้นหายาปฏิชีวนะ (Search antibiotic)" />
             <button type="button" id="atbSearchClear" class="combobox-clear-btn" onclick="clearATBSearch()" title="ล้างคำค้นหา" aria-label="Clear search">✕</button>
             <div id="atbComboboxDropdown" class="combobox-dropdown" role="listbox"></div>
           </div>
           <select id="atbDrug" style="display:none;" onchange="calcATB()"></select>
         </div>
         <div class="col-12">
-          <label>Form Strength Override (mg/mL, mg/tab) <span style="font-size:10.5px; font-weight:400; color:var(--muted); text-transform:none;">(ระบุเมื่อต้องการปรับความเข้มข้นยาจากค่าเริ่มต้น)</span></label>
-          <input type="number" id="atbForm" min="0" step="0.01" placeholder="ความเข้มข้นยา (e.g. 250 mg/5 mL = 50)" oninput="calcATB()">
+          <label for="atbForm">Form Strength Override (mg/mL, mg/tab) <span style="font-size:11px; font-weight:400; color:var(--muted); text-transform:none;">(ปรับความเข้มข้นยาจากค่าเริ่มต้น)</span></label>
+          <input type="number" id="atbForm" min="0" step="0.01" inputmode="decimal" autocomplete="off" placeholder="ความเข้มข้นยา (e.g. 250 mg/5 mL = 50)" oninput="calcATB()">
         </div>
         <div class="col-12">
           <div id="atbOut" class="summary"></div>
@@ -2623,7 +2627,7 @@
             <span class="evidence-badge" onclick="openEvidenceModal('pals')" title="คลิกเพื่อดูเอกสารอ้างอิงและระดับหลักฐาน"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> AHA PALS 2025</span>
           </div>
           <label for="pAge">Patient Age (yr) <span style="font-size:10.5px; font-weight:400; color:var(--muted); text-transform:none;">(Optional — คำนวณขนาด ETT / Blade)</span></label>
-          <input type="number" id="pAge" min="0" max="15" step="0.1" placeholder="อายุเพื่อคำนวณ ETT (e.g. 4)" oninput="onPALSAgeChange()">
+          <input type="number" id="pAge" min="0" max="15" step="0.1" inputmode="decimal" autocomplete="off" placeholder="อายุเพื่อคำนวณ ETT (e.g. 4)" oninput="onPALSAgeChange()">
         </div>
         <div class="col-12">
           <div id="pOut" class="summary"></div>
@@ -2642,17 +2646,17 @@
         <div class="col-6">
           <label>Birth Weight (kg)</label>
           <div style="display:flex; gap:6px;">
-            <input type="number" id="nW" min="0" step="0.01" placeholder="น้ำหนักแรกเกิด kg" oninput="calcNCPR()">
+            <input type="number" id="nW" min="0" step="0.01" inputmode="decimal" autocomplete="off" placeholder="น้ำหนักแรกเกิด kg" oninput="calcNCPR()">
             <button class="btn" style="padding:5px 9px; font-size:11px; white-space:nowrap;" onclick="syncNCPRWithABW()" title="ดึงค่าน้ำหนักจาก Topbar ABW">Sync ABW</button>
           </div>
         </div>
         <div class="col-6">
           <label>Gestational Age (wk)</label>
-          <input type="number" id="nGA" min="20" max="44" step="1" placeholder="สัปดาห์ (optional)" oninput="calcNCPR()">
+          <input type="number" id="nGA" min="20" max="44" step="1" inputmode="decimal" autocomplete="off" placeholder="สัปดาห์ (optional)" oninput="calcNCPR()">
         </div>
         <div class="col-6">
           <label>Blood Glucose (mg/dL)</label>
-          <input type="number" id="nBG" step="1" placeholder="mg/dL (optional)" oninput="calcNCPR()">
+          <input type="number" id="nBG" step="1" inputmode="decimal" autocomplete="off" placeholder="mg/dL (optional)" oninput="calcNCPR()">
         </div>
         <div class="col-12">
           <div id="nOut" class="summary"></div>
@@ -2673,15 +2677,15 @@
         </div>
         <div class="col-4">
           <label>Target Dose (mcg/kg/min)</label>
-          <input type="number" id="dripDoseInput" min="0" step="0.01" placeholder="mcg/kg/min" oninput="calcDrip()">
+          <input type="number" id="dripDoseInput" min="0" step="0.01" inputmode="decimal" autocomplete="off" placeholder="mcg/kg/min" oninput="calcDrip()">
         </div>
         <div class="col-4">
           <label>Drug Amount (mg)</label>
-          <input type="number" id="dripPrepMg" min="0" step="0.1" placeholder="mg in diluent" oninput="calcDrip()">
+          <input type="number" id="dripPrepMg" min="0" step="0.1" inputmode="decimal" autocomplete="off" placeholder="mg in diluent" oninput="calcDrip()">
         </div>
         <div class="col-4">
           <label>Diluent Volume (mL)</label>
-          <input type="number" id="dripPrepVolMl" min="1" step="1" placeholder="mL D5W / NSS" oninput="calcDrip()">
+          <input type="number" id="dripPrepVolMl" min="1" step="1" inputmode="decimal" autocomplete="off" placeholder="mL D5W / NSS" oninput="calcDrip()">
         </div>
         <div class="col-12">
           <div id="dripOut" class="summary"></div>
@@ -2790,11 +2794,11 @@
         </div>
         <div class="col-4">
           <label>Prior Fluid Boluses Given (mL)</label>
-          <input type="number" id="dkaPriorBolus" min="0" step="50" placeholder="mL NS given in ER" oninput="calcDKA()">
+          <input type="number" id="dkaPriorBolus" min="0" step="50" inputmode="decimal" autocomplete="off" placeholder="mL NS given in ER" oninput="calcDKA()">
         </div>
         <div class="col-4">
           <label>Current Bedside BG (mg/dL)</label>
-          <input type="number" id="dkaBG" min="0" step="10" placeholder="mg/dL" oninput="calcDKA()">
+          <input type="number" id="dkaBG" min="0" step="10" inputmode="decimal" autocomplete="off" placeholder="mg/dL" oninput="calcDKA()">
         </div>
         <div class="col-12">
           <div id="dkaOut" class="summary"></div>
@@ -2841,36 +2845,36 @@
         
         <div class="col-3">
           <label>Serum Na (mEq/L)</label>
-          <input type="number" id="lyteNa" min="90" max="200" step="1" placeholder="e.g. 130" oninput="calcElectrolytes()">
+          <input type="number" id="lyteNa" min="90" max="200" step="1" inputmode="decimal" autocomplete="off" placeholder="e.g. 130" oninput="calcElectrolytes()">
         </div>
         <div class="col-3">
           <label>Blood Glucose (mg/dL)</label>
-          <input type="number" id="lyteGlucose" min="0" max="2500" step="10" placeholder="e.g. 350" oninput="calcElectrolytes()">
+          <input type="number" id="lyteGlucose" min="0" max="2500" step="10" inputmode="decimal" autocomplete="off" placeholder="e.g. 350" oninput="calcElectrolytes()">
         </div>
         <div class="col-3">
           <label>Total Calcium (mg/dL)</label>
-          <input type="number" id="lyteTotalCa" min="2" max="20" step="0.1" placeholder="e.g. 7.2" oninput="calcElectrolytes()">
+          <input type="number" id="lyteTotalCa" min="2" max="20" step="0.1" inputmode="decimal" autocomplete="off" placeholder="e.g. 7.2" oninput="calcElectrolytes()">
         </div>
         <div class="col-3">
           <label>Serum Albumin (g/dL)</label>
-          <input type="number" id="lyteAlbumin" min="0.5" max="7" step="0.1" placeholder="e.g. 2.5" oninput="calcElectrolytes()">
+          <input type="number" id="lyteAlbumin" min="0.5" max="7" step="0.1" inputmode="decimal" autocomplete="off" placeholder="e.g. 2.5" oninput="calcElectrolytes()">
         </div>
 
         <div class="col-3">
           <label>Serum K+ (mEq/L)</label>
-          <input type="number" id="lyteK" min="1" max="12" step="0.1" placeholder="e.g. 4.0" oninput="calcElectrolytes()">
+          <input type="number" id="lyteK" min="1" max="12" step="0.1" inputmode="decimal" autocomplete="off" placeholder="e.g. 4.0" oninput="calcElectrolytes()">
         </div>
         <div class="col-3">
           <label>Blood pH (Arterial/Venous)</label>
-          <input type="number" id="lytePH" min="6.5" max="7.8" step="0.01" placeholder="e.g. 7.10" oninput="calcElectrolytes()">
+          <input type="number" id="lytePH" min="6.5" max="7.8" step="0.01" inputmode="decimal" autocomplete="off" placeholder="e.g. 7.10" oninput="calcElectrolytes()">
         </div>
         <div class="col-3">
           <label>Serum Cl- (mEq/L)</label>
-          <input type="number" id="lyteCl" min="50" max="160" step="1" placeholder="e.g. 98" oninput="calcElectrolytes()">
+          <input type="number" id="lyteCl" min="50" max="160" step="1" inputmode="decimal" autocomplete="off" placeholder="e.g. 98" oninput="calcElectrolytes()">
         </div>
         <div class="col-3">
           <label>Serum HCO3- (mEq/L)</label>
-          <input type="number" id="lyteHCO3" min="1" max="60" step="1" placeholder="e.g. 12" oninput="calcElectrolytes()">
+          <input type="number" id="lyteHCO3" min="1" max="60" step="1" inputmode="decimal" autocomplete="off" placeholder="e.g. 12" oninput="calcElectrolytes()">
         </div>
 
         <!-- Collapsible Advanced Lab Inputs -->
@@ -2883,43 +2887,43 @@
             <div class="grid" style="margin-top:10px;">
               <div class="col-3">
                 <label>Serum BUN (mg/dL)</label>
-                <input type="number" id="lyteBUN" min="1" max="250" step="1" placeholder="e.g. 24" oninput="calcElectrolytes()">
+                <input type="number" id="lyteBUN" min="1" max="250" step="1" inputmode="decimal" autocomplete="off" placeholder="e.g. 24" oninput="calcElectrolytes()">
               </div>
               <div class="col-3">
                 <label>Serum Cr (mg/dL)</label>
-                <input type="number" id="lyteSCr" min="0.1" max="20" step="0.1" placeholder="e.g. 0.8" oninput="calcElectrolytes()">
+                <input type="number" id="lyteSCr" min="0.1" max="20" step="0.1" inputmode="decimal" autocomplete="off" placeholder="e.g. 0.8" oninput="calcElectrolytes()">
               </div>
               <div class="col-3">
                 <label>Measured Serum Osm</label>
-                <input type="number" id="lyteMeasOsm" min="150" max="500" step="1" placeholder="mOsm/kg" oninput="calcElectrolytes()">
+                <input type="number" id="lyteMeasOsm" min="150" max="500" step="1" inputmode="decimal" autocomplete="off" placeholder="mOsm/kg" oninput="calcElectrolytes()">
               </div>
               <div class="col-3">
                 <label>Target Na (Deficit calc)</label>
-                <input type="number" id="lyteTargetNa" min="120" max="155" step="1" value="135" oninput="calcElectrolytes()">
+                <input type="number" id="lyteTargetNa" min="120" max="155" step="1" inputmode="decimal" autocomplete="off" value="135" oninput="calcElectrolytes()">
               </div>
               <div class="col-3">
                 <label>Urine Na (mEq/L)</label>
-                <input type="number" id="lyteUNa" min="0" max="300" step="1" placeholder="mEq/L" oninput="calcElectrolytes()">
+                <input type="number" id="lyteUNa" min="0" max="300" step="1" inputmode="decimal" autocomplete="off" placeholder="mEq/L" oninput="calcElectrolytes()">
               </div>
               <div class="col-3">
                 <label>Urine K (mEq/L)</label>
-                <input type="number" id="lyteUK" min="0" max="200" step="1" placeholder="mEq/L" oninput="calcElectrolytes()">
+                <input type="number" id="lyteUK" min="0" max="200" step="1" inputmode="decimal" autocomplete="off" placeholder="mEq/L" oninput="calcElectrolytes()">
               </div>
               <div class="col-3">
                 <label>Urine Cl (mEq/L)</label>
-                <input type="number" id="lyteUCl" min="0" max="300" step="1" placeholder="mEq/L" oninput="calcElectrolytes()">
+                <input type="number" id="lyteUCl" min="0" max="300" step="1" inputmode="decimal" autocomplete="off" placeholder="mEq/L" oninput="calcElectrolytes()">
               </div>
               <div class="col-3">
                 <label>Urine Cr (mg/dL)</label>
-                <input type="number" id="lyteUCr" min="1" max="500" step="1" placeholder="mg/dL" oninput="calcElectrolytes()">
+                <input type="number" id="lyteUCr" min="1" max="500" step="1" inputmode="decimal" autocomplete="off" placeholder="mg/dL" oninput="calcElectrolytes()">
               </div>
               <div class="col-3">
                 <label>Urine Urea / BUN (mg/dL)</label>
-                <input type="number" id="lyteUUrea" min="10" max="3000" step="10" placeholder="mg/dL" oninput="calcElectrolytes()">
+                <input type="number" id="lyteUUrea" min="10" max="3000" step="10" inputmode="decimal" autocomplete="off" placeholder="mg/dL" oninput="calcElectrolytes()">
               </div>
               <div class="col-3">
                 <label>Urine Osmolality</label>
-                <input type="number" id="lyteUOsm" min="50" max="1500" step="10" placeholder="mOsm/kg" oninput="calcElectrolytes()">
+                <input type="number" id="lyteUOsm" min="50" max="1500" step="10" inputmode="decimal" autocomplete="off" placeholder="mOsm/kg" oninput="calcElectrolytes()">
               </div>
             </div>
           </details>
@@ -3056,11 +3060,11 @@
 
         <div class="col-4">
           <label>% Total Body Surface Area Burn (%TBSA)</label>
-          <input type="number" id="burnTBSA" min="0" max="100" step="1" placeholder="e.g. 20" oninput="calcTrauma()">
+          <input type="number" id="burnTBSA" inputmode="decimal" autocomplete="off" min="0" max="100" step="1" placeholder="e.g. 20" oninput="calcTrauma()">
         </div>
         <div class="col-4">
           <label>Hours Elapsed Since Burn Injury</label>
-          <input type="number" id="burnHoursElapsed" min="0" max="24" step="0.5" placeholder="e.g. 2 (hours)" oninput="calcTrauma()">
+          <input type="number" id="burnHoursElapsed" inputmode="decimal" autocomplete="off" min="0" max="24" step="0.5" placeholder="e.g. 2 (hours)" oninput="calcTrauma()">
         </div>
         <div class="col-4">
           <label>Patient Age Scale for GCS</label>
@@ -3153,11 +3157,11 @@
 
         <div class="col-4">
           <label>Current Hb (g/dL)</label>
-          <input type="number" id="txCurrentHb" min="1" max="20" step="0.1" placeholder="e.g. 6.5" oninput="calcTransfusion()">
+          <input type="number" id="txCurrentHb" inputmode="decimal" autocomplete="off" min="1" max="20" step="0.1" placeholder="e.g. 6.5" oninput="calcTransfusion()">
         </div>
         <div class="col-4">
           <label>Target Hb (g/dL)</label>
-          <input type="number" id="txTargetHb" min="1" max="20" step="0.1" placeholder="e.g. 10.0" value="10.0" oninput="calcTransfusion()">
+          <input type="number" id="txTargetHb" inputmode="decimal" autocomplete="off" min="1" max="20" step="0.1" placeholder="e.g. 10.0" value="10.0" oninput="calcTransfusion()">
         </div>
         <div class="col-4">
           <label>PRBC Anticoagulant Type</label>
@@ -3175,7 +3179,7 @@
 
     <!-- Standalone Footer -->
     <footer class="app-footer">
-      <div><strong>ER-PED Workstation</strong> — Clinical Precision Cockpit <span class="version-chip" id="footerVersionChip" onclick="openChangelogModal()" title="ดูบันทึกการเปลี่ยนแปลง">v2.2.0</span></div>
+      <div><strong>ER-PED Workstation</strong> — Clinical Precision Cockpit <span class="version-chip" id="footerVersionChip" onclick="openChangelogModal()" title="ดูบันทึกการเปลี่ยนแปลง">v2.3.0</span></div>
       <div style="font-size:11px; margin-top:4px; color:var(--muted);">
         พัฒนาและอ้างอิงจาก <a href="https://ped-tsh.web.app/" target="_blank" rel="noopener" style="color:var(--accent); font-weight:700; text-decoration:underline;">Pediatric Emergency Workstation (ped-tsh.web.app)</a>
       </div>
@@ -3257,16 +3261,23 @@
   <div id="changelogBackdrop" class="drawer-backdrop hidden" onclick="if(event.target.id==='changelogBackdrop') closeChangelogModal()">
     <div class="drawer" onclick="event.stopPropagation()">
       <div class="drawer-header">
-        <strong id="changelogHeaderTitle" style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg> ER-PED Version <span id="changelogVersionNumber">2.2.0</span> Changelog</strong>
+        <strong id="changelogHeaderTitle" style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg> ER-PED Version <span id="changelogVersionNumber">2.3.0</span> Changelog</strong>
         <button type="button" class="btn" style="padding:4px 10px; font-size:12px; display:inline-flex; align-items:center; gap:4px;" onclick="closeChangelogModal()">Close <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> (Esc)</button>
       </div>
       <div class="drawer-body" style="font-size:13px; line-height:1.6;">
-        <h3 style="color:var(--accent); margin-top:4px;">What's New in v<span id="changelogWhatsNewVersion">2.2.0</span> (October 2026):</h3>
+        <h3 style="color:var(--accent); margin-top:4px;">What's New in v<span id="changelogWhatsNewVersion">2.3.0</span> (October 2026):</h3>
+        <ul>
+          <li><strong>✨ Simplified UI/UX &amp; Calm Elevation (ปรับ UI ให้เรียบง่าย สะอาดตา สบายตา)</strong>: ลดความซับซ้อนของส่วนควบคุม (Visual Noise) — ตัดตัวเลขนับจำนวนในวงเล็บออกจาก Category Switcher (Meds &amp; Fluids, Emergency Resus, Protocols &amp; CDS, All Modules) ปรับเงา Surface Elevation ให้นุ่มนวลสบายตาภายใต้แสงไฟห้องฉุกเฉิน</li>
+          <li><strong>📱 100% Modern Form Input Ergonomics</strong>: เพิ่ม <code>inputmode="decimal"</code> และ <code>autocomplete="off"</code> บนช่องกรอกตัวเลขทางคลินิก 100% ทั่วทั้งระบบ เพื่อเปิดแป้นพิมพ์ตัวเลขทันทีบนสมาร์ทโฟน/แท็บเล็ต ป้องกันการซูมหน้าจออัตโนมัติของ Safari และป้องกันป๊อปอัป Autofill บดบังค่าคำนวณ พร้อมเพิ่ม <code>enterkeyhint="search"</code> และ <code>spellcheck="false"</code> บนช่องค้นหายา</li>
+          <li><strong>📊 Clean Topbar Instrument Cluster</strong>: ปรับความสูงและระยะห่างของแถบมาตรวัดด้านบนให้กะทัดรัด ตัวเลขน้ำหนักที่ใช้งาน (Active Weight) โดดเด่นชัดเจนด้วยฟอนต์แบบ Tabular Monospace พร้อมระบุที่มาของค่าน้ำหนัก (Provenance) อย่างกระชับ แม่นยำ</li>
+        </ul>
+        <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;" />
+        <h4 style="color:var(--ink); margin-top:4px;">📜 Version 2.2.0 Highlights:</h4>
         <ul>
           <li><strong>💊 Unified Pediatric Formulary Engine (รวมขนาดยาเด็กและยาปฏิชีวนะในแท็บเดียว)</strong>: ผสานระบบคำนวณขนาดยาเด็กทั่วไปและยาปฏิชีวนะ (Pediatric Antibiotics) ทั้งหมดเข้าด้วยกันในแท็บ <strong>Medications (ขนาดยาเด็ก &amp; ยาปฏิชีวนะ)</strong> ค้นหาและคำนวณได้ทันทีจากช่องค้นหาเดียว</li>
-          <li><strong>🏥 Expanded Pediatric Medication Library (+29 ตัวยาจำเป็นสำหรับผู้ป่วยเด็ก)</strong>: เพิ่มรายการยาสำคัญทั้งในภาวะฉุกเฉิน หอผู้ป่วยเด็ก และ OPD เช่น Furosemide (IV/PO), Spironolactone, Captopril, Propranolol, Digoxin, Adenosine, Atropine, Amiodarone, Morphine, Ketamine, Tramadol, Clonazepam, Topiramate, Baclofen, Levothyroxine, Glucagon, UDCA, Zinc Sulfate, Liquid Paraffin, Vancomycin, Fluconazole, Linezolid, Colistin, Amphotericin B, Levofloxacin, Calamine, Hydrocortisone 1% cream, Budesonide respules ขยายคลังยาสู่ 170 รายการครอบคลุมทุกระบบ</li>
-          <li><strong>🧭 Streamlined 18-Module Cockpit Navigation</strong>: ปรับลดความซ้ำซ้อนของแท็บบน Navigation Rail เหลือ 18 โมดูลหลักที่กระชับและเข้าถึงได้รวดเร็ว (Meds &amp; Transfusion 4 โมดูล, Resus 7 โมดูล, Protocols 7 โมดูล) พร้อมปุ่มลัดคีย์บอร์ด <code>Alt+1</code> (ยาทั่วไป) และ <code>Alt+2</code> (ตัวกรองยาปฏิชีวนะ)</li>
-          <li><strong>🔍 Multicategory Quick Filter Pills</strong>: เพิ่มแถบกรองประเภทยา 9 หมวดหมู่ (All, Antibiotics, Antipyretic/Analgesic, Respiratory, GI/Antiemetic, Steroid, Neurology/Anticonvulsant, Cardiovascular/Diuretic, Topical/Skin) คัดกรองยาได้ในสัมผัสเดียว</li>
+          <li><strong>🏥 Expanded Pediatric Medication Library (+29 ตัวยาจำเป็นสำหรับผู้ป่วยเด็ก)</strong>: เพิ่มรายการยาสำคัญทั้งในภาวะฉุกเฉิน หอผู้ป่วยเด็ก และ OPD ขยายคลังยาสู่ 170 รายการครอบคลุมทุกระบบ พร้อมเมทริกซ์ปรับยาตาม eGFR</li>
+          <li><strong>🧭 Streamlined 18-Module Cockpit Navigation</strong>: ปรับลดความซ้ำซ้อนของแท็บบน Navigation Rail เหลือ 18 โมดูลหลักที่กระชับและเข้าถึงได้รวดเร็ว</li>
+          <li><strong>🔍 Multicategory Quick Filter Pills</strong>: เพิ่มแถบกรองประเภทยา 9 หมวดหมู่ คัดกรองยาได้ในสัมผัสเดียว</li>
         </ul>
         <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;" />
         <h4 style="color:var(--ink); margin-top:4px;">📜 Version 2.1.0 Highlights:</h4>

@@ -223,3 +223,12 @@ flowchart TD
     - **Quick Category Filters**: Added 9-pill category switcher to `#doseCategoryFilter` (All, Antibiotics (ATB), Antipyretic/Analgesic, Respiratory, GI/Antiemetic, Steroid, Neurology/Anticonvulsant, Cardiovascular/Diuretic, Topical/Skin).
     - **Backward Compatibility & Invariant Safety**: `Alt+1` focuses unified Medications; `Alt+2` opens Medications with the Antibiotics filter pre-selected; `#atb` panel and `calcATB()` remain intact in DOM for backward compatibility and test isolation. Contiguous eGFR Schwartz tier adjustment tables dynamically render for all renal-adjusted drugs in the unified engine. All 127 tests pass green.
     - Service worker cache version bumped to `er-ped-v2.2.0-20261019`.
+
+62. **Streamlined UI/UX & Native Form Input Ergonomics (modern-web-guidance v2.3.0 - October 2026)**:
+    - **Simplified Cockpit Navigation**: Pruned noisy parenthetical counters from Category Switcher pills (`Meds & Fluids`, `Emergency Resus`, `Protocols & CDS`, `All Modules`), reducing visual noise and decision latency for ER clinicians.
+    - **Calm Elevation & Surface Hierarchy**: Softened ambient elevation tokens (`--shadow-1`, `--shadow-2`, `--shadow-3`) to eliminate harsh drop shadows and enhance contrast under fluorescent ED lighting.
+    - **Refined Biometric Instrument Cluster**: Tightened topbar padding and aligned biometrics with subtle border radii, crisp label contrast, and clean provenance indicators (`Provenance: Measured`, `Provenance: Weech est`, etc.).
+    - **100% Modern Form Input Ergonomics**: Integrated `inputmode="decimal"` and `autocomplete="off"` across all numerical dosage, laboratory, fluid, and burn inputs (`#weight`, `#age`, `#length`, `#doseConc`, `#atbForm`, `#burnTBSA`, `#txCurrentHb`, etc.) per Modern Web Guidance, ensuring mobile numeric keypad activation without Safari auto-zoom or intrusive browser autofill overlays. Added `enterkeyhint="search"` and `spellcheck="false"` to drug combobox inputs.
+    - **Deterministic Invariants & Tests**: Preserved all 18 tab buttons, 54 essential DOM element IDs, and 127 passing automated tests.
+    - Service worker cache version bumped to `er-ped-v2.3.0-20261019`.
+
