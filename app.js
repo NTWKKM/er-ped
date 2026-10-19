@@ -621,7 +621,8 @@ function renderBroselowMiniSpectrum() {
           hudDot.classList.add('active');
         }
         if (triageBtn) {
-          triageBtn.style.borderColor = solid;
+          const isMono = document.documentElement && document.documentElement.getAttribute('data-theme') === 'mono';
+          triageBtn.style.borderColor = isMono ? '' : solid;
         }
       } else {
         hudLabel.textContent = 'Broselow';

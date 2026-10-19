@@ -1953,6 +1953,16 @@ test('Broselow Futuristic Triage HUD & Dropdown Engine: Capsule telemetry sync a
   window.eval('previewBroselowZone("Pink")');
   assert.strictEqual(hudLabel.textContent, 'Pink', 'HUD label must display Pink for 6.5 kg');
   assert.strictEqual(hudVal.textContent, '6.5 kg', 'HUD value must display 6.5 kg for 6.5 kg');
+
+  assert(triageBtn.style.borderColor !== '', 'triageBtn inline borderColor must be set in non-mono theme');
+
+  // Test mono theme clears inline border-color to preserve theme hover styles
+  window.eval('setTheme("mono")');
+  assert.strictEqual(triageBtn.style.borderColor, '', 'triageBtn inline borderColor must be cleared in mono theme');
+
+  // Switch back to light theme restores border color
+  window.eval('setTheme("light")');
+  assert(triageBtn.style.borderColor !== '', 'triageBtn inline borderColor must be restored in light theme');
 });
 
 console.log(`\n----------------------------------------`);
