@@ -201,5 +201,42 @@ flowchart TD
     - **"Show Math" Explainable CDS**: Expandable formula breakdown disclosure across calculators displaying raw unrounded intermediate steps, increasing clinician transparency and clinical trust.
     - **Modern Web Platform & Gloved Ergonomics**: CSS Anchor Positioning for popovers, CSS `@starting-style` entry animations, enlarged $48\times 48\text{ px}$ mobile dock touch targets, and Delta Vital Signs visualizer.
     - **Consolidated Bedside Pocket Card Printing**: Single-tap consolidated print layout compiling all core emergency parameters (PALS, Airway, Seizure, Drips, Vitals, Sepsis, Anaphylaxis) into an instant bedside A4 emergency pocket card.
-    - **Automated Verification**: Expanded test suite in `scripts/test-core.js` to **101 passing unit tests** across all 19 clinical tabs and 20 evidence registry references.
     - Service worker cache version bumped to `er-ped-v2.0.0-20260827`.
+
+59. **Clinical Precision Cockpit UI/UX & Bilingual Module Architecture (taste-skill v2.1.0 - October 2026)**:
+    - **Aesthetic Overhaul & Anti-Slop Discipline**: Replaced generic warm ivory/terracotta/Newsreader serif with Clinical Precision Cockpit design system: high-contrast Slate canvas (`#F8FAFC`), crisp white cards (`#FFFFFF`), medical sky accent (`#0284C7` / hover `#0369A1`), deep obsidian dark chassis (`#0B0F17` / cards `#111827`), night-vision red mode, and high-contrast monochrome mode (> 15:1 WCAG AAA contrast).
+    - **Display Typography**: Upgraded display typography to neo-grotesque sans display (`Sarabun` 700 with `-0.02em` tracking) paired with `JetBrains Mono` tabular figures (`font-variant-numeric: tabular-nums;`).
+    - **Bilingual Module Architecture**: Standardized module header architecture (`.module-title` + `.module-subtitle`) across all 19 clinical tabs, maintaining 100% test compatibility and clear Thai/English clinician recognition.
+    - **Token & Component Alignment**: Unified `.hero-metric` tokens (`.hero-metric-label`, `.hero-metric-value`, `.hero-metric-sub`) and added `.stage-card` container styling for protocols. Pruned all hardcoded legacy color hexes in favor of CSS tokens.
+    - **Service Worker Cache**: Bumped cache name to `er-ped-v2.1.0-20261019`.
+
+60. **2-Tier Cockpit Navigation & Integrated Topbar Quick Triage (v2.1.0 - October 2026)**:
+    - **Topbar Triage Integration**: Relocated the 10-button Broselow quick-weight triage strip (`5k`..`40k`) and 9-band mini-spectrum into the sticky Topbar biometrics instrument cluster (`.topbar-triage`), creating a natural clinical sequence: Measured Inputs -> Quick Weight Presets -> In-Use Calculated Weight -> Global Actions.
+    - **2-Tier Cockpit Navigation (`.cockpit-nav`)**: Merged the previous multi-row category pills and 19-tab horizontal rail into a single cohesive cockpit card. Tier 1 hosts 3 segmented category switches (💊 *Meds & Transfusion*, 🚨 *Emergency Resus*, 📋 *Protocols & CDS*, plus *All Modules*), while Tier 2 displays only the 5–7 active module tabs with zero multi-row wrapping or cognitive clutter.
+    - **Vertical Fold Optimization**: Reclaimed $>60\text{ px}$ of vertical fold space, bringing active drug calculators and critical emergency protocol tables into immediate bedside view.
+    - **Preserved Test Invariants**: Preserved DOM element IDs (`quickWeightStrip`, `broselowMiniStrip`, `mainTabRail`, `category-pill`, `tab-btn`) ensuring all 126 unit/integration tests pass seamlessly.
+
+61. **Unified Pediatric Formulary Engine & 18-Module Streamlined Navigation (v2.2.0 - October 2026)**:
+    - **Formulary Unification**: Merged all 54 pediatric antibiotics (`pediatricATB`) and 29 newly curated essential pediatric medications into a single unified medication engine (`pediatricDose`, 170 drugs total). Clinicians can now search, filter, and calculate all pediatric medications from a single search interface.
+    - **Expanded Pediatric Formulary (+29 Drugs)**: Added high-yield pediatric inpatient, outpatient, and emergency medications spanning Cardiovascular (Furosemide IV/PO, Spironolactone, Captopril, Propranolol, Digoxin, Adenosine, Atropine, Amiodarone), Analgesia & Resus (Morphine, Ketamine, Tramadol), Neuro & Anticonvulsants (Clonazepam, Topiramate, Baclofen), Endocrine & GI (Levothyroxine, Glucagon, UDCA, Zinc Sulfate, Liquid Paraffin), Advanced Anti-infectives (Vancomycin, Fluconazole, Linezolid, Colistin, Amphotericin B, Levofloxacin), and Topical Dermatology (Calamine, Hydrocortisone 1% cream, Budesonide respules).
+    - **Streamlined 18-Module Cockpit**: Eliminated the redundant standalone `ATB` tab button from Tier 2 Navigation Rail, reducing total rail modules from 19 to 18 (Meds & Transfusion has 4 modules: Medications, IV Fluids, Drip Rate, Transfusion; Resus has 7; Protocols has 7).
+    - **Quick Category Filters**: Added 9-pill category switcher to `#doseCategoryFilter` (All, Antibiotics (ATB), Antipyretic/Analgesic, Respiratory, GI/Antiemetic, Steroid, Neurology/Anticonvulsant, Cardiovascular/Diuretic, Topical/Skin).
+    - **Backward Compatibility & Invariant Safety**: `Alt+1` focuses unified Medications; `Alt+2` opens Medications with the Antibiotics filter pre-selected; `#atb` panel and `calcATB()` remain intact in DOM for backward compatibility and test isolation. Contiguous eGFR Schwartz tier adjustment tables dynamically render for all renal-adjusted drugs in the unified engine. All 127 tests pass green.
+    - Service worker cache version bumped to `er-ped-v2.2.0-20261019`.
+
+62. **Streamlined UI/UX & Native Form Input Ergonomics (modern-web-guidance v2.3.0 - October 2026)**:
+    - **Simplified Cockpit Navigation**: Pruned noisy parenthetical counters from Category Switcher pills (`Meds & Fluids`, `Emergency Resus`, `Protocols & CDS`, `All Modules`), reducing visual noise and decision latency for ER clinicians.
+    - **Calm Elevation & Surface Hierarchy**: Softened ambient elevation tokens (`--shadow-1`, `--shadow-2`, `--shadow-3`) to eliminate harsh drop shadows and enhance contrast under fluorescent ED lighting.
+    - **Refined Biometric Instrument Cluster**: Tightened topbar padding and aligned biometrics with subtle border radii, crisp label contrast, and clean provenance indicators (`Provenance: Measured`, `Provenance: Weech est`, etc.).
+    - **100% Modern Form Input Ergonomics**: Integrated `inputmode="decimal"` and `autocomplete="off"` across all numerical dosage, laboratory, fluid, and burn inputs (`#weight`, `#age`, `#length`, `#doseConc`, `#atbForm`, `#burnTBSA`, `#txCurrentHb`, etc.) per Modern Web Guidance, ensuring mobile numeric keypad activation without Safari auto-zoom or intrusive browser autofill overlays. Added `enterkeyhint="search"` and `spellcheck="false"` to drug combobox inputs.
+    - **Deterministic Invariants & Tests**: Preserved all 18 tab buttons, 54 essential DOM element IDs, and 127 passing automated tests.
+    - Service worker cache version bumped to `er-ped-v2.3.0-20261019`.
+
+63. **Broselow Futuristic Triage HUD Capsule & Scroll-Down Popover Deck (v2.3.1 - October 2026)**:
+    - **Space-Saving Cockpit HUD Capsule**: Reclaimed >270px of horizontal topbar width by transitioning from 10 flat inline buttons to a 140px cybernetic telemetry capsule (`#triageDropdownBtn` within `#topbarTriage`).
+    - **Dynamic Color Telemetry**: Real-time Broselow zone synchronization (`renderBroselowMiniSpectrum()`) dynamically tints the pulsing HUD dot (`#triageHudDot`), updates the zone label (`#triageHudLabel`), and formats tabular quick-weight figures (`#triageHudVal`).
+    - **Interactive Scroll-Down Deck (`#triagePopoverMenu`)**: A 2-column scrollable quick-weight matrix displaying target weights (`5k`..`40k`), color badges, weight intervals, and estimated ages with 1-tap clinical adoption and seamless auto-dismissal.
+    - **Preserved Invariants & 128 Passing Tests**: Kept `#quickWeightStrip`, `#broselowMiniStrip`, `.quick-weight-btn`, `.broselow-mini-seg`, `previewBroselowZone()`, and `applyQuickWeight()` intact with 100% green test pass.
+    - Service worker cache version bumped to `er-ped-v2.3.1-20261019`.
+
+

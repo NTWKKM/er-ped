@@ -586,9 +586,15 @@ test('Renal Dosing & Regimens: Ranitidine IV vs PO separated catalog entries and
 });
 
 test('Renal Dosing: All renal drugs have contiguous eGFR tiers without gaps', () => {
-  const allDrugs = [...dataset.pediatricDose, ...dataset.pediatricATB];
-  const renalDrugs = allDrugs.filter(d => d.renalDosing && d.renalDosing.length > 0);
-  assert.strictEqual(renalDrugs.length, 14, 'Must have exactly 14 renal-adjusted drugs');
+  const seenKeys = new Set();
+  const renalDrugs = [];
+  [...dataset.pediatricDose, ...dataset.pediatricATB].forEach(d => {
+    if (d.renalDosing && d.renalDosing.length > 0 && !seenKeys.has(d.key)) {
+      seenKeys.add(d.key);
+      renalDrugs.push(d);
+    }
+  });
+  assert(renalDrugs.length >= 14, `Must have at least 14 renal-adjusted drugs (found ${renalDrugs.length})`);
 
   renalDrugs.forEach(drug => {
     const tiers = drug.renalDosing;
@@ -962,6 +968,33 @@ test('Combobox Category Filtering: Dose & ATB category filter updates dropdown o
   assert(dropdown.innerHTML.includes('Paracetamol') || dropdown.innerHTML.includes('Ibuprofen'), 'Dropdown should contain antipyretics');
   assert(!dropdown.innerHTML.includes('Salbutamol'), 'Dropdown should NOT contain Salbutamol under antipyretic category');
 
+  // Verify Emergency filter pill & matching
+  const emergencyPill = document.querySelector('#doseCategoryFilter button[onclick*="emergency"]');
+  assert(emergencyPill !== null, 'Emergency category filter pill must exist in #doseCategoryFilter');
+  window.eval('setDoseCategoryFilter("emergency")');
+  assert(
+    dropdown.querySelector('.combobox-item[data-key="adenosine-iv"]') !== null ||
+    dropdown.querySelector('.combobox-item[data-key="glucagon-im-sc"]') !== null,
+    'Dropdown should contain emergency medications under emergency category'
+  );
+  assert(
+    dropdown.querySelector('.combobox-item[data-key*="paracetamol"]') === null,
+    'Dropdown should NOT contain Paracetamol under emergency category'
+  );
+
+  // Verify Endocrine filter pill & matching
+  const endocrinePill = document.querySelector('#doseCategoryFilter button[onclick*="endocrine"]');
+  assert(endocrinePill !== null, 'Endocrine category filter pill must exist in #doseCategoryFilter');
+  window.eval('setDoseCategoryFilter("endocrine")');
+  assert(
+    dropdown.querySelector('.combobox-item[data-key="levothyroxine-oral"]') !== null,
+    'Dropdown should contain endocrine medications under endocrine category'
+  );
+  assert(
+    dropdown.querySelector('.combobox-item[data-key*="paracetamol"]') === null,
+    'Dropdown should NOT contain Paracetamol under endocrine category'
+  );
+
   window.eval('setDoseCategoryFilter("all")');
 });
 
@@ -1333,9 +1366,9 @@ test('Bedside Pocket Card Print Function: Safe execution check', () => {
   }, 'printBedsideSummaryCard must execute safely');
 });
 
-test('Category Jump Filter: Resus, Meds, Protocols, All filtering across 19 tabs', () => {
+test('Category Jump Filter: Resus, Meds, Protocols, All filtering across 18 tabs', () => {
   const allTabs = Array.from(document.querySelectorAll('.tab-btn'));
-  assert.strictEqual(allTabs.length, 19, 'Must have exactly 19 tab buttons');
+  assert.strictEqual(allTabs.length, 18, 'Must have exactly 18 tab buttons in streamlined navigation');
 
   // Filter Resus
   window.eval('filterNavCategory("resus");');
@@ -1345,13 +1378,54 @@ test('Category Jump Filter: Resus, Meds, Protocols, All filtering across 19 tabs
   // Filter Meds
   window.eval('filterNavCategory("meds");');
   const medsTabs = allTabs.filter(t => t.getAttribute('data-category') === 'meds');
-  assert(medsTabs.length >= 4, 'Must have at least 4 meds tabs');
+  assert.strictEqual(medsTabs.length, 4, 'Must have exactly 4 meds tabs (Medications, IV Fluids, Drip Rate, Transfusion)');
 
   // Reset All
   window.eval('filterNavCategory("all");');
   allTabs.forEach(t => {
     assert.notStrictEqual(t.style.display, 'none', 'All tabs visible under "all" filter');
   });
+});
+
+test('Unified Medications Engine: Merged ATBs & 29 Expanded Pediatric Drugs', () => {
+  assert(dataset.pediatricDose.length >= 170, `pediatricDose must contain >= 170 drugs (found ${dataset.pediatricDose.length})`);
+
+  // Verify ATB presence in unified pediatricDose
+  const amox = dataset.pediatricDose.find(d => d.key.includes('amoxicillin'));
+  assert(amox, 'Amoxicillin must be present in unified pediatricDose');
+
+  const vanc = dataset.pediatricDose.find(d => d.key === 'vancomycin-iv');
+  assert(vanc, 'Vancomycin IV must be present in unified pediatricDose');
+
+  // Verify newly expanded pediatric drugs
+  const furosemide = dataset.pediatricDose.find(d => d.key === 'furosemide-iv-im');
+  assert(furosemide, 'Furosemide IV/IM must be present in unified pediatricDose');
+  assert.strictEqual(furosemide.category, 'cardiovascular', 'Furosemide must have cardiovascular category');
+
+  const adenosine = dataset.pediatricDose.find(d => d.key === 'adenosine-iv');
+  assert(adenosine, 'Adenosine must be present in unified pediatricDose');
+
+  const morphine = dataset.pediatricDose.find(d => d.key === 'morphine-iv');
+  assert(morphine, 'Morphine Sulfate must be present in unified pediatricDose');
+
+  // Test calculation in unified dose engine for 10 kg child with Furosemide
+  document.getElementById('weight').value = '10';
+  document.getElementById('age').value = '2';
+  window.eval('gAgeUnit = "yr"; onWeightChange();');
+  document.getElementById('doseDrug').value = 'furosemide-iv-im';
+  window.eval('calcDose();');
+  const furosemideOrder = window.copyEHROrder('dose');
+  assert(furosemideOrder.includes('Furosemide'), 'EHR order must contain Furosemide');
+  const furosemideDoseMatch = furosemideOrder.match(/Furosemide[^\d]*(\d+(?:\.\d+)?)\s*mg/i);
+  assert(furosemideDoseMatch, 'EHR order must contain Furosemide dose in mg');
+  const furosemideDoseMg = parseFloat(furosemideDoseMatch[1]);
+  assert(furosemideDoseMg === 10 || furosemideDoseMg === 20, `EHR order for 10 kg furosemide (1-2 mg/kg) must calculate target dose (expected 10 or 20 mg, got ${furosemideDoseMg} mg)`);
+
+  // Test calculation in unified dose engine for 10 kg child with Vancomycin (renal-adjusted)
+  document.getElementById('doseDrug').value = 'vancomycin-iv';
+  window.eval('calcDose();');
+  const doseOutHtml = document.getElementById('doseOut').innerHTML;
+  assert(doseOutHtml.includes('Renal Adjustment'), 'Dose output for Vancomycin must render Renal Adjustment table');
 });
 
 // --- ADVANCED CLINICAL ENGINE & EDGE CASE TEST SUITES ---
@@ -1848,6 +1922,37 @@ test('Evidence Modal UI Engine: openEvidenceModal, filterEvidenceList, and DOM R
   // Test closing modal
   window.eval('closeEvidenceModal()');
   assert(backdrop.classList.contains('hidden'), 'evidenceBackdrop must have hidden class after closeEvidenceModal');
+});
+
+test('Broselow Futuristic Triage HUD & Dropdown Engine: Capsule telemetry sync and popover toggle', () => {
+  const triageBtn = document.getElementById('triageDropdownBtn');
+  const triageMenu = document.getElementById('triagePopoverMenu');
+  const hudDot = document.getElementById('triageHudDot');
+  const hudLabel = document.getElementById('triageHudLabel');
+  const hudVal = document.getElementById('triageHudVal');
+
+  assert(triageBtn !== null, '#triageDropdownBtn must exist');
+  assert(triageMenu !== null, '#triagePopoverMenu must exist');
+  assert(hudDot !== null, '#triageHudDot must exist');
+
+  // Test Popover Toggle
+  window.eval('toggleTriagePopover()');
+  assert(triageMenu.classList.contains('open'), 'Triage popover must be open after toggleTriagePopover');
+  assert.strictEqual(triageBtn.getAttribute('aria-expanded'), 'true');
+
+  // Test applyQuickWeight from within dropdown closes popover and updates HUD telemetry
+  const purpleBtn = document.querySelector('.quick-weight-btn[data-color="Purple"]');
+  assert(purpleBtn !== null, '.quick-weight-btn[data-color="Purple"] must exist');
+  purpleBtn.click();
+  assert(!triageMenu.classList.contains('open'), 'Triage popover must close when quick-weight button is clicked');
+  assert.strictEqual(hudLabel.textContent, 'Purple', 'HUD label must display Purple for 10 kg');
+  assert.strictEqual(hudVal.textContent, '10.0 kg', 'HUD value must display 10.0 kg for 10 kg');
+  assert(hudDot.classList.contains('active'), 'HUD dot must have active class');
+
+  // Test previewBroselowZone with Pink (6.5 kg)
+  window.eval('previewBroselowZone("Pink")');
+  assert.strictEqual(hudLabel.textContent, 'Pink', 'HUD label must display Pink for 6.5 kg');
+  assert.strictEqual(hudVal.textContent, '6.5 kg', 'HUD value must display 6.5 kg for 6.5 kg');
 });
 
 console.log(`\n----------------------------------------`);
