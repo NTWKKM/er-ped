@@ -1389,7 +1389,10 @@ test('Unified Medications Engine: Merged ATBs & 29 Expanded Pediatric Drugs', ()
   window.eval('calcDose();');
   const furosemideOrder = window.copyEHROrder('dose');
   assert(furosemideOrder.includes('Furosemide'), 'EHR order must contain Furosemide');
-  assert(furosemideOrder.includes('10 mg') || furosemideOrder.includes('20 mg'), 'EHR order for 10 kg furosemide (1-2 mg/kg) must calculate target dose');
+  const furosemideDoseMatch = furosemideOrder.match(/Furosemide[^\d]*(\d+(?:\.\d+)?)\s*mg/i);
+  assert(furosemideDoseMatch, 'EHR order must contain Furosemide dose in mg');
+  const furosemideDoseMg = parseFloat(furosemideDoseMatch[1]);
+  assert(furosemideDoseMg === 10 || furosemideDoseMg === 20, `EHR order for 10 kg furosemide (1-2 mg/kg) must calculate target dose (expected 10 or 20 mg, got ${furosemideDoseMg} mg)`);
 
   // Test calculation in unified dose engine for 10 kg child with Vancomycin (renal-adjusted)
   document.getElementById('doseDrug').value = 'vancomycin-iv';
@@ -1911,16 +1914,18 @@ test('Broselow Futuristic Triage HUD & Dropdown Engine: Capsule telemetry sync a
   assert.strictEqual(triageBtn.getAttribute('aria-expanded'), 'true');
 
   // Test applyQuickWeight from within dropdown closes popover and updates HUD telemetry
-  window.eval('applyQuickWeight(10); closeAllPopovers();');
-  assert(!triageMenu.classList.contains('open'), 'Triage popover must close on closeAllPopovers');
+  const purpleBtn = document.querySelector('.quick-weight-btn[data-color="Purple"]');
+  assert(purpleBtn !== null, '.quick-weight-btn[data-color="Purple"] must exist');
+  purpleBtn.click();
+  assert(!triageMenu.classList.contains('open'), 'Triage popover must close when quick-weight button is clicked');
   assert.strictEqual(hudLabel.textContent, 'Purple', 'HUD label must display Purple for 10 kg');
-  assert.strictEqual(hudVal.textContent, '10k', 'HUD value must display 10k for 10 kg');
+  assert.strictEqual(hudVal.textContent, '10.0 kg', 'HUD value must display 10.0 kg for 10 kg');
   assert(hudDot.classList.contains('active'), 'HUD dot must have active class');
 
   // Test previewBroselowZone with Pink (6.5 kg)
   window.eval('previewBroselowZone("Pink")');
   assert.strictEqual(hudLabel.textContent, 'Pink', 'HUD label must display Pink for 6.5 kg');
-  assert.strictEqual(hudVal.textContent, '7k', 'HUD value must display 7k for 6.5 kg (rounded)');
+  assert.strictEqual(hudVal.textContent, '6.5 kg', 'HUD value must display 6.5 kg for 6.5 kg');
 });
 
 console.log(`\n----------------------------------------`);

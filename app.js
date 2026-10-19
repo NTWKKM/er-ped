@@ -612,7 +612,7 @@ function renderBroselowMiniSpectrum() {
     if (hudLabel && hudVal) {
       if (zone && zoneColor && w > 0) {
         hudLabel.textContent = zoneColor;
-        hudVal.textContent = `${w.toFixed(0)}k`;
+        hudVal.textContent = `${w.toFixed(1)} kg`;
         if (hudDot) {
           const palette = BROSELOW_COLOR_MAP[zoneColor] || null;
           hudDot.style.background = palette ? palette.bg : 'var(--accent)';
