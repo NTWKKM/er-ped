@@ -2005,8 +2005,7 @@ test('UI & UX Minimalism: Glare-Free Light Theme Contrast & Mobile Clearance Int
   assert(getContrast('#991B1B', '#FEF2F2') >= 7.0, '--danger-text on --danger-soft must exceed WCAG AAA (>= 7.0:1)');
 
   // Verify dynamic --topbar-h responsive clearance in media queries
-  assert(html.includes('@media (max-width: 960px) {\n      :root {\n        --topbar-h: 96px;') ||
-         html.includes('@media (max-width: 960px) {\n      :root {\n        --topbar-h:'),
+  assert(html.includes('@media (max-width: 960px) {\n      :root {\n        --topbar-h: 96px;'),
          'Must define dynamic --topbar-h for tablet breakpoint (<=960px)');
   assert(html.includes('@media (max-width: 768px) {\n      :root {\n        --topbar-h: 106px;'),
          'Must define dynamic --topbar-h for mobile breakpoint (<=768px)');
@@ -2014,8 +2013,14 @@ test('UI & UX Minimalism: Glare-Free Light Theme Contrast & Mobile Clearance Int
          'Must define dynamic --topbar-h for small mobile breakpoint (<=480px)');
 
   // Verify mobile biometric wrapping to prevent horizontal blowout
-  assert(html.includes('flex-wrap: wrap;') && html.includes('white-space: normal;'),
+  const bioFieldsRule = html.match(/\.topbar-biometrics\s+\.bio-fields\s*\{([^}]+)\}/);
+  assert(bioFieldsRule && bioFieldsRule[1].includes('flex-wrap: wrap;') && bioFieldsRule[1].includes('white-space: normal;'),
          'Mobile bio-fields must allow flex-wrap and normal whitespace to avoid horizontal overflow');
+
+  // Verify dark scheme fallback for mobile-bottom-dock when light theme not explicit
+  assert(html.includes('@media (prefers-color-scheme: dark)') &&
+         html.includes(':root:not([data-theme="light"]) .mobile-bottom-dock'),
+         'Must support prefers-color-scheme: dark fallback for .mobile-bottom-dock');
 });
 
 console.log(`\n----------------------------------------`);

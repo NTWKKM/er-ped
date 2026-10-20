@@ -1014,6 +1014,13 @@
       align-items: center;
       gap: 2px;
     }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .mobile-bottom-dock {
+        background: rgba(17, 24, 39, 0.94);
+        border-top-color: #1E293B;
+        box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.5);
+      }
+    }
     :root[data-theme="dark"] .mobile-bottom-dock {
       background: rgba(17, 24, 39, 0.94);
       border-top-color: #1E293B;
