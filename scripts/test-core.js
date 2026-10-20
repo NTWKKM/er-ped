@@ -1965,6 +1965,98 @@ test('Broselow Futuristic Triage HUD & Dropdown Engine: Capsule telemetry sync a
   assert(triageBtn.style.borderColor !== '', 'triageBtn inline borderColor must be restored in light theme');
 });
 
+// 12. UI & UX Minimalism Engine: Light Theme Contrast Ratios & Responsive Viewport Clearance
+test('UI & UX Minimalism: Glare-Free Light Theme Contrast & Mobile Clearance Integrity', () => {
+  const html = fs.readFileSync(htmlPath, 'utf8');
+
+  // Relative luminance calculator
+  function getLuminance(hex) {
+    hex = hex.replace('#', '').trim();
+    if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+    const rgb = [
+      parseInt(hex.slice(0, 2), 16) / 255,
+      parseInt(hex.slice(2, 4), 16) / 255,
+      parseInt(hex.slice(4, 6), 16) / 255
+    ].map(v => v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+    return 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
+  }
+
+  function getContrast(c1, c2) {
+    const l1 = getLuminance(c1);
+    const l2 = getLuminance(c2);
+    return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+  }
+
+  // Parse theme-scoped declarations
+  function parseThemeTokens(blockRegex) {
+    const match = html.match(blockRegex);
+    if (!match) return {};
+    const tokens = {};
+    for (const line of match[1].split('\n')) {
+      const m = line.match(/^\s*--([a-zA-Z0-9_-]+)\s*:\s*([^;]+);/);
+      if (m) tokens['--' + m[1]] = m[2].trim();
+    }
+    return tokens;
+  }
+
+  const lightTokens = parseThemeTokens(/:root\s*\{([^}]+)\}/);
+  const monoTokens = parseThemeTokens(/:root\[data-theme=["']mono["']\]\s*\{([^}]+)\}/);
+
+  // Verify calibrated light theme tokens
+  assert(lightTokens['--bg'] === '#F1F4F8', '--bg in :root must be glare-free Medical Mist (#F1F4F8)');
+  assert(lightTokens['--accent'] === '#0277B6', '--accent in :root must be surgical azure (#0277B6)');
+  assert(lightTokens['--accent-text'] === '#026AA2', '--accent-text in :root must be calibrated for AA/AAA contrast (#026AA2)');
+  assert(lightTokens['--good-text'] === '#166534', '--good-text in :root must be calibrated (#166534)');
+  assert(lightTokens['--warning-text'] === '#92400E', '--warning-text in :root must be calibrated (#92400E)');
+  assert(lightTokens['--danger-text'] === '#991B1B', '--danger-text in :root must be calibrated (#991B1B)');
+
+  // Verify calibrated mono theme tokens
+  assert(monoTokens['--accent-text'] === '#ECECE8', '--accent-text in :root[data-theme="mono"] must be light mono value (#ECECE8)');
+  assert(monoTokens['--card'] === '#20201E', '--card in :root[data-theme="mono"] must be dark elevated surface (#20201E)');
+
+  // Verify WCAG AA/AAA Mathematical Compliance for Light Theme
+  const white = '#FFFFFF';
+  assert(getContrast(white, lightTokens['--accent']) >= 4.5, 'White on --accent in light theme must meet WCAG AA (>= 4.5:1)');
+  assert(getContrast(lightTokens['--accent-text'], lightTokens['--card']) >= 4.5, '--accent-text on white card in light theme must meet WCAG AA');
+  assert(getContrast(lightTokens['--accent-text'], lightTokens['--accent-soft']) >= 4.5, '--accent-text on --accent-soft in light theme must meet WCAG AA');
+  assert(getContrast(lightTokens['--good-text'], lightTokens['--good-soft']) >= 6.0, '--good-text on --good-soft in light theme must exceed 6.0:1');
+  assert(getContrast(lightTokens['--warning-text'], lightTokens['--warning-soft']) >= 6.0, '--warning-text on --warning-soft in light theme must exceed 6.0:1');
+  assert(getContrast(lightTokens['--danger-text'], lightTokens['--danger-soft']) >= 7.0, '--danger-text on --danger-soft in light theme must exceed WCAG AAA (>= 7.0:1)');
+
+  // Verify WCAG Compliance for Mono Theme & Consumer Contrast (.triage-popover-hint on dark --card)
+  const hintRule = html.match(/\.triage-popover-hint\s*\{([^}]+)\}/);
+  assert(hintRule && hintRule[1].includes('color: var(--accent-text);'), '.triage-popover-hint must consume var(--accent-text)');
+  assert(
+    getContrast(monoTokens['--accent-text'], monoTokens['--card']) >= 4.5,
+    'Mono --accent-text on mono --card surface (.triage-popover-hint in popover) must meet WCAG AA (>= 4.5:1)'
+  );
+
+  // Verify dynamic --topbar-h responsive clearance in media queries
+  assert(html.includes('@media (max-width: 960px) {\n      :root {\n        --topbar-h: 96px;'),
+         'Must define dynamic --topbar-h for tablet breakpoint (<=960px)');
+  assert(html.includes('@media (max-width: 768px) {\n      :root {\n        --topbar-h: 106px;'),
+         'Must define dynamic --topbar-h for mobile breakpoint (<=768px)');
+  assert(html.includes('@media (max-width: 480px) {\n      :root {\n        --topbar-h: 168px;'),
+         'Must define dynamic --topbar-h for small mobile breakpoint (<=480px)');
+
+  // Verify mobile biometric wrapping to prevent horizontal blowout
+  const bioFieldsRule = html.match(/\.topbar-biometrics\s+\.bio-fields\s*\{([^}]+)\}/);
+  assert(bioFieldsRule && bioFieldsRule[1].includes('flex-wrap: wrap;') && bioFieldsRule[1].includes('white-space: normal;'),
+         'Mobile bio-fields must allow flex-wrap and normal whitespace to avoid horizontal overflow');
+
+  // Verify dark scheme fallback for mobile-bottom-dock within @media (prefers-color-scheme: dark)
+  const darkDockMediaMatch = html.match(
+    /@media\s*\(\s*prefers-color-scheme:\s*dark\s*\)\s*\{[^{}]*:root:not\(\[data-theme=["']?light["']?\]\)\s*\.mobile-bottom-dock\s*\{([^}]+)\}\s*\}/
+  );
+  assert(
+    darkDockMediaMatch &&
+    darkDockMediaMatch[1].includes('background: rgba(17, 24, 39, 0.94);') &&
+    darkDockMediaMatch[1].includes('border-top-color: #1E293B;') &&
+    darkDockMediaMatch[1].includes('box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.5);'),
+    'Must support prefers-color-scheme: dark fallback for .mobile-bottom-dock with dark background, border, and shadow'
+  );
+});
+
 console.log(`\n----------------------------------------`);
 console.log(`Test Results: ${passed} Passed, ${failed} Failed`);
 console.log(`----------------------------------------\n`);

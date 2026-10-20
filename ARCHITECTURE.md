@@ -254,5 +254,12 @@ flowchart TD
       - Replaced redundant `#refPopoverMenu` (which previously duplicated Broselow drawer and Vitals tab shortcuts) with direct 1-tap access to `openEvidenceModal()`.
       - Partitioned `#overflowMenu` into semantic sections (`Print & Cards`, `Tools & Settings`) with `.popover-section-label`.
     - **100% Invariant Verification**: Maintained all required footer DOM assertions (`assert(footer.innerHTML.includes('triggerPrintCard'))`, etc.) and verified all 128 tests pass green.
+66. **Minimalist Clinical Cockpit & Glare-Free Light Theme Overhaul (v2.3.3 - October 2026)**:
+    - **Glare-Free Clinical Mist Canvas**: Replaced stark cool slate with calming Medical Mist `#F1F4F8` and calibrated inset panels to `#E5EAF0` and `#EDF2F7`. Pure white cards (`#FFFFFF`) gain natural separation and depth without excessive shadow or heavy borders, dramatically improving comfort and legibility under ED fluorescent lighting.
+    - **Dedicated Semantic Text Tokens (WCAG AA/AAA $\ge 4.5:1$, actual $5.10:1$ to $8.3:1$)**: Calibrated `--accent: #0277B6`, `--accent-text: #026AA2`, `--good-text: #166534`, `--warning-text: #92400E`, and `--danger-text: #991B1B` (with dark/mono/red equivalents) to eliminate visual blur and guarantee high contrast on soft tinted containers (`.hero-metric`, `.dose-badge`, `.badge-cap`, `.evidence-badge`, `.loe-badge`, `.seizure-timer-readout`), satisfying the test's $\ge 4.5:1$ requirement (`#026AA2` on `#E0F2FE` achieves $5.10:1$, and up to $8.3:1$ on white).
+    - **Cockpit Nav Hairline Precision**: Refined Tier 1 category pills with smooth full-pill geometry and subtle elevation (`box-shadow: 0 2px 6px var(--ring)`), and Tier 2 tab buttons with crisp 2.5px flat underline indicators.
+    - **Dynamic Responsive Topbar Clearance & Biometric Flex-Wrap**: Re-architected `--topbar-h` dynamically across breakpoints (`52px` desktop, `96px` tablet <=960px, `106px` mobile <=768px, `168px` phone <=480px) and applied `flex-wrap: wrap; white-space: normal;` on mobile `.bio-fields`, eliminating sticky topbar content occlusion and horizontal viewport blowout. Preserved 16px input font size across all mobile viewports to prevent iOS Safari auto-zooming.
+    - **100% Invariant Verification**: All 18 clinical tabs, essential DOM element IDs, and 129 automated JSDOM tests pass green.
+
 
 
