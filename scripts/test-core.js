@@ -2017,10 +2017,17 @@ test('UI & UX Minimalism: Glare-Free Light Theme Contrast & Mobile Clearance Int
   assert(bioFieldsRule && bioFieldsRule[1].includes('flex-wrap: wrap;') && bioFieldsRule[1].includes('white-space: normal;'),
          'Mobile bio-fields must allow flex-wrap and normal whitespace to avoid horizontal overflow');
 
-  // Verify dark scheme fallback for mobile-bottom-dock when light theme not explicit
-  assert(html.includes('@media (prefers-color-scheme: dark)') &&
-         html.includes(':root:not([data-theme="light"]) .mobile-bottom-dock'),
-         'Must support prefers-color-scheme: dark fallback for .mobile-bottom-dock');
+  // Verify dark scheme fallback for mobile-bottom-dock within @media (prefers-color-scheme: dark)
+  const darkDockMediaMatch = html.match(
+    /@media\s*\(\s*prefers-color-scheme:\s*dark\s*\)\s*\{[^{}]*:root:not\(\[data-theme=["']?light["']?\]\)\s*\.mobile-bottom-dock\s*\{([^}]+)\}\s*\}/
+  );
+  assert(
+    darkDockMediaMatch &&
+    darkDockMediaMatch[1].includes('background: rgba(17, 24, 39, 0.94);') &&
+    darkDockMediaMatch[1].includes('border-top-color: #1E293B;') &&
+    darkDockMediaMatch[1].includes('box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.5);'),
+    'Must support prefers-color-scheme: dark fallback for .mobile-bottom-dock with dark background, border, and shadow'
+  );
 });
 
 console.log(`\n----------------------------------------`);
