@@ -1965,6 +1965,59 @@ test('Broselow Futuristic Triage HUD & Dropdown Engine: Capsule telemetry sync a
   assert(triageBtn.style.borderColor !== '', 'triageBtn inline borderColor must be restored in light theme');
 });
 
+// 12. UI & UX Minimalism Engine: Light Theme Contrast Ratios & Responsive Viewport Clearance
+test('UI & UX Minimalism: Glare-Free Light Theme Contrast & Mobile Clearance Integrity', () => {
+  const html = fs.readFileSync(htmlPath, 'utf8');
+
+  // Relative luminance calculator
+  function getLuminance(hex) {
+    hex = hex.replace('#', '').trim();
+    if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+    const rgb = [
+      parseInt(hex.slice(0, 2), 16) / 255,
+      parseInt(hex.slice(2, 4), 16) / 255,
+      parseInt(hex.slice(4, 6), 16) / 255
+    ].map(v => v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+    return 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
+  }
+
+  function getContrast(c1, c2) {
+    const l1 = getLuminance(c1);
+    const l2 = getLuminance(c2);
+    return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+  }
+
+  // Verify calibrated light theme tokens exist in index.html
+  assert(html.includes('--bg: #F1F4F8;'), '--bg must be set to glare-free Medical Mist (#F1F4F8)');
+  assert(html.includes('--accent: #0277B6;'), '--accent must be set to surgical azure (#0277B6)');
+  assert(html.includes('--accent-text: #026AA2;'), '--accent-text must be calibrated for AAA contrast');
+  assert(html.includes('--good-text: #166534;'), '--good-text must be calibrated for AAA contrast');
+  assert(html.includes('--warning-text: #92400E;'), '--warning-text must be calibrated for AAA contrast');
+  assert(html.includes('--danger-text: #991B1B;'), '--danger-text must be calibrated for AAA contrast');
+
+  // Verify WCAG AA/AAA Mathematical Compliance
+  const white = '#FFFFFF';
+  assert(getContrast(white, '#0277B6') >= 4.5, 'White on --accent must meet WCAG AA (>= 4.5:1)');
+  assert(getContrast('#026AA2', white) >= 4.5, '--accent-text on white card must meet WCAG AA');
+  assert(getContrast('#026AA2', '#E0F2FE') >= 4.5, '--accent-text on --accent-soft must meet WCAG AA');
+  assert(getContrast('#166534', '#ECFDF5') >= 6.0, '--good-text on --good-soft must exceed 6.0:1');
+  assert(getContrast('#92400E', '#FFFBEB') >= 6.0, '--warning-text on --warning-soft must exceed 6.0:1');
+  assert(getContrast('#991B1B', '#FEF2F2') >= 7.0, '--danger-text on --danger-soft must exceed WCAG AAA (>= 7.0:1)');
+
+  // Verify dynamic --topbar-h responsive clearance in media queries
+  assert(html.includes('@media (max-width: 960px) {\n      :root {\n        --topbar-h: 96px;') ||
+         html.includes('@media (max-width: 960px) {\n      :root {\n        --topbar-h:'),
+         'Must define dynamic --topbar-h for tablet breakpoint (<=960px)');
+  assert(html.includes('@media (max-width: 768px) {\n      :root {\n        --topbar-h: 106px;'),
+         'Must define dynamic --topbar-h for mobile breakpoint (<=768px)');
+  assert(html.includes('@media (max-width: 480px) {\n      :root {\n        --topbar-h: 168px;'),
+         'Must define dynamic --topbar-h for small mobile breakpoint (<=480px)');
+
+  // Verify mobile biometric wrapping to prevent horizontal blowout
+  assert(html.includes('flex-wrap: wrap;') && html.includes('white-space: normal;'),
+         'Mobile bio-fields must allow flex-wrap and normal whitespace to avoid horizontal overflow');
+});
+
 console.log(`\n----------------------------------------`);
 console.log(`Test Results: ${passed} Passed, ${failed} Failed`);
 console.log(`----------------------------------------\n`);

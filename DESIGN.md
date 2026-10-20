@@ -4,25 +4,30 @@
 
 ### Light Theme Palette (`data-theme="light"`, default)
 
-- `--bg`: `#F8FAFC` (Slate-50: Crisp, clean, non-glare clinical canvas)
-- `--card`: `#FFFFFF` (Elevated crisp white card surface)
-- `--panel`: `#F1F5F9` (Slate-100: Soft cool neutral surgical panel)
-- `--panel-subtle`: `#F8FAFC` (Slate-50 inset surface)
+- `--bg`: `#F1F4F8` (Neutral-cool Medical Mist: Calming, non-glare clinical canvas reducing eye strain)
+- `--card`: `#FFFFFF` (Elevated crisp white card surface with surgical clarity)
+- `--panel`: `#E5EAF0` (Recessed well / table header / inset container with 1.22:1 contrast against cards)
+- `--panel-subtle`: `#EDF2F7` (Tactile sub-panel / pill container / card hover with 1.14:1 contrast against cards)
 - `--ink`: `#0F172A` (Slate-900: High-contrast dark charcoal text, > 15:1 contrast)
+- `--ink-secondary`: `#334155` (Slate-700: High-readability secondary clinical text, > 9:1 contrast)
 - `--muted`: `#475569` (Slate-600: Crisp secondary labels, WCAG AA compliant > 5.5:1)
-- `--border`: `#E2E8F0` (Slate-200: Subtle 1px precision border)
+- `--border`: `#D8E0EA` (Subtle 1px precision hairline border preventing card washout under bright ER lights)
 - `--border-strong`: `#CBD5E1` (Slate-300: High-visibility border for focused/active states)
-- `--accent`: `#0284C7` (Sky-600: Clinical precision sky blue for primary actions & active states)
-- `--accent-hover`: `#0369A1` (Sky-700: Darkened sky blue)
-- `--accent-soft`: `#E0F2FE` (Sky-100: Subtle tint for active weight & highlight containers)
-- `--accent-subtle`: `#F0F9FF` (Sky-50: Soft tinted container background)
+- `--accent`: `#0277B6` (Surgical azure: 4.86:1 contrast for white button text and primary actions)
+- `--accent-hover`: `#026597` (Deep surgical azure hover: 6.5:1 contrast)
+- `--accent-soft`: `#E0F2FE` (Sky-100: Soft tint for active weight & highlight containers)
+- `--accent-subtle`: `#F0F7FF` (Sky-50: Ultra-soft tinted container background for table hover)
+- `--accent-text`: `#026AA2` (High-contrast text token on soft tints, WCAG AA+ 5.86:1 on white, 5.10:1 on soft tint)
 - `--dark-btn`: `#0F172A` (Slate-900: High-contrast tactile action button)
 - `--good`: `#16A34A` (Clinical safe green)
-- `--good-soft`: `#F0FDF4` (Subtle safe tint)
+- `--good-soft`: `#ECFDF5` (Soft mint tint)
+- `--good-text`: `#166534` (Deep clinical green text token, WCAG AAA > 7.1:1 on white, 6.77:1 on soft tint)
 - `--warning`: `#D97706` (Amber caution / Broselow indicator)
-- `--warning-soft`: `#FFFBEB` (Subtle warning tint)
+- `--warning-soft`: `#FFFBEB` (Soft amber tint)
+- `--warning-text`: `#92400E` (Deep clinical amber text token, WCAG AAA > 7.0:1 on white, 6.84:1 on soft tint)
 - `--danger`: `#DC2626` (Emergency PALS critical red)
-- `--danger-soft`: `#FEF2F2` (Subtle emergency tint)
+- `--danger-soft`: `#FEF2F2` (Soft rose tint)
+- `--danger-text`: `#991B1B` (Deep clinical red text token, WCAG AAA > 8.3:1 on white, 7.60:1 on soft tint)
 
 ### Dark Theme Palette (`data-theme="dark"`)
 
@@ -126,5 +131,7 @@
 22. **Unified Pediatric Formulary Engine & 9-Category Filter Pill Strip (v2.2.0)**: Consolidated all pediatric medications, anti-infectives, and emergency drugs (170 drugs total) into the unified `#dose` module (`Medications` / `ขนาดยาเด็ก & ยาปฏิชีวนะ`). Removed the standalone ATB navigation tab button to eliminate redundant cognitive friction. Integrated an ergonomic 9-category filter pill strip (`#doseCategoryFilter`: All, Antibiotics (ATB), Antipyretic/Analgesic, Respiratory, GI/Antiemetic, Steroid, Neurology/Anticonvulsant, Cardiovascular/Diuretic, Topical/Skin). Drug cards dynamically render indication selectors, safety ceilings (`maxPerDoseMg` / `maxPerDayMg`), oral liquid preparation volume calculations in mL, and bedside Schwartz eGFR renal adjustment matrices. Keyboard shortcuts (`Alt+1` for All Meds, `Alt+2` for Antibiotics filter) ensure zero-latency emergency access.
 23. **Streamlined Minimalist UI/UX & Mobile Form Input Ergonomics (modern-web-guidance v2.3.0)**: Simplified cockpit chrome and visual clutter by eliminating parenthetical item counts on Category Switcher pills (e.g. `Meds & Fluids`, `Emergency Resus`, `Protocols & CDS`, `All Modules`). Lightened shadow elevation tokens (`--shadow-1`, `--shadow-2`, `--shadow-3`) with softer ambient opacity for a crisp, calm clinical card surface. Streamlined Topbar instrument cluster with compact biometric capsules, discrete `Provenance` weight provenance labels, and tabular monospace readouts. Enforced modern mobile web form ergonomics across 100% of numeric inputs (`inputmode="decimal"`, `autocomplete="off"`) and combobox search fields (`enterkeyhint="search"`, `spellcheck="false"`), preventing native keyboard zooming and unwanted autocomplete dropdown collisions during critical emergency resuscitations.
 24. **Futuristic Broselow Triage HUD Capsule & Scroll-Down Matrix Popover (modern-web-guidance v2.3.1)**: Replaced the bulky horizontal 10-button quick weight strip with an ultra-compact (~140px) Futuristic Triage HUD Capsule integrated into the topbar. The capsule features a glowing active Broselow color indicator dot (`#triageHudDot`), active zone name (`#triageHudLabel`), tabular monospace weight display (`#triageHudVal`), animated chevron, and an integrated 9-segment interactive mini-spectrum bar (`#broselowMiniStrip`). Clicking the capsule smoothly reveals a tethered Scroll-Down Popover (`#triagePopoverMenu`) containing a responsive 2-column clinical card deck (`#quickWeightStrip`) with weight ranges, estimated ages, and 1-tap rapid adoption, saving >270px of topbar horizontal space and eliminating mobile/tablet wrap.
+25. **Minimalist Swiss Clinical Ergonomics & Glare-Free Light Theme (taste-skill v2.3.3)**: Calibrated light theme palette to non-glare Medical Mist canvas (`#F1F4F8`), tactile inset panels (`--panel: #E5EAF0`, `--panel-subtle: #EDF2F7`), and surgical azure accent (`#0277B6`). Introduced semantic WCAG AA/AAA (> 5.5:1 to 8.3:1) text tokens (`--accent-text: #026AA2`, `--good-text: #166534`, `--warning-text: #92400E`, `--danger-text: #991B1B`) to guarantee sharp legibility of hero readouts, badges, and calculation summaries on pastel tints. Refined 2-tier Cockpit Nav geometry with hairline borders, luminous full-pill category switches, and flat underline tab indicators. Implemented dynamic `--topbar-h` responsive clearance (`52px` desktop, `96px` tablet <=960px, `106px` mobile <=768px, `168px` phone <=480px) and mobile biometric flex-wrapping, completely eliminating sticky topbar content overlap and horizontal viewport blowout.
+
 
 
