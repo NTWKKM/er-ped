@@ -769,6 +769,25 @@
       color: #000000;
       border-color: #ECECE8;
     }
+    :root[data-theme="mono"] .fab button.broselow-fab {
+      background: #20201E;
+      color: #ECECE8;
+      font-weight: 800;
+      border: 1.5px solid #74746E;
+    }
+    :root[data-theme="mono"] .fab button.broselow-fab:hover {
+      background: #2E2E2A;
+      border-color: #ECECE8;
+    }
+    :root[data-theme="mono"] .fab .fab-btn-sm {
+      background: #20201E;
+      color: #ECECE8;
+      border: 1px solid #74746E;
+    }
+    :root[data-theme="mono"] .fab .fab-btn-sm:hover {
+      background: #2E2E2A;
+      border-color: #ECECE8;
+    }
     :root[data-theme="mono"] .combobox-item:hover,
     :root[data-theme="mono"] .combobox-item.selected,
     :root[data-theme="mono"] .combobox-item.kb-active {
@@ -830,6 +849,24 @@
       color: #FFFFFF;
       font-weight: 800;
       border: 1px solid #FF5252;
+    }
+    :root[data-theme="red"] .fab button.broselow-fab {
+      background: #2A0505;
+      color: #FFCDD2;
+      border: 1.5px solid #5C1010;
+    }
+    :root[data-theme="red"] .fab button.broselow-fab:hover {
+      background: #3B0808;
+      border-color: #FF5252;
+    }
+    :root[data-theme="red"] .fab .fab-btn-sm {
+      background: #2A0505;
+      color: #FFCDD2;
+      border: 1px solid #5C1010;
+    }
+    :root[data-theme="red"] .fab .fab-btn-sm:hover {
+      background: #3B0808;
+      border-color: #FF5252;
     }
     :root[data-theme="red"] .topbar {
       background: rgba(10, 0, 0, 0.92);
@@ -1837,51 +1874,357 @@
       line-height: 1.45;
     }
 
-    /* Emergency PALS Floating Action Button (FAB) */
+    /* Floating Action Buttons & Rapid Triage Cluster (FAB) */
     .fab { 
       position: fixed; 
       right: 20px; 
       bottom: 20px; 
       display: flex; 
       flex-direction: column; 
-      gap: 10px; 
+      align-items: flex-end;
+      gap: 8px; 
       z-index: 90; 
+      pointer-events: none;
+    }
+    .fab > * {
+      pointer-events: auto;
     }
 
-    .fab button { 
+    .fab-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    /* Secondary Utility Floating Controls */
+    .fab .fab-btn-sm {
+      height: 32px;
+      padding: 0 11px;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: var(--r-full);
+      background: var(--card);
+      color: var(--ink);
+      border: 1px solid var(--border-strong);
+      box-shadow: var(--shadow-1);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease, color 0.15s ease;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      user-select: none;
+      font-family: inherit;
+    }
+    .fab .fab-btn-sm:hover {
+      background: var(--panel);
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: var(--shadow-2);
+      transform: translateY(-1px);
+    }
+    .fab .fab-btn-sm:active {
+      transform: scale(0.97);
+    }
+    .fab .fab-btn-sm.more-fab {
+      width: 32px;
+      padding: 0;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0.5px;
+    }
+    .fab .fab-btn-sm .fab-chevron {
+      opacity: 0.7;
+      transition: transform 0.15s ease;
+    }
+    .fab .fab-btn-sm[aria-expanded="true"] .fab-chevron {
+      transform: rotate(180deg);
+    }
+
+    /* Primary Emergency Floating Action Buttons */
+    .fab button.broselow-fab,
+    .fab button.pals-fab { 
       border: none; 
       border-radius: var(--r-full); 
-      padding: 9px 16px; 
-      box-shadow: 0 4px 14px rgba(0,0,0,0.16); 
-      background: var(--dark-btn); 
-      color: #FFFFFF; 
+      height: 42px;
+      padding: 0 16px; 
+      box-shadow: 0 4px 16px rgba(0,0,0,0.20); 
       font-weight: 800; 
-      font-size: 13px; 
+      font-size: 13.5px; 
       cursor: pointer; 
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+      gap: 8px;
+      transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+      user-select: none;
+      font-family: inherit;
     }
-    .fab button:active {
+    .fab button.broselow-fab:active,
+    .fab button.pals-fab:active {
       transform: scale(0.97);
     }
 
-    .fab button:hover {
-      background: #111110;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.22);
-    }
-
+    /* PALS Emergency Red Floating Pill */
     .fab button.pals-fab {
       background: var(--danger);
       color: #FFFFFF;
-      border: none;
-      box-shadow: 0 4px 16px rgba(220, 38, 38, 0.32);
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 4px 16px rgba(220, 38, 38, 0.35);
     }
-
     .fab button.pals-fab:hover {
       background: #B91C1C;
-      box-shadow: 0 6px 20px rgba(220, 38, 38, 0.40);
+      box-shadow: 0 6px 20px rgba(220, 38, 38, 0.45);
+      transform: translateY(-1px);
+    }
+
+    /* Broselow High-Contrast Clinical Triage Floating Pill */
+    .fab button.broselow-fab {
+      background: var(--dark-btn);
+      color: #FFFFFF;
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+    }
+    .fab button.broselow-fab:hover {
+      background: #111110;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
+      transform: translateY(-1px);
+    }
+    .fab button.broselow-fab .triage-hud-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--muted);
+      flex-shrink: 0;
+      transition: background 0.15s ease, box-shadow 0.15s ease;
+    }
+    .fab button.broselow-fab .triage-hud-val {
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.75);
+      font-family: var(--font-mono);
+      padding: 1px 6px;
+      background: rgba(255, 255, 255, 0.14);
+      border-radius: var(--r-xs);
+    }
+    .fab button.broselow-fab .fab-chevron {
+      opacity: 0.7;
+      transition: transform 0.15s ease;
+    }
+    .fab button.broselow-fab[aria-expanded="true"] .fab-chevron {
+      transform: rotate(180deg);
+    }
+
+    /* Upward-Opening Floating Popover Menus */
+    .fab .popover-wrapper {
+      position: relative;
+    }
+    .fab .popover-menu,
+    .fab-popover {
+      top: auto;
+      bottom: calc(100% + 8px);
+      right: 0;
+      left: auto;
+      transform: none;
+      border-radius: var(--r-md);
+      box-shadow: var(--shadow-3);
+      border: 1px solid var(--border-strong);
+      background: var(--card);
+      transform-origin: bottom right;
+    }
+    .fab .popover-menu.open {
+      display: flex;
+      animation: fabPopoverSlideUp 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes fabPopoverSlideUp {
+      from { opacity: 0; transform: translateY(6px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Popover Items inside FAB */
+    .fab .popover-menu .popover-item {
+      border: 0;
+      border-radius: var(--r-sm);
+      background: transparent;
+      box-shadow: none;
+      color: var(--ink);
+      font: 600 13px 'Sarabun', sans-serif;
+      padding: 8px 12px;
+      width: 100%;
+      justify-content: flex-start;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.12s ease, color 0.12s ease;
+      font-family: inherit;
+    }
+    .fab .popover-menu .popover-item:hover {
+      background: var(--panel);
+      color: var(--accent);
+      box-shadow: none;
+      transform: none;
+    }
+    .fab .popover-menu .popover-item:active {
+      transform: none;
+    }
+
+    /* Broselow Triage Popover inside FAB */
+    .fab .triage-popover-menu {
+      min-width: 310px;
+      max-width: 340px;
+      padding: 8px;
+      max-height: calc(100vh - 140px);
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+    .fab .quick-weight-strip {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      max-height: 250px;
+      overflow-y: auto;
+      padding: 2px;
+      scrollbar-width: thin;
+    }
+    .fab .quick-weight-btn {
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      background: var(--panel);
+      box-shadow: none;
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 6px 8px;
+      cursor: pointer;
+      min-height: 46px;
+      width: 100%;
+      font-family: inherit;
+      transition: all 0.12s ease;
+    }
+    .fab .quick-weight-btn:hover {
+      border-color: var(--accent);
+      background: var(--accent-subtle);
+      box-shadow: none;
+      transform: none;
+    }
+    .fab .quick-weight-btn:active {
+      transform: none;
+    }
+    .fab .quick-weight-btn.active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1.5px var(--accent);
+    }
+    .fab .quick-weight-btn .qw-name {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: var(--ink);
+      font-family: var(--font-mono);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .fab .quick-weight-btn .qw-meta {
+      font-size: 10px;
+      color: var(--muted);
+      line-height: 1.2;
+      margin-top: 2px;
+    }
+    .fab .triage-full-btn {
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      background: transparent;
+      box-shadow: none;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 10px;
+      width: 100%;
+      justify-content: center;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: background 0.12s ease, border-color 0.12s ease;
+      font-family: inherit;
+    }
+    .fab .triage-full-btn:hover {
+      background: var(--panel);
+      border-color: var(--accent);
+      box-shadow: none;
+      transform: none;
+    }
+    .fab .triage-full-btn:active {
+      transform: none;
+    }
+
+    /* Dark Theme Overrides for FAB */
+    :root[data-theme="dark"] .fab button.broselow-fab {
+      background: #1E293B;
+      color: #F8FAFC;
+      border-color: #334155;
+    }
+    :root[data-theme="dark"] .fab button.broselow-fab:hover {
+      background: #0F172A;
+      border-color: var(--accent);
+    }
+    :root[data-theme="dark"] .fab-btn-sm {
+      background: #1E293B;
+      color: #F8FAFC;
+      border-color: #334155;
+    }
+    :root[data-theme="dark"] .fab-btn-sm:hover {
+      background: #0F172A;
+      border-color: var(--accent);
+    }
+
+    .popover-section-label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 6px 10px 2px;
+      user-select: none;
+      border-top: 1px solid var(--border);
+      margin-top: 4px;
+    }
+    .popover-section-label:first-child {
+      border-top: none;
+      margin-top: 0;
+      padding-top: 2px;
+    }
+
+    /* Mobile Responsive Overrides for FAB */
+    @media (max-width: 680px) {
+      .fab button.pals-fab {
+        display: none !important;
+      }
+      .fab {
+        bottom: calc(64px + env(safe-area-inset-bottom));
+        right: 14px;
+      }
+      .fab .triage-popover-menu {
+        max-width: calc(100vw - 28px);
+        right: 0;
+      }
+    }
+    @media (max-width: 480px) {
+      .fab button.broselow-fab,
+      .fab button.pals-fab {
+        height: 38px;
+        padding: 0 14px;
+        font-size: 12.5px;
+      }
+      .fab .triage-popover-menu {
+        min-width: 290px;
+        max-width: calc(100vw - 20px);
+        right: -6px;
+      }
     }
 
     /* Clinical Evidence & Reference Badges */
@@ -2561,100 +2904,7 @@
         </div>
       </div>
 
-      <!-- Center: Futuristic Broselow Triage HUD Capsule & Dropdown -->
-      <div class="topbar-triage triage-strip-wrapper popover-wrapper" id="topbarTriage">
-        <button type="button" id="triageDropdownBtn" class="triage-hud-btn" onclick="toggleTriagePopover(event)" aria-haspopup="true" aria-expanded="false" title="Broselow Emergency Triage Selector (คลิกเพื่อเลือกโซน/น้ำหนักด่วน)">
-          <div class="triage-hud-top">
-            <span class="triage-hud-dot" id="triageHudDot"></span>
-            <span class="triage-hud-label" id="triageHudLabel">Broselow</span>
-            <span class="triage-hud-val mono" id="triageHudVal">—</span>
-            <svg class="triage-hud-chevron" xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-          </div>
-        </button>
-        <!-- Interactive Broselow Mini-Spectrum Bar -->
-        <div class="broselow-mini-strip" id="broselowMiniStrip" title="Broselow 9-Zone Spectrum (คลิกเพื่อคำนวณและพรีวิวโซน)">
-          <div class="broselow-mini-seg" style="background:#B0B0B0;" onclick="previewBroselowZone('Grey', event)" title="Grey (3–5.9 kg)"></div>
-          <div class="broselow-mini-seg" style="background:#FF80AB;" onclick="previewBroselowZone('Pink', event)" title="Pink (6–7.9 kg)"></div>
-          <div class="broselow-mini-seg" style="background:#FF5252;" onclick="previewBroselowZone('Red', event)" title="Red (8–9.9 kg)"></div>
-          <div class="broselow-mini-seg" style="background:#B388FF;" onclick="previewBroselowZone('Purple', event)" title="Purple (10–11.9 kg)"></div>
-          <div class="broselow-mini-seg" style="background:#FFEE58;" onclick="previewBroselowZone('Yellow', event)" title="Yellow (12–14.9 kg)"></div>
-          <div class="broselow-mini-seg" style="background:#FFFFFF;" onclick="previewBroselowZone('White', event)" title="White (15–18.9 kg)"></div>
-          <div class="broselow-mini-seg" style="background:#40C4FF;" onclick="previewBroselowZone('Blue', event)" title="Blue (19–23.9 kg)"></div>
-          <div class="broselow-mini-seg" style="background:#FFAB40;" onclick="previewBroselowZone('Orange', event)" title="Orange (24–29.9 kg)"></div>
-          <div class="broselow-mini-seg" style="background:#69F0AE;" onclick="previewBroselowZone('Green', event)" title="Green (30–36 kg)"></div>
-        </div>
-
-        <!-- Triage Dropdown Popover Menu (Scroll Down) -->
-        <div id="triagePopoverMenu" class="popover-menu triage-popover-menu" role="menu">
-          <div class="triage-popover-header">
-            <span class="triage-popover-title">
-              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-              Broselow Rapid Triage
-            </span>
-            <span class="triage-popover-hint">1-Tap Adopt</span>
-          </div>
-          <div class="quick-weight-strip" id="quickWeightStrip" role="group" aria-label="Broselow-Aligned Quick Weight Triage Presets">
-            <button type="button" class="quick-weight-btn" data-color="Grey" onclick="applyQuickWeight(5); closeAllPopovers();" title="Grey (3–5.9 kg, ~1 mo)">
-              <span class="qw-dot" style="background:#B0B0B0;"></span>
-              <span class="qw-name">Grey · 5k</span>
-              <span class="qw-meta">3–5.9 kg (~1 mo)</span>
-            </button>
-            <button type="button" class="quick-weight-btn" data-color="Pink" onclick="applyQuickWeight(7); closeAllPopovers();" title="Pink (6–7.9 kg, ~4 mo)">
-              <span class="qw-dot" style="background:#FF80AB;"></span>
-              <span class="qw-name">Pink · 7k</span>
-              <span class="qw-meta">6–7.9 kg (~4 mo)</span>
-            </button>
-            <button type="button" class="quick-weight-btn" data-color="Red" onclick="applyQuickWeight(9); closeAllPopovers();" title="Red (8–9.9 kg, ~9 mo)">
-              <span class="qw-dot" style="background:#FF5252;"></span>
-              <span class="qw-name">Red · 9k</span>
-              <span class="qw-meta">8–9.9 kg (~9 mo)</span>
-            </button>
-            <button type="button" class="quick-weight-btn" data-color="Purple" onclick="applyQuickWeight(10); closeAllPopovers();" title="Purple (10–11.9 kg, ~1 yr)">
-              <span class="qw-dot" style="background:#B388FF;"></span>
-              <span class="qw-name">Purple · 10k</span>
-              <span class="qw-meta">10–11.9 kg (~1 yr)</span>
-            </button>
-            <button type="button" class="quick-weight-btn" data-color="Yellow" onclick="applyQuickWeight(13); closeAllPopovers();" title="Yellow (12–14.9 kg, ~2.5 yr)">
-              <span class="qw-dot" style="background:#FFEE58;"></span>
-              <span class="qw-name">Yellow · 13k</span>
-              <span class="qw-meta">12–14.9 kg (~2.5 yr)</span>
-            </button>
-            <button type="button" class="quick-weight-btn" data-color="White" onclick="applyQuickWeight(17); closeAllPopovers();" title="White (15–18.9 kg, ~4.5 yr)">
-              <span class="qw-dot" style="background:#FFFFFF; border:1px solid rgba(0,0,0,0.3);"></span>
-              <span class="qw-name">White · 17k</span>
-              <span class="qw-meta">15–18.9 kg (~4.5 yr)</span>
-            </button>
-            <button type="button" class="quick-weight-btn" data-color="Blue" onclick="applyQuickWeight(21); closeAllPopovers();" title="Blue (19–23.9 kg, ~6.5 yr)">
-              <span class="qw-dot" style="background:#40C4FF;"></span>
-              <span class="qw-name">Blue · 21k</span>
-              <span class="qw-meta">19–23.9 kg (~6.5 yr)</span>
-            </button>
-            <button type="button" class="quick-weight-btn" data-color="Orange" onclick="applyQuickWeight(27); closeAllPopovers();" title="Orange (24–29.9 kg, ~8.5 yr)">
-              <span class="qw-dot" style="background:#FFAB40;"></span>
-              <span class="qw-name">Orange · 27k</span>
-              <span class="qw-meta">24–29.9 kg (~8.5 yr)</span>
-            </button>
-            <button type="button" class="quick-weight-btn" data-color="Green" onclick="applyQuickWeight(33); closeAllPopovers();" title="Green (30–36 kg, ~10 yr)">
-              <span class="qw-dot" style="background:#69F0AE;"></span>
-              <span class="qw-name">Green · 33k</span>
-              <span class="qw-meta">30–36 kg (~10 yr)</span>
-            </button>
-            <button type="button" class="quick-weight-btn" data-color="Adolescent" onclick="applyQuickWeight(40); closeAllPopovers();" title="Adolescent (>36 kg, ~12 yr)">
-              <span class="qw-dot" style="background:#94A3B8;"></span>
-              <span class="qw-name">Adolescent · 40k</span>
-              <span class="qw-meta">&gt;36 kg (~12 yr)</span>
-            </button>
-          </div>
-          <div class="triage-popover-footer">
-            <button type="button" class="triage-full-btn" onclick="toggleBroselowPanel(); closeAllPopovers();">
-              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0l12.6 12.6z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></svg>
-              <span>Full Broselow Equipment Drawer &rarr;</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Right: In-Use Active Weight & Action Cluster -->
+      <!-- Right: In-Use Active Weight & Theme Toggle -->
       <div class="topbar-actions">
         <!-- IN USE: the weight the dose engine is actually running on -->
         <div class="bio-group active-weight is-empty" id="activeWeightBox">
@@ -2663,46 +2913,8 @@
           <span id="activeWeightSrc" class="active-weight-src">enter BW or age</span>
         </div>
 
-        <!-- Reference ▾ Popover Trigger -->
-        <div class="popover-wrapper">
-          <button type="button" id="refPopoverBtn" class="btn" style="padding:6px 10px; font-size:12px; display:inline-flex; align-items:center; gap:4px;" onclick="toggleRefPopover(event)" title="เมนูข้อมูลอ้างอิง (Reference Tools)" aria-label="Reference menu" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
-          <div id="refPopoverMenu" class="popover-menu" role="menu">
-            <button type="button" class="popover-item" onclick="openEvidenceModal(); closeAllPopovers();" role="menuitem">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg> <span>Evidence & References</span>
-            </button>
-            <button type="button" class="popover-item" onclick="showTab('vitals'); closeAllPopovers();" role="menuitem">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M17 12h-2l-2 5-3-10-2 5H7"/></svg> <span>Vital Signs by Age</span>
-            </button>
-            <button type="button" class="popover-item" onclick="toggleBroselowPanel(); closeAllPopovers();" role="menuitem">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0l12.6 12.6z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></svg> <span>Broselow Tape</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Broselow Color Tape Chip -->
-        <button type="button" id="broselow" class="broselow-chip mono" style="padding:4px 8px; border-radius:var(--r-sm); font-weight:800; background:var(--panel); color:var(--ink); border:1px solid var(--border); font-size:12px;" onclick="toggleBroselowPanel()" aria-label="Broselow Color Tape Reference" title="คลิกเพื่อดู Broselow Color Tape Reference">—</button>
-
         <!-- ◐ Theme Toggle Button -->
-        <button type="button" id="themeToggleBtn" class="btn" style="padding:6px 10px; font-size:12px;" onclick="toggleTheme()" title="สลับ Dark / Light / Mono Mode">Light</button>
-
-        <!-- ⋯ Overflow Menu Popover Trigger -->
-        <div class="popover-wrapper">
-          <button type="button" id="overflowBtn" class="btn" style="padding:6px 9px; font-size:13px; font-weight:800;" onclick="toggleOverflowMenu(event)" title="เมนูเพิ่มเติม (More Options)" aria-label="More actions" aria-haspopup="true" aria-expanded="false">⋯</button>
-          <div id="overflowMenu" class="popover-menu" role="menu">
-            <button type="button" id="a2hsBtn" class="popover-item" style="display:none;" onclick="triggerA2HS(); closeAllPopovers();" role="menuitem">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> <span>Install App</span>
-            </button>
-            <button type="button" id="printBtn" class="popover-item" onclick="triggerPrintCard(); closeAllPopovers();" role="menuitem">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3h12v6"/><rect width="12" height="8" x="6" y="14" rx="1"/></svg> <span>Print Active Tab</span>
-            </button>
-            <button type="button" id="printSummaryBtn" class="popover-item" onclick="printBedsideSummaryCard(); closeAllPopovers();" role="menuitem">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="16" height="20" x="4" y="2" rx="2"/><path d="M8 10h8"/><path d="M8 14h8"/><path d="M8 18h5"/></svg> <span>Print Bedside Pocket Card</span>
-            </button>
-            <button type="button" id="langToggleBtn" class="popover-item" onclick="toggleLanguage(); closeAllPopovers();" role="menuitem">
-              <span>TH / EN</span>
-            </button>
-          </div>
-        </div>
+        <button type="button" id="themeToggleBtn" class="btn" style="padding:6px 11px; font-size:12px; font-weight:700;" onclick="toggleTheme()" title="สลับ Dark / Light / Mono / Red Mode">Light</button>
       </div>
     </div>
   </div>
@@ -3433,14 +3645,13 @@
 
     <!-- Standalone Footer -->
     <footer class="app-footer">
-      <div><strong>ER-PED Workstation</strong> — Clinical Precision Cockpit <span class="version-chip" id="footerVersionChip" onclick="openChangelogModal()" title="ดูบันทึกการเปลี่ยนแปลง">v2.3.1</span></div>
+      <div><strong>ER-PED Workstation</strong> — Clinical Precision Cockpit <span class="version-chip" id="footerVersionChip" onclick="openChangelogModal()" title="คลิกเพื่อดูบันทึกการเปลี่ยนแปลง (Changelog)">v2.3.2</span></div>
       <div style="font-size:11px; margin-top:4px; color:var(--muted);">
         พัฒนาและอ้างอิงจาก <a href="https://ped-tsh.web.app/" target="_blank" rel="noopener" style="color:var(--accent); font-weight:700; text-decoration:underline;">Pediatric Emergency Workstation (ped-tsh.web.app)</a>
       </div>
-      <div style="font-size:11px; margin-top:8px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
-        <span style="cursor:pointer; color:var(--accent); display:inline-flex; align-items:center;" onclick="openAttributionModal()"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>Credit & Attribution</span>
+      <div style="font-size:11.5px; margin-top:8px; display:flex; justify-content:center; gap:16px; flex-wrap:wrap;">
+        <span style="cursor:pointer; color:var(--accent); display:inline-flex; align-items:center;" onclick="openAttributionModal()"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>Credit &amp; Attribution</span>
         <span style="cursor:pointer; color:var(--accent); display:inline-flex; align-items:center;" onclick="openDatasetEditor()"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>Dataset Editor</span>
-        <span style="cursor:pointer; color:var(--accent); display:inline-flex; align-items:center;" onclick="openChangelogModal()"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>Changelog</span>
         <span style="cursor:pointer; color:var(--accent); display:inline-flex; align-items:center;" onclick="triggerPrintCard()"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px; margin-right:4px;"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3h12v6"/><rect width="12" height="8" x="6" y="14" rx="1"/></svg>Printable Card</span>
       </div>
       <div style="font-size:11px; margin-top:6px; opacity:0.8;">Hotkeys: <code>Alt+1..0</code> / <code>Alt+K</code> / <code>Alt+A</code> / <code>Alt+E</code> Tabs | <code>Esc</code> Close Drawer</div>
@@ -3515,11 +3726,17 @@
   <div id="changelogBackdrop" class="drawer-backdrop hidden" onclick="if(event.target.id==='changelogBackdrop') closeChangelogModal()">
     <div class="drawer" onclick="event.stopPropagation()">
       <div class="drawer-header">
-        <strong id="changelogHeaderTitle" style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg> ER-PED Version <span id="changelogVersionNumber">2.3.1</span> Changelog</strong>
+        <strong id="changelogHeaderTitle" style="font-size:16px; display:inline-flex; align-items:center; gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg> ER-PED Version <span id="changelogVersionNumber">2.3.2</span> Changelog</strong>
         <button type="button" class="btn" style="padding:4px 10px; font-size:12px; display:inline-flex; align-items:center; gap:4px;" onclick="closeChangelogModal()">Close <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> (Esc)</button>
       </div>
       <div class="drawer-body" style="font-size:13px; line-height:1.6;">
-        <h3 style="color:var(--accent); margin-top:4px;">What's New in v<span id="changelogWhatsNewVersion">2.3.1</span> (October 2026):</h3>
+        <h3 style="color:var(--accent); margin-top:4px;">What's New in v<span id="changelogWhatsNewVersion">2.3.2</span> (October 2026):</h3>
+        <ul>
+          <li><strong>🚀 Dedicated Broselow &amp; Reference Floating Action Cluster (`.fab`)</strong>: ย้ายการควบคุม Broselow Telemetry HUD และปุ่ม Reference จากแถบด้านบน (Topbar) สู่ Floating Action Cluster ที่มุมขวาล่าง (`.fab`) ในรูปแบบ Floating Pill ขนาดเด่นชัด พร้อมไฟสถานะสีโซนเรืองแสง ค่าน้ำหนัก และเมนูลอยแบบเลื่อนขึ้น (Upward-Expanding Popover)</li>
+          <li><strong>🎯 Surface Hierarchy &amp; Redundancy Purge (/taste-skill)</strong>: จัดระเบียบบทบาทหน้าจออย่างชัดเจนตามมาตรฐาน taste-skill โดยกำหนดให้ Topbar แสดงเฉพาะข้อมูลคนไข้ น้ำหนักที่ใช้งาน และปุ่มสลับธีม, ปรับปุ่ม Reference ให้เปิด Evidence Modal โดยตรงใน 1-Tap, และจัดหมวดหมู่เมนูตัวเลือกเพิ่มเติมเป็นสัดส่วน (Print &amp; Cards / Tools &amp; Settings)</li>
+        </ul>
+        <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;" />
+        <h4 style="color:var(--ink); margin-top:4px;">📜 Version 2.3.1 Highlights:</h4>
         <ul>
           <li><strong>⚡ Futuristic Broselow Triage HUD Capsule &amp; Dropdown (แคปซูลล้ำยุค + เมนูเลื่อนลงประหยัดพื้นที่)</strong>: ปรับดีไซน์ Broselow ด้านบนสุดใหม่ทั้งหมด จากเดิมที่เป็นปุ่มแนวยาว 10 ปุ่มที่กินพื้นที่เกือบ 420px ให้กลายเป็น <strong>Cockpit Triage HUD Capsule</strong> ขนาดกะทัดรัดเพียง 140px (ประหยัดพื้นที่แนวนอนไปกว่า 270px) พร้อมไฟสถานะสีเรืองแสง (Glowing Dot), แถบ Mini-Spectrum 9 สีที่แตะเลือกสีได้ทันที และเมื่อคลิกแคปซูลจะเลื่อนเปิดเมนู Dropdown คัดกรอง 10 โซนน้ำหนักพร้อมช่วงอายุในแบบ 1-Tap ทันที</li>
           <li><strong>✨ Simplified UI/UX &amp; Calm Elevation</strong>: ปรับอินเทอร์เฟซให้เรียบง่าย สบายตา ลดภาระการมองเห็นด้วยโทนเงา Ambient Elevation นุ่มนวล</li>
@@ -3781,13 +3998,154 @@
     </button>
   </nav>
 
-  <!-- Emergency Floating Action Buttons -->
-  <div class="fab">
+  <!-- Floating Action Buttons & Quick Controls -->
+  <div class="fab" id="fabCluster">
+    <!-- Utility Row: Evidence & Workstation Options -->
+    <div class="fab-row">
+      <!-- Evidence 1-Tap Trigger -->
+      <button type="button" id="refPopoverBtn" class="fab-btn-sm ref-fab" onclick="openEvidenceModal(); closeAllPopovers();" title="เอกสารอ้างอิงและระดับหลักฐานทางการแพทย์ (Clinical Evidence Registry)" aria-label="Evidence & References">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+        <span>Evidence</span>
+      </button>
+      <div id="refPopoverMenu" style="display:none;" aria-hidden="true"></div>
+
+      <!-- ⋯ Overflow Menu Popover Trigger -->
+      <div class="popover-wrapper fab-popover-wrapper">
+        <button type="button" id="overflowBtn" class="fab-btn-sm more-fab" onclick="toggleOverflowMenu(event)" title="เมนูคำสั่งและเครื่องมือเพิ่มเติม (Workstation Options)" aria-label="More actions" aria-haspopup="true" aria-expanded="false">
+          <span>⋯</span>
+        </button>
+        <div id="overflowMenu" class="popover-menu fab-popover" role="menu">
+          <div class="popover-section-label">Print &amp; Cards</div>
+          <button type="button" id="printBtn" class="popover-item" onclick="triggerPrintCard(); closeAllPopovers();" role="menuitem">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3h12v6"/><rect width="12" height="8" x="6" y="14" rx="1"/></svg>
+            <span>Print Active Tab</span>
+          </button>
+          <button type="button" id="printSummaryBtn" class="popover-item" onclick="printBedsideSummaryCard(); closeAllPopovers();" role="menuitem">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="16" height="20" x="4" y="2" rx="2"/><path d="M8 10h8"/><path d="M8 14h8"/><path d="M8 18h5"/></svg>
+            <span>Print Pocket Card</span>
+          </button>
+
+          <div class="popover-section-label">Tools &amp; Settings</div>
+          <button type="button" id="langToggleBtn" class="popover-item" onclick="toggleLanguage(); closeAllPopovers();" role="menuitem">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+            <span>Language (TH / EN)</span>
+          </button>
+          <button type="button" class="popover-item" onclick="openDatasetEditor(); closeAllPopovers();" role="menuitem">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+            <span>Dataset Editor</span>
+          </button>
+          <button type="button" id="a2hsBtn" class="popover-item" style="display:none;" onclick="triggerA2HS(); closeAllPopovers();" role="menuitem">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Install App</span>
+          </button>
+          <button type="button" class="popover-item" onclick="hardReload(); closeAllPopovers();" role="menuitem">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg>
+            <span>Reload App</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Broselow Floating Action Button (Like PALS) -->
+    <div class="popover-wrapper fab-popover-wrapper" id="topbarTriage">
+      <button type="button" id="triageDropdownBtn" class="broselow-fab" onclick="toggleTriagePopover(event)" aria-haspopup="true" aria-expanded="false" title="Broselow Tape & Emergency Triage (คลิกเพื่อเลือกโซน/น้ำหนักด่วน)">
+        <span class="triage-hud-dot" id="triageHudDot"></span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0l12.6 12.6z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></svg>
+        <span id="triageHudLabel">Broselow</span>
+        <span class="triage-hud-val mono" id="triageHudVal">—</span>
+        <svg class="fab-chevron" xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+      </button>
+
+      <!-- Triage Dropdown Popover Menu (Scroll Upwards from FAB) -->
+      <div id="triagePopoverMenu" class="popover-menu triage-popover-menu fab-popover" role="menu">
+        <div class="triage-popover-header">
+          <span class="triage-popover-title">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Broselow Rapid Triage
+          </span>
+          <!-- Active Color Chip in popover -->
+          <button type="button" id="broselow" class="broselow-chip mono" style="padding:2px 7px; border-radius:var(--r-sm); font-size:11px; font-weight:800; cursor:pointer;" onclick="toggleBroselowPanel(); closeAllPopovers();" title="คลิกเพื่อดู Broselow Full Equipment Drawer">—</button>
+        </div>
+
+        <!-- Interactive Broselow Mini-Spectrum Bar -->
+        <div class="broselow-mini-strip" id="broselowMiniStrip" title="Broselow 9-Zone Spectrum (คลิกเพื่อคำนวณและพรีวิวโซน)">
+          <div class="broselow-mini-seg" style="background:#B0B0B0;" onclick="previewBroselowZone('Grey', event)" title="Grey (3–5.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#FF80AB;" onclick="previewBroselowZone('Pink', event)" title="Pink (6–7.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#FF5252;" onclick="previewBroselowZone('Red', event)" title="Red (8–9.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#B388FF;" onclick="previewBroselowZone('Purple', event)" title="Purple (10–11.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#FFEE58;" onclick="previewBroselowZone('Yellow', event)" title="Yellow (12–14.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#FFFFFF;" onclick="previewBroselowZone('White', event)" title="White (15–18.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#40C4FF;" onclick="previewBroselowZone('Blue', event)" title="Blue (19–23.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#FFAB40;" onclick="previewBroselowZone('Orange', event)" title="Orange (24–29.9 kg)"></div>
+          <div class="broselow-mini-seg" style="background:#69F0AE;" onclick="previewBroselowZone('Green', event)" title="Green (30–36 kg)"></div>
+        </div>
+
+        <div class="quick-weight-strip" id="quickWeightStrip" role="group" aria-label="Broselow-Aligned Quick Weight Triage Presets">
+          <button type="button" class="quick-weight-btn" data-color="Grey" onclick="applyQuickWeight(5); closeAllPopovers();" title="Grey (3–5.9 kg, ~1 mo)">
+            <span class="qw-dot" style="background:#B0B0B0;"></span>
+            <span class="qw-name">Grey · 5k</span>
+            <span class="qw-meta">3–5.9 kg (~1 mo)</span>
+          </button>
+          <button type="button" class="quick-weight-btn" data-color="Pink" onclick="applyQuickWeight(7); closeAllPopovers();" title="Pink (6–7.9 kg, ~4 mo)">
+            <span class="qw-dot" style="background:#FF80AB;"></span>
+            <span class="qw-name">Pink · 7k</span>
+            <span class="qw-meta">6–7.9 kg (~4 mo)</span>
+          </button>
+          <button type="button" class="quick-weight-btn" data-color="Red" onclick="applyQuickWeight(9); closeAllPopovers();" title="Red (8–9.9 kg, ~9 mo)">
+            <span class="qw-dot" style="background:#FF5252;"></span>
+            <span class="qw-name">Red · 9k</span>
+            <span class="qw-meta">8–9.9 kg (~9 mo)</span>
+          </button>
+          <button type="button" class="quick-weight-btn" data-color="Purple" onclick="applyQuickWeight(10); closeAllPopovers();" title="Purple (10–11.9 kg, ~1 yr)">
+            <span class="qw-dot" style="background:#B388FF;"></span>
+            <span class="qw-name">Purple · 10k</span>
+            <span class="qw-meta">10–11.9 kg (~1 yr)</span>
+          </button>
+          <button type="button" class="quick-weight-btn" data-color="Yellow" onclick="applyQuickWeight(13); closeAllPopovers();" title="Yellow (12–14.9 kg, ~2.5 yr)">
+            <span class="qw-dot" style="background:#FFEE58;"></span>
+            <span class="qw-name">Yellow · 13k</span>
+            <span class="qw-meta">12–14.9 kg (~2.5 yr)</span>
+          </button>
+          <button type="button" class="quick-weight-btn" data-color="White" onclick="applyQuickWeight(17); closeAllPopovers();" title="White (15–18.9 kg, ~4.5 yr)">
+            <span class="qw-dot" style="background:#FFFFFF; border:1px solid rgba(0,0,0,0.3);"></span>
+            <span class="qw-name">White · 17k</span>
+            <span class="qw-meta">15–18.9 kg (~4.5 yr)</span>
+          </button>
+          <button type="button" class="quick-weight-btn" data-color="Blue" onclick="applyQuickWeight(21); closeAllPopovers();" title="Blue (19–23.9 kg, ~6.5 yr)">
+            <span class="qw-dot" style="background:#40C4FF;"></span>
+            <span class="qw-name">Blue · 21k</span>
+            <span class="qw-meta">19–23.9 kg (~6.5 yr)</span>
+          </button>
+          <button type="button" class="quick-weight-btn" data-color="Orange" onclick="applyQuickWeight(27); closeAllPopovers();" title="Orange (24–29.9 kg, ~8.5 yr)">
+            <span class="qw-dot" style="background:#FFAB40;"></span>
+            <span class="qw-name">Orange · 27k</span>
+            <span class="qw-meta">24–29.9 kg (~8.5 yr)</span>
+          </button>
+          <button type="button" class="quick-weight-btn" data-color="Green" onclick="applyQuickWeight(33); closeAllPopovers();" title="Green (30–36 kg, ~10 yr)">
+            <span class="qw-dot" style="background:#69F0AE;"></span>
+            <span class="qw-name">Green · 33k</span>
+            <span class="qw-meta">30–36 kg (~10 yr)</span>
+          </button>
+          <button type="button" class="quick-weight-btn" data-color="Adolescent" onclick="applyQuickWeight(40); closeAllPopovers();" title="Adolescent (>36 kg, ~12 yr)">
+            <span class="qw-dot" style="background:#94A3B8;"></span>
+            <span class="qw-name">Adolescent · 40k</span>
+            <span class="qw-meta">&gt;36 kg (~12 yr)</span>
+          </button>
+        </div>
+
+        <div class="triage-popover-footer">
+          <button type="button" class="triage-full-btn" onclick="toggleBroselowPanel(); closeAllPopovers();">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0l12.6 12.6z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></svg>
+            <span>Full Broselow Equipment Drawer &rarr;</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Emergency PALS Floating Action Button -->
     <button class="pals-fab" onclick="showTab('pals')" title="เข้าถึง PALS Resuscitation ทันที (Alt+P)">
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg> PALS CODE
-    </button>
-    <button onclick="hardReload()" title="โหลดแอปใหม่">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg> Reload
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg>
+      <span>PALS CODE</span>
     </button>
   </div>
 

@@ -135,20 +135,8 @@ function toggleTriagePopover(e) {
 
 function toggleRefPopover(e) {
   if (e) e.stopPropagation();
-  const btn = document.getElementById('refPopoverBtn');
-  const menu = document.getElementById('refPopoverMenu');
-  const overflowBtn = document.getElementById('overflowBtn');
-  const overflowMenu = document.getElementById('overflowMenu');
-  const triageBtn = document.getElementById('triageDropdownBtn');
-  const triageMenu = document.getElementById('triagePopoverMenu');
-  if (overflowMenu) overflowMenu.classList.remove('open');
-  if (overflowBtn) overflowBtn.setAttribute('aria-expanded', 'false');
-  if (triageMenu) triageMenu.classList.remove('open');
-  if (triageBtn) triageBtn.setAttribute('aria-expanded', 'false');
-  if (menu) {
-    const isOpen = menu.classList.toggle('open');
-    if (btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-  }
+  closeAllPopovers();
+  openEvidenceModal();
 }
 
 function toggleOverflowMenu(e) {
@@ -576,6 +564,18 @@ const BROSELOW_COLOR_MAP = {
   'Green':  { bg: '#DCFCE7', fg: '#166534' }
 };
 
+const BROSELOW_SOLID_COLORS = {
+  'Grey': '#B0B0B0',
+  'Pink': '#FF80AB',
+  'Red': '#FF5252',
+  'Purple': '#B388FF',
+  'Yellow': '#FFEE58',
+  'White': '#FFFFFF',
+  'Blue': '#40C4FF',
+  'Orange': '#FFAB40',
+  'Green': '#69F0AE'
+};
+
 function renderBroselowMiniSpectrum() {
   const w = getWeight();
   const zone = getBroselowZone(w);
@@ -605,19 +605,24 @@ function renderBroselowMiniSpectrum() {
       btn.classList.toggle('active', isActive);
     });
 
-    // Update Futuristic Topbar HUD Capsule Readout
+    // Update Broselow FAB HUD Readout
     const hudDot = document.getElementById('triageHudDot');
     const hudLabel = document.getElementById('triageHudLabel');
     const hudVal = document.getElementById('triageHudVal');
+    const triageBtn = document.getElementById('triageDropdownBtn');
     if (hudLabel && hudVal) {
       if (zone && zoneColor && w > 0) {
         hudLabel.textContent = zoneColor;
         hudVal.textContent = `${w.toFixed(1)} kg`;
+        const solid = BROSELOW_SOLID_COLORS[zoneColor] || (BROSELOW_COLOR_MAP[zoneColor] ? BROSELOW_COLOR_MAP[zoneColor].bg : 'var(--accent)');
         if (hudDot) {
-          const palette = BROSELOW_COLOR_MAP[zoneColor] || null;
-          hudDot.style.background = palette ? palette.bg : 'var(--accent)';
-          hudDot.style.boxShadow = palette ? `0 0 6px ${palette.fg}` : '0 0 6px var(--accent)';
+          hudDot.style.background = solid;
+          hudDot.style.boxShadow = `0 0 8px ${solid}`;
           hudDot.classList.add('active');
+        }
+        if (triageBtn) {
+          const isMono = document.documentElement && document.documentElement.getAttribute('data-theme') === 'mono';
+          triageBtn.style.borderColor = isMono ? '' : solid;
         }
       } else {
         hudLabel.textContent = 'Broselow';
@@ -626,6 +631,9 @@ function renderBroselowMiniSpectrum() {
           hudDot.style.background = 'var(--muted)';
           hudDot.style.boxShadow = 'none';
           hudDot.classList.remove('active');
+        }
+        if (triageBtn) {
+          triageBtn.style.borderColor = '';
         }
       }
     }
