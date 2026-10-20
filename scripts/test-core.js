@@ -1987,22 +1987,49 @@ test('UI & UX Minimalism: Glare-Free Light Theme Contrast & Mobile Clearance Int
     return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
   }
 
-  // Verify calibrated light theme tokens exist in index.html
-  assert(html.includes('--bg: #F1F4F8;'), '--bg must be set to glare-free Medical Mist (#F1F4F8)');
-  assert(html.includes('--accent: #0277B6;'), '--accent must be set to surgical azure (#0277B6)');
-  assert(html.includes('--accent-text: #026AA2;'), '--accent-text must be calibrated for AAA contrast');
-  assert(html.includes('--good-text: #166534;'), '--good-text must be calibrated for AAA contrast');
-  assert(html.includes('--warning-text: #92400E;'), '--warning-text must be calibrated for AAA contrast');
-  assert(html.includes('--danger-text: #991B1B;'), '--danger-text must be calibrated for AAA contrast');
+  // Parse theme-scoped declarations
+  function parseThemeTokens(blockRegex) {
+    const match = html.match(blockRegex);
+    if (!match) return {};
+    const tokens = {};
+    for (const line of match[1].split('\n')) {
+      const m = line.match(/^\s*--([a-zA-Z0-9_-]+)\s*:\s*([^;]+);/);
+      if (m) tokens['--' + m[1]] = m[2].trim();
+    }
+    return tokens;
+  }
 
-  // Verify WCAG AA/AAA Mathematical Compliance
+  const lightTokens = parseThemeTokens(/:root\s*\{([^}]+)\}/);
+  const monoTokens = parseThemeTokens(/:root\[data-theme=["']mono["']\]\s*\{([^}]+)\}/);
+
+  // Verify calibrated light theme tokens
+  assert(lightTokens['--bg'] === '#F1F4F8', '--bg in :root must be glare-free Medical Mist (#F1F4F8)');
+  assert(lightTokens['--accent'] === '#0277B6', '--accent in :root must be surgical azure (#0277B6)');
+  assert(lightTokens['--accent-text'] === '#026AA2', '--accent-text in :root must be calibrated for AA/AAA contrast (#026AA2)');
+  assert(lightTokens['--good-text'] === '#166534', '--good-text in :root must be calibrated (#166534)');
+  assert(lightTokens['--warning-text'] === '#92400E', '--warning-text in :root must be calibrated (#92400E)');
+  assert(lightTokens['--danger-text'] === '#991B1B', '--danger-text in :root must be calibrated (#991B1B)');
+
+  // Verify calibrated mono theme tokens
+  assert(monoTokens['--accent-text'] === '#ECECE8', '--accent-text in :root[data-theme="mono"] must be light mono value (#ECECE8)');
+  assert(monoTokens['--card'] === '#20201E', '--card in :root[data-theme="mono"] must be dark elevated surface (#20201E)');
+
+  // Verify WCAG AA/AAA Mathematical Compliance for Light Theme
   const white = '#FFFFFF';
-  assert(getContrast(white, '#0277B6') >= 4.5, 'White on --accent must meet WCAG AA (>= 4.5:1)');
-  assert(getContrast('#026AA2', white) >= 4.5, '--accent-text on white card must meet WCAG AA');
-  assert(getContrast('#026AA2', '#E0F2FE') >= 4.5, '--accent-text on --accent-soft must meet WCAG AA');
-  assert(getContrast('#166534', '#ECFDF5') >= 6.0, '--good-text on --good-soft must exceed 6.0:1');
-  assert(getContrast('#92400E', '#FFFBEB') >= 6.0, '--warning-text on --warning-soft must exceed 6.0:1');
-  assert(getContrast('#991B1B', '#FEF2F2') >= 7.0, '--danger-text on --danger-soft must exceed WCAG AAA (>= 7.0:1)');
+  assert(getContrast(white, lightTokens['--accent']) >= 4.5, 'White on --accent in light theme must meet WCAG AA (>= 4.5:1)');
+  assert(getContrast(lightTokens['--accent-text'], lightTokens['--card']) >= 4.5, '--accent-text on white card in light theme must meet WCAG AA');
+  assert(getContrast(lightTokens['--accent-text'], lightTokens['--accent-soft']) >= 4.5, '--accent-text on --accent-soft in light theme must meet WCAG AA');
+  assert(getContrast(lightTokens['--good-text'], lightTokens['--good-soft']) >= 6.0, '--good-text on --good-soft in light theme must exceed 6.0:1');
+  assert(getContrast(lightTokens['--warning-text'], lightTokens['--warning-soft']) >= 6.0, '--warning-text on --warning-soft in light theme must exceed 6.0:1');
+  assert(getContrast(lightTokens['--danger-text'], lightTokens['--danger-soft']) >= 7.0, '--danger-text on --danger-soft in light theme must exceed WCAG AAA (>= 7.0:1)');
+
+  // Verify WCAG Compliance for Mono Theme & Consumer Contrast (.triage-popover-hint on dark --card)
+  const hintRule = html.match(/\.triage-popover-hint\s*\{([^}]+)\}/);
+  assert(hintRule && hintRule[1].includes('color: var(--accent-text);'), '.triage-popover-hint must consume var(--accent-text)');
+  assert(
+    getContrast(monoTokens['--accent-text'], monoTokens['--card']) >= 4.5,
+    'Mono --accent-text on mono --card surface (.triage-popover-hint in popover) must meet WCAG AA (>= 4.5:1)'
+  );
 
   // Verify dynamic --topbar-h responsive clearance in media queries
   assert(html.includes('@media (max-width: 960px) {\n      :root {\n        --topbar-h: 96px;'),

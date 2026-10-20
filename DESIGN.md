@@ -64,6 +64,7 @@
 - `--accent`: `#ECECE8` (Off-white accent for primary actions and active control backgrounds)
 - `--accent-soft`: `#2E2E2B` (Subtle grayscale container highlight tint)
 - `--accent-subtle`: `#262624` (Soft grayscale container background)
+- `--accent-text`: `#ECECE8` (High-contrast light mono text token, WCAG AAA > 13:1 on dark card surface)
 - **Active Controls & Combobox Highlight**: Employs **Tonal Inversion** (`#ECECE8` background with `#121210` dark graphite text and `#FFFFFF` 2px outline for active tabs, pills, and dropdown selections), guaranteeing > 14:1 contrast ratio without color dependencies (Key Decision #36).
 
 ### Night-Vision Red Theme Palette (`data-theme="red"`, v1.12.0)
