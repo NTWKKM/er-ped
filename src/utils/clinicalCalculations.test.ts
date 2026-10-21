@@ -81,21 +81,44 @@ test('WHO Growth Z-Score calculation for weight and height (male and female)', (
   const heavyChild = calcGrowthZScores(3, 19, 96, 'male');
   assert.ok(heavyChild);
   assert.equal(heavyChild.wazLabel, 'High Weight');
-  // Excess weight status is derived from Weight-for-Height for <5 yr
-  assert.equal(heavyChild.nutritionIndicator, 'WFH');
-  assert.equal(heavyChild.nutritionLabel, 'Obese');
+  assert.equal(heavyChild.nutritionIndicator, null);
+  assert.equal(heavyChild.nutritionLabel, null);
+  assert.equal(heavyChild.nutritionStatus, null);
+  assert.equal(heavyChild.bmi, 20.6);
 
-  // Adolescent children (> 10 yr): WAZ is suppressed (null) and replaced by HAZ and BMI-for-age
+  // Adolescent children (> 10 yr): WAZ is suppressed (null); HAZ and raw BMI are preserved
   const adolescent = calcGrowthZScores(12, 45, 150, 'male');
   assert.ok(adolescent);
   assert.equal(adolescent.waz, null);
   assert.equal(adolescent.wazLabel, null);
   assert.ok(adolescent.haz !== null);
-  assert.equal(adolescent.nutritionIndicator, 'BMI');
-  assert.equal(adolescent.nutritionLabel, 'Normal');
+  assert.equal(adolescent.bmi, 20);
+  assert.equal(adolescent.nutritionIndicator, null);
+  assert.equal(adolescent.nutritionLabel, null);
 
   // Adolescent children without height: returns null (hides unsupported WAZ badge)
   assert.equal(calcGrowthZScores(12, 45, null, 'male'), null);
+
+  // 60-month boundary test for both sexes: continuous interpolation across 4.99 yr vs 5.01 yr
+  const b59mo = calcGrowthZScores(4.99, 18.2, 109.9, 'male');
+  const b60mo = calcGrowthZScores(5.01, 18.3, 110.1, 'male');
+  assert.ok(b59mo && b60mo);
+  assert.ok(Math.abs((b59mo.waz ?? 0) - (b60mo.waz ?? 0)) <= 0.05);
+  assert.ok(Math.abs((b59mo.haz ?? 0) - (b60mo.haz ?? 0)) <= 0.05);
+
+  const g59mo = calcGrowthZScores(4.99, 18.1, 109.3, 'female');
+  const g60mo = calcGrowthZScores(5.01, 18.2, 109.5, 'female');
+  assert.ok(g59mo && g60mo);
+  assert.ok(Math.abs((g59mo.waz ?? 0) - (g60mo.waz ?? 0)) <= 0.05);
+  assert.ok(Math.abs((g59mo.haz ?? 0) - (g60mo.haz ?? 0)) <= 0.05);
+
+  // WFH band-edge boundary test: 97.5 cm vs 97.6 cm produces continuous HAZ without step-function jumps
+  const edge975 = calcGrowthZScores(3, 15, 97.5, 'male');
+  const edge976 = calcGrowthZScores(3, 15, 97.6, 'male');
+  assert.ok(edge975 && edge976);
+  assert.ok(Math.abs((edge975.haz ?? 0) - (edge976.haz ?? 0)) <= 0.05);
+  assert.equal(edge975.nutritionLabel, null);
+  assert.equal(edge976.nutritionLabel, null);
 });
 
 test('Unified drug dose resolution with safety ceilings and age restriction', () => {

@@ -165,63 +165,20 @@ export function calcGrowthZScores(
     }
   }
 
-  // Excess weight / body habitus indicator: Weight-for-height (<5y) and BMI-for-age (5-19y)
+  // Raw BMI calculation when height is provided; suppress unvalidated ratio-based WFH/BMI-for-age
+  // classifications because WHO sex-specific LMS reference tables for WFH/BMI-for-age are not included in dataset
   let bmi: number | null = null;
-  let nutritionIndicator: 'WFH' | 'BMI' | null = null;
-  let nutritionLabel: string | null = null;
-  let nutritionStatus: 'good' | 'warning' | 'danger' | null = null;
-
   if (Number.isFinite(h) && h > 0) {
     const heightM = h / 100;
     bmi = +(w / (heightM * heightM)).toFixed(1);
-
-    if (ageMo < 60) {
-      nutritionIndicator = 'WFH';
-      const refW = estimateWeightFromLength(h);
-      if (refW && refW > 0) {
-        const ratio = w / refW;
-        if (ratio > 1.3) {
-          nutritionStatus = 'danger';
-          nutritionLabel = 'Obese';
-        } else if (ratio > 1.2) {
-          nutritionStatus = 'warning';
-          nutritionLabel = 'Overweight';
-        } else if (ratio < 0.7) {
-          nutritionStatus = 'danger';
-          nutritionLabel = 'Severe Wasting';
-        } else if (ratio < 0.8) {
-          nutritionStatus = 'warning';
-          nutritionLabel = 'Wasted';
-        } else {
-          nutritionStatus = 'good';
-          nutritionLabel = 'Normal';
-        }
-      }
-    } else {
-      nutritionIndicator = 'BMI';
-      const medianBmi = wMed / ((hMed / 100) * (hMed / 100));
-      const ratio = bmi / medianBmi;
-      if (ratio > 1.3) {
-        nutritionStatus = 'danger';
-        nutritionLabel = 'Obese';
-      } else if (ratio > 1.15) {
-        nutritionStatus = 'warning';
-        nutritionLabel = 'Overweight';
-      } else if (ratio < 0.7) {
-        nutritionStatus = 'danger';
-        nutritionLabel = 'Severe Thinness';
-      } else if (ratio < 0.8) {
-        nutritionStatus = 'warning';
-        nutritionLabel = 'Thinness';
-      } else {
-        nutritionStatus = 'good';
-        nutritionLabel = 'Normal';
-      }
-    }
   }
 
+  const nutritionIndicator: 'WFH' | 'BMI' | null = null;
+  const nutritionLabel: string | null = null;
+  const nutritionStatus: 'good' | 'warning' | 'danger' | null = null;
+
   // If age > 10y and no height was entered, no supported growth indicator can be computed
-  if (waz === null && haz === null && nutritionLabel === null) {
+  if (waz === null && haz === null) {
     return null;
   }
 

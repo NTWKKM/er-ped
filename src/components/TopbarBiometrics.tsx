@@ -274,10 +274,16 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                     HAZ: {zScores.haz >= 0 ? `+${zScores.haz}` : zScores.haz} ({zScores.hazLabel})
                   </span>
                 )}
-                {zScores.nutritionLabel && (zScores.nutritionStatus !== 'good' || zScores.waz === null) && (
+                {zScores.waz === null && zScores.bmi !== null && (
                   <span>
-                    {zScores.waz !== null || zScores.haz !== null ? ' · ' : ''}
-                    {zScores.nutritionIndicator === 'BMI' && zScores.bmi ? `BMI ${zScores.bmi} ` : ''}
+                    {zScores.haz !== null ? ' · ' : ''}
+                    BMI {zScores.bmi}
+                  </span>
+                )}
+                {zScores.nutritionLabel && (
+                  <span>
+                    {zScores.waz !== null || zScores.haz !== null || zScores.bmi !== null ? ' · ' : ''}
+                    {zScores.nutritionIndicator ? `${zScores.nutritionIndicator} ` : ''}
                     ({zScores.nutritionLabel})
                   </span>
                 )}
