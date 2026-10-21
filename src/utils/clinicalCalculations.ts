@@ -134,8 +134,8 @@ export const WHO_WFA_LMS = {
     [-0.1417, 17.8422, 0.13325], // 57 mo
     [-0.1447, 18.0073, 0.13389], // 58 mo
     [-0.1477, 18.1722, 0.13453], // 59 mo
-    [-0.1922, 18.3328, 0.12947], // 60 mo
-    [-0.2026, 18.5057, 0.12988], // 61 mo
+    [-0.1506, 18.3366, 0.13517], // 60 mo (WHO Child Growth Standards through 60 completed months)
+    [-0.2026, 18.5057, 0.12988], // 61 mo (WHO Growth Reference 2007 from 61 months)
     [-0.213, 18.6802, 0.13028], // 62 mo
     [-0.2234, 18.8563, 0.13067], // 63 mo
     [-0.2338, 19.034, 0.13105], // 64 mo
@@ -257,8 +257,8 @@ export const WHO_WFA_LMS = {
     [-0.3479, 17.6916, 0.146], // 57 mo
     [-0.3492, 17.8686, 0.14675], // 58 mo
     [-0.3505, 18.0445, 0.14748], // 59 mo
-    [-0.465, 18.0823, 0.1424], // 60 mo
-    [-0.4681, 18.2579, 0.14295], // 61 mo
+    [-0.3518, 18.2193, 0.14821], // 60 mo (WHO Child Growth Standards through 60 completed months)
+    [-0.4681, 18.2579, 0.14295], // 61 mo (WHO Growth Reference 2007 from 61 months)
     [-0.4711, 18.4329, 0.1435], // 62 mo
     [-0.4742, 18.6073, 0.14404], // 63 mo
     [-0.4773, 18.7811, 0.14459], // 64 mo
@@ -427,13 +427,22 @@ export function calcGrowthZScores(
     const [l, m, s] = getInterpolatedLMS(ageMo, sex);
     wMed = m;
     const rawWaz = computeWhoWaz(w, l, m, s);
-    if (rawWaz < -3) {
+    // Snap tiny IEEE-754 floating point inaccuracies to exact integer SD thresholds (-3, -2, 2, 3)
+    let effectiveWaz = rawWaz;
+    for (const threshold of [-3, -2, 2, 3]) {
+      if (Math.abs(effectiveWaz - threshold) < 1e-12) {
+        effectiveWaz = threshold;
+        break;
+      }
+    }
+
+    if (effectiveWaz < -3) {
       wazStatus = 'danger';
       wazLabel = 'Severe Underweight';
-    } else if (rawWaz < -2) {
+    } else if (effectiveWaz < -2) {
       wazStatus = 'warning';
       wazLabel = 'Underweight';
-    } else if (rawWaz > 2) {
+    } else if (effectiveWaz > 2) {
       wazStatus = 'warning';
       wazLabel = 'High Weight';
     } else {

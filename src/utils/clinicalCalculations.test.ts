@@ -5,6 +5,8 @@ import {
   estimateWeightFromLength,
   calcBSA,
   calcGrowthZScores,
+  computeWhoWaz,
+  getInterpolatedLMS,
   getBroselowZone,
   resolveDrugDose,
   calcSchwartzEGFR,
@@ -120,156 +122,154 @@ test('WHO Growth Z-Score calculation for weight and height (male and female)', (
   assert.equal(edge975.nutritionLabel, null);
   assert.equal(edge976.nutritionLabel, null);
 
+  // Helper to compute exact threshold weight W = M * (1 + L * S * SD)^(1 / L)
+  const getExactWeight = (l: number, m: number, s: number, sd: number) =>
+    m * Math.pow(1 + l * s * sd, 1 / l);
+
   // WHO WAZ LMS method and fine-grained classification threshold validation (120-month boys and girls)
-  // Classify with unrounded score, round only displayed score (testing immediately below, at, and above thresholds)
+  // Classify with unrounded score, round only displayed score (testing immediately below, exactly at, and above thresholds)
   // Boys 120 mo (10 yr): L = -0.6764, M = 31.1586, S = 0.16305
-  // Exact cutoffs: -3 SD = 20.420 kg, -2 SD = 23.206 kg, Median = 31.159 kg, +2 SD = 45.038 kg
+  const bL = -0.6764, bM = 31.1586, bS = 0.16305;
   const boyMedian = calcGrowthZScores(10, 31.16, 137.8, 'male');
   assert.equal(boyMedian?.waz, 0);
   assert.equal(boyMedian?.wazLabel, 'Normal');
   assert.equal(boyMedian?.wazStatus, 'good');
 
-  // Boys: -2 SD threshold (23.206 kg)
-  // 23.10 kg (unrounded ~ -2.034, rounds to -2.0 but strictly Underweight)
+  // Boys: -2 SD threshold (exact W = 23.205996... kg)
+  const boyWNeg2 = getExactWeight(bL, bM, bS, -2);
+  // Regression test: 23.10 kg (rounds to -2.0, but unrounded ~ -2.034, strictly Underweight)
   const boyBelowNeg2 = calcGrowthZScores(10, 23.10, 137.8, 'male');
   assert.equal(boyBelowNeg2?.waz, -2);
   assert.equal(boyBelowNeg2?.wazLabel, 'Underweight');
   assert.equal(boyBelowNeg2?.wazStatus, 'warning');
 
-  // 23.19 kg (immediately below -2 SD threshold: ~ -2.005)
-  const boyImmedBelowNeg2 = calcGrowthZScores(10, 23.19, 137.8, 'male');
+  // Immediately below -2 SD threshold (W_exact - 0.005 kg)
+  const boyImmedBelowNeg2 = calcGrowthZScores(10, boyWNeg2 - 0.005, 137.8, 'male');
   assert.equal(boyImmedBelowNeg2?.waz, -2);
   assert.equal(boyImmedBelowNeg2?.wazLabel, 'Underweight');
   assert.equal(boyImmedBelowNeg2?.wazStatus, 'warning');
 
-  // 23.206 kg (at -2 SD threshold: ~ -2.000)
-  const boyAtNeg2 = calcGrowthZScores(10, 23.206, 137.8, 'male');
+  // Exact equality at -2 SD threshold (W_exact)
+  const boyAtNeg2 = calcGrowthZScores(10, boyWNeg2, 137.8, 'male');
   assert.equal(boyAtNeg2?.waz, -2);
   assert.equal(boyAtNeg2?.wazLabel, 'Normal');
   assert.equal(boyAtNeg2?.wazStatus, 'good');
 
-  // 23.22 kg (immediately above -2 SD threshold: ~ -1.996)
-  const boyImmedAboveNeg2 = calcGrowthZScores(10, 23.22, 137.8, 'male');
+  // Immediately above -2 SD threshold (W_exact + 0.005 kg)
+  const boyImmedAboveNeg2 = calcGrowthZScores(10, boyWNeg2 + 0.005, 137.8, 'male');
   assert.equal(boyImmedAboveNeg2?.waz, -2);
   assert.equal(boyImmedAboveNeg2?.wazLabel, 'Normal');
   assert.equal(boyImmedAboveNeg2?.wazStatus, 'good');
 
-  // 23.30 kg (above threshold: ~ -1.970)
-  const boyAboveNeg2 = calcGrowthZScores(10, 23.30, 137.8, 'male');
-  assert.equal(boyAboveNeg2?.waz, -2);
-  assert.equal(boyAboveNeg2?.wazLabel, 'Normal');
-  assert.equal(boyAboveNeg2?.wazStatus, 'good');
-
-  // Boys: +2 SD threshold (45.038 kg)
-  // 45.00 kg (immediately below +2 SD threshold: ~ 1.996)
-  const boyImmedBelowPos2 = calcGrowthZScores(10, 45.00, 137.8, 'male');
+  // Boys: +2 SD threshold (exact W = 45.038053... kg)
+  const boyWPos2 = getExactWeight(bL, bM, bS, 2);
+  // Immediately below +2 SD threshold (W_exact - 0.005 kg)
+  const boyImmedBelowPos2 = calcGrowthZScores(10, boyWPos2 - 0.005, 137.8, 'male');
   assert.equal(boyImmedBelowPos2?.waz, 2);
   assert.equal(boyImmedBelowPos2?.wazLabel, 'Normal');
   assert.equal(boyImmedBelowPos2?.wazStatus, 'good');
 
-  // 45.0380 kg (at +2 SD threshold: ~ 2.000)
-  const boyAtPos2 = calcGrowthZScores(10, 45.038, 137.8, 'male');
+  // Exact equality at +2 SD threshold (W_exact)
+  const boyAtPos2 = calcGrowthZScores(10, boyWPos2, 137.8, 'male');
   assert.equal(boyAtPos2?.waz, 2);
   assert.equal(boyAtPos2?.wazLabel, 'Normal');
   assert.equal(boyAtPos2?.wazStatus, 'good');
 
-  // 45.06 kg (immediately above +2 SD threshold: ~ 2.003)
-  const boyImmedAbovePos2 = calcGrowthZScores(10, 45.06, 137.8, 'male');
+  // Immediately above +2 SD threshold (W_exact + 0.005 kg)
+  const boyImmedAbovePos2 = calcGrowthZScores(10, boyWPos2 + 0.005, 137.8, 'male');
   assert.equal(boyImmedAbovePos2?.waz, 2);
   assert.equal(boyImmedAbovePos2?.wazLabel, 'High Weight');
   assert.equal(boyImmedAbovePos2?.wazStatus, 'warning');
 
-  // 45.10 kg (above +2 SD threshold: ~ 2.008)
-  const boyAbovePos2 = calcGrowthZScores(10, 45.10, 137.8, 'male');
-  assert.equal(boyAbovePos2?.waz, 2);
-  assert.equal(boyAbovePos2?.wazLabel, 'High Weight');
-  assert.equal(boyAbovePos2?.wazStatus, 'warning');
-
-  // Boys: -3 SD threshold (20.420 kg)
-  // 20.40 kg (immediately below -3 SD threshold: ~ -3.007)
-  const boyImmedBelowNeg3 = calcGrowthZScores(10, 20.40, 137.8, 'male');
+  // Boys: -3 SD threshold (exact W = 20.420117... kg)
+  const boyWNeg3 = getExactWeight(bL, bM, bS, -3);
+  // Immediately below -3 SD threshold (W_exact - 0.005 kg)
+  const boyImmedBelowNeg3 = calcGrowthZScores(10, boyWNeg3 - 0.005, 137.8, 'male');
   assert.equal(boyImmedBelowNeg3?.waz, -3);
   assert.equal(boyImmedBelowNeg3?.wazLabel, 'Severe Underweight');
   assert.equal(boyImmedBelowNeg3?.wazStatus, 'danger');
 
-  // 20.42012 kg (at -3 SD threshold: ~ -3.000)
-  const boyAtNeg3 = calcGrowthZScores(10, 20.42012, 137.8, 'male');
+  // Exact equality at -3 SD threshold (W_exact)
+  const boyAtNeg3 = calcGrowthZScores(10, boyWNeg3, 137.8, 'male');
   assert.equal(boyAtNeg3?.waz, -3);
   assert.equal(boyAtNeg3?.wazLabel, 'Underweight');
   assert.equal(boyAtNeg3?.wazStatus, 'warning');
 
-  // 20.44 kg (immediately above -3 SD threshold: ~ -2.993)
-  const boyImmedAboveNeg3 = calcGrowthZScores(10, 20.44, 137.8, 'male');
+  // Immediately above -3 SD threshold (W_exact + 0.005 kg)
+  const boyImmedAboveNeg3 = calcGrowthZScores(10, boyWNeg3 + 0.005, 137.8, 'male');
   assert.equal(boyImmedAboveNeg3?.waz, -3);
   assert.equal(boyImmedAboveNeg3?.wazLabel, 'Underweight');
   assert.equal(boyImmedAboveNeg3?.wazStatus, 'warning');
 
   // Girls 120 mo (10 yr): L = -0.5958, M = 31.8578, S = 0.17262
-  // Exact cutoffs: -3 SD = 20.286 kg, -2 SD = 23.274 kg, Median = 31.858 kg, +2 SD = 46.890 kg
+  const gL = -0.5958, gM = 31.8578, gS = 0.17262;
   const girlMedian = calcGrowthZScores(10, 31.86, 138.0, 'female');
   assert.equal(girlMedian?.waz, 0);
   assert.equal(girlMedian?.wazLabel, 'Normal');
   assert.equal(girlMedian?.wazStatus, 'good');
 
-  // Girls: -2 SD threshold (23.274 kg)
-  // 23.20 kg (below -2 SD threshold: ~ -2.025)
+  // Girls: -2 SD threshold (exact W = 23.273739... kg)
+  const girlWNeg2 = getExactWeight(gL, gM, gS, -2);
+  // Below -2 SD threshold: 23.20 kg
   const girlBelowNeg2 = calcGrowthZScores(10, 23.20, 138.0, 'female');
   assert.equal(girlBelowNeg2?.waz, -2);
   assert.equal(girlBelowNeg2?.wazLabel, 'Underweight');
   assert.equal(girlBelowNeg2?.wazStatus, 'warning');
 
-  // 23.25 kg (immediately below -2 SD threshold: ~ -2.008)
-  const girlImmedBelowNeg2 = calcGrowthZScores(10, 23.25, 138.0, 'female');
+  // Immediately below -2 SD threshold (W_exact - 0.005 kg)
+  const girlImmedBelowNeg2 = calcGrowthZScores(10, girlWNeg2 - 0.005, 138.0, 'female');
   assert.equal(girlImmedBelowNeg2?.waz, -2);
   assert.equal(girlImmedBelowNeg2?.wazLabel, 'Underweight');
   assert.equal(girlImmedBelowNeg2?.wazStatus, 'warning');
 
-  // 23.2738 kg (at -2 SD threshold: ~ -2.000)
-  const girlAtNeg2 = calcGrowthZScores(10, 23.2738, 138.0, 'female');
+  // Exact equality at -2 SD threshold (W_exact)
+  const girlAtNeg2 = calcGrowthZScores(10, girlWNeg2, 138.0, 'female');
   assert.equal(girlAtNeg2?.waz, -2);
   assert.equal(girlAtNeg2?.wazLabel, 'Normal');
   assert.equal(girlAtNeg2?.wazStatus, 'good');
 
-  // 23.30 kg (immediately above -2 SD threshold: ~ -1.991)
-  const girlImmedAboveNeg2 = calcGrowthZScores(10, 23.30, 138.0, 'female');
+  // Immediately above -2 SD threshold (W_exact + 0.005 kg)
+  const girlImmedAboveNeg2 = calcGrowthZScores(10, girlWNeg2 + 0.005, 138.0, 'female');
   assert.equal(girlImmedAboveNeg2?.waz, -2);
   assert.equal(girlImmedAboveNeg2?.wazLabel, 'Normal');
   assert.equal(girlImmedAboveNeg2?.wazStatus, 'good');
 
-  // Girls: +2 SD threshold (46.890 kg)
-  // 46.85 kg (immediately below +2 SD threshold: ~ 1.996)
-  const girlImmedBelowPos2 = calcGrowthZScores(10, 46.85, 138.0, 'female');
+  // Girls: +2 SD threshold (exact W = 46.889730... kg)
+  const girlWPos2 = getExactWeight(gL, gM, gS, 2);
+  // Immediately below +2 SD threshold (W_exact - 0.005 kg)
+  const girlImmedBelowPos2 = calcGrowthZScores(10, girlWPos2 - 0.005, 138.0, 'female');
   assert.equal(girlImmedBelowPos2?.waz, 2);
   assert.equal(girlImmedBelowPos2?.wazLabel, 'Normal');
   assert.equal(girlImmedBelowPos2?.wazStatus, 'good');
 
-  // 46.8897 kg (at +2 SD threshold: ~ 2.000)
-  const girlAtPos2 = calcGrowthZScores(10, 46.8897, 138.0, 'female');
+  // Exact equality at +2 SD threshold (W_exact)
+  const girlAtPos2 = calcGrowthZScores(10, girlWPos2, 138.0, 'female');
   assert.equal(girlAtPos2?.waz, 2);
   assert.equal(girlAtPos2?.wazLabel, 'Normal');
   assert.equal(girlAtPos2?.wazStatus, 'good');
 
-  // 46.95 kg (immediately above +2 SD threshold: ~ 2.006)
-  const girlImmedAbovePos2 = calcGrowthZScores(10, 46.95, 138.0, 'female');
+  // Immediately above +2 SD threshold (W_exact + 0.005 kg)
+  const girlImmedAbovePos2 = calcGrowthZScores(10, girlWPos2 + 0.005, 138.0, 'female');
   assert.equal(girlImmedAbovePos2?.waz, 2);
   assert.equal(girlImmedAbovePos2?.wazLabel, 'High Weight');
   assert.equal(girlImmedAbovePos2?.wazStatus, 'warning');
 
-  // Girls: -3 SD threshold (20.286 kg)
-  // 20.25 kg (immediately below -3 SD threshold: ~ -3.013)
-  const girlImmedBelowNeg3 = calcGrowthZScores(10, 20.25, 138.0, 'female');
+  // Girls: -3 SD threshold (exact W = 20.286078... kg)
+  const girlWNeg3 = getExactWeight(gL, gM, gS, -3);
+  // Immediately below -3 SD threshold (W_exact - 0.005 kg)
+  const girlImmedBelowNeg3 = calcGrowthZScores(10, girlWNeg3 - 0.005, 138.0, 'female');
   assert.equal(girlImmedBelowNeg3?.waz, -3);
   assert.equal(girlImmedBelowNeg3?.wazLabel, 'Severe Underweight');
   assert.equal(girlImmedBelowNeg3?.wazStatus, 'danger');
 
-  // 20.2861 kg (at -3 SD threshold: ~ -3.000)
-  const girlAtNeg3 = calcGrowthZScores(10, 20.2861, 138.0, 'female');
+  // Exact equality at -3 SD threshold (W_exact)
+  const girlAtNeg3 = calcGrowthZScores(10, girlWNeg3, 138.0, 'female');
   assert.equal(girlAtNeg3?.waz, -3);
   assert.equal(girlAtNeg3?.wazLabel, 'Underweight');
   assert.equal(girlAtNeg3?.wazStatus, 'warning');
 
-  // 20.32 kg (immediately above -3 SD threshold: ~ -2.988)
-  const girlImmedAboveNeg3 = calcGrowthZScores(10, 20.32, 138.0, 'female');
+  // Immediately above -3 SD threshold (W_exact + 0.005 kg)
+  const girlImmedAboveNeg3 = calcGrowthZScores(10, girlWNeg3 + 0.005, 138.0, 'female');
   assert.equal(girlImmedAboveNeg3?.waz, -3);
   assert.equal(girlImmedAboveNeg3?.wazLabel, 'Underweight');
   assert.equal(girlImmedAboveNeg3?.wazStatus, 'warning');
@@ -292,8 +292,8 @@ test('WHO Growth Z-Score calculation for weight and height (male and female)', (
     { ageYr: 1, sex: 'female', med: 8.95, neg2: 7.04, pos2: 11.51 },
     { ageYr: 2, sex: 'male', med: 12.15, neg2: 9.67, pos2: 15.28 },
     { ageYr: 2, sex: 'female', med: 11.48, neg2: 9.04, pos2: 14.85 },
-    { ageYr: 5, sex: 'male', med: 18.33, neg2: 14.24, pos2: 23.91 },
-    { ageYr: 5, sex: 'female', med: 18.08, neg2: 13.84, pos2: 24.54 },
+    { ageYr: 5, sex: 'male', med: 18.34, neg2: 14.07, pos2: 24.16 },
+    { ageYr: 5, sex: 'female', med: 18.22, neg2: 13.74, pos2: 24.92 },
     { ageYr: 7, sex: 'male', med: 22.89, neg2: 17.65, pos2: 30.69 },
     { ageYr: 7, sex: 'female', med: 22.37, neg2: 16.78, pos2: 31.44 },
   ];
@@ -316,6 +316,69 @@ test('WHO Growth Z-Score calculation for weight and height (male and female)', (
       resPos2?.wazLabel === 'Normal' || resPos2?.wazLabel === 'High Weight',
       `Expected Normal or High Weight at +2 SD for ${cp.sex} at ${cp.ageYr} yr`
     );
+  }
+});
+
+test('WHO Anthro and AnthroPlus independent reference output comparison (fractional ages and tails)', () => {
+  // Benchmark cases from official WHO AnthroPlus survey dataset (survey_who2007_z.csv)
+  // across diverse fractional ages, sexes, and extreme tail values (|WAZ| > 3 to > 6 SD).
+  // Demonstrates full agreement with official WHO software outputs.
+  const whoBenchmarks: Array<{
+    id: number;
+    sex: 'male' | 'female';
+    ageMo: number;
+    wt: number;
+    expectedWaz: number;
+    isTail?: boolean;
+  }> = [
+    // Standard fractional age cases across childhood
+    { id: 6, sex: 'male', ageMo: 80.65, wt: 18.8, expectedWaz: -1.26 },
+    { id: 10, sex: 'male', ageMo: 89.78, wt: 25.3, expectedWaz: 0.35 },
+    { id: 21, sex: 'female', ageMo: 74.27, wt: 29.7, expectedWaz: 2.23 },
+    { id: 28, sex: 'male', ageMo: 78.74, wt: 16.6, expectedWaz: -2.13 },
+    { id: 35, sex: 'female', ageMo: 97.94, wt: 29.7, expectedWaz: 0.90 },
+    { id: 40, sex: 'male', ageMo: 115.09, wt: 30.9, expectedWaz: 0.22 },
+    // Extreme positive tail cases (> +3 SD) testing WHO restricted SD tail formula
+    { id: 748, sex: 'female', ageMo: 61.99, wt: 30.5, expectedWaz: 3.14, isTail: true },
+    { id: 488, sex: 'female', ageMo: 98.59, wt: 50.3, expectedWaz: 3.54, isTail: true },
+    { id: 161, sex: 'male', ageMo: 66.27, wt: 34.4, expectedWaz: 4.23, isTail: true },
+    { id: 465, sex: 'male', ageMo: 101.29, wt: 66.2, expectedWaz: 5.89, isTail: true },
+    { id: 640, sex: 'male', ageMo: 64.97, wt: 41.6, expectedWaz: 6.24, isTail: true },
+  ];
+
+  for (const b of whoBenchmarks) {
+    const [l, m, s] = getInterpolatedLMS(b.ageMo, b.sex);
+    const unroundedZ = computeWhoWaz(b.wt, l, m, s);
+    // Unrounded computed Z matches WHO official software output within 0.005 Z-score across all ages and tails
+    assert.ok(
+      Math.abs(unroundedZ - b.expectedWaz) < 0.005,
+      `Case ${b.id} (${b.sex}, ${b.ageMo} mo, ${b.wt} kg): expected ${b.expectedWaz}, got ${unroundedZ.toFixed(4)}`
+    );
+
+    // End-to-end calcGrowthZScores integration check
+    const zScoreRes = calcGrowthZScores(b.ageMo / 12, b.wt, 120, b.sex);
+    assert.ok(zScoreRes);
+    // Displayed WAZ rounds to 1 decimal place, matching WHO output rounded to 1 decimal place
+    const expectedRounded = Math.abs(b.expectedWaz) < 0.05 ? 0 : +b.expectedWaz.toFixed(1);
+    assert.equal(
+      zScoreRes.waz,
+      expectedRounded,
+      `Case ${b.id} rounded display mismatch: expected ${expectedRounded}, got ${zScoreRes.waz}`
+    );
+
+    if (b.expectedWaz > 2) {
+      assert.equal(zScoreRes.wazLabel, 'High Weight');
+      assert.equal(zScoreRes.wazStatus, 'warning');
+    } else if (b.expectedWaz < -3) {
+      assert.equal(zScoreRes.wazLabel, 'Severe Underweight');
+      assert.equal(zScoreRes.wazStatus, 'danger');
+    } else if (b.expectedWaz < -2) {
+      assert.equal(zScoreRes.wazLabel, 'Underweight');
+      assert.equal(zScoreRes.wazStatus, 'warning');
+    } else {
+      assert.equal(zScoreRes.wazLabel, 'Normal');
+      assert.equal(zScoreRes.wazStatus, 'good');
+    }
   }
 });
 
