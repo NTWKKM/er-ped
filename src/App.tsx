@@ -69,12 +69,15 @@ export default function App() {
     return null;
   }, [bio.useIBW, bio.rawWeight, ibwWeight]);
 
-  const handleWeightChange = (val: string) => {
+  const handleWeightChange = (
+    val: string,
+    source: 'manual' | 'broselow' = 'manual'
+  ) => {
     setBio((prev) => ({
       ...prev,
       rawWeight: val,
       useIBW: false,
-      weightSource: val && parseFloat(val) > 0 ? 'manual' : null,
+      weightSource: val && parseFloat(val) > 0 ? source : null,
     }));
   };
 
@@ -86,7 +89,7 @@ export default function App() {
       val = String(maxLimit);
     }
     setBio((prev) => {
-      if (prev.weightSource === 'manual' && parseFloat(prev.rawWeight) > 0) {
+      if ((prev.weightSource === 'manual' || prev.weightSource === 'broselow') && parseFloat(prev.rawWeight) > 0) {
         return { ...prev, rawAge: val, useIBW: false };
       }
       const estW =
@@ -236,7 +239,7 @@ export default function App() {
         previewColor={broselowPreviewColor}
         onClose={() => setBroselowOpen(false)}
         onSelectZoneWeight={(kg, color) => {
-          handleWeightChange(String(kg));
+          handleWeightChange(String(kg), 'broselow');
           setBroselowPreviewColor(color);
         }}
       />

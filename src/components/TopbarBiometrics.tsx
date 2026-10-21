@@ -12,7 +12,7 @@ export interface BiometricState {
   sex: 'male' | 'female';
   rawHeight: string;
   useIBW: boolean;
-  weightSource: 'manual' | 'estimated' | null;
+  weightSource: 'manual' | 'estimated' | 'broselow' | null;
   serumCr: string;
 }
 
@@ -21,7 +21,7 @@ interface TopbarBiometricsProps {
   activeWeight: number | null;
   ibwWeight: number | null;
   theme: 'light' | 'dark' | 'mono' | 'red';
-  onWeightChange: (val: string) => void;
+  onWeightChange: (val: string, source?: 'manual' | 'broselow') => void;
   onAgeChange: (val: string) => void;
   onToggleAgeUnit: () => void;
   onToggleSex: () => void;
@@ -97,13 +97,39 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
         isEmpty: false,
       };
     }
+    if (bio.weightSource === 'broselow') {
+      const bandName = activeBand ? ` · ${activeBand.color}` : '';
+      return {
+        label: `Broselow band${bandName}`,
+        compactLabel: activeBand ? activeBand.color : 'Broselow',
+        isDerived: true,
+        isEmpty: false,
+      };
+    }
+    if (bio.weightSource === 'manual') {
+      return {
+        label: 'measured',
+        compactLabel: 'measured',
+        isDerived: false,
+        isEmpty: false,
+      };
+    }
     return {
-      label: 'measured',
-      compactLabel: 'measured',
-      isDerived: false,
+      label: 'estimated',
+      compactLabel: 'estimated',
+      isDerived: true,
       isEmpty: false,
     };
-  }, [activeWeight, bio.useIBW, ibwWeight, bio.rawHeight, bio.weightSource, bio.rawAge, bio.ageUnit]);
+  }, [
+    activeWeight,
+    bio.useIBW,
+    ibwWeight,
+    bio.rawHeight,
+    bio.weightSource,
+    bio.rawAge,
+    bio.ageUnit,
+    activeBand,
+  ]);
 
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--card)]/95 backdrop-blur-md no-print shadow-xs">

@@ -64,6 +64,10 @@ test('WHO Growth Z-Score calculation for weight and height (male and female)', (
   assert.equal(resFemale.waz, 0);
   assert.equal(resFemale.wazLabel, 'Normal');
   assert.equal(resFemale.haz, 0);
+
+  // Unmeasured / non-manual weight returns null (gates WAZ to measured values only)
+  assert.equal(calcGrowthZScores(2, null, 87.8, 'male'), null);
+  assert.equal(calcGrowthZScores(2, undefined, 87.8, 'male'), null);
 });
 
 test('Unified drug dose resolution with safety ceilings and age restriction', () => {
