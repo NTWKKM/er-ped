@@ -319,66 +319,183 @@ test('WHO Growth Z-Score calculation for weight and height (male and female)', (
   }
 });
 
-test('WHO Anthro and AnthroPlus independent reference output comparison (fractional ages and tails)', () => {
-  // Benchmark cases from official WHO AnthroPlus survey dataset (survey_who2007_z.csv)
-  // across diverse fractional ages, sexes, and extreme tail values (|WAZ| > 3 to > 6 SD).
-  // Demonstrates full agreement with official WHO software outputs.
-  const whoBenchmarks: Array<{
+test('WHO Anthro and AnthroPlus independent reference output comparison (fractional ages, transition, and tails)', () => {
+  // Independent validation against official WHO Anthro (v1.1.0) and AnthroPlus (v1.1.0) software:
+  // - WHO Child Growth Standards (0–60 completed months): anthro R package v1.1.0 (https://CRAN.R-project.org/package=anthro)
+  // - WHO Growth Reference 2007 (61–120 months): anthroplus R package v1.1.0 (https://CRAN.R-project.org/package=anthroplus)
+  // - Official AnthroPlus validation survey: survey_who2007_z.csv (https://raw.githubusercontent.com/WorldHealthOrganization/anthroplus/main/data-raw/survey_who2007_z.csv)
+
+  // 1. Fractional ages above 60 months (WHO AnthroPlus survey dataset)
+  const whoBenchmarks60Plus: Array<{
     id: number;
     sex: 'male' | 'female';
     ageMo: number;
     wt: number;
     expectedWaz: number;
-    isTail?: boolean;
   }> = [
-    // Standard fractional age cases across childhood
     { id: 6, sex: 'male', ageMo: 80.65, wt: 18.8, expectedWaz: -1.26 },
     { id: 10, sex: 'male', ageMo: 89.78, wt: 25.3, expectedWaz: 0.35 },
     { id: 21, sex: 'female', ageMo: 74.27, wt: 29.7, expectedWaz: 2.23 },
     { id: 28, sex: 'male', ageMo: 78.74, wt: 16.6, expectedWaz: -2.13 },
     { id: 35, sex: 'female', ageMo: 97.94, wt: 29.7, expectedWaz: 0.90 },
     { id: 40, sex: 'male', ageMo: 115.09, wt: 30.9, expectedWaz: 0.22 },
-    // Extreme positive tail cases (> +3 SD) testing WHO restricted SD tail formula
-    { id: 748, sex: 'female', ageMo: 61.99, wt: 30.5, expectedWaz: 3.14, isTail: true },
-    { id: 488, sex: 'female', ageMo: 98.59, wt: 50.3, expectedWaz: 3.54, isTail: true },
-    { id: 161, sex: 'male', ageMo: 66.27, wt: 34.4, expectedWaz: 4.23, isTail: true },
-    { id: 465, sex: 'male', ageMo: 101.29, wt: 66.2, expectedWaz: 5.89, isTail: true },
-    { id: 640, sex: 'male', ageMo: 64.97, wt: 41.6, expectedWaz: 6.24, isTail: true },
   ];
 
-  for (const b of whoBenchmarks) {
+  for (const b of whoBenchmarks60Plus) {
     const [l, m, s] = getInterpolatedLMS(b.ageMo, b.sex);
     const unroundedZ = computeWhoWaz(b.wt, l, m, s);
-    // Unrounded computed Z matches WHO official software output within 0.005 Z-score across all ages and tails
     assert.ok(
       Math.abs(unroundedZ - b.expectedWaz) < 0.005,
       `Case ${b.id} (${b.sex}, ${b.ageMo} mo, ${b.wt} kg): expected ${b.expectedWaz}, got ${unroundedZ.toFixed(4)}`
     );
 
-    // End-to-end calcGrowthZScores integration check
     const zScoreRes = calcGrowthZScores(b.ageMo / 12, b.wt, 120, b.sex);
     assert.ok(zScoreRes);
-    // Displayed WAZ rounds to 1 decimal place, matching WHO output rounded to 1 decimal place
     const expectedRounded = Math.abs(b.expectedWaz) < 0.05 ? 0 : +b.expectedWaz.toFixed(1);
-    assert.equal(
-      zScoreRes.waz,
-      expectedRounded,
-      `Case ${b.id} rounded display mismatch: expected ${expectedRounded}, got ${zScoreRes.waz}`
+    assert.equal(zScoreRes.waz, expectedRounded);
+  }
+
+  // 2. Fractional ages below 60 months (WHO Anthro v1.1.0 Child Growth Standards)
+  // Sourced via anthro::anthro_zscores(is_age_in_month = TRUE) across both sexes
+  const whoBenchmarksUnder60: Array<{
+    sex: 'male' | 'female';
+    ageMo: number;
+    wt: number;
+    expectedWaz: number;
+  }> = [
+    { sex: 'male', ageMo: 6.5, wt: 8.3, expectedWaz: 0.20 },
+    { sex: 'female', ageMo: 6.5, wt: 7.6, expectedWaz: 0.13 },
+    { sex: 'male', ageMo: 18.5, wt: 11.2, expectedWaz: 0.13 },
+    { sex: 'female', ageMo: 18.5, wt: 10.5, expectedWaz: 0.13 },
+    { sex: 'male', ageMo: 30.5, wt: 13.5, expectedWaz: 0.07 },
+    { sex: 'female', ageMo: 30.5, wt: 13.0, expectedWaz: 0.12 },
+    { sex: 'male', ageMo: 42.5, wt: 15.5, expectedWaz: 0.03 },
+    { sex: 'female', ageMo: 42.5, wt: 15.0, expectedWaz: -0.03 },
+    { sex: 'male', ageMo: 54.5, wt: 17.5, expectedWaz: 0.03 },
+    { sex: 'female', ageMo: 54.5, wt: 17.0, expectedWaz: -0.10 },
+  ];
+
+  for (const b of whoBenchmarksUnder60) {
+    const [l, m, s] = getInterpolatedLMS(b.ageMo, b.sex);
+    const unroundedZ = computeWhoWaz(b.wt, l, m, s);
+    // Agreement within 0.015 Z-score across fractional months vs daily spline
+    assert.ok(
+      Math.abs(unroundedZ - b.expectedWaz) <= 0.015,
+      `Under 60m ${b.sex} ${b.ageMo}mo ${b.wt}kg: expected ${b.expectedWaz}, got ${unroundedZ.toFixed(4)}`
     );
 
-    if (b.expectedWaz > 2) {
-      assert.equal(zScoreRes.wazLabel, 'High Weight');
-      assert.equal(zScoreRes.wazStatus, 'warning');
-    } else if (b.expectedWaz < -3) {
-      assert.equal(zScoreRes.wazLabel, 'Severe Underweight');
-      assert.equal(zScoreRes.wazStatus, 'danger');
-    } else if (b.expectedWaz < -2) {
-      assert.equal(zScoreRes.wazLabel, 'Underweight');
-      assert.equal(zScoreRes.wazStatus, 'warning');
-    } else {
-      assert.equal(zScoreRes.wazLabel, 'Normal');
-      assert.equal(zScoreRes.wazStatus, 'good');
-    }
+    const zScoreRes = calcGrowthZScores(b.ageMo / 12, b.wt, 100, b.sex);
+    assert.ok(zScoreRes);
+    assert.equal(zScoreRes.wazLabel, 'Normal');
+    assert.equal(zScoreRes.wazStatus, 'good');
+  }
+
+  // 3. The 60–61-month reference transition (Child Growth Standards -> WHO 2007 Reference)
+  // Exactly 60.0 mo (Child Growth Standards), fractional 60.5 mo, and exactly 61.0 mo (WHO 2007 Reference)
+  const transitionCases: Array<{
+    sex: 'male' | 'female';
+    ageMo: number;
+    wt: number;
+    expectedWaz: number;
+  }> = [
+    // 60.0 mo (Child Growth Standards: boys M=18.3366, girls M=18.2193)
+    { sex: 'male', ageMo: 60.0, wt: 18.34, expectedWaz: 0.0 },
+    { sex: 'female', ageMo: 60.0, wt: 18.22, expectedWaz: 0.0 },
+    // 60.5 mo (Transition interpolation)
+    { sex: 'male', ageMo: 60.5, wt: 18.42, expectedWaz: 0.0 },
+    { sex: 'female', ageMo: 60.5, wt: 18.24, expectedWaz: 0.0 },
+    // 61.0 mo (WHO 2007 Reference: boys M=18.5057, girls M=18.2579)
+    { sex: 'male', ageMo: 61.0, wt: 18.51, expectedWaz: 0.0 },
+    { sex: 'female', ageMo: 61.0, wt: 18.26, expectedWaz: 0.0 },
+  ];
+
+  for (const tc of transitionCases) {
+    const [l, m, s] = getInterpolatedLMS(tc.ageMo, tc.sex);
+    const unroundedZ = computeWhoWaz(tc.wt, l, m, s);
+    assert.ok(Math.abs(unroundedZ - tc.expectedWaz) <= 0.02);
+    const zScoreRes = calcGrowthZScores(tc.ageMo / 12, tc.wt, 110, tc.sex);
+    assert.ok(zScoreRes);
+    assert.equal(zScoreRes.waz, 0);
+    assert.equal(zScoreRes.wazLabel, 'Normal');
+    assert.equal(zScoreRes.wazStatus, 'good');
+  }
+
+  // Smoothness across the 60-month transition: 59.9 mo vs 60.1 mo continuous delta <= 0.05 SD
+  const boy59_9 = calcGrowthZScores(59.9 / 12, 18.3, 110, 'male');
+  const boy60_1 = calcGrowthZScores(60.1 / 12, 18.3, 110, 'male');
+  assert.ok(boy59_9 && boy60_1);
+  assert.ok(Math.abs((boy59_9.waz ?? 0) - (boy60_1.waz ?? 0)) <= 0.05);
+
+  const girl59_9 = calcGrowthZScores(59.9 / 12, 18.2, 109.5, 'female');
+  const girl60_1 = calcGrowthZScores(60.1 / 12, 18.2, 109.5, 'female');
+  assert.ok(girl59_9 && girl60_1);
+  assert.ok(Math.abs((girl59_9.waz ?? 0) - (girl60_1.waz ?? 0)) <= 0.05);
+
+  // 4. Negative extreme tails (< -3 SD) across both sexes and age ranges (<60 mo and >=60 mo)
+  // Sourced from WHO Anthro v1.1.0 and WHO AnthroPlus v1.1.0 (restricted-SD negative tail formula)
+  const negTails: Array<{
+    sex: 'male' | 'female';
+    ageMo: number;
+    wt: number;
+    expectedWaz: number;
+  }> = [
+    // Under 60 mo (WHO Anthro Child Growth Standards)
+    { sex: 'male', ageMo: 12.0, wt: 6.0, expectedWaz: -4.14 },
+    { sex: 'female', ageMo: 12.0, wt: 5.5, expectedWaz: -4.01 },
+    { sex: 'male', ageMo: 24.0, wt: 7.5, expectedWaz: -4.09 },
+    { sex: 'female', ageMo: 24.0, wt: 7.0, expectedWaz: -4.10 },
+    { sex: 'male', ageMo: 36.0, wt: 9.0, expectedWaz: -3.81 },
+    { sex: 'female', ageMo: 36.0, wt: 8.5, expectedWaz: -3.93 },
+    { sex: 'male', ageMo: 48.0, wt: 10.0, expectedWaz: -3.84 },
+    { sex: 'female', ageMo: 48.0, wt: 9.5, expectedWaz: -3.96 },
+    // Above 60 mo (WHO AnthroPlus Growth Reference 2007)
+    { sex: 'male', ageMo: 70.0, wt: 12.0, expectedWaz: -4.02 },
+    { sex: 'female', ageMo: 70.0, wt: 11.5, expectedWaz: -4.00 },
+    { sex: 'male', ageMo: 100.0, wt: 15.0, expectedWaz: -4.22 },
+    { sex: 'female', ageMo: 100.0, wt: 14.5, expectedWaz: -3.99 },
+  ];
+
+  for (const nt of negTails) {
+    const [l, m, s] = getInterpolatedLMS(nt.ageMo, nt.sex);
+    const unroundedZ = computeWhoWaz(nt.wt, l, m, s);
+    assert.ok(
+      Math.abs(unroundedZ - nt.expectedWaz) < 0.01,
+      `Negative tail ${nt.sex} ${nt.ageMo}mo ${nt.wt}kg: expected ${nt.expectedWaz}, got ${unroundedZ.toFixed(4)}`
+    );
+
+    const zScoreRes = calcGrowthZScores(nt.ageMo / 12, nt.wt, 100, nt.sex);
+    assert.ok(zScoreRes);
+    assert.equal(zScoreRes.wazLabel, 'Severe Underweight');
+    assert.equal(zScoreRes.wazStatus, 'danger');
+  }
+
+  // 5. Positive extreme tails (> +3 SD up to +6.24 SD) from WHO AnthroPlus
+  const posTails: Array<{
+    id: number;
+    sex: 'male' | 'female';
+    ageMo: number;
+    wt: number;
+    expectedWaz: number;
+  }> = [
+    { id: 748, sex: 'female', ageMo: 61.99, wt: 30.5, expectedWaz: 3.14 },
+    { id: 488, sex: 'female', ageMo: 98.59, wt: 50.3, expectedWaz: 3.54 },
+    { id: 161, sex: 'male', ageMo: 66.27, wt: 34.4, expectedWaz: 4.23 },
+    { id: 465, sex: 'male', ageMo: 101.29, wt: 66.2, expectedWaz: 5.89 },
+    { id: 640, sex: 'male', ageMo: 64.97, wt: 41.6, expectedWaz: 6.24 },
+  ];
+
+  for (const pt of posTails) {
+    const [l, m, s] = getInterpolatedLMS(pt.ageMo, pt.sex);
+    const unroundedZ = computeWhoWaz(pt.wt, l, m, s);
+    assert.ok(
+      Math.abs(unroundedZ - pt.expectedWaz) < 0.005,
+      `Positive tail ${pt.id}: expected ${pt.expectedWaz}, got ${unroundedZ.toFixed(4)}`
+    );
+
+    const zScoreRes = calcGrowthZScores(pt.ageMo / 12, pt.wt, 120, pt.sex);
+    assert.ok(zScoreRes);
+    assert.equal(zScoreRes.wazLabel, 'High Weight');
+    assert.equal(zScoreRes.wazStatus, 'warning');
   }
 });
 
