@@ -17,14 +17,14 @@ type MainTab = 'dose' | 'fluids' | 'drip' | 'resus' | 'protocols';
 
 export default function App() {
   const [bio, setBio] = useState<BiometricState>({
-    rawWeight: '15',
-    rawAge: '3.5',
+    rawWeight: '',
+    rawAge: '',
     ageUnit: 'yr',
     sex: 'male',
     rawHeight: '',
     useIBW: false,
-    weightSource: 'manual',
-    serumCr: '0.5',
+    weightSource: null,
+    serumCr: '',
   });
 
   const [mainTab, setMainTab] = useState<MainTab>('dose');
@@ -69,12 +69,15 @@ export default function App() {
     return null;
   }, [bio.useIBW, bio.rawWeight, ibwWeight]);
 
-  const handleWeightChange = (val: string) => {
+  const handleWeightChange = (
+    val: string,
+    source: 'manual' | 'broselow' = 'manual'
+  ) => {
     setBio((prev) => ({
       ...prev,
       rawWeight: val,
       useIBW: false,
-      weightSource: val && parseFloat(val) > 0 ? 'manual' : null,
+      weightSource: val && parseFloat(val) > 0 ? source : null,
     }));
   };
 
@@ -86,7 +89,7 @@ export default function App() {
       val = String(maxLimit);
     }
     setBio((prev) => {
-      if (prev.weightSource === 'manual' && parseFloat(prev.rawWeight) > 0) {
+      if ((prev.weightSource === 'manual' || prev.weightSource === 'broselow') && parseFloat(prev.rawWeight) > 0) {
         return { ...prev, rawAge: val, useIBW: false };
       }
       const estW =
@@ -115,6 +118,22 @@ export default function App() {
     });
   };
 
+  const handleToggleSex = () => {
+    setBio((prev) => ({
+      ...prev,
+      sex: prev.sex === 'male' ? 'female' : 'male',
+    }));
+  };
+
+  const handleCycleTheme = () => {
+    setTheme((t) => {
+      if (t === 'light') return 'dark';
+      if (t === 'dark') return 'mono';
+      if (t === 'mono') return 'red';
+      return 'light';
+    });
+  };
+
   const TABS: { id: MainTab; label: string }[] = [
     { id: 'dose', label: 'Meds' },
     { id: 'fluids', label: 'Fluids' },
@@ -134,9 +153,10 @@ export default function App() {
         onWeightChange={handleWeightChange}
         onAgeChange={handleAgeChange}
         onToggleAgeUnit={handleToggleAgeUnit}
+        onToggleSex={handleToggleSex}
         onHeightChange={(val) => setBio((prev) => ({ ...prev, rawHeight: val }))}
         onToggleUseIBW={(checked) => setBio((prev) => ({ ...prev, useIBW: checked }))}
-        onCycleTheme={() => setTheme((t) => (t === 'light' ? 'dark' : 'light'))}
+        onCycleTheme={handleCycleTheme}
         onOpenBroselowModal={(color) => {
           setBroselowPreviewColor(color || null);
           setBroselowOpen(true);
@@ -219,7 +239,7 @@ export default function App() {
         previewColor={broselowPreviewColor}
         onClose={() => setBroselowOpen(false)}
         onSelectZoneWeight={(kg, color) => {
-          handleWeightChange(String(kg));
+          handleWeightChange(String(kg), 'broselow');
           setBroselowPreviewColor(color);
         }}
       />

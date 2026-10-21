@@ -57,15 +57,317 @@ export function calcBSA(weightKg: number | null | undefined, heightCm: number | 
 }
 
 export interface GrowthZScoreResult {
-  waz: number;
-  wazLabel: string;
-  wazStatus: 'good' | 'warning' | 'danger';
+  waz: number | null;
+  wazLabel: string | null;
+  wazStatus: 'good' | 'warning' | 'danger' | null;
   haz: number | null;
   hazLabel: string | null;
   hazStatus: 'good' | 'warning' | 'danger' | null;
+  bmi: number | null;
+  nutritionIndicator: 'WFH' | 'BMI' | null;
+  nutritionLabel: string | null;
+  nutritionStatus: 'good' | 'warning' | 'danger' | null;
   refAgeMo: number;
   medianWeight: number;
   medianHeight: number;
+}
+
+export const WHO_WFA_LMS = {
+  boys: [
+    [0.3487, 3.3464, 0.14602], // 0 mo
+    [0.2297, 4.4709, 0.13395], // 1 mo
+    [0.197, 5.5675, 0.12385], // 2 mo
+    [0.1738, 6.3762, 0.11727], // 3 mo
+    [0.1553, 7.0023, 0.11316], // 4 mo
+    [0.1395, 7.5105, 0.1108], // 5 mo
+    [0.1257, 7.934, 0.10958], // 6 mo
+    [0.1134, 8.297, 0.10902], // 7 mo
+    [0.1021, 8.6151, 0.10882], // 8 mo
+    [0.0917, 8.9014, 0.10881], // 9 mo
+    [0.082, 9.1649, 0.10891], // 10 mo
+    [0.073, 9.4122, 0.10906], // 11 mo
+    [0.0644, 9.6479, 0.10925], // 12 mo
+    [0.0563, 9.8749, 0.10949], // 13 mo
+    [0.0487, 10.0953, 0.10976], // 14 mo
+    [0.0413, 10.3108, 0.11007], // 15 mo
+    [0.0343, 10.5228, 0.11041], // 16 mo
+    [0.0275, 10.7319, 0.11079], // 17 mo
+    [0.0211, 10.9385, 0.11119], // 18 mo
+    [0.0148, 11.143, 0.11164], // 19 mo
+    [0.0087, 11.3462, 0.11211], // 20 mo
+    [0.0029, 11.5486, 0.11261], // 21 mo
+    [-0.0028, 11.7504, 0.11314], // 22 mo
+    [-0.0083, 11.9514, 0.11369], // 23 mo
+    [-0.0137, 12.1515, 0.11426], // 24 mo
+    [-0.0189, 12.3502, 0.11485], // 25 mo
+    [-0.024, 12.5466, 0.11544], // 26 mo
+    [-0.0289, 12.7401, 0.11604], // 27 mo
+    [-0.0337, 12.9303, 0.11664], // 28 mo
+    [-0.0385, 13.1169, 0.11723], // 29 mo
+    [-0.0431, 13.3, 0.11781], // 30 mo
+    [-0.0476, 13.4798, 0.11839], // 31 mo
+    [-0.052, 13.6567, 0.11896], // 32 mo
+    [-0.0564, 13.8309, 0.11953], // 33 mo
+    [-0.0606, 14.0031, 0.12008], // 34 mo
+    [-0.0648, 14.1736, 0.12062], // 35 mo
+    [-0.0689, 14.3429, 0.12116], // 36 mo
+    [-0.0729, 14.5113, 0.12168], // 37 mo
+    [-0.0769, 14.6791, 0.1222], // 38 mo
+    [-0.0808, 14.8466, 0.12271], // 39 mo
+    [-0.0846, 15.014, 0.12322], // 40 mo
+    [-0.0883, 15.1813, 0.12373], // 41 mo
+    [-0.092, 15.3486, 0.12425], // 42 mo
+    [-0.0957, 15.5158, 0.12478], // 43 mo
+    [-0.0993, 15.6828, 0.12531], // 44 mo
+    [-0.1028, 15.8497, 0.12586], // 45 mo
+    [-0.1063, 16.0163, 0.12643], // 46 mo
+    [-0.1097, 16.1827, 0.127], // 47 mo
+    [-0.1131, 16.3489, 0.12759], // 48 mo
+    [-0.1165, 16.515, 0.12819], // 49 mo
+    [-0.1198, 16.6811, 0.1288], // 50 mo
+    [-0.123, 16.8471, 0.12943], // 51 mo
+    [-0.1262, 17.0132, 0.13005], // 52 mo
+    [-0.1294, 17.1792, 0.13069], // 53 mo
+    [-0.1325, 17.3452, 0.13133], // 54 mo
+    [-0.1356, 17.5111, 0.13197], // 55 mo
+    [-0.1387, 17.6768, 0.13261], // 56 mo
+    [-0.1417, 17.8422, 0.13325], // 57 mo
+    [-0.1447, 18.0073, 0.13389], // 58 mo
+    [-0.1477, 18.1722, 0.13453], // 59 mo
+    [-0.1506, 18.3366, 0.13517], // 60 mo (WHO Child Growth Standards through 60 completed months)
+    [-0.2026, 18.5057, 0.12988], // 61 mo (WHO Growth Reference 2007 from 61 months)
+    [-0.213, 18.6802, 0.13028], // 62 mo
+    [-0.2234, 18.8563, 0.13067], // 63 mo
+    [-0.2338, 19.034, 0.13105], // 64 mo
+    [-0.2443, 19.2132, 0.13142], // 65 mo
+    [-0.2548, 19.394, 0.13178], // 66 mo
+    [-0.2653, 19.5765, 0.13213], // 67 mo
+    [-0.2758, 19.7607, 0.13246], // 68 mo
+    [-0.2864, 19.9468, 0.13279], // 69 mo
+    [-0.2969, 20.1344, 0.13311], // 70 mo
+    [-0.3075, 20.3235, 0.13342], // 71 mo
+    [-0.318, 20.5137, 0.13372], // 72 mo
+    [-0.3285, 20.7052, 0.13402], // 73 mo
+    [-0.339, 20.8979, 0.13432], // 74 mo
+    [-0.3494, 21.0918, 0.13462], // 75 mo
+    [-0.3598, 21.287, 0.13493], // 76 mo
+    [-0.3701, 21.4833, 0.13523], // 77 mo
+    [-0.3804, 21.681, 0.13554], // 78 mo
+    [-0.3906, 21.8799, 0.13586], // 79 mo
+    [-0.4007, 22.08, 0.13618], // 80 mo
+    [-0.4107, 22.2813, 0.13652], // 81 mo
+    [-0.4207, 22.4837, 0.13686], // 82 mo
+    [-0.4305, 22.6872, 0.13722], // 83 mo
+    [-0.4402, 22.8915, 0.13759], // 84 mo
+    [-0.4499, 23.0968, 0.13797], // 85 mo
+    [-0.4594, 23.3029, 0.13838], // 86 mo
+    [-0.4688, 23.5101, 0.1388], // 87 mo
+    [-0.4781, 23.7182, 0.13923], // 88 mo
+    [-0.4873, 23.9272, 0.13969], // 89 mo
+    [-0.4964, 24.1371, 0.14016], // 90 mo
+    [-0.5053, 24.3479, 0.14065], // 91 mo
+    [-0.5142, 24.5595, 0.14117], // 92 mo
+    [-0.5229, 24.7722, 0.1417], // 93 mo
+    [-0.5315, 24.9858, 0.14226], // 94 mo
+    [-0.5399, 25.2005, 0.14284], // 95 mo
+    [-0.5482, 25.4163, 0.14344], // 96 mo
+    [-0.5564, 25.6332, 0.14407], // 97 mo
+    [-0.5644, 25.8513, 0.14472], // 98 mo
+    [-0.5722, 26.0706, 0.14539], // 99 mo
+    [-0.5799, 26.2911, 0.14608], // 100 mo
+    [-0.5873, 26.5128, 0.14679], // 101 mo
+    [-0.5946, 26.7358, 0.14752], // 102 mo
+    [-0.6017, 26.9602, 0.14828], // 103 mo
+    [-0.6085, 27.1861, 0.14905], // 104 mo
+    [-0.6152, 27.4137, 0.14984], // 105 mo
+    [-0.6216, 27.6432, 0.15066], // 106 mo
+    [-0.6278, 27.875, 0.15149], // 107 mo
+    [-0.6337, 28.1092, 0.15233], // 108 mo
+    [-0.6393, 28.3459, 0.15319], // 109 mo
+    [-0.6446, 28.5854, 0.15406], // 110 mo
+    [-0.6496, 28.8277, 0.15493], // 111 mo
+    [-0.6543, 29.0731, 0.15581], // 112 mo
+    [-0.6585, 29.3217, 0.1567], // 113 mo
+    [-0.6624, 29.5736, 0.1576], // 114 mo
+    [-0.6659, 29.8289, 0.1585], // 115 mo
+    [-0.6689, 30.0877, 0.1594], // 116 mo
+    [-0.6714, 30.3501, 0.16031], // 117 mo
+    [-0.6735, 30.616, 0.16122], // 118 mo
+    [-0.6752, 30.8854, 0.16213], // 119 mo
+    [-0.6764, 31.1586, 0.16305], // 120 mo
+  ],
+  girls: [
+    [0.3809, 3.2322, 0.14171], // 0 mo
+    [0.1714, 4.1873, 0.13724], // 1 mo
+    [0.0962, 5.1282, 0.13], // 2 mo
+    [0.0402, 5.8458, 0.12619], // 3 mo
+    [-0.005, 6.4237, 0.12402], // 4 mo
+    [-0.043, 6.8985, 0.12274], // 5 mo
+    [-0.0756, 7.297, 0.12204], // 6 mo
+    [-0.1039, 7.6422, 0.12178], // 7 mo
+    [-0.1288, 7.9487, 0.12181], // 8 mo
+    [-0.1507, 8.2254, 0.12199], // 9 mo
+    [-0.17, 8.48, 0.12223], // 10 mo
+    [-0.1872, 8.7192, 0.12247], // 11 mo
+    [-0.2024, 8.9481, 0.12268], // 12 mo
+    [-0.2158, 9.1699, 0.12283], // 13 mo
+    [-0.2278, 9.387, 0.12294], // 14 mo
+    [-0.2384, 9.6008, 0.12299], // 15 mo
+    [-0.2478, 9.8124, 0.12303], // 16 mo
+    [-0.2562, 10.0226, 0.12306], // 17 mo
+    [-0.2637, 10.2315, 0.12309], // 18 mo
+    [-0.2703, 10.4393, 0.12315], // 19 mo
+    [-0.2762, 10.6464, 0.12323], // 20 mo
+    [-0.2815, 10.8534, 0.12335], // 21 mo
+    [-0.2862, 11.0608, 0.1235], // 22 mo
+    [-0.2903, 11.2688, 0.12369], // 23 mo
+    [-0.2941, 11.4775, 0.1239], // 24 mo
+    [-0.2975, 11.6864, 0.12414], // 25 mo
+    [-0.3005, 11.8947, 0.12441], // 26 mo
+    [-0.3032, 12.1015, 0.12472], // 27 mo
+    [-0.3057, 12.3059, 0.12506], // 28 mo
+    [-0.308, 12.5073, 0.12545], // 29 mo
+    [-0.3101, 12.7055, 0.12587], // 30 mo
+    [-0.312, 12.9006, 0.12633], // 31 mo
+    [-0.3138, 13.093, 0.12683], // 32 mo
+    [-0.3155, 13.2837, 0.12737], // 33 mo
+    [-0.3171, 13.4731, 0.12794], // 34 mo
+    [-0.3186, 13.6618, 0.12855], // 35 mo
+    [-0.3201, 13.8503, 0.12919], // 36 mo
+    [-0.3216, 14.0385, 0.12988], // 37 mo
+    [-0.323, 14.2265, 0.13059], // 38 mo
+    [-0.3243, 14.414, 0.13135], // 39 mo
+    [-0.3257, 14.601, 0.13213], // 40 mo
+    [-0.327, 14.7873, 0.13293], // 41 mo
+    [-0.3283, 14.9727, 0.13376], // 42 mo
+    [-0.3296, 15.1573, 0.1346], // 43 mo
+    [-0.3309, 15.341, 0.13545], // 44 mo
+    [-0.3322, 15.524, 0.1363], // 45 mo
+    [-0.3335, 15.7064, 0.13716], // 46 mo
+    [-0.3348, 15.8882, 0.138], // 47 mo
+    [-0.3361, 16.0697, 0.13884], // 48 mo
+    [-0.3374, 16.2511, 0.13968], // 49 mo
+    [-0.3387, 16.4322, 0.14051], // 50 mo
+    [-0.34, 16.6133, 0.14132], // 51 mo
+    [-0.3414, 16.7942, 0.14213], // 52 mo
+    [-0.3427, 16.9748, 0.14293], // 53 mo
+    [-0.344, 17.1551, 0.14371], // 54 mo
+    [-0.3453, 17.3347, 0.14448], // 55 mo
+    [-0.3466, 17.5136, 0.14525], // 56 mo
+    [-0.3479, 17.6916, 0.146], // 57 mo
+    [-0.3492, 17.8686, 0.14675], // 58 mo
+    [-0.3505, 18.0445, 0.14748], // 59 mo
+    [-0.3518, 18.2193, 0.14821], // 60 mo (WHO Child Growth Standards through 60 completed months)
+    [-0.4681, 18.2579, 0.14295], // 61 mo (WHO Growth Reference 2007 from 61 months)
+    [-0.4711, 18.4329, 0.1435], // 62 mo
+    [-0.4742, 18.6073, 0.14404], // 63 mo
+    [-0.4773, 18.7811, 0.14459], // 64 mo
+    [-0.4803, 18.9545, 0.14514], // 65 mo
+    [-0.4834, 19.1276, 0.14569], // 66 mo
+    [-0.4864, 19.3004, 0.14624], // 67 mo
+    [-0.4894, 19.473, 0.14679], // 68 mo
+    [-0.4924, 19.6455, 0.14735], // 69 mo
+    [-0.4954, 19.818, 0.1479], // 70 mo
+    [-0.4984, 19.9908, 0.14845], // 71 mo
+    [-0.5013, 20.1639, 0.149], // 72 mo
+    [-0.5043, 20.3377, 0.14955], // 73 mo
+    [-0.5072, 20.5124, 0.1501], // 74 mo
+    [-0.51, 20.6885, 0.15065], // 75 mo
+    [-0.5129, 20.8661, 0.1512], // 76 mo
+    [-0.5157, 21.0457, 0.15175], // 77 mo
+    [-0.5185, 21.2274, 0.1523], // 78 mo
+    [-0.5213, 21.4113, 0.15284], // 79 mo
+    [-0.524, 21.5979, 0.15339], // 80 mo
+    [-0.5268, 21.7872, 0.15393], // 81 mo
+    [-0.5294, 21.9795, 0.15448], // 82 mo
+    [-0.5321, 22.1751, 0.15502], // 83 mo
+    [-0.5347, 22.374, 0.15556], // 84 mo
+    [-0.5372, 22.5762, 0.1561], // 85 mo
+    [-0.5398, 22.7816, 0.15663], // 86 mo
+    [-0.5423, 22.9904, 0.15717], // 87 mo
+    [-0.5447, 23.2025, 0.1577], // 88 mo
+    [-0.5471, 23.418, 0.15823], // 89 mo
+    [-0.5495, 23.6369, 0.15876], // 90 mo
+    [-0.5518, 23.8593, 0.15928], // 91 mo
+    [-0.5541, 24.0853, 0.1598], // 92 mo
+    [-0.5563, 24.3149, 0.16032], // 93 mo
+    [-0.5585, 24.5482, 0.16084], // 94 mo
+    [-0.5606, 24.7853, 0.16135], // 95 mo
+    [-0.5627, 25.0262, 0.16186], // 96 mo
+    [-0.5647, 25.271, 0.16237], // 97 mo
+    [-0.5667, 25.5197, 0.16287], // 98 mo
+    [-0.5686, 25.7721, 0.16337], // 99 mo
+    [-0.5704, 26.0284, 0.16386], // 100 mo
+    [-0.5722, 26.2883, 0.16435], // 101 mo
+    [-0.574, 26.5519, 0.16483], // 102 mo
+    [-0.5757, 26.819, 0.16532], // 103 mo
+    [-0.5773, 27.0896, 0.16579], // 104 mo
+    [-0.5789, 27.3635, 0.16626], // 105 mo
+    [-0.5804, 27.6406, 0.16673], // 106 mo
+    [-0.5819, 27.9208, 0.16719], // 107 mo
+    [-0.5833, 28.204, 0.16764], // 108 mo
+    [-0.5847, 28.4901, 0.16809], // 109 mo
+    [-0.5859, 28.7791, 0.16854], // 110 mo
+    [-0.5872, 29.0711, 0.16897], // 111 mo
+    [-0.5883, 29.3663, 0.16941], // 112 mo
+    [-0.5895, 29.6646, 0.16983], // 113 mo
+    [-0.5905, 29.9663, 0.17025], // 114 mo
+    [-0.5915, 30.2715, 0.17066], // 115 mo
+    [-0.5925, 30.5805, 0.17107], // 116 mo
+    [-0.5934, 30.8934, 0.17146], // 117 mo
+    [-0.5942, 31.2105, 0.17186], // 118 mo
+    [-0.595, 31.5319, 0.17224], // 119 mo
+    [-0.5958, 31.8578, 0.17262], // 120 mo
+  ],
+} as const;
+
+export function getInterpolatedLMS(
+  ageMo: number,
+  sex: 'male' | 'female'
+): [l: number, m: number, s: number] {
+  const table = sex === 'male' ? WHO_WFA_LMS.boys : WHO_WFA_LMS.girls;
+  if (ageMo <= 0) return [table[0][0], table[0][1], table[0][2]];
+  if (ageMo >= 120) return [table[120][0], table[120][1], table[120][2]];
+  const low = Math.floor(ageMo);
+  const upp = Math.min(120, low + 1);
+  const diff = ageMo - low;
+  const [l0, m0, s0] = table[low];
+  const [l1, m1, s1] = table[upp];
+  return [
+    l0 + diff * (l1 - l0),
+    m0 + diff * (m1 - m0),
+    s0 + diff * (s1 - s0),
+  ];
+}
+
+export function computeWhoWaz(
+  weight: number,
+  l: number,
+  m: number,
+  s: number
+): number {
+  let z: number;
+  if (Math.abs(l) < 1e-5) {
+    z = Math.log(weight / m) / s;
+  } else {
+    z = (Math.pow(weight / m, l) - 1) / (s * l);
+  }
+
+  const calcSD = (sd: number) => m * Math.pow(1 + l * s * sd, 1 / l);
+
+  if (z > 3) {
+    const sd3pos = calcSD(3);
+    const sd2pos = calcSD(2);
+    const sd23pos = sd3pos - sd2pos;
+    z = 3 + (weight - sd3pos) / sd23pos;
+  } else if (z < -3) {
+    const sd3neg = calcSD(-3);
+    const sd2neg = calcSD(-2);
+    const sd23neg = sd2neg - sd3neg;
+    z = -3 + (weight - sd3neg) / sd23neg;
+  }
+
+  return z;
 }
 
 export function calcGrowthZScores(
@@ -80,56 +382,126 @@ export function calcGrowthZScores(
     return null;
   }
 
-  const ageMo = Math.min(180, Math.round(a * 12));
+  const ageMo = Math.min(180, Math.max(0, a * 12));
   const table = sex === 'male' ? DATASET.whoGrowth.boys.table : DATASET.whoGrowth.girls.table;
 
-  let closestRow = table[0];
-  let minDiff = 9999;
-  for (let i = 0; i < table.length; i++) {
-    const diff = Math.abs(table[i][0] - ageMo);
-    if (diff < minDiff) {
-      minDiff = diff;
-      closestRow = table[i];
+  // Continuous linear interpolation across reference table months to avoid abrupt discrete jumps
+  let rowA = table[0];
+  let rowB = table[table.length - 1];
+
+  for (let i = 0; i < table.length - 1; i++) {
+    if (ageMo >= table[i][0] && ageMo <= table[i + 1][0]) {
+      rowA = table[i];
+      rowB = table[i + 1];
+      break;
     }
   }
 
-  const [rowMo, wMed, wSD, hMed, hSD] = closestRow;
-  const waz = +((w - wMed) / wSD).toFixed(1);
-  let wazStatus: 'good' | 'warning' | 'danger' = 'good';
-  let wazLabel = 'Normal';
-  if (waz < -3) {
-    wazStatus = 'danger';
-    wazLabel = 'Severe Underweight';
-  } else if (waz < -2) {
-    wazStatus = 'warning';
-    wazLabel = 'Underweight';
-  } else if (waz > 3) {
-    wazStatus = 'danger';
-    wazLabel = 'Obese';
-  } else if (waz > 2) {
-    wazStatus = 'warning';
-    wazLabel = 'Overweight';
+  let wMed: number, wSD: number, hMed: number, hSD: number;
+  if (rowA[0] === rowB[0] || ageMo <= table[0][0]) {
+    wMed = table[0][1];
+    wSD = table[0][2];
+    hMed = table[0][3];
+    hSD = table[0][4];
+  } else if (ageMo >= table[table.length - 1][0]) {
+    const last = table[table.length - 1];
+    wMed = last[1];
+    wSD = last[2];
+    hMed = last[3];
+    hSD = last[4];
+  } else {
+    const t = (ageMo - rowA[0]) / (rowB[0] - rowA[0]);
+    wMed = rowA[1] + t * (rowB[1] - rowA[1]);
+    wSD = rowA[2] + t * (rowB[2] - rowA[2]);
+    hMed = rowA[3] + t * (rowB[3] - rowA[3]);
+    hSD = rowA[4] + t * (rowB[4] - rowA[4]);
   }
 
+  // WHO weight-for-age is standardized up to 10 completed years (120 months); beyond 120 mo, WAZ is unstandardized
+  const isWazSupported = ageMo <= 120;
+  let waz: number | null = null;
+  let wazLabel: string | null = null;
+  let wazStatus: 'good' | 'warning' | 'danger' | null = null;
+
+  if (isWazSupported) {
+    const [l, m, s] = getInterpolatedLMS(ageMo, sex);
+    wMed = m;
+    const rawWaz = computeWhoWaz(w, l, m, s);
+    // Snap tiny IEEE-754 floating point inaccuracies to exact integer SD thresholds (-3, -2, 2, 3)
+    let effectiveWaz = rawWaz;
+    for (const threshold of [-3, -2, 2, 3]) {
+      if (Math.abs(effectiveWaz - threshold) < 1e-12) {
+        effectiveWaz = threshold;
+        break;
+      }
+    }
+
+    if (effectiveWaz < -3) {
+      wazStatus = 'danger';
+      wazLabel = 'Severe Underweight';
+    } else if (effectiveWaz < -2) {
+      wazStatus = 'warning';
+      wazLabel = 'Underweight';
+    } else if (effectiveWaz > 2) {
+      wazStatus = 'warning';
+      wazLabel = 'High Weight';
+    } else {
+      wazStatus = 'good';
+      wazLabel = 'Normal';
+    }
+    const roundedWaz = +rawWaz.toFixed(1);
+    waz = roundedWaz === 0 ? 0 : roundedWaz;
+  }
+
+  // Height-for-Age (HAZ) is standardized 0-19 years
   const h = Number(heightCm);
   let haz: number | null = null;
   let hazLabel: string | null = null;
   let hazStatus: 'good' | 'warning' | 'danger' | null = null;
 
-  if (Number.isFinite(h) && h > 0) {
-    haz = +((h - hMed) / hSD).toFixed(1);
-    hazStatus = 'good';
-    hazLabel = 'Normal';
-    if (haz < -3) {
+  if (Number.isFinite(h) && h > 0 && hSD > 0) {
+    const rawHaz = (h - hMed) / hSD;
+    // Snap tiny IEEE-754 floating point inaccuracies to exact integer SD thresholds (-3, -2, 2, 3)
+    let effectiveHaz = rawHaz;
+    for (const threshold of [-3, -2, 2, 3]) {
+      if (Math.abs(effectiveHaz - threshold) < 1e-12) {
+        effectiveHaz = threshold;
+        break;
+      }
+    }
+
+    if (effectiveHaz < -3) {
       hazStatus = 'danger';
       hazLabel = 'Severe Stunting';
-    } else if (haz < -2) {
+    } else if (effectiveHaz < -2) {
       hazStatus = 'warning';
       hazLabel = 'Stunted';
-    } else if (haz > 2) {
+    } else if (effectiveHaz > 2) {
       hazStatus = 'warning';
       hazLabel = 'Tall';
+    } else {
+      hazStatus = 'good';
+      hazLabel = 'Normal';
     }
+    const roundedHaz = +rawHaz.toFixed(1);
+    haz = roundedHaz === 0 ? 0 : roundedHaz;
+  }
+
+  // Raw BMI calculation when height is provided; suppress unvalidated ratio-based WFH/BMI-for-age
+  // classifications because WHO sex-specific LMS reference tables for WFH/BMI-for-age are not included in dataset
+  let bmi: number | null = null;
+  if (Number.isFinite(h) && h > 0) {
+    const heightM = h / 100;
+    bmi = +(w / (heightM * heightM)).toFixed(1);
+  }
+
+  const nutritionIndicator: 'WFH' | 'BMI' | null = null;
+  const nutritionLabel: string | null = null;
+  const nutritionStatus: 'good' | 'warning' | 'danger' | null = null;
+
+  // If age > 10y and no height was entered, no supported growth indicator can be computed
+  if (waz === null && haz === null) {
+    return null;
   }
 
   return {
@@ -139,9 +511,13 @@ export function calcGrowthZScores(
     haz,
     hazLabel,
     hazStatus,
-    refAgeMo: rowMo,
-    medianWeight: wMed,
-    medianHeight: hMed,
+    bmi,
+    nutritionIndicator,
+    nutritionLabel,
+    nutritionStatus,
+    refAgeMo: Math.round(ageMo * 10) / 10,
+    medianWeight: Math.round(wMed * 10) / 10,
+    medianHeight: Math.round(hMed * 10) / 10,
   };
 }
 
