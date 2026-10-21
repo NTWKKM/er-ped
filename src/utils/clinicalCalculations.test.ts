@@ -203,7 +203,7 @@ test('WHO Growth Z-Score calculation for weight and height (male and female)', (
 
   // Girls 120 mo (10 yr): L = -0.5958, M = 31.8578, S = 0.17262
   const gL = -0.5958, gM = 31.8578, gS = 0.17262;
-  const girlMedian = calcGrowthZScores(10, 31.86, 138.0, 'female');
+  const girlMedian = calcGrowthZScores(10, 31.86, 138.6, 'female');
   assert.equal(girlMedian?.waz, 0);
   assert.equal(girlMedian?.wazLabel, 'Normal');
   assert.equal(girlMedian?.wazStatus, 'good');
@@ -211,25 +211,25 @@ test('WHO Growth Z-Score calculation for weight and height (male and female)', (
   // Girls: -2 SD threshold (exact W = 23.273739... kg)
   const girlWNeg2 = getExactWeight(gL, gM, gS, -2);
   // Below -2 SD threshold: 23.20 kg
-  const girlBelowNeg2 = calcGrowthZScores(10, 23.20, 138.0, 'female');
+  const girlBelowNeg2 = calcGrowthZScores(10, 23.20, 138.6, 'female');
   assert.equal(girlBelowNeg2?.waz, -2);
   assert.equal(girlBelowNeg2?.wazLabel, 'Underweight');
   assert.equal(girlBelowNeg2?.wazStatus, 'warning');
 
   // Immediately below -2 SD threshold (W_exact - 0.005 kg)
-  const girlImmedBelowNeg2 = calcGrowthZScores(10, girlWNeg2 - 0.005, 138.0, 'female');
+  const girlImmedBelowNeg2 = calcGrowthZScores(10, girlWNeg2 - 0.005, 138.6, 'female');
   assert.equal(girlImmedBelowNeg2?.waz, -2);
   assert.equal(girlImmedBelowNeg2?.wazLabel, 'Underweight');
   assert.equal(girlImmedBelowNeg2?.wazStatus, 'warning');
 
   // Exact equality at -2 SD threshold (W_exact)
-  const girlAtNeg2 = calcGrowthZScores(10, girlWNeg2, 138.0, 'female');
+  const girlAtNeg2 = calcGrowthZScores(10, girlWNeg2, 138.6, 'female');
   assert.equal(girlAtNeg2?.waz, -2);
   assert.equal(girlAtNeg2?.wazLabel, 'Normal');
   assert.equal(girlAtNeg2?.wazStatus, 'good');
 
   // Immediately above -2 SD threshold (W_exact + 0.005 kg)
-  const girlImmedAboveNeg2 = calcGrowthZScores(10, girlWNeg2 + 0.005, 138.0, 'female');
+  const girlImmedAboveNeg2 = calcGrowthZScores(10, girlWNeg2 + 0.005, 138.6, 'female');
   assert.equal(girlImmedAboveNeg2?.waz, -2);
   assert.equal(girlImmedAboveNeg2?.wazLabel, 'Normal');
   assert.equal(girlImmedAboveNeg2?.wazStatus, 'good');
@@ -237,19 +237,19 @@ test('WHO Growth Z-Score calculation for weight and height (male and female)', (
   // Girls: +2 SD threshold (exact W = 46.889730... kg)
   const girlWPos2 = getExactWeight(gL, gM, gS, 2);
   // Immediately below +2 SD threshold (W_exact - 0.005 kg)
-  const girlImmedBelowPos2 = calcGrowthZScores(10, girlWPos2 - 0.005, 138.0, 'female');
+  const girlImmedBelowPos2 = calcGrowthZScores(10, girlWPos2 - 0.005, 138.6, 'female');
   assert.equal(girlImmedBelowPos2?.waz, 2);
   assert.equal(girlImmedBelowPos2?.wazLabel, 'Normal');
   assert.equal(girlImmedBelowPos2?.wazStatus, 'good');
 
   // Exact equality at +2 SD threshold (W_exact)
-  const girlAtPos2 = calcGrowthZScores(10, girlWPos2, 138.0, 'female');
+  const girlAtPos2 = calcGrowthZScores(10, girlWPos2, 138.6, 'female');
   assert.equal(girlAtPos2?.waz, 2);
   assert.equal(girlAtPos2?.wazLabel, 'Normal');
   assert.equal(girlAtPos2?.wazStatus, 'good');
 
   // Immediately above +2 SD threshold (W_exact + 0.005 kg)
-  const girlImmedAbovePos2 = calcGrowthZScores(10, girlWPos2 + 0.005, 138.0, 'female');
+  const girlImmedAbovePos2 = calcGrowthZScores(10, girlWPos2 + 0.005, 138.6, 'female');
   assert.equal(girlImmedAbovePos2?.waz, 2);
   assert.equal(girlImmedAbovePos2?.wazLabel, 'High Weight');
   assert.equal(girlImmedAbovePos2?.wazStatus, 'warning');
@@ -257,149 +257,173 @@ test('WHO Growth Z-Score calculation for weight and height (male and female)', (
   // Girls: -3 SD threshold (exact W = 20.286078... kg)
   const girlWNeg3 = getExactWeight(gL, gM, gS, -3);
   // Immediately below -3 SD threshold (W_exact - 0.005 kg)
-  const girlImmedBelowNeg3 = calcGrowthZScores(10, girlWNeg3 - 0.005, 138.0, 'female');
+  const girlImmedBelowNeg3 = calcGrowthZScores(10, girlWNeg3 - 0.005, 138.6, 'female');
   assert.equal(girlImmedBelowNeg3?.waz, -3);
   assert.equal(girlImmedBelowNeg3?.wazLabel, 'Severe Underweight');
   assert.equal(girlImmedBelowNeg3?.wazStatus, 'danger');
 
   // Exact equality at -3 SD threshold (W_exact)
-  const girlAtNeg3 = calcGrowthZScores(10, girlWNeg3, 138.0, 'female');
+  const girlAtNeg3 = calcGrowthZScores(10, girlWNeg3, 138.6, 'female');
   assert.equal(girlAtNeg3?.waz, -3);
   assert.equal(girlAtNeg3?.wazLabel, 'Underweight');
   assert.equal(girlAtNeg3?.wazStatus, 'warning');
 
   // Immediately above -3 SD threshold (W_exact + 0.005 kg)
-  const girlImmedAboveNeg3 = calcGrowthZScores(10, girlWNeg3 + 0.005, 138.0, 'female');
+  const girlImmedAboveNeg3 = calcGrowthZScores(10, girlWNeg3 + 0.005, 138.6, 'female');
   assert.equal(girlImmedAboveNeg3?.waz, -3);
   assert.equal(girlImmedAboveNeg3?.wazLabel, 'Underweight');
   assert.equal(girlImmedAboveNeg3?.wazStatus, 'warning');
 
   // WHO HAZ Gaussian method and fine-grained classification threshold validation (120-month boys and girls)
+  // Reference values sourced from WHO Growth Reference 2007 (5–19 years):
+  // Boys 120 mo (10 yr): hMed = 137.8 cm, hSD = 6.4 cm
+  // Girls 120 mo (10 yr): hMed = 138.6 cm, hSD = 6.4 cm
   // Classify with unrounded score, round only displayed score (testing immediately below, exactly at, and above thresholds)
-  // Boys 120 mo (10 yr): hMed = 137.8, hSD = 6.8
-  const boyHMed = 137.8, boyHSD = 6.8;
+  const boyHMed = 137.8, boyHSD = 6.4;
+  const boyHNeg2 = +(boyHMed - 2 * boyHSD).toFixed(1); // 125.0 cm (-2 SD)
+  const boyHPos2 = +(boyHMed + 2 * boyHSD).toFixed(1); // 150.6 cm (+2 SD)
+  const boyHNeg3 = +(boyHMed - 3 * boyHSD).toFixed(1); // 118.6 cm (-3 SD)
+
   const boyHMedian = calcGrowthZScores(10, 31, boyHMed, 'male');
   assert.equal(boyHMedian?.haz, 0);
   assert.equal(boyHMedian?.hazLabel, 'Normal');
   assert.equal(boyHMedian?.hazStatus, 'good');
 
-  // Boys: -2 SD threshold (124.2 cm)
-  // 124.1 cm (unrounded ~ -2.015, rounds to -2.0 but strictly Stunted)
-  const boyHBelowNeg2 = calcGrowthZScores(10, 31, 124.1, 'male');
+  // Boys: -2 SD threshold (125.0 cm) derived from median (137.8) and SD (6.4)
+  // Values below -2 SD boundary (e.g. boyHNeg2 - 0.1 = 124.9 cm, and legacy 124.2 / 124.1 cm) must NOT be classified as Normal
+  const boyHBelowNeg2 = calcGrowthZScores(10, 31, +(boyHNeg2 - 0.1).toFixed(1), 'male');
   assert.equal(boyHBelowNeg2?.haz, -2);
   assert.equal(boyHBelowNeg2?.hazLabel, 'Stunted');
   assert.equal(boyHBelowNeg2?.hazStatus, 'warning');
 
-  // 124.2 cm (exact at -2 SD threshold: ~ -2.000)
-  const boyHAtNeg2 = calcGrowthZScores(10, 31, 124.2, 'male');
+  // Regression check: Old boundary (124.2 cm) was previously misclassified as Normal when hSD was 6.8;
+  // with WHO 2007 hSD = 6.4, it is strictly Stunted (~ -2.13 SD)
+  const boyOldBoundary = calcGrowthZScores(10, 31, 124.2, 'male');
+  assert.equal(boyOldBoundary?.haz, -2.1);
+  assert.equal(boyOldBoundary?.hazLabel, 'Stunted');
+  assert.equal(boyOldBoundary?.hazStatus, 'warning');
+
+  // 125.0 cm (exact at -2 SD threshold: ~ -2.000)
+  const boyHAtNeg2 = calcGrowthZScores(10, 31, boyHNeg2, 'male');
   assert.equal(boyHAtNeg2?.haz, -2);
   assert.equal(boyHAtNeg2?.hazLabel, 'Normal');
   assert.equal(boyHAtNeg2?.hazStatus, 'good');
 
-  // 124.3 cm (immediately above -2 SD threshold: ~ -1.985)
-  const boyHAboveNeg2 = calcGrowthZScores(10, 31, 124.3, 'male');
+  // 125.1 cm (immediately above -2 SD threshold: ~ -1.984)
+  const boyHAboveNeg2 = calcGrowthZScores(10, 31, +(boyHNeg2 + 0.1).toFixed(1), 'male');
   assert.equal(boyHAboveNeg2?.haz, -2);
   assert.equal(boyHAboveNeg2?.hazLabel, 'Normal');
   assert.equal(boyHAboveNeg2?.hazStatus, 'good');
 
-  // Boys: +2 SD threshold (151.4 cm)
-  // 151.3 cm (immediately below +2 SD threshold: ~ 1.985)
-  const boyHBelowPos2 = calcGrowthZScores(10, 31, 151.3, 'male');
+  // Boys: +2 SD threshold (150.6 cm)
+  // 150.5 cm (immediately below +2 SD threshold: ~ 1.984)
+  const boyHBelowPos2 = calcGrowthZScores(10, 31, +(boyHPos2 - 0.1).toFixed(1), 'male');
   assert.equal(boyHBelowPos2?.haz, 2);
   assert.equal(boyHBelowPos2?.hazLabel, 'Normal');
   assert.equal(boyHBelowPos2?.hazStatus, 'good');
 
-  // 151.4 cm (exact at +2 SD threshold: ~ 2.000)
-  const boyHAtPos2 = calcGrowthZScores(10, 31, 151.4, 'male');
+  // 150.6 cm (exact at +2 SD threshold: ~ 2.000)
+  const boyHAtPos2 = calcGrowthZScores(10, 31, boyHPos2, 'male');
   assert.equal(boyHAtPos2?.haz, 2);
   assert.equal(boyHAtPos2?.hazLabel, 'Normal');
   assert.equal(boyHAtPos2?.hazStatus, 'good');
 
-  // 151.5 cm (immediately above +2 SD threshold: ~ 2.015)
-  const boyHAbovePos2 = calcGrowthZScores(10, 31, 151.5, 'male');
+  // 150.7 cm (immediately above +2 SD threshold: ~ 2.016)
+  const boyHAbovePos2 = calcGrowthZScores(10, 31, +(boyHPos2 + 0.1).toFixed(1), 'male');
   assert.equal(boyHAbovePos2?.haz, 2);
   assert.equal(boyHAbovePos2?.hazLabel, 'Tall');
   assert.equal(boyHAbovePos2?.hazStatus, 'warning');
 
-  // Boys: -3 SD threshold (117.4 cm)
-  // 117.3 cm (immediately below -3 SD threshold: ~ -3.015)
-  const boyHBelowNeg3 = calcGrowthZScores(10, 31, 117.3, 'male');
+  // Boys: -3 SD threshold (118.6 cm)
+  // 118.5 cm (immediately below -3 SD threshold: ~ -3.016)
+  const boyHBelowNeg3 = calcGrowthZScores(10, 31, +(boyHNeg3 - 0.1).toFixed(1), 'male');
   assert.equal(boyHBelowNeg3?.haz, -3);
   assert.equal(boyHBelowNeg3?.hazLabel, 'Severe Stunting');
   assert.equal(boyHBelowNeg3?.hazStatus, 'danger');
 
-  // 117.4 cm (exact at -3 SD threshold: ~ -3.000)
-  const boyHAtNeg3 = calcGrowthZScores(10, 31, 117.4, 'male');
+  // 118.6 cm (exact at -3 SD threshold: ~ -3.000)
+  const boyHAtNeg3 = calcGrowthZScores(10, 31, boyHNeg3, 'male');
   assert.equal(boyHAtNeg3?.haz, -3);
   assert.equal(boyHAtNeg3?.hazLabel, 'Stunted');
   assert.equal(boyHAtNeg3?.hazStatus, 'warning');
 
-  // 117.5 cm (immediately above -3 SD threshold: ~ -2.985)
-  const boyHAboveNeg3 = calcGrowthZScores(10, 31, 117.5, 'male');
+  // 118.7 cm (immediately above -3 SD threshold: ~ -2.984)
+  const boyHAboveNeg3 = calcGrowthZScores(10, 31, +(boyHNeg3 + 0.1).toFixed(1), 'male');
   assert.equal(boyHAboveNeg3?.haz, -3);
   assert.equal(boyHAboveNeg3?.hazLabel, 'Stunted');
   assert.equal(boyHAboveNeg3?.hazStatus, 'warning');
 
-  // Girls 120 mo (10 yr): hMed = 138.0, hSD = 6.8
-  const girlHMed = 138.0, girlHSD = 6.8;
+  // Girls 120 mo (10 yr): hMed = 138.6, hSD = 6.4
+  const girlHMed = 138.6, girlHSD = 6.4;
+  const girlHNeg2 = +(girlHMed - 2 * girlHSD).toFixed(1); // 125.8 cm (-2 SD)
+  const girlHPos2 = +(girlHMed + 2 * girlHSD).toFixed(1); // 151.4 cm (+2 SD)
+  const girlHNeg3 = +(girlHMed - 3 * girlHSD).toFixed(1); // 119.4 cm (-3 SD)
+
   const girlHMedian = calcGrowthZScores(10, 31, girlHMed, 'female');
   assert.equal(girlHMedian?.haz, 0);
   assert.equal(girlHMedian?.hazLabel, 'Normal');
   assert.equal(girlHMedian?.hazStatus, 'good');
 
-  // Girls: -2 SD threshold (124.4 cm)
-  // 124.3 cm (unrounded ~ -2.015, rounds to -2.0 but strictly Stunted)
-  const girlHBelowNeg2 = calcGrowthZScores(10, 31, 124.3, 'female');
+  // Girls: -2 SD threshold (125.8 cm) derived from median (138.6) and SD (6.4)
+  // Values below -2 SD boundary (e.g. girlHNeg2 - 0.1 = 125.7 cm, and legacy 124.4 / 124.3 cm) must NOT be classified as Normal
+  const girlHBelowNeg2 = calcGrowthZScores(10, 31, +(girlHNeg2 - 0.1).toFixed(1), 'female');
   assert.equal(girlHBelowNeg2?.haz, -2);
   assert.equal(girlHBelowNeg2?.hazLabel, 'Stunted');
   assert.equal(girlHBelowNeg2?.hazStatus, 'warning');
 
-  // 124.4 cm (exact at -2 SD threshold: ~ -2.000)
-  const girlHAtNeg2 = calcGrowthZScores(10, 31, 124.4, 'female');
+  // Regression check: Old boundary (124.4 cm) was previously misclassified as Normal when hSD was 6.8;
+  // with WHO 2007 hMed = 138.6 and hSD = 6.4, it is strictly Stunted (~ -2.22 SD)
+  const girlOldBoundary = calcGrowthZScores(10, 31, 124.4, 'female');
+  assert.equal(girlOldBoundary?.haz, -2.2);
+  assert.equal(girlOldBoundary?.hazLabel, 'Stunted');
+  assert.equal(girlOldBoundary?.hazStatus, 'warning');
+
+  // 125.8 cm (exact at -2 SD threshold: ~ -2.000)
+  const girlHAtNeg2 = calcGrowthZScores(10, 31, girlHNeg2, 'female');
   assert.equal(girlHAtNeg2?.haz, -2);
   assert.equal(girlHAtNeg2?.hazLabel, 'Normal');
   assert.equal(girlHAtNeg2?.hazStatus, 'good');
 
-  // 124.5 cm (immediately above -2 SD threshold: ~ -1.985)
-  const girlHAboveNeg2 = calcGrowthZScores(10, 31, 124.5, 'female');
+  // 125.9 cm (immediately above -2 SD threshold: ~ -1.984)
+  const girlHAboveNeg2 = calcGrowthZScores(10, 31, +(girlHNeg2 + 0.1).toFixed(1), 'female');
   assert.equal(girlHAboveNeg2?.haz, -2);
   assert.equal(girlHAboveNeg2?.hazLabel, 'Normal');
   assert.equal(girlHAboveNeg2?.hazStatus, 'good');
 
-  // Girls: +2 SD threshold (151.6 cm)
-  // 151.5 cm (immediately below +2 SD threshold: ~ 1.985)
-  const girlHBelowPos2 = calcGrowthZScores(10, 31, 151.5, 'female');
+  // Girls: +2 SD threshold (151.4 cm)
+  // 151.3 cm (immediately below +2 SD threshold: ~ 1.984)
+  const girlHBelowPos2 = calcGrowthZScores(10, 31, +(girlHPos2 - 0.1).toFixed(1), 'female');
   assert.equal(girlHBelowPos2?.haz, 2);
   assert.equal(girlHBelowPos2?.hazLabel, 'Normal');
   assert.equal(girlHBelowPos2?.hazStatus, 'good');
 
-  // 151.6 cm (exact at +2 SD threshold: ~ 2.000)
-  const girlHAtPos2 = calcGrowthZScores(10, 31, 151.6, 'female');
+  // 151.4 cm (exact at +2 SD threshold: ~ 2.000)
+  const girlHAtPos2 = calcGrowthZScores(10, 31, girlHPos2, 'female');
   assert.equal(girlHAtPos2?.haz, 2);
   assert.equal(girlHAtPos2?.hazLabel, 'Normal');
   assert.equal(girlHAtPos2?.hazStatus, 'good');
 
-  // 151.7 cm (immediately above +2 SD threshold: ~ 2.015)
-  const girlHAbovePos2 = calcGrowthZScores(10, 31, 151.7, 'female');
+  // 151.5 cm (immediately above +2 SD threshold: ~ 2.016)
+  const girlHAbovePos2 = calcGrowthZScores(10, 31, +(girlHPos2 + 0.1).toFixed(1), 'female');
   assert.equal(girlHAbovePos2?.haz, 2);
   assert.equal(girlHAbovePos2?.hazLabel, 'Tall');
   assert.equal(girlHAbovePos2?.hazStatus, 'warning');
 
-  // Girls: -3 SD threshold (117.6 cm)
-  // 117.5 cm (immediately below -3 SD threshold: ~ -3.015)
-  const girlHBelowNeg3 = calcGrowthZScores(10, 31, 117.5, 'female');
+  // Girls: -3 SD threshold (119.4 cm)
+  // 119.3 cm (immediately below -3 SD threshold: ~ -3.016)
+  const girlHBelowNeg3 = calcGrowthZScores(10, 31, +(girlHNeg3 - 0.1).toFixed(1), 'female');
   assert.equal(girlHBelowNeg3?.haz, -3);
   assert.equal(girlHBelowNeg3?.hazLabel, 'Severe Stunting');
   assert.equal(girlHBelowNeg3?.hazStatus, 'danger');
 
-  // 117.6 cm (exact at -3 SD threshold: ~ -3.000)
-  const girlHAtNeg3 = calcGrowthZScores(10, 31, 117.6, 'female');
+  // 119.4 cm (exact at -3 SD threshold: ~ -3.000)
+  const girlHAtNeg3 = calcGrowthZScores(10, 31, girlHNeg3, 'female');
   assert.equal(girlHAtNeg3?.haz, -3);
   assert.equal(girlHAtNeg3?.hazLabel, 'Stunted');
   assert.equal(girlHAtNeg3?.hazStatus, 'warning');
 
-  // 117.7 cm (immediately above -3 SD threshold: ~ -2.985)
-  const girlHAboveNeg3 = calcGrowthZScores(10, 31, 117.7, 'female');
+  // 119.5 cm (immediately above -3 SD threshold: ~ -2.984)
+  const girlHAboveNeg3 = calcGrowthZScores(10, 31, +(girlHNeg3 + 0.1).toFixed(1), 'female');
   assert.equal(girlHAboveNeg3?.haz, -3);
   assert.equal(girlHAboveNeg3?.hazLabel, 'Stunted');
   assert.equal(girlHAboveNeg3?.hazStatus, 'warning');
