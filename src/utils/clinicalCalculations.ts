@@ -72,6 +72,92 @@ export interface GrowthZScoreResult {
   medianHeight: number;
 }
 
+// WHO Child Growth Standards (0-60 mo) & WHO Growth Reference 2007 (61-120 mo)
+// 7-point sex- and age-specific Weight-for-Age standard deviation cut-offs:
+// [ageMo, [SD3neg, SD2neg, SD1neg, SD0 (Median), SD1pos, SD2pos, SD3pos]]
+export const WHO_WFA_CUTOFFS = {
+  boys: [
+    [0, [2.1, 2.5, 2.9, 3.3, 3.9, 4.4, 5.0]],
+    [1, [2.9, 3.4, 3.9, 4.5, 5.1, 5.8, 6.6]],
+    [2, [3.8, 4.3, 4.9, 5.6, 6.3, 7.1, 8.0]],
+    [3, [4.4, 5.0, 5.7, 6.4, 7.2, 8.0, 9.0]],
+    [6, [5.7, 6.4, 7.1, 7.9, 8.8, 9.8, 10.9]],
+    [9, [6.4, 7.1, 8.0, 8.9, 9.9, 11.0, 12.3]],
+    [12, [6.9, 7.7, 8.6, 9.6, 10.8, 12.0, 13.3]],
+    [18, [7.8, 8.8, 9.8, 10.9, 12.2, 13.7, 15.3]],
+    [24, [8.6, 9.7, 10.8, 12.2, 13.6, 15.3, 17.1]],
+    [36, [10.0, 11.3, 12.7, 14.3, 16.2, 18.3, 20.7]],
+    [48, [11.2, 12.7, 14.4, 16.3, 18.6, 21.2, 24.2]],
+    [60, [12.4, 14.1, 16.0, 18.3, 21.0, 24.2, 27.9]],
+    [72, [14.1, 15.9, 18.0, 20.5, 23.5, 27.1, 31.5]],
+    [84, [15.7, 17.7, 20.0, 22.9, 26.4, 30.7, 36.1]],
+    [96, [17.3, 19.5, 22.1, 25.4, 29.5, 34.7, 41.5]],
+    [108, [18.8, 21.3, 24.3, 28.1, 33.0, 39.4, 48.2]],
+    [120, [20.4, 23.2, 26.7, 31.2, 37.0, 45.0, 56.4]],
+  ] as const,
+  girls: [
+    [0, [2.0, 2.4, 2.8, 3.2, 3.7, 4.2, 4.8]],
+    [1, [2.7, 3.2, 3.6, 4.2, 4.8, 5.5, 6.2]],
+    [2, [3.4, 3.9, 4.5, 5.1, 5.8, 6.6, 7.5]],
+    [3, [4.0, 4.5, 5.2, 5.8, 6.6, 7.5, 8.5]],
+    [6, [5.1, 5.7, 6.5, 7.3, 8.2, 9.3, 10.6]],
+    [9, [5.8, 6.5, 7.3, 8.2, 9.3, 10.5, 12.0]],
+    [12, [6.3, 7.0, 7.9, 8.9, 10.1, 11.5, 13.1]],
+    [18, [7.2, 8.1, 9.1, 10.2, 11.6, 13.2, 15.1]],
+    [24, [8.1, 9.0, 10.2, 11.5, 13.0, 14.8, 17.0]],
+    [36, [9.6, 10.8, 12.2, 13.9, 15.8, 18.1, 20.9]],
+    [48, [10.9, 12.3, 14.0, 16.1, 18.5, 21.5, 25.2]],
+    [60, [12.1, 13.7, 15.8, 18.2, 21.2, 24.9, 29.5]],
+    [72, [13.5, 15.3, 17.5, 20.2, 23.5, 27.8, 33.4]],
+    [84, [14.8, 16.8, 19.3, 22.4, 26.3, 31.4, 38.3]],
+    [96, [16.3, 18.6, 21.4, 25.0, 29.7, 35.8, 44.1]],
+    [108, [18.1, 20.8, 24.0, 28.2, 33.6, 41.0, 51.1]],
+    [120, [20.3, 23.3, 27.0, 31.9, 38.2, 46.9, 59.2]],
+  ] as const,
+};
+
+function interpolateWfaCutoffs(
+  ageMo: number,
+  rows: readonly (readonly [number, readonly number[]])[]
+): number[] {
+  if (ageMo <= rows[0][0]) return [...rows[0][1]];
+  if (ageMo >= rows[rows.length - 1][0]) return [...rows[rows.length - 1][1]];
+  for (let i = 0; i < rows.length - 1; i++) {
+    const [m0, c0] = rows[i];
+    const [m1, c1] = rows[i + 1];
+    if (ageMo >= m0 && ageMo <= m1) {
+      const t = (ageMo - m0) / (m1 - m0);
+      return c0.map((val, idx) => val + t * (c1[idx] - val));
+    }
+  }
+  return [...rows[rows.length - 1][1]];
+}
+
+function calcWazFromCutoffs(w: number, cutoffs: number[]): number {
+  const [sd3n, sd2n, sd1n, med, sd1p, sd2p, sd3p] = cutoffs;
+  if (w >= med) {
+    if (w <= sd1p) {
+      return (w - med) / (sd1p - med);
+    } else if (w <= sd2p) {
+      return 1 + (w - sd1p) / (sd2p - sd1p);
+    } else if (w <= sd3p) {
+      return 2 + (w - sd2p) / (sd3p - sd2p);
+    } else {
+      return 3 + (w - sd3p) / (sd3p - sd2p);
+    }
+  } else {
+    if (w >= sd1n) {
+      return -1 + (w - sd1n) / (med - sd1n);
+    } else if (w >= sd2n) {
+      return -2 + (w - sd2n) / (sd1n - sd2n);
+    } else if (w >= sd3n) {
+      return -3 + (w - sd3n) / (sd2n - sd3n);
+    } else {
+      return -3 + (w - sd3n) / (sd2n - sd3n);
+    }
+  }
+}
+
 export function calcGrowthZScores(
   ageYr: number | null | undefined,
   weightKg: number | null | undefined,
@@ -126,7 +212,10 @@ export function calcGrowthZScores(
   let wazStatus: 'good' | 'warning' | 'danger' | null = null;
 
   if (isWazSupported) {
-    waz = +((w - wMed) / wSD).toFixed(1);
+    const cutoffsTable = sex === 'male' ? WHO_WFA_CUTOFFS.boys : WHO_WFA_CUTOFFS.girls;
+    const cutoffs = interpolateWfaCutoffs(ageMo, cutoffsTable);
+    wMed = cutoffs[3];
+    waz = +calcWazFromCutoffs(w, cutoffs).toFixed(1);
     if (waz < -3) {
       wazStatus = 'danger';
       wazLabel = 'Severe Underweight';

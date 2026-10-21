@@ -247,44 +247,50 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
               )}
             </div>
 
-            {/* 4. WHO Growth Standards Z-Score Badge (Desktop/Large Screen) */}
+            {/* 4. WHO Growth Standards Z-Score Badge & Neutral BMI Display (Desktop/Large Screen) */}
             {zScores && (
-              <div
-                className={`hidden lg:flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold font-mono-tabular border transition-all select-none ${
-                  zScores.wazStatus === 'danger' ||
-                  zScores.hazStatus === 'danger' ||
-                  zScores.nutritionStatus === 'danger'
-                    ? 'bg-[var(--danger-soft)] text-[var(--danger-text)] border-[var(--danger)]/30'
-                    : zScores.wazStatus === 'warning' ||
-                      zScores.hazStatus === 'warning' ||
-                      zScores.nutritionStatus === 'warning'
-                    ? 'bg-[var(--warning-soft)] text-[var(--warning-text)] border-[var(--warning)]/30'
-                    : 'bg-[var(--good-soft)] text-[var(--good-text)] border-[var(--good)]/30'
-                }`}
-                title={`WHO Growth Standards (${bio.sex === 'male' ? 'เด็กชาย' : 'เด็กหญิง'}, ${Math.round(zScores.refAgeMo)} mo): Median Wt ${zScores.medianWeight.toFixed(1)}kg, Median Ht ${zScores.medianHeight.toFixed(1)}cm`}
-              >
-                {zScores.waz !== null && (
-                  <span>
-                    WAZ: {zScores.waz >= 0 ? `+${zScores.waz}` : zScores.waz} ({zScores.wazLabel})
-                  </span>
-                )}
-                {zScores.haz !== null && (
-                  <span>
-                    {zScores.waz !== null ? ' · ' : ''}
-                    HAZ: {zScores.haz >= 0 ? `+${zScores.haz}` : zScores.haz} ({zScores.hazLabel})
-                  </span>
+              <div className="hidden lg:flex items-center gap-1.5 select-none">
+                {(zScores.waz !== null || zScores.haz !== null || zScores.nutritionLabel) && (
+                  <div
+                    className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold font-mono-tabular border transition-all ${
+                      zScores.wazStatus === 'danger' ||
+                      zScores.hazStatus === 'danger' ||
+                      zScores.nutritionStatus === 'danger'
+                        ? 'bg-[var(--danger-soft)] text-[var(--danger-text)] border-[var(--danger)]/30'
+                        : zScores.wazStatus === 'warning' ||
+                          zScores.hazStatus === 'warning' ||
+                          zScores.nutritionStatus === 'warning'
+                        ? 'bg-[var(--warning-soft)] text-[var(--warning-text)] border-[var(--warning)]/30'
+                        : 'bg-[var(--good-soft)] text-[var(--good-text)] border-[var(--good)]/30'
+                    }`}
+                    title={`WHO Growth Standards (${bio.sex === 'male' ? 'เด็กชาย' : 'เด็กหญิง'}, ${Math.round(zScores.refAgeMo)} mo): Median Wt ${zScores.medianWeight.toFixed(1)}kg, Median Ht ${zScores.medianHeight.toFixed(1)}cm`}
+                  >
+                    {zScores.waz !== null && (
+                      <span>
+                        WAZ: {zScores.waz >= 0 ? `+${zScores.waz}` : zScores.waz} ({zScores.wazLabel})
+                      </span>
+                    )}
+                    {zScores.haz !== null && (
+                      <span>
+                        {zScores.waz !== null ? ' · ' : ''}
+                        HAZ: {zScores.haz >= 0 ? `+${zScores.haz}` : zScores.haz} ({zScores.hazLabel})
+                      </span>
+                    )}
+                    {zScores.nutritionLabel && (
+                      <span>
+                        {zScores.waz !== null || zScores.haz !== null ? ' · ' : ''}
+                        {zScores.nutritionIndicator ? `${zScores.nutritionIndicator} ` : ''}
+                        ({zScores.nutritionLabel})
+                      </span>
+                    )}
+                  </div>
                 )}
                 {zScores.waz === null && zScores.bmi !== null && (
-                  <span>
-                    {zScores.haz !== null ? ' · ' : ''}
+                  <span
+                    className="flex items-center px-1.5 py-0.5 rounded text-[11px] font-semibold font-mono-tabular border bg-[var(--panel-subtle)] text-[var(--muted)] border-[var(--border)] transition-all"
+                    title={`Raw BMI: ${zScores.bmi} kg/m² (WHO reference cut-offs not applied)`}
+                  >
                     BMI {zScores.bmi}
-                  </span>
-                )}
-                {zScores.nutritionLabel && (
-                  <span>
-                    {zScores.waz !== null || zScores.haz !== null || zScores.bmi !== null ? ' · ' : ''}
-                    {zScores.nutritionIndicator ? `${zScores.nutritionIndicator} ` : ''}
-                    ({zScores.nutritionLabel})
                   </span>
                 )}
               </div>
