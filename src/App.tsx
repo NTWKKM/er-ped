@@ -17,14 +17,14 @@ type MainTab = 'dose' | 'fluids' | 'drip' | 'resus' | 'protocols';
 
 export default function App() {
   const [bio, setBio] = useState<BiometricState>({
-    rawWeight: '15',
-    rawAge: '3.5',
+    rawWeight: '',
+    rawAge: '',
     ageUnit: 'yr',
     sex: 'male',
     rawHeight: '',
     useIBW: false,
-    weightSource: 'manual',
-    serumCr: '0.5',
+    weightSource: null,
+    serumCr: '',
   });
 
   const [mainTab, setMainTab] = useState<MainTab>('dose');

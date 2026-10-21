@@ -459,21 +459,32 @@ export function calcGrowthZScores(
   let hazLabel: string | null = null;
   let hazStatus: 'good' | 'warning' | 'danger' | null = null;
 
-  if (Number.isFinite(h) && h > 0) {
-    haz = +((h - hMed) / hSD).toFixed(1);
-    if (haz < -3) {
+  if (Number.isFinite(h) && h > 0 && hSD > 0) {
+    const rawHaz = (h - hMed) / hSD;
+    // Snap tiny IEEE-754 floating point inaccuracies to exact integer SD thresholds (-3, -2, 2, 3)
+    let effectiveHaz = rawHaz;
+    for (const threshold of [-3, -2, 2, 3]) {
+      if (Math.abs(effectiveHaz - threshold) < 1e-12) {
+        effectiveHaz = threshold;
+        break;
+      }
+    }
+
+    if (effectiveHaz < -3) {
       hazStatus = 'danger';
       hazLabel = 'Severe Stunting';
-    } else if (haz < -2) {
+    } else if (effectiveHaz < -2) {
       hazStatus = 'warning';
       hazLabel = 'Stunted';
-    } else if (haz > 2) {
+    } else if (effectiveHaz > 2) {
       hazStatus = 'warning';
       hazLabel = 'Tall';
     } else {
       hazStatus = 'good';
       hazLabel = 'Normal';
     }
+    const roundedHaz = +rawHaz.toFixed(1);
+    haz = roundedHaz === 0 ? 0 : roundedHaz;
   }
 
   // Raw BMI calculation when height is provided; suppress unvalidated ratio-based WFH/BMI-for-age
