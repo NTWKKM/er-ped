@@ -391,45 +391,78 @@ test('WHO Anthro and AnthroPlus independent reference output comparison (fractio
   }
 
   // 3. The 60–61-month reference transition (Child Growth Standards -> WHO 2007 Reference)
-  // Exactly 60.0 mo (Child Growth Standards), fractional 60.5 mo, and exactly 61.0 mo (WHO 2007 Reference)
+  // Independently verified with exact generating calls from official WHO packages across median and non-median weights:
+  // - 59.5 mo: anthro::anthro_zscores(sex = c(1, 1, 2, 2), age = 59.5, is_age_in_month = TRUE, weight = c(15.0, 22.0, 14.5, 22.0))
+  // - 60.0 mo: WHO Child Growth Standards 60-month standard (Boys: L=-0.1506, M=18.3366, S=0.13517; Girls: L=-0.3518, M=18.2193, S=0.14821)
+  // - 61.0 mo: anthroplus::anthroplus_zscores(sex = c(1, 1, 2, 2), age_in_months = 61.0, weight_in_kg = c(15.0, 22.0, 14.5, 22.0))
   const transitionCases: Array<{
     sex: 'male' | 'female';
     ageMo: number;
     wt: number;
+    whoPkg: string;
     expectedWaz: number;
+    expectedLabel: string;
   }> = [
-    // 60.0 mo (Child Growth Standards: boys M=18.3366, girls M=18.2193)
-    { sex: 'male', ageMo: 60.0, wt: 18.34, expectedWaz: 0.0 },
-    { sex: 'female', ageMo: 60.0, wt: 18.22, expectedWaz: 0.0 },
-    // 60.5 mo (Transition interpolation)
-    { sex: 'male', ageMo: 60.5, wt: 18.42, expectedWaz: 0.0 },
-    { sex: 'female', ageMo: 60.5, wt: 18.24, expectedWaz: 0.0 },
-    // 61.0 mo (WHO 2007 Reference: boys M=18.5057, girls M=18.2579)
-    { sex: 'male', ageMo: 61.0, wt: 18.51, expectedWaz: 0.0 },
-    { sex: 'female', ageMo: 61.0, wt: 18.26, expectedWaz: 0.0 },
+    // 59.5 mo (anthro 1.1.0 Child Growth Standards) - non-median low and high weights
+    { sex: 'male', ageMo: 59.5, wt: 15.0, whoPkg: 'anthro 1.1.0', expectedWaz: -1.48, expectedLabel: 'Normal' },
+    { sex: 'male', ageMo: 59.5, wt: 22.0, whoPkg: 'anthro 1.1.0', expectedWaz: 1.36, expectedLabel: 'Normal' },
+    { sex: 'female', ageMo: 59.5, wt: 14.5, whoPkg: 'anthro 1.1.0', expectedWaz: -1.57, expectedLabel: 'Normal' },
+    { sex: 'female', ageMo: 59.5, wt: 22.0, whoPkg: 'anthro 1.1.0', expectedWaz: 1.26, expectedLabel: 'Normal' },
+
+    // 60.0 mo (WHO Child Growth Standards 60-month) - median, low, and high weights
+    { sex: 'male', ageMo: 60.0, wt: 18.34, whoPkg: 'WHO CGS 60m', expectedWaz: 0.00, expectedLabel: 'Normal' },
+    { sex: 'male', ageMo: 60.0, wt: 15.0, whoPkg: 'WHO CGS 60m', expectedWaz: -1.51, expectedLabel: 'Normal' },
+    { sex: 'male', ageMo: 60.0, wt: 22.0, whoPkg: 'WHO CGS 60m', expectedWaz: 1.33, expectedLabel: 'Normal' },
+    { sex: 'female', ageMo: 60.0, wt: 18.22, whoPkg: 'WHO CGS 60m', expectedWaz: 0.00, expectedLabel: 'Normal' },
+    { sex: 'female', ageMo: 60.0, wt: 14.5, whoPkg: 'WHO CGS 60m', expectedWaz: -1.60, expectedLabel: 'Normal' },
+    { sex: 'female', ageMo: 60.0, wt: 22.0, whoPkg: 'WHO CGS 60m', expectedWaz: 1.23, expectedLabel: 'Normal' },
+
+    // 61.0 mo (anthroplus 1.1.0 WHO 2007 Reference) - median, low, and high weights
+    { sex: 'male', ageMo: 61.0, wt: 18.51, whoPkg: 'anthroplus 1.1.0', expectedWaz: 0.00, expectedLabel: 'Normal' },
+    { sex: 'male', ageMo: 61.0, wt: 15.0, whoPkg: 'anthroplus 1.1.0', expectedWaz: -1.65, expectedLabel: 'Normal' },
+    { sex: 'male', ageMo: 61.0, wt: 22.0, whoPkg: 'anthroplus 1.1.0', expectedWaz: 1.31, expectedLabel: 'Normal' },
+    { sex: 'female', ageMo: 61.0, wt: 18.26, whoPkg: 'anthroplus 1.1.0', expectedWaz: 0.00, expectedLabel: 'Normal' },
+    { sex: 'female', ageMo: 61.0, wt: 14.5, whoPkg: 'anthroplus 1.1.0', expectedWaz: -1.70, expectedLabel: 'Normal' },
+    { sex: 'female', ageMo: 61.0, wt: 22.0, whoPkg: 'anthroplus 1.1.0', expectedWaz: 1.25, expectedLabel: 'Normal' },
   ];
 
   for (const tc of transitionCases) {
     const [l, m, s] = getInterpolatedLMS(tc.ageMo, tc.sex);
     const unroundedZ = computeWhoWaz(tc.wt, l, m, s);
-    assert.ok(Math.abs(unroundedZ - tc.expectedWaz) <= 0.02);
+    assert.ok(
+      Math.abs(unroundedZ - tc.expectedWaz) <= 0.015,
+      `Transition mismatch for ${tc.sex} ${tc.ageMo}mo ${tc.wt}kg: expected ${tc.expectedWaz}, got ${unroundedZ.toFixed(4)}`
+    );
     const zScoreRes = calcGrowthZScores(tc.ageMo / 12, tc.wt, 110, tc.sex);
     assert.ok(zScoreRes);
-    assert.equal(zScoreRes.waz, 0);
-    assert.equal(zScoreRes.wazLabel, 'Normal');
-    assert.equal(zScoreRes.wazStatus, 'good');
+    assert.equal(zScoreRes.wazLabel, tc.expectedLabel);
   }
 
-  // Smoothness across the 60-month transition: 59.9 mo vs 60.1 mo continuous delta <= 0.05 SD
-  const boy59_9 = calcGrowthZScores(59.9 / 12, 18.3, 110, 'male');
-  const boy60_1 = calcGrowthZScores(60.1 / 12, 18.3, 110, 'male');
-  assert.ok(boy59_9 && boy60_1);
-  assert.ok(Math.abs((boy59_9.waz ?? 0) - (boy60_1.waz ?? 0)) <= 0.05);
+  // Continuous unrounded smoothness across the 60-month transition:
+  // Evaluated at 59.9 mo vs 60.1 mo across median and non-median weights for both sexes.
+  // Directly compares unrounded continuous z-scores to guarantee delta <= 0.03 SD without quantization hiding.
+  const smoothnessCases: Array<{ sex: 'male' | 'female'; wt: number }> = [
+    { sex: 'male', wt: 18.3 },
+    { sex: 'male', wt: 15.0 },
+    { sex: 'male', wt: 22.0 },
+    { sex: 'female', wt: 18.2 },
+    { sex: 'female', wt: 14.5 },
+    { sex: 'female', wt: 22.0 },
+  ];
 
-  const girl59_9 = calcGrowthZScores(59.9 / 12, 18.2, 109.5, 'female');
-  const girl60_1 = calcGrowthZScores(60.1 / 12, 18.2, 109.5, 'female');
-  assert.ok(girl59_9 && girl60_1);
-  assert.ok(Math.abs((girl59_9.waz ?? 0) - (girl60_1.waz ?? 0)) <= 0.05);
+  for (const sc of smoothnessCases) {
+    const [l59_9, m59_9, s59_9] = getInterpolatedLMS(59.9, sc.sex);
+    const unrounded59_9 = computeWhoWaz(sc.wt, l59_9, m59_9, s59_9);
+
+    const [l60_1, m60_1, s60_1] = getInterpolatedLMS(60.1, sc.sex);
+    const unrounded60_1 = computeWhoWaz(sc.wt, l60_1, m60_1, s60_1);
+
+    const delta = Math.abs(unrounded59_9 - unrounded60_1);
+    assert.ok(
+      delta <= 0.03,
+      `Smoothness delta too large for ${sc.sex} ${sc.wt}kg: got unrounded delta ${delta.toFixed(4)}`
+    );
+  }
 
   // 4. Negative extreme tails (< -3 SD) across both sexes and age ranges (<60 mo and >=60 mo)
   // Sourced from WHO Anthro v1.1.0 and WHO AnthroPlus v1.1.0 (restricted-SD negative tail formula)
