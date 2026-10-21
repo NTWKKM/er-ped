@@ -120,88 +120,203 @@ test('WHO Growth Z-Score calculation for weight and height (male and female)', (
   assert.equal(edge975.nutritionLabel, null);
   assert.equal(edge976.nutritionLabel, null);
 
-  // WHO WAZ multi-point reference cut-offs and boundary validation (120-month boys and girls)
-  // Boys 120 mo (10 yr): WHO cut-offs [-3 SD: 20.4, -2 SD: 23.2, Median: 31.2, +2 SD: 45.0, +3 SD: 56.4]
-  const boyMedian = calcGrowthZScores(10, 31.2, 137.8, 'male');
+  // WHO WAZ LMS method and fine-grained classification threshold validation (120-month boys and girls)
+  // Classify with unrounded score, round only displayed score (testing immediately below, at, and above thresholds)
+  // Boys 120 mo (10 yr): L = -0.6764, M = 31.1586, S = 0.16305
+  // Exact cutoffs: -3 SD = 20.420 kg, -2 SD = 23.206 kg, Median = 31.159 kg, +2 SD = 45.038 kg
+  const boyMedian = calcGrowthZScores(10, 31.16, 137.8, 'male');
   assert.equal(boyMedian?.waz, 0);
   assert.equal(boyMedian?.wazLabel, 'Normal');
+  assert.equal(boyMedian?.wazStatus, 'good');
 
-  const boyNeg2 = calcGrowthZScores(10, 23.2, 137.8, 'male');
-  assert.equal(boyNeg2?.waz, -2);
-  assert.equal(boyNeg2?.wazLabel, 'Normal');
+  // Boys: -2 SD threshold (23.206 kg)
+  // 23.10 kg (unrounded ~ -2.034, rounds to -2.0 but strictly Underweight)
+  const boyBelowNeg2 = calcGrowthZScores(10, 23.10, 137.8, 'male');
+  assert.equal(boyBelowNeg2?.waz, -2);
+  assert.equal(boyBelowNeg2?.wazLabel, 'Underweight');
+  assert.equal(boyBelowNeg2?.wazStatus, 'warning');
 
-  const boyPos2 = calcGrowthZScores(10, 45.0, 137.8, 'male');
-  assert.equal(boyPos2?.waz, 2);
-  assert.equal(boyPos2?.wazLabel, 'Normal');
+  // 23.19 kg (immediately below -2 SD threshold: ~ -2.005)
+  const boyImmedBelowNeg2 = calcGrowthZScores(10, 23.19, 137.8, 'male');
+  assert.equal(boyImmedBelowNeg2?.waz, -2);
+  assert.equal(boyImmedBelowNeg2?.wazLabel, 'Underweight');
+  assert.equal(boyImmedBelowNeg2?.wazStatus, 'warning');
 
-  const boyNeg3 = calcGrowthZScores(10, 20.4, 137.8, 'male');
-  assert.equal(boyNeg3?.waz, -3);
-  assert.equal(boyNeg3?.wazLabel, 'Underweight');
+  // 23.206 kg (at -2 SD threshold: ~ -2.000)
+  const boyAtNeg2 = calcGrowthZScores(10, 23.206, 137.8, 'male');
+  assert.equal(boyAtNeg2?.waz, -2);
+  assert.equal(boyAtNeg2?.wazLabel, 'Normal');
+  assert.equal(boyAtNeg2?.wazStatus, 'good');
 
-  // Both sides of -2 SD boundary (23.2 kg)
-  const boyUnder2 = calcGrowthZScores(10, 22.8, 137.8, 'male');
-  assert.equal(boyUnder2?.waz, -2.1);
-  assert.equal(boyUnder2?.wazLabel, 'Underweight');
-  assert.equal(boyUnder2?.wazStatus, 'warning');
+  // 23.22 kg (immediately above -2 SD threshold: ~ -1.996)
+  const boyImmedAboveNeg2 = calcGrowthZScores(10, 23.22, 137.8, 'male');
+  assert.equal(boyImmedAboveNeg2?.waz, -2);
+  assert.equal(boyImmedAboveNeg2?.wazLabel, 'Normal');
+  assert.equal(boyImmedAboveNeg2?.wazStatus, 'good');
 
-  const boyAboveNeg2 = calcGrowthZScores(10, 23.6, 137.8, 'male');
-  assert.equal(boyAboveNeg2?.waz, -1.9);
+  // 23.30 kg (above threshold: ~ -1.970)
+  const boyAboveNeg2 = calcGrowthZScores(10, 23.30, 137.8, 'male');
+  assert.equal(boyAboveNeg2?.waz, -2);
   assert.equal(boyAboveNeg2?.wazLabel, 'Normal');
   assert.equal(boyAboveNeg2?.wazStatus, 'good');
 
-  // Both sides of +2 SD boundary (45.0 kg)
-  const boyBelowPos2 = calcGrowthZScores(10, 44.5, 137.8, 'male');
-  assert.equal(boyBelowPos2?.waz, 1.9);
-  assert.equal(boyBelowPos2?.wazLabel, 'Normal');
-  assert.equal(boyBelowPos2?.wazStatus, 'good');
+  // Boys: +2 SD threshold (45.038 kg)
+  // 45.00 kg (immediately below +2 SD threshold: ~ 1.996)
+  const boyImmedBelowPos2 = calcGrowthZScores(10, 45.00, 137.8, 'male');
+  assert.equal(boyImmedBelowPos2?.waz, 2);
+  assert.equal(boyImmedBelowPos2?.wazLabel, 'Normal');
+  assert.equal(boyImmedBelowPos2?.wazStatus, 'good');
 
-  const boyHigh2 = calcGrowthZScores(10, 45.9, 137.8, 'male');
-  assert.equal(boyHigh2?.waz, 2.1);
-  assert.equal(boyHigh2?.wazLabel, 'High Weight');
-  assert.equal(boyHigh2?.wazStatus, 'warning');
+  // 45.0380 kg (at +2 SD threshold: ~ 2.000)
+  const boyAtPos2 = calcGrowthZScores(10, 45.038, 137.8, 'male');
+  assert.equal(boyAtPos2?.waz, 2);
+  assert.equal(boyAtPos2?.wazLabel, 'Normal');
+  assert.equal(boyAtPos2?.wazStatus, 'good');
 
-  // Both sides of -3 SD boundary (20.4 kg)
-  const boySevere3 = calcGrowthZScores(10, 20.0, 137.8, 'male');
-  assert.equal(boySevere3?.waz, -3.1);
-  assert.equal(boySevere3?.wazLabel, 'Severe Underweight');
-  assert.equal(boySevere3?.wazStatus, 'danger');
+  // 45.06 kg (immediately above +2 SD threshold: ~ 2.003)
+  const boyImmedAbovePos2 = calcGrowthZScores(10, 45.06, 137.8, 'male');
+  assert.equal(boyImmedAbovePos2?.waz, 2);
+  assert.equal(boyImmedAbovePos2?.wazLabel, 'High Weight');
+  assert.equal(boyImmedAbovePos2?.wazStatus, 'warning');
 
-  const boyAboveNeg3 = calcGrowthZScores(10, 20.8, 137.8, 'male');
-  assert.equal(boyAboveNeg3?.waz, -2.9);
-  assert.equal(boyAboveNeg3?.wazLabel, 'Underweight');
-  assert.equal(boyAboveNeg3?.wazStatus, 'warning');
+  // 45.10 kg (above +2 SD threshold: ~ 2.008)
+  const boyAbovePos2 = calcGrowthZScores(10, 45.10, 137.8, 'male');
+  assert.equal(boyAbovePos2?.waz, 2);
+  assert.equal(boyAbovePos2?.wazLabel, 'High Weight');
+  assert.equal(boyAbovePos2?.wazStatus, 'warning');
 
-  // Girls 120 mo (10 yr): WHO cut-offs [-3 SD: 20.3, -2 SD: 23.3, Median: 31.9, +2 SD: 46.9, +3 SD: 59.2]
-  const girlMedian = calcGrowthZScores(10, 31.9, 138.0, 'female');
+  // Boys: -3 SD threshold (20.420 kg)
+  // 20.40 kg (immediately below -3 SD threshold: ~ -3.007)
+  const boyImmedBelowNeg3 = calcGrowthZScores(10, 20.40, 137.8, 'male');
+  assert.equal(boyImmedBelowNeg3?.waz, -3);
+  assert.equal(boyImmedBelowNeg3?.wazLabel, 'Severe Underweight');
+  assert.equal(boyImmedBelowNeg3?.wazStatus, 'danger');
+
+  // 20.42012 kg (at -3 SD threshold: ~ -3.000)
+  const boyAtNeg3 = calcGrowthZScores(10, 20.42012, 137.8, 'male');
+  assert.equal(boyAtNeg3?.waz, -3);
+  assert.equal(boyAtNeg3?.wazLabel, 'Underweight');
+  assert.equal(boyAtNeg3?.wazStatus, 'warning');
+
+  // 20.44 kg (immediately above -3 SD threshold: ~ -2.993)
+  const boyImmedAboveNeg3 = calcGrowthZScores(10, 20.44, 137.8, 'male');
+  assert.equal(boyImmedAboveNeg3?.waz, -3);
+  assert.equal(boyImmedAboveNeg3?.wazLabel, 'Underweight');
+  assert.equal(boyImmedAboveNeg3?.wazStatus, 'warning');
+
+  // Girls 120 mo (10 yr): L = -0.5958, M = 31.8578, S = 0.17262
+  // Exact cutoffs: -3 SD = 20.286 kg, -2 SD = 23.274 kg, Median = 31.858 kg, +2 SD = 46.890 kg
+  const girlMedian = calcGrowthZScores(10, 31.86, 138.0, 'female');
   assert.equal(girlMedian?.waz, 0);
   assert.equal(girlMedian?.wazLabel, 'Normal');
+  assert.equal(girlMedian?.wazStatus, 'good');
 
-  // Both sides of -2 SD boundary (23.3 kg)
-  const girlUnder2 = calcGrowthZScores(10, 23.0, 138.0, 'female');
-  assert.equal(girlUnder2?.waz, -2.1);
-  assert.equal(girlUnder2?.wazLabel, 'Underweight');
+  // Girls: -2 SD threshold (23.274 kg)
+  // 23.20 kg (below -2 SD threshold: ~ -2.025)
+  const girlBelowNeg2 = calcGrowthZScores(10, 23.20, 138.0, 'female');
+  assert.equal(girlBelowNeg2?.waz, -2);
+  assert.equal(girlBelowNeg2?.wazLabel, 'Underweight');
+  assert.equal(girlBelowNeg2?.wazStatus, 'warning');
 
-  const girlAboveNeg2 = calcGrowthZScores(10, 23.8, 138.0, 'female');
-  assert.equal(girlAboveNeg2?.waz, -1.9);
-  assert.equal(girlAboveNeg2?.wazLabel, 'Normal');
+  // 23.25 kg (immediately below -2 SD threshold: ~ -2.008)
+  const girlImmedBelowNeg2 = calcGrowthZScores(10, 23.25, 138.0, 'female');
+  assert.equal(girlImmedBelowNeg2?.waz, -2);
+  assert.equal(girlImmedBelowNeg2?.wazLabel, 'Underweight');
+  assert.equal(girlImmedBelowNeg2?.wazStatus, 'warning');
 
-  // Both sides of +2 SD boundary (46.9 kg)
-  const girlBelowPos2 = calcGrowthZScores(10, 45.6, 138.0, 'female');
-  assert.equal(girlBelowPos2?.waz, 1.9);
-  assert.equal(girlBelowPos2?.wazLabel, 'Normal');
+  // 23.2738 kg (at -2 SD threshold: ~ -2.000)
+  const girlAtNeg2 = calcGrowthZScores(10, 23.2738, 138.0, 'female');
+  assert.equal(girlAtNeg2?.waz, -2);
+  assert.equal(girlAtNeg2?.wazLabel, 'Normal');
+  assert.equal(girlAtNeg2?.wazStatus, 'good');
 
-  const girlHigh2 = calcGrowthZScores(10, 48.2, 138.0, 'female');
-  assert.equal(girlHigh2?.waz, 2.1);
-  assert.equal(girlHigh2?.wazLabel, 'High Weight');
+  // 23.30 kg (immediately above -2 SD threshold: ~ -1.991)
+  const girlImmedAboveNeg2 = calcGrowthZScores(10, 23.30, 138.0, 'female');
+  assert.equal(girlImmedAboveNeg2?.waz, -2);
+  assert.equal(girlImmedAboveNeg2?.wazLabel, 'Normal');
+  assert.equal(girlImmedAboveNeg2?.wazStatus, 'good');
 
-  // Both sides of -3 SD boundary (20.3 kg)
-  const girlSevere3 = calcGrowthZScores(10, 19.9, 138.0, 'female');
-  assert.equal(girlSevere3?.waz, -3.1);
-  assert.equal(girlSevere3?.wazLabel, 'Severe Underweight');
+  // Girls: +2 SD threshold (46.890 kg)
+  // 46.85 kg (immediately below +2 SD threshold: ~ 1.996)
+  const girlImmedBelowPos2 = calcGrowthZScores(10, 46.85, 138.0, 'female');
+  assert.equal(girlImmedBelowPos2?.waz, 2);
+  assert.equal(girlImmedBelowPos2?.wazLabel, 'Normal');
+  assert.equal(girlImmedBelowPos2?.wazStatus, 'good');
 
-  const girlAboveNeg3 = calcGrowthZScores(10, 20.7, 138.0, 'female');
-  assert.equal(girlAboveNeg3?.waz, -2.9);
-  assert.equal(girlAboveNeg3?.wazLabel, 'Underweight');
+  // 46.8897 kg (at +2 SD threshold: ~ 2.000)
+  const girlAtPos2 = calcGrowthZScores(10, 46.8897, 138.0, 'female');
+  assert.equal(girlAtPos2?.waz, 2);
+  assert.equal(girlAtPos2?.wazLabel, 'Normal');
+  assert.equal(girlAtPos2?.wazStatus, 'good');
+
+  // 46.95 kg (immediately above +2 SD threshold: ~ 2.006)
+  const girlImmedAbovePos2 = calcGrowthZScores(10, 46.95, 138.0, 'female');
+  assert.equal(girlImmedAbovePos2?.waz, 2);
+  assert.equal(girlImmedAbovePos2?.wazLabel, 'High Weight');
+  assert.equal(girlImmedAbovePos2?.wazStatus, 'warning');
+
+  // Girls: -3 SD threshold (20.286 kg)
+  // 20.25 kg (immediately below -3 SD threshold: ~ -3.013)
+  const girlImmedBelowNeg3 = calcGrowthZScores(10, 20.25, 138.0, 'female');
+  assert.equal(girlImmedBelowNeg3?.waz, -3);
+  assert.equal(girlImmedBelowNeg3?.wazLabel, 'Severe Underweight');
+  assert.equal(girlImmedBelowNeg3?.wazStatus, 'danger');
+
+  // 20.2861 kg (at -3 SD threshold: ~ -3.000)
+  const girlAtNeg3 = calcGrowthZScores(10, 20.2861, 138.0, 'female');
+  assert.equal(girlAtNeg3?.waz, -3);
+  assert.equal(girlAtNeg3?.wazLabel, 'Underweight');
+  assert.equal(girlAtNeg3?.wazStatus, 'warning');
+
+  // 20.32 kg (immediately above -3 SD threshold: ~ -2.988)
+  const girlImmedAboveNeg3 = calcGrowthZScores(10, 20.32, 138.0, 'female');
+  assert.equal(girlImmedAboveNeg3?.waz, -3);
+  assert.equal(girlImmedAboveNeg3?.wazLabel, 'Underweight');
+  assert.equal(girlImmedAboveNeg3?.wazStatus, 'warning');
+
+  // Independent WHO reference output validation across both sexes and supported age range
+  // Testing Median (0 SD), -2 SD, and +2 SD across multiple pediatric age checkpoints:
+  // 1 mo (1/12 yr), 6 mo (0.5 yr), 12 mo (1 yr), 24 mo (2 yr), 60 mo (5 yr), 84 mo (7 yr)
+  const whoCheckpoints: Array<{
+    ageYr: number;
+    sex: 'male' | 'female';
+    med: number;
+    neg2: number;
+    pos2: number;
+  }> = [
+    { ageYr: 1 / 12, sex: 'male', med: 4.47, neg2: 3.39, pos2: 5.80 },
+    { ageYr: 1 / 12, sex: 'female', med: 4.19, neg2: 3.16, pos2: 5.48 },
+    { ageYr: 0.5, sex: 'male', med: 7.93, neg2: 6.35, pos2: 9.85 },
+    { ageYr: 0.5, sex: 'female', med: 7.30, neg2: 5.73, pos2: 9.34 },
+    { ageYr: 1, sex: 'male', med: 9.65, neg2: 7.74, pos2: 11.99 },
+    { ageYr: 1, sex: 'female', med: 8.95, neg2: 7.04, pos2: 11.51 },
+    { ageYr: 2, sex: 'male', med: 12.15, neg2: 9.67, pos2: 15.28 },
+    { ageYr: 2, sex: 'female', med: 11.48, neg2: 9.04, pos2: 14.85 },
+    { ageYr: 5, sex: 'male', med: 18.33, neg2: 14.24, pos2: 23.91 },
+    { ageYr: 5, sex: 'female', med: 18.08, neg2: 13.84, pos2: 24.54 },
+    { ageYr: 7, sex: 'male', med: 22.89, neg2: 17.65, pos2: 30.69 },
+    { ageYr: 7, sex: 'female', med: 22.37, neg2: 16.78, pos2: 31.44 },
+  ];
+
+  for (const cp of whoCheckpoints) {
+    const resMed = calcGrowthZScores(cp.ageYr, cp.med, 100, cp.sex);
+    assert.equal(resMed?.waz, 0, `Failed median for ${cp.sex} at ${cp.ageYr} yr`);
+    assert.equal(resMed?.wazLabel, 'Normal');
+
+    const resNeg2 = calcGrowthZScores(cp.ageYr, cp.neg2, 100, cp.sex);
+    assert.equal(resNeg2?.waz, -2, `Failed -2 SD for ${cp.sex} at ${cp.ageYr} yr`);
+    assert.ok(
+      resNeg2?.wazLabel === 'Normal' || resNeg2?.wazLabel === 'Underweight',
+      `Expected Normal or Underweight at -2 SD for ${cp.sex} at ${cp.ageYr} yr`
+    );
+
+    const resPos2 = calcGrowthZScores(cp.ageYr, cp.pos2, 100, cp.sex);
+    assert.equal(resPos2?.waz, 2, `Failed +2 SD for ${cp.sex} at ${cp.ageYr} yr`);
+    assert.ok(
+      resPos2?.wazLabel === 'Normal' || resPos2?.wazLabel === 'High Weight',
+      `Expected Normal or High Weight at +2 SD for ${cp.sex} at ${cp.ageYr} yr`
+    );
+  }
 });
 
 test('Unified drug dose resolution with safety ceilings and age restriction', () => {
