@@ -58,10 +58,16 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
   const heightVal = parseFloat(bio.rawHeight);
   const validHeight = Number.isFinite(heightVal) && heightVal > 0 ? heightVal : null;
 
-  // Real-time WHO Growth Standards Z-Scores
+  const parsedWeight = parseFloat(bio.rawWeight);
+  const measuredWeight =
+    bio.weightSource === 'manual' && Number.isFinite(parsedWeight) && parsedWeight > 0
+      ? parsedWeight
+      : null;
+
+  // Real-time WHO Growth Standards Z-Scores (requires measured weight)
   const zScores = useMemo(() => {
-    return calcGrowthZScores(ageYears, activeWeight, validHeight, bio.sex);
-  }, [ageYears, activeWeight, validHeight, bio.sex]);
+    return calcGrowthZScores(ageYears, measuredWeight, validHeight, bio.sex);
+  }, [ageYears, measuredWeight, validHeight, bio.sex]);
 
   // Authoritative clinical provenance of the active dosing weight
   const weightProvenance = useMemo(() => {
@@ -164,8 +170,8 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                 onClick={onToggleSex}
                 className={`hidden sm:inline-flex text-xs font-extrabold px-1.5 py-0.5 rounded cursor-pointer select-none transition-colors ${
                   bio.sex === 'male'
-                    ? 'bg-sky-500/15 text-sky-700 dark:text-sky-300'
-                    : 'bg-rose-500/15 text-rose-700 dark:text-rose-300'
+                    ? 'bg-[var(--accent-soft)] text-[var(--accent-text)]'
+                    : 'bg-[var(--danger-soft)] text-[var(--danger-text)]'
                 }`}
                 title={`สลับเพศ (${bio.sex === 'male' ? 'เด็กชาย ♂' : 'เด็กหญิง ♀'}) สำหรับ WHO Growth Standards`}
               >
@@ -242,10 +248,10 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
           <div
             className={`flex flex-col justify-center px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg border shadow-xs transition-colors ${
               weightProvenance.isEmpty
-                ? 'border-l-3.5 border-l-[var(--border-strong)] border-[var(--border)] bg-[var(--panel-subtle)]'
+                ? 'border-l-[3.5px] border-l-[var(--border-strong)] border-[var(--border)] bg-[var(--panel-subtle)]'
                 : weightProvenance.isDerived
-                ? 'border-l-3.5 border-l-[var(--warning)] border-[var(--border)] bg-[var(--warning-soft)]'
-                : 'border-l-3.5 border-l-[var(--accent)] border-[var(--border)] bg-[var(--card)]'
+                ? 'border-l-[3.5px] border-l-[var(--warning)] border-[var(--border)] bg-[var(--warning-soft)]'
+                : 'border-l-[3.5px] border-l-[var(--accent)] border-[var(--border)] bg-[var(--card)]'
             }`}
           >
             <div className="flex items-baseline gap-1 sm:gap-1.5">
