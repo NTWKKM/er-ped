@@ -68,6 +68,34 @@ test('WHO Growth Z-Score calculation for weight and height (male and female)', (
   // Unmeasured / non-manual weight returns null (gates WAZ to measured values only)
   assert.equal(calcGrowthZScores(2, null, 87.8, 'male'), null);
   assert.equal(calcGrowthZScores(2, undefined, 87.8, 'male'), null);
+
+  // Continuous linear interpolation prevents abrupt discrete jumps between sparse table rows (2.54 vs 2.55 yr)
+  const at254 = calcGrowthZScores(2.54, 10, 92.3, 'male');
+  const at255 = calcGrowthZScores(2.55, 10, 92.3, 'male');
+  assert.ok(at254 && at255);
+  assert.ok(Math.abs((at254.waz ?? 0) - (at255.waz ?? 0)) <= 0.05);
+  assert.equal(at254.wazLabel, 'Underweight');
+  assert.equal(at255.wazLabel, 'Underweight');
+
+  // WAZ > +2 is classified as 'High Weight', never 'Overweight' or 'Obese' on WAZ alone
+  const heavyChild = calcGrowthZScores(3, 19, 96, 'male');
+  assert.ok(heavyChild);
+  assert.equal(heavyChild.wazLabel, 'High Weight');
+  // Excess weight status is derived from Weight-for-Height for <5 yr
+  assert.equal(heavyChild.nutritionIndicator, 'WFH');
+  assert.equal(heavyChild.nutritionLabel, 'Obese');
+
+  // Adolescent children (> 10 yr): WAZ is suppressed (null) and replaced by HAZ and BMI-for-age
+  const adolescent = calcGrowthZScores(12, 45, 150, 'male');
+  assert.ok(adolescent);
+  assert.equal(adolescent.waz, null);
+  assert.equal(adolescent.wazLabel, null);
+  assert.ok(adolescent.haz !== null);
+  assert.equal(adolescent.nutritionIndicator, 'BMI');
+  assert.equal(adolescent.nutritionLabel, 'Normal');
+
+  // Adolescent children without height: returns null (hides unsupported WAZ badge)
+  assert.equal(calcGrowthZScores(12, 45, null, 'male'), null);
 });
 
 test('Unified drug dose resolution with safety ceilings and age restriction', () => {

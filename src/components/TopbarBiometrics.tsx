@@ -251,17 +251,35 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
             {zScores && (
               <div
                 className={`hidden lg:flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold font-mono-tabular border transition-all select-none ${
-                  zScores.wazStatus === 'danger' || zScores.hazStatus === 'danger'
+                  zScores.wazStatus === 'danger' ||
+                  zScores.hazStatus === 'danger' ||
+                  zScores.nutritionStatus === 'danger'
                     ? 'bg-[var(--danger-soft)] text-[var(--danger-text)] border-[var(--danger)]/30'
-                    : zScores.wazStatus === 'warning' || zScores.hazStatus === 'warning'
+                    : zScores.wazStatus === 'warning' ||
+                      zScores.hazStatus === 'warning' ||
+                      zScores.nutritionStatus === 'warning'
                     ? 'bg-[var(--warning-soft)] text-[var(--warning-text)] border-[var(--warning)]/30'
                     : 'bg-[var(--good-soft)] text-[var(--good-text)] border-[var(--good)]/30'
                 }`}
-                title={`WHO Growth Standards (${bio.sex === 'male' ? 'เด็กชาย' : 'เด็กหญิง'}, ${zScores.refAgeMo} mo): Median Wt ${zScores.medianWeight}kg, Median Ht ${zScores.medianHeight}cm`}
+                title={`WHO Growth Standards (${bio.sex === 'male' ? 'เด็กชาย' : 'เด็กหญิง'}, ${Math.round(zScores.refAgeMo)} mo): Median Wt ${zScores.medianWeight.toFixed(1)}kg, Median Ht ${zScores.medianHeight.toFixed(1)}cm`}
               >
-                <span>WAZ: {zScores.waz >= 0 ? `+${zScores.waz}` : zScores.waz} ({zScores.wazLabel})</span>
+                {zScores.waz !== null && (
+                  <span>
+                    WAZ: {zScores.waz >= 0 ? `+${zScores.waz}` : zScores.waz} ({zScores.wazLabel})
+                  </span>
+                )}
                 {zScores.haz !== null && (
-                  <span>· HAZ: {zScores.haz >= 0 ? `+${zScores.haz}` : zScores.haz} ({zScores.hazLabel})</span>
+                  <span>
+                    {zScores.waz !== null ? ' · ' : ''}
+                    HAZ: {zScores.haz >= 0 ? `+${zScores.haz}` : zScores.haz} ({zScores.hazLabel})
+                  </span>
+                )}
+                {zScores.nutritionLabel && (zScores.nutritionStatus !== 'good' || zScores.waz === null) && (
+                  <span>
+                    {zScores.waz !== null || zScores.haz !== null ? ' · ' : ''}
+                    {zScores.nutritionIndicator === 'BMI' && zScores.bmi ? `BMI ${zScores.bmi} ` : ''}
+                    ({zScores.nutritionLabel})
+                  </span>
                 )}
               </div>
             )}

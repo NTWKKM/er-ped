@@ -57,12 +57,16 @@ export function calcBSA(weightKg: number | null | undefined, heightCm: number | 
 }
 
 export interface GrowthZScoreResult {
-  waz: number;
-  wazLabel: string;
-  wazStatus: 'good' | 'warning' | 'danger';
+  waz: number | null;
+  wazLabel: string | null;
+  wazStatus: 'good' | 'warning' | 'danger' | null;
   haz: number | null;
   hazLabel: string | null;
   hazStatus: 'good' | 'warning' | 'danger' | null;
+  bmi: number | null;
+  nutritionIndicator: 'WFH' | 'BMI' | null;
+  nutritionLabel: string | null;
+  nutritionStatus: 'good' | 'warning' | 'danger' | null;
   refAgeMo: number;
   medianWeight: number;
   medianHeight: number;
@@ -80,37 +84,65 @@ export function calcGrowthZScores(
     return null;
   }
 
-  const ageMo = Math.min(180, Math.round(a * 12));
+  const ageMo = Math.min(180, Math.max(0, a * 12));
   const table = sex === 'male' ? DATASET.whoGrowth.boys.table : DATASET.whoGrowth.girls.table;
 
-  let closestRow = table[0];
-  let minDiff = 9999;
-  for (let i = 0; i < table.length; i++) {
-    const diff = Math.abs(table[i][0] - ageMo);
-    if (diff < minDiff) {
-      minDiff = diff;
-      closestRow = table[i];
+  // Continuous linear interpolation across reference table months to avoid abrupt discrete jumps
+  let rowA = table[0];
+  let rowB = table[table.length - 1];
+
+  for (let i = 0; i < table.length - 1; i++) {
+    if (ageMo >= table[i][0] && ageMo <= table[i + 1][0]) {
+      rowA = table[i];
+      rowB = table[i + 1];
+      break;
     }
   }
 
-  const [rowMo, wMed, wSD, hMed, hSD] = closestRow;
-  const waz = +((w - wMed) / wSD).toFixed(1);
-  let wazStatus: 'good' | 'warning' | 'danger' = 'good';
-  let wazLabel = 'Normal';
-  if (waz < -3) {
-    wazStatus = 'danger';
-    wazLabel = 'Severe Underweight';
-  } else if (waz < -2) {
-    wazStatus = 'warning';
-    wazLabel = 'Underweight';
-  } else if (waz > 3) {
-    wazStatus = 'danger';
-    wazLabel = 'Obese';
-  } else if (waz > 2) {
-    wazStatus = 'warning';
-    wazLabel = 'Overweight';
+  let wMed: number, wSD: number, hMed: number, hSD: number;
+  if (rowA[0] === rowB[0] || ageMo <= table[0][0]) {
+    wMed = table[0][1];
+    wSD = table[0][2];
+    hMed = table[0][3];
+    hSD = table[0][4];
+  } else if (ageMo >= table[table.length - 1][0]) {
+    const last = table[table.length - 1];
+    wMed = last[1];
+    wSD = last[2];
+    hMed = last[3];
+    hSD = last[4];
+  } else {
+    const t = (ageMo - rowA[0]) / (rowB[0] - rowA[0]);
+    wMed = rowA[1] + t * (rowB[1] - rowA[1]);
+    wSD = rowA[2] + t * (rowB[2] - rowA[2]);
+    hMed = rowA[3] + t * (rowB[3] - rowA[3]);
+    hSD = rowA[4] + t * (rowB[4] - rowA[4]);
   }
 
+  // WHO weight-for-age is standardized up to 10 completed years (120 months); beyond 120 mo, WAZ is unstandardized
+  const isWazSupported = ageMo <= 120;
+  let waz: number | null = null;
+  let wazLabel: string | null = null;
+  let wazStatus: 'good' | 'warning' | 'danger' | null = null;
+
+  if (isWazSupported) {
+    waz = +((w - wMed) / wSD).toFixed(1);
+    if (waz < -3) {
+      wazStatus = 'danger';
+      wazLabel = 'Severe Underweight';
+    } else if (waz < -2) {
+      wazStatus = 'warning';
+      wazLabel = 'Underweight';
+    } else if (waz > 2) {
+      wazStatus = 'warning';
+      wazLabel = 'High Weight';
+    } else {
+      wazStatus = 'good';
+      wazLabel = 'Normal';
+    }
+  }
+
+  // Height-for-Age (HAZ) is standardized 0-19 years
   const h = Number(heightCm);
   let haz: number | null = null;
   let hazLabel: string | null = null;
@@ -118,8 +150,6 @@ export function calcGrowthZScores(
 
   if (Number.isFinite(h) && h > 0) {
     haz = +((h - hMed) / hSD).toFixed(1);
-    hazStatus = 'good';
-    hazLabel = 'Normal';
     if (haz < -3) {
       hazStatus = 'danger';
       hazLabel = 'Severe Stunting';
@@ -129,7 +159,70 @@ export function calcGrowthZScores(
     } else if (haz > 2) {
       hazStatus = 'warning';
       hazLabel = 'Tall';
+    } else {
+      hazStatus = 'good';
+      hazLabel = 'Normal';
     }
+  }
+
+  // Excess weight / body habitus indicator: Weight-for-height (<5y) and BMI-for-age (5-19y)
+  let bmi: number | null = null;
+  let nutritionIndicator: 'WFH' | 'BMI' | null = null;
+  let nutritionLabel: string | null = null;
+  let nutritionStatus: 'good' | 'warning' | 'danger' | null = null;
+
+  if (Number.isFinite(h) && h > 0) {
+    const heightM = h / 100;
+    bmi = +(w / (heightM * heightM)).toFixed(1);
+
+    if (ageMo < 60) {
+      nutritionIndicator = 'WFH';
+      const refW = estimateWeightFromLength(h);
+      if (refW && refW > 0) {
+        const ratio = w / refW;
+        if (ratio > 1.3) {
+          nutritionStatus = 'danger';
+          nutritionLabel = 'Obese';
+        } else if (ratio > 1.2) {
+          nutritionStatus = 'warning';
+          nutritionLabel = 'Overweight';
+        } else if (ratio < 0.7) {
+          nutritionStatus = 'danger';
+          nutritionLabel = 'Severe Wasting';
+        } else if (ratio < 0.8) {
+          nutritionStatus = 'warning';
+          nutritionLabel = 'Wasted';
+        } else {
+          nutritionStatus = 'good';
+          nutritionLabel = 'Normal';
+        }
+      }
+    } else {
+      nutritionIndicator = 'BMI';
+      const medianBmi = wMed / ((hMed / 100) * (hMed / 100));
+      const ratio = bmi / medianBmi;
+      if (ratio > 1.3) {
+        nutritionStatus = 'danger';
+        nutritionLabel = 'Obese';
+      } else if (ratio > 1.15) {
+        nutritionStatus = 'warning';
+        nutritionLabel = 'Overweight';
+      } else if (ratio < 0.7) {
+        nutritionStatus = 'danger';
+        nutritionLabel = 'Severe Thinness';
+      } else if (ratio < 0.8) {
+        nutritionStatus = 'warning';
+        nutritionLabel = 'Thinness';
+      } else {
+        nutritionStatus = 'good';
+        nutritionLabel = 'Normal';
+      }
+    }
+  }
+
+  // If age > 10y and no height was entered, no supported growth indicator can be computed
+  if (waz === null && haz === null && nutritionLabel === null) {
+    return null;
   }
 
   return {
@@ -139,9 +232,13 @@ export function calcGrowthZScores(
     haz,
     hazLabel,
     hazStatus,
-    refAgeMo: rowMo,
-    medianWeight: wMed,
-    medianHeight: hMed,
+    bmi,
+    nutritionIndicator,
+    nutritionLabel,
+    nutritionStatus,
+    refAgeMo: Math.round(ageMo * 10) / 10,
+    medianWeight: Math.round(wMed * 10) / 10,
+    medianHeight: Math.round(hMed * 10) / 10,
   };
 }
 
