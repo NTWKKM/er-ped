@@ -261,5 +261,18 @@ flowchart TD
     - **Dynamic Responsive Topbar Clearance & Biometric Flex-Wrap**: Re-architected `--topbar-h` dynamically across breakpoints (`52px` desktop, `96px` tablet <=960px, `106px` mobile <=768px, `168px` phone <=480px) and applied `flex-wrap: wrap; white-space: normal;` on mobile `.bio-fields`, eliminating sticky topbar content occlusion and horizontal viewport blowout. Preserved 16px input font size across all mobile viewports to prevent iOS Safari auto-zooming.
     - **100% Invariant Verification**: All 18 clinical tabs, essential DOM element IDs, and 129 automated JSDOM tests pass green.
 
+67. **ER-PED Pro v2.4 Platform Migration — React 19, TypeScript, Vite & Tailwind CSS v4 (v2.4.0 - October 2026)**:
+    - **Modern Component Architecture**: Migrated core application architecture from vanilla JavaScript (`app.js`, `dataset.js`) into modular, type-safe React 19 + TypeScript + Vite (`pnpm`):
+      - `src/components/TopbarBiometrics.tsx`: Biometric telemetry cluster (measured weight, estimated weight via Weech formula, Broselow spectrum band, length, age, sex, and theme switcher).
+      - `src/components/MedicationsView.tsx`: Unified pediatric formulary engine with 170+ drugs, real-time dosing calculations, liquid prep dilutions, safety ceilings, and bedside Schwartz eGFR renal dose adaptation matrices.
+      - `src/components/FluidsAndDripsView.tsx`: Holliday–Segar maintenance fluids, 24h/48h dehydration deficit replacement, and forward/reverse vasoactive infusion pump calculations (`mcg/kg/min` $\leftrightarrow$ `mL/hr`).
+      - `src/components/EmergencyResusView.tsx`: Emergency resuscitation suite (AHA/AAP PALS 2025 algorithms, Pediatric Airway & RSI, Sepsis & Septic Shock Phoenix score, Anaphylaxis, Trauma & Modified Parkland burn fluid, Croup & Stridor Westley score).
+      - `src/components/ProtocolsAndCDSView.tsx`: Clinical decision support & stepwise protocols (GINA 2026 Asthma + HFNC, Pediatric DKA 48h deficit, Time-Phased Seizure & Stopwatch, Toxicology & Antidotes, Procedural Sedation PSA, Pediatric Electrolytes & Corrected Imbalances, Vital Signs Reference).
+      - `src/components/ModalsAndDrawers.tsx`: Interactive Broselow 9-band spectrum drawer, clinical evidence modal, and version changelog.
+      - `src/utils/clinicalCalculations.ts`: Pure, deterministic clinical mathematical calculation engine covered by automated unit tests.
+    - **Safety & Archive**: Legacy vanilla implementation safely archived on branch `archive/v1-legacy`. Cleaned AI Studio temp artifacts (`.aistudio`) and redundant duplicate asset dumps.
+    - **Automated Verification**: Verified type-checking (`pnpm run lint`), core clinical unit tests (`pnpm test`), and production build (`pnpm run build`) passing 100% green.
+
+
 
 

@@ -1,24 +1,33 @@
 {
   "name": "er-ped",
-  "version": "2.3.3",
-  "description": "👶🏻 ER Pediatric Clinical Calculator PWA",
-  "main": "index.html",
+  "private": true,
+  "version": "2.4.0",
+  "description": "👶🏻 ER-PED Pro — Pediatric Emergency & Clinical Calculator Workstation",
+  "type": "module",
   "scripts": {
-    "start": "npx serve .",
-    "dev": "npx serve .",
-    "test": "node scripts/check-dataset.js && node scripts/test-core.js"
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "clean": "rm -rf dist",
+    "lint": "tsc --noEmit",
+    "test": "tsx --test src/utils/clinicalCalculations.test.ts"
   },
-  "keywords": [
-    "pediatric",
-    "er-ped",
-    "calculator",
-    "emergency-medicine",
-    "pwa",
-    "broselow"
-  ],
-  "author": "",
-  "license": "MIT",
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@vitejs/plugin-react": "^6.1.1",
+    "lucide-react": "^0.546.0",
+    "react": "^19.0.1",
+    "react-dom": "^19.0.1",
+    "vite": "^8.3.0"
+  },
   "devDependencies": {
-    "jsdom": "^30.0.0"
+    "@types/node": "^22.14.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "esbuild": "^0.25.0",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.21.0",
+    "typescript": "^7.0.2"
   }
 }
+

@@ -1,0 +1,208 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #F1F4F8;
+  --card: #FFFFFF;
+  --panel: #E5EAF0;
+  --panel-subtle: #EDF2F7;
+  --ink: #0F172A;
+  --ink-secondary: #334155;
+  --muted: #475569;
+  --border: #D8E0EA;
+  --border-strong: #CBD5E1;
+  --accent: #0277B6;
+  --accent-hover: #026597;
+  --accent-soft: #E0F2FE;
+  --accent-subtle: #F0F7FF;
+  --accent-text: #026AA2;
+  --good: #16A34A;
+  --good-soft: #ECFDF5;
+  --good-text: #166534;
+  --warning: #D97706;
+  --warning-soft: #FFFBEB;
+  --warning-text: #92400E;
+  --danger: #DC2626;
+  --danger-soft: #FEF2F2;
+  --danger-text: #991B1B;
+  --font-sans: 'Plus Jakarta Sans', 'Sarabun', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Sarabun', ui-monospace, SFMono-Regular, monospace;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0B0F17;
+  --card: #111827;
+  --panel: #1E293B;
+  --panel-subtle: #0F172A;
+  --ink: #F8FAFC;
+  --ink-secondary: #CBD5E1;
+  --muted: #94A3B8;
+  --border: #1E293B;
+  --border-strong: #334155;
+  --accent: #38BDF8;
+  --accent-hover: #7DD3FC;
+  --accent-soft: #0C2B47;
+  --accent-subtle: #081E33;
+  --accent-text: #38BDF8;
+  --good: #4ADE80;
+  --good-soft: #052E16;
+  --good-text: #4ADE80;
+  --warning: #FBBF24;
+  --warning-soft: #451A03;
+  --warning-text: #FBBF24;
+  --danger: #F87171;
+  --danger-soft: #450A0A;
+  --danger-text: #F87171;
+}
+
+:root[data-theme="mono"] {
+  --bg: #181816;
+  --card: #20201E;
+  --panel: #141412;
+  --panel-subtle: #1C1C1A;
+  --ink: #F4F4F2;
+  --ink-secondary: #ECECE8;
+  --muted: #A6A6A0;
+  --border: #42423E;
+  --border-strong: #74746E;
+  --accent: #ECECE8;
+  --accent-hover: #FFFFFF;
+  --accent-soft: #2E2E2B;
+  --accent-subtle: #262624;
+  --accent-text: #ECECE8;
+  --good: #BDBDB8;
+  --good-soft: #20201E;
+  --good-text: #FFFFFF;
+  --warning: #D8D8D2;
+  --warning-soft: #20201E;
+  --warning-text: #FFFFFF;
+  --danger: #FFFFFF;
+  --danger-soft: #20201E;
+  --danger-text: #FFFFFF;
+}
+
+:root[data-theme="red"] {
+  --bg: #0A0000;
+  --card: #180404;
+  --panel: #220808;
+  --panel-subtle: #140303;
+  --ink: #FF6B6B;
+  --ink-secondary: #FFAAAA;
+  --muted: #B84A4A;
+  --border: #401010;
+  --border-strong: #601818;
+  --accent: #FF2B2B;
+  --accent-hover: #FF5252;
+  --accent-soft: #380808;
+  --accent-subtle: #240505;
+  --accent-text: #FF6B6B;
+  --good: #FF8585;
+  --good-soft: #280808;
+  --good-text: #FF8585;
+  --warning: #FFAA80;
+  --warning-soft: #2D0F08;
+  --warning-text: #FFAA80;
+  --danger: #FF0000;
+  --danger-soft: #380000;
+  --danger-text: #FF0000;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  background-color: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-mono-tabular {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Custom utility classes mapped to CSS variables */
+.clinical-card {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.clinical-panel {
+  background-color: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.clinical-panel-subtle {
+  background-color: var(--panel-subtle);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+@layer components {
+  .clinical-input {
+    background-color: var(--card);
+    color: var(--ink);
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 14px;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+  }
+
+  .clinical-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
+  }
+}
+
+.clinical-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  text-align: left;
+}
+
+.clinical-table th {
+  background-color: var(--panel);
+  color: var(--ink);
+  font-weight: 700;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-strong);
+  font-size: 11.5px;
+  white-space: nowrap;
+}
+
+.clinical-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+  vertical-align: top;
+}
+
+.clinical-table tbody tr:nth-child(even) td {
+  background-color: color-mix(in srgb, var(--panel) 35%, var(--card));
+}
+
+.clinical-table tbody tr:hover td {
+  background-color: var(--accent-subtle);
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+  }
+  .clinical-card {
+    border: 1px solid #000 !important;
+    box-shadow: none !important;
+  }
+}

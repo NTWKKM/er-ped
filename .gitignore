@@ -1,3 +1,10 @@
-.DS_Store
 node_modules/
-.hermes/plans/2026-07-28-biometric-clarity-and-decopy.md
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+.hermes/
+

@@ -1,0 +1,6 @@
+{
+  "name": "ER-PED Pro — Pediatric Emergency & Clinical Calculator Workstation",
+  "description": "Next-generation pediatric emergency resuscitation, medication dosing, Broselow tape, and clinical decision support workstation with real-time eGFR renal adjustment, reverse drip calculation, and EHR order builder.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
