@@ -115,6 +115,22 @@ export default function App() {
     });
   };
 
+  const handleToggleSex = () => {
+    setBio((prev) => ({
+      ...prev,
+      sex: prev.sex === 'male' ? 'female' : 'male',
+    }));
+  };
+
+  const handleCycleTheme = () => {
+    setTheme((t) => {
+      if (t === 'light') return 'dark';
+      if (t === 'dark') return 'mono';
+      if (t === 'mono') return 'red';
+      return 'light';
+    });
+  };
+
   const TABS: { id: MainTab; label: string }[] = [
     { id: 'dose', label: 'Meds' },
     { id: 'fluids', label: 'Fluids' },
@@ -134,9 +150,10 @@ export default function App() {
         onWeightChange={handleWeightChange}
         onAgeChange={handleAgeChange}
         onToggleAgeUnit={handleToggleAgeUnit}
+        onToggleSex={handleToggleSex}
         onHeightChange={(val) => setBio((prev) => ({ ...prev, rawHeight: val }))}
         onToggleUseIBW={(checked) => setBio((prev) => ({ ...prev, useIBW: checked }))}
-        onCycleTheme={() => setTheme((t) => (t === 'light' ? 'dark' : 'light'))}
+        onCycleTheme={handleCycleTheme}
         onOpenBroselowModal={(color) => {
           setBroselowPreviewColor(color || null);
           setBroselowOpen(true);

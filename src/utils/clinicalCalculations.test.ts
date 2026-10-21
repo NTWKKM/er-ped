@@ -51,12 +51,19 @@ test('Broselow decimal weight boundary matching (no gaps)', () => {
   assert.ok(purpleZone && purpleZone.color.includes('Purple'));
 });
 
-test('WHO Growth Z-Score calculation for weight and height', () => {
-  const res = calcGrowthZScores(2, 12.2, 87.8, 'male');
-  assert.ok(res);
-  assert.equal(res.waz, 0);
-  assert.equal(res.wazLabel, 'Normal');
-  assert.equal(res.haz, 0);
+test('WHO Growth Z-Score calculation for weight and height (male and female)', () => {
+  const resMale = calcGrowthZScores(2, 12.2, 87.8, 'male');
+  assert.ok(resMale);
+  assert.equal(resMale.waz, 0);
+  assert.equal(resMale.wazLabel, 'Normal');
+  assert.equal(resMale.haz, 0);
+
+  // Female comparison for the same age
+  const resFemale = calcGrowthZScores(2, 11.5, 86.4, 'female');
+  assert.ok(resFemale);
+  assert.equal(resFemale.waz, 0);
+  assert.equal(resFemale.wazLabel, 'Normal');
+  assert.equal(resFemale.haz, 0);
 });
 
 test('Unified drug dose resolution with safety ceilings and age restriction', () => {

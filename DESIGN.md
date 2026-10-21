@@ -108,7 +108,11 @@
 
 ## UI States & Components
 
-1. **Top Biometric Instrument Bar**: Sticky top bar with clean 1px border separation, containing inputs for ABW, Age (with `Yr`/`Mo` unit switch), Length, and dynamic `Wt for Ht`/Broselow badges.
+1. **Top Biometric Instrument Bar**: Sticky top bar with clean 1px border separation and tactile capsules:
+   - **Measured Zone**: ABW input with unit, Age input with `yr`/`mo` toggle button, and Sex toggle (`♂`/`♀`) for WHO Growth charts.
+   - **Derived Zone**: Height (`HT`) input, real-time `Wt for Ht` readout, explicit `Use Wt-for-Ht` switch, and dynamic WHO Growth Standards Z-Score badge (`WAZ` & `HAZ` with color-coded severity).
+   - **In-Use Hero Metric Zone**: High-visibility active weight box with left status border (blue accent for manual, amber caution for derived/estimated, neutral for empty), explicit provenance label (`measured`, `estimated · Weech`, `Wt for Ht`, `enter BW or age`), Broselow resuscitation tape zone pill (`White · 12-14 kg`) with 1-tap reference modal, and 4-theme cycle toggle (`Light` $\rightarrow$ `Dark` $\rightarrow$ `Mono` $\rightarrow$ `Red`).
+   - **Ergonomic Mobile Streamlining (≤ 640px)**: Automatically truncates non-essential fields (`HT`, `Sex`, and Z-scores) to present strictly the 4 clinical essentials: Weight (`BW` + In-Use Readout), Age (`yr`/`mo`), Broselow tape band, and Theme toggle, with `16px` minimum mobile input font-size preventing iOS Safari auto-zoom.
 2. **Zero-CLS Smooth-Scrolling Tab Rail**: Horizontal scrollable tab navigation with persistent labels across all viewports (never hides labels on inactive tabs) and automatic center scrolling (`btn.scrollIntoView`) on selection, achieving 0.00 Cumulative Layout Shift (Key Decision #46).
 3. **Inline Lucide SVG Icon System**: Offline-first inline Lucide SVGs (`currentColor`, `stroke-width="2"`, `aria-hidden="true"`) replacing all live-UI text emojis across tabs, search inputs, toolbars, lock badges, and modals.
 4. **Autocomplete Combobox with Quick-Clear**: Integrated single-input search dropdown with left-aligned search SVG icon, quick-clear (`✕`) touch button, real-time fuzzy filtering, drug category badges, and keyboard navigation.
