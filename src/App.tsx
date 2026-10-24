@@ -354,6 +354,7 @@ export default function App() {
               else if (sub === 'fluids' || sub === 'transfusion') setMainTab('fluids');
             }}
             onAddOrder={handleAddOrder}
+            onInvalidateOrders={invalidateCalculatedOrders}
           />
         )}
 

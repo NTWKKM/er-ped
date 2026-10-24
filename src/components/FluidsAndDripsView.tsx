@@ -15,6 +15,7 @@ interface FluidsAndDripsViewProps {
   activeWeight: number | null;
   onChangeSubTab: (sub: 'fluids' | 'drip' | 'transfusion') => void;
   onAddOrder?: (order: OrderItem) => void;
+  onInvalidateOrders?: () => void;
 }
 
 export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
@@ -22,6 +23,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
   activeWeight,
   onChangeSubTab,
   onAddOrder,
+  onInvalidateOrders,
 }) => {
   const handleSubTabChange = (tab: 'fluids' | 'drip' | 'transfusion') => {
     onChangeSubTab(tab);
@@ -48,6 +50,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
     DATASET.infusionDrips.find((d) => d.key === dripKey) || DATASET.infusionDrips[0];
 
   const handleSelectDrip = (key: string) => {
+    onInvalidateOrders?.();
     setDripKey(key);
     setReverseRate('');
     const item = DATASET.infusionDrips.find((d) => d.key === key);
@@ -96,10 +99,18 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
     Number.isFinite(tarHbNum) &&
     tarHbNum > 0;
   const tx = hasValidHb ? calcTransfusion(w, curHbNum, tarHbNum, prbcType) : null;
+  const rawMinPrbcHours = tx && tx.maxInfusionRate > 0 ? tx.prbcVol / tx.maxInfusionRate : 0;
+  const minPrbcDurationHr = Math.max(2, Math.ceil(rawMinPrbcHours * 10) / 10);
   const maxPermittedPrbcVol = tx ? tx.maxInfusionRate * 4 : 0;
   const isPrbcScheduleConflict = Boolean(
     tx && tx.prbcVol > 0 && (tx.maxInfusionRate <= 0 || tx.prbcVol > maxPermittedPrbcVol)
   );
+  const prbcDurationText =
+    minPrbcDurationHr >= 4
+      ? '4 hr'
+      : minPrbcDurationHr > 2
+        ? `${minPrbcDurationHr}-4 hr`
+        : '2-4 hr';
   const baseTx = calcTransfusion(w, 0, 0, prbcType);
 
   return (
@@ -160,7 +171,10 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
               <select
                 id="fDegree"
                 value={deficitPct}
-                onChange={(e) => setDeficitPct(parseInt(e.target.value, 10))}
+                onChange={(e) => {
+                  onInvalidateOrders?.();
+                  setDeficitPct(parseInt(e.target.value, 10));
+                }}
                 className="clinical-input w-full font-semibold"
               >
                 <option value={3}>3% — Mild (dry mucous membranes)</option>
@@ -178,7 +192,10 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
               <select
                 id="fPlan"
                 value={fluidDuration}
-                onChange={(e) => setFluidDuration(parseInt(e.target.value, 10))}
+                onChange={(e) => {
+                  onInvalidateOrders?.();
+                  setFluidDuration(parseInt(e.target.value, 10));
+                }}
                 className="clinical-input w-full font-semibold"
               >
                 <option value={24}>Over 24 Hours</option>
@@ -288,7 +305,10 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                 min="0"
                 step="0.05"
                 value={dripDose}
-                onChange={(e) => setDripDose(e.target.value)}
+                onChange={(e) => {
+                  onInvalidateOrders?.();
+                  setDripDose(e.target.value);
+                }}
                 className="clinical-input w-full font-mono-tabular font-bold"
               />
             </div>
@@ -307,7 +327,10 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                   min="0.1"
                   step="0.5"
                   value={dripDrugMg}
-                  onChange={(e) => setDripDrugMg(e.target.value)}
+                  onChange={(e) => {
+                    onInvalidateOrders?.();
+                    setDripDrugMg(e.target.value);
+                  }}
                   className="clinical-input w-full font-mono-tabular font-bold text-center px-1.5"
                   title="Drug amount (mg)"
                 />
@@ -321,7 +344,10 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                   min="1"
                   step="5"
                   value={dripVolMl}
-                  onChange={(e) => setDripVolMl(e.target.value)}
+                  onChange={(e) => {
+                    onInvalidateOrders?.();
+                    setDripVolMl(e.target.value);
+                  }}
                   className="clinical-input w-full font-mono-tabular font-bold text-center px-1.5"
                   title="Diluent volume (mL)"
                 />
@@ -419,7 +445,10 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                 type="number"
                 step="0.1"
                 value={currentHb}
-                onChange={(e) => setCurrentHb(e.target.value)}
+                onChange={(e) => {
+                  onInvalidateOrders?.();
+                  setCurrentHb(e.target.value);
+                }}
                 className="clinical-input w-full font-mono-tabular font-bold"
               />
             </div>
@@ -432,7 +461,10 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                 type="number"
                 step="0.1"
                 value={targetHb}
-                onChange={(e) => setTargetHb(e.target.value)}
+                onChange={(e) => {
+                  onInvalidateOrders?.();
+                  setTargetHb(e.target.value);
+                }}
                 className="clinical-input w-full font-mono-tabular font-bold"
               />
             </div>
@@ -443,7 +475,10 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
               <select
                 id="txPrbcType"
                 value={prbcType}
-                onChange={(e) => setPrbcType(e.target.value as 'cpda' | 'sagm')}
+                onChange={(e) => {
+                  onInvalidateOrders?.();
+                  setPrbcType(e.target.value as 'cpda' | 'sagm');
+                }}
                 className="clinical-input w-full font-bold"
               >
                 <option value="cpda">CPDA-1 (×3)</option>
@@ -468,7 +503,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                       onAddOrder({
                         id: createOrderId('tx'),
                         module: 'Transfusion',
-                        text: `PRBC (${prbcType.toUpperCase()}) ${tx.prbcVol} mL IV over 2-4 hr (Max rate ≤ ${tx.maxInfusionRate} mL/hr) [Current Hb ${curHbNum} → Target ${tarHbNum} g/dL]`,
+                        text: `PRBC (${prbcType.toUpperCase()}) ${tx.prbcVol} mL IV over ${prbcDurationText} (Max rate ≤ ${tx.maxInfusionRate} mL/hr) [Current Hb ${curHbNum} → Target ${tarHbNum} g/dL]`,
                         timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
                       });
                     }}
@@ -499,7 +534,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                         {tx.prbcVol} <span className="text-sm font-bold">mL</span>
                       </div>
                       <div className="text-xs text-[var(--muted)] mt-1">
-                        Max safe rate ≤ {tx.maxInfusionRate} mL/hr
+                        Max safe rate ≤ {tx.maxInfusionRate} mL/hr ({prbcDurationText})
                       </div>
                     </>
                   ) : (
