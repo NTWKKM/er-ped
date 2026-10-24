@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
   TopbarBiometrics,
   BiometricState,
@@ -43,6 +43,63 @@ export default function App() {
   const [evidenceOpen, setEvidenceOpen] = useState<boolean>(false);
   const [orderSheetOpen, setOrderSheetOpen] = useState<boolean>(false);
   const [orders, setOrders] = useState<OrderItem[]>([]);
+
+  const evidenceTriggerRef = useRef<HTMLElement | null>(null);
+  const orderSheetTriggerRef = useRef<HTMLElement | null>(null);
+
+  const handleOpenEvidenceModal = () => {
+    evidenceTriggerRef.current = (document.activeElement as HTMLElement) || null;
+    setEvidenceOpen(true);
+  };
+
+  const handleCloseEvidenceModal = () => {
+    setEvidenceOpen(false);
+    evidenceTriggerRef.current?.focus();
+  };
+
+  const handleOpenOrderSheetModal = () => {
+    orderSheetTriggerRef.current = (document.activeElement as HTMLElement) || null;
+    setOrderSheetOpen(true);
+  };
+
+  const handleCloseOrderSheetModal = () => {
+    setOrderSheetOpen(false);
+    orderSheetTriggerRef.current?.focus();
+  };
+
+  const handleAddOrder = (order: OrderItem) => {
+    setOrders((prev) => [...prev, order]);
+  };
+
+  useEffect(() => {
+    if (evidenceOpen) {
+      const timer = setTimeout(() => {
+        const dialog = document.querySelector<HTMLElement>(
+          '[role="dialog"][aria-label="Clinical Evidence Registry Modal"]'
+        );
+        const focusable = dialog?.querySelector<HTMLElement>(
+          'input, button, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        focusable?.focus();
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, [evidenceOpen]);
+
+  useEffect(() => {
+    if (orderSheetOpen) {
+      const timer = setTimeout(() => {
+        const dialog = document.querySelector<HTMLElement>(
+          '[role="dialog"][aria-label="Active Patient Order Sheet & Bedside Pocket Summary"]'
+        );
+        const focusable = dialog?.querySelector<HTMLElement>(
+          'button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        focusable?.focus();
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, [orderSheetOpen]);
 
   const [seizureSeconds, setSeizureSeconds] = useState<number>(0);
   const [seizureRunning, setSeizureRunning] = useState<boolean>(false);
@@ -170,8 +227,8 @@ export default function App() {
           setBroselowPreviewColor(color || null);
           setBroselowOpen(true);
         }}
-        onOpenEvidenceModal={() => setEvidenceOpen(true)}
-        onOpenOrderSheetModal={() => setOrderSheetOpen(true)}
+        onOpenEvidenceModal={handleOpenEvidenceModal}
+        onOpenOrderSheetModal={handleOpenOrderSheetModal}
       />
 
       {/* Focused, Uncluttered Main Workspace */}
@@ -215,6 +272,7 @@ export default function App() {
             heightCm={parseFloat(bio.rawHeight) || null}
             serumCr={bio.serumCr}
             onSerumCrChange={(val) => setBio((prev) => ({ ...prev, serumCr: val }))}
+            onAddOrder={handleAddOrder}
           />
         )}
 
@@ -225,8 +283,9 @@ export default function App() {
             onChangeSubTab={(sub) => {
               setFluidsTopic(sub);
               if (sub === 'drip') setMainTab('drip');
-              else if (sub === 'fluids') setMainTab('fluids');
+              else if (sub === 'fluids' || sub === 'transfusion') setMainTab('fluids');
             }}
+            onAddOrder={handleAddOrder}
           />
         )}
 
@@ -243,6 +302,7 @@ export default function App() {
               setSeizureSeconds(0);
             }}
             onChangeTopic={setResusTopic}
+            onAddOrder={handleAddOrder}
           />
         )}
 
@@ -252,6 +312,7 @@ export default function App() {
             activeWeight={activeWeight}
             ageYears={ageYears}
             onChangeTopic={setProtocolTopic}
+            onAddOrder={handleAddOrder}
           />
         )}
       </main>
@@ -272,7 +333,7 @@ export default function App() {
       <EvidenceModal
         isOpen={evidenceOpen}
         initialTopicKey={null}
-        onClose={() => setEvidenceOpen(false)}
+        onClose={handleCloseEvidenceModal}
       />
 
       {/* Active Patient EHR Order Sheet & Bedside Pocket Summary Modal */}
@@ -281,7 +342,7 @@ export default function App() {
         orders={orders}
         activeWeight={activeWeight}
         ageYears={ageYears}
-        onClose={() => setOrderSheetOpen(false)}
+        onClose={handleCloseOrderSheetModal}
         onRemoveOrder={(id) => setOrders((prev) => prev.filter((o) => o.id !== id))}
         onClearOrders={() => setOrders([])}
         onCopyAll={() => {

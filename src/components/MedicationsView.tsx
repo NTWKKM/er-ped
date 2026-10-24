@@ -9,6 +9,7 @@ import {
   calcPatientRenalDose,
 } from '../utils/clinicalCalculations';
 import { Search, X, ChevronDown, AlertTriangle } from 'lucide-react';
+import { OrderItem } from './ModalsAndDrawers';
 
 interface MedicationsViewProps {
   activeWeight: number | null;
@@ -16,6 +17,7 @@ interface MedicationsViewProps {
   heightCm: number | null;
   serumCr: string;
   onSerumCrChange: (val: string) => void;
+  onAddOrder?: (order: OrderItem) => void;
 }
 
 function cleanEnglishText(text?: string | null): string {
@@ -59,6 +61,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
   heightCm,
   serumCr,
   onSerumCrChange,
+  onAddOrder,
 }) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
@@ -284,6 +287,27 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
         </div>
       ) : (
         <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-[var(--muted)]">Calculated Dosage</span>
+            {onAddOrder && !resolved?.isAgeRestricted && (
+              <button
+                type="button"
+                onClick={() => {
+                  onAddOrder({
+                    id: `med-${selectedDrug.key}-${Date.now()}`,
+                    module: 'Medication',
+                    text: `${selectedDrug.name} ${singleDoseMgText}${singleDoseVolumeText ? ` (${singleDoseVolumeText})` : ''} ${cleanEnglishText(selectedDrug.route) || 'PO'} ${selectedDrug.freq || selectedDrug.split || 'PRN'}`,
+                    timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
+                  });
+                }}
+                className="px-2.5 py-1 text-xs font-bold rounded border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
+                title="Add to Active Patient Order Sheet"
+              >
+                + Order Sheet
+              </button>
+            )}
+          </div>
+
           {/* 2 Clean Hero Readouts */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="clinical-panel-subtle p-4">

@@ -8,6 +8,7 @@ import {
   calcIVKClReplacement,
   fmtMg,
 } from '../utils/clinicalCalculations';
+import { OrderItem } from './ModalsAndDrawers';
 
 export type ProtocolTopic =
   | 'asthma'
@@ -23,6 +24,7 @@ interface ProtocolsAndCDSViewProps {
   activeWeight: number | null;
   ageYears: number | null;
   onChangeTopic: (topic: ProtocolTopic) => void;
+  onAddOrder?: (order: OrderItem) => void;
 }
 
 export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
@@ -30,6 +32,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
   activeWeight,
   ageYears,
   onChangeTopic,
+  onAddOrder,
 }) => {
   const [dkaSeverity, setDkaSeverity] = useState<number>(7);
   const [dkaPriorBolus, setDkaPriorBolus] = useState<string>('0');

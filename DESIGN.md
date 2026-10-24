@@ -147,6 +147,12 @@
     - **Mobile Non-Zoom Input Font Sizing**: Configured all form inputs (`.clinical-input`, `input[type="number"]`, `input[type="text"]`, `select`) to enforce `16px` on mobile viewports (< 768px), preventing iOS Safari auto-zooming.
     - **Viewport Stability**: Standardized root container on `min-h-[100dvh]` to eliminate mobile browser address bar layout jumps.
 
+29. **Accessibility, Transfusion Guardrails & Active Order Queue Flow (CodeRabbit PR #11 Polish)**:
+    - **Calculator Order State Flow**: Passed `handleAddOrder` callback into calculator views (`MedicationsView`, `FluidsAndDripsView`, `EmergencyResusView`, `ProtocolsAndCDSView`), enabling 1-tap `+ Order Sheet` queuing of calculated drug doses, maintenance fluids, vasoactive drips, and PRBC transfusions.
+    - **Accessible Dialog Focus Management**: Added trigger element retention and keyboard focus routing into `EvidenceModal` and `OrderSheetModal` on open, restoring focus to originating trigger buttons on close.
+    - **Transfusion Calculation Safety Guardrails**: Eliminated implicit `0` and `10.0` fallbacks for `currentHb` and `targetHb` in `FluidsAndDripsView`; requires explicit positive numeric values before rendering PRBC volume requirements.
+    - **W3C Form Accessibility & ARIA Navigation Sync**: Grouped vasoactive drip dilution inputs into `<fieldset>` with `<legend>` and explicit control labels; added `aria-pressed` states to subtab selector buttons; aligned main navigation state between `fluids` and `transfusion` subtabs.
+
 
 
 

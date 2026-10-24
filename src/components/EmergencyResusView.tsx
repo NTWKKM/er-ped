@@ -9,6 +9,7 @@ import {
   calcParklandBurn,
 } from '../utils/clinicalCalculations';
 import { Play, Pause, RotateCcw } from 'lucide-react';
+import { OrderItem } from './ModalsAndDrawers';
 
 export type ResusTopic =
   | 'pals'
@@ -28,6 +29,7 @@ interface EmergencyResusViewProps {
   onToggleSeizureTimer: () => void;
   onResetSeizureTimer: () => void;
   onChangeTopic: (topic: ResusTopic) => void;
+  onAddOrder?: (order: OrderItem) => void;
 }
 
 export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
@@ -39,6 +41,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
   onToggleSeizureTimer,
   onResetSeizureTimer,
   onChangeTopic,
+  onAddOrder,
 }) => {
   const [ncprWeight, setNcprWeight] = useState<string>('');
   const [burnTBSA, setBurnTBSA] = useState<string>('15');

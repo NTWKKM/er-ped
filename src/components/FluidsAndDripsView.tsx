@@ -8,17 +8,20 @@ import {
   calcTransfusion,
 } from '../utils/clinicalCalculations';
 import { AlertTriangle } from 'lucide-react';
+import { OrderItem } from './ModalsAndDrawers';
 
 interface FluidsAndDripsViewProps {
   activeSubTab?: 'fluids' | 'drip' | 'transfusion';
   activeWeight: number | null;
   onChangeSubTab?: (sub: 'fluids' | 'drip' | 'transfusion') => void;
+  onAddOrder?: (order: OrderItem) => void;
 }
 
 export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
   activeSubTab = 'fluids',
   activeWeight,
   onChangeSubTab,
+  onAddOrder,
 }) => {
   const [internalSubTab, setInternalSubTab] = useState<'fluids' | 'drip' | 'transfusion'>(activeSubTab);
 
@@ -95,9 +98,15 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
     selectedDripItem?.maxRateMcgKgMin && doseNum > selectedDripItem.maxRateMcgKgMin;
 
   // 3. Transfusion calculations
-  const curHbNum = parseFloat(currentHb) || 0;
-  const tarHbNum = parseFloat(targetHb) || 10.0;
-  const tx = calcTransfusion(w, curHbNum, tarHbNum, prbcType);
+  const curHbNum = parseFloat(currentHb);
+  const tarHbNum = parseFloat(targetHb);
+  const hasValidHb =
+    Number.isFinite(curHbNum) &&
+    curHbNum > 0 &&
+    Number.isFinite(tarHbNum) &&
+    tarHbNum > 0;
+  const tx = hasValidHb ? calcTransfusion(w, curHbNum, tarHbNum, prbcType) : null;
+  const baseTx = calcTransfusion(w, 0, 0, prbcType);
 
   return (
     <div className="clinical-card p-5 space-y-4">
@@ -109,6 +118,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
         <div className="flex items-center gap-1 p-0.5 rounded-lg bg-[var(--panel)] border border-[var(--border)] self-start sm:self-auto">
           <button
             type="button"
+            aria-pressed={currentTab === 'fluids'}
             onClick={() => handleSubTabChange('fluids')}
             className={`px-2.5 sm:px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer ${
               currentTab === 'fluids'
@@ -120,6 +130,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
           </button>
           <button
             type="button"
+            aria-pressed={currentTab === 'drip'}
             onClick={() => handleSubTabChange('drip')}
             className={`px-2.5 sm:px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer ${
               currentTab === 'drip'
@@ -131,6 +142,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
           </button>
           <button
             type="button"
+            aria-pressed={currentTab === 'transfusion'}
             onClick={() => handleSubTabChange('transfusion')}
             className={`px-2.5 sm:px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer ${
               currentTab === 'transfusion'
@@ -186,38 +198,60 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
               Enter patient Weight (BW) above to calculate IV fluid rates
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="clinical-panel-subtle p-4">
-                <div className="text-xs font-semibold text-[var(--muted)]">
-                  Combined Rate (Maintenance + Deficit)
-                </div>
-                <div className="text-2xl font-extrabold font-mono-tabular text-[var(--good-text)] mt-1">
-                  {combinedRate.toFixed(1)} <span className="text-sm font-bold">mL/hr</span>
-                </div>
-                <div className="text-xs text-[var(--muted)] mt-1">
-                  Mnt {mntHr.toFixed(1)} + Deficit {replaceRate.toFixed(1)} mL/hr
-                </div>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-[var(--muted)]">Calculated Fluid Regimen</span>
+                {onAddOrder && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onAddOrder({
+                        id: `fluids-${Date.now()}`,
+                        module: 'IV Fluids',
+                        text: `Maintenance Fluid @ ${mntHr.toFixed(1)} mL/hr (${mntDay} mL/day)${deficitPct ? ` + Deficit ${deficitPct}% replacement (${replaceRate.toFixed(1)} mL/hr) = Total ${combinedRate.toFixed(1)} mL/hr` : ''}`,
+                        timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
+                      });
+                    }}
+                    className="px-2.5 py-1 text-xs font-bold rounded border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
+                    title="Add to Active Patient Order Sheet"
+                  >
+                    + Order Sheet
+                  </button>
+                )}
               </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="clinical-panel-subtle p-4">
+                  <div className="text-xs font-semibold text-[var(--muted)]">
+                    Combined Rate (Maintenance + Deficit)
+                  </div>
+                  <div className="text-2xl font-extrabold font-mono-tabular text-[var(--good-text)] mt-1">
+                    {combinedRate.toFixed(1)} <span className="text-sm font-bold">mL/hr</span>
+                  </div>
+                  <div className="text-xs text-[var(--muted)] mt-1">
+                    Mnt {mntHr.toFixed(1)} + Deficit {replaceRate.toFixed(1)} mL/hr
+                  </div>
+                </div>
 
-              <div className="clinical-panel-subtle p-4">
-                <div className="text-xs font-semibold text-[var(--muted)]">
-                  Maintenance (Holliday–Segar)
+                <div className="clinical-panel-subtle p-4">
+                  <div className="text-xs font-semibold text-[var(--muted)]">
+                    Maintenance (Holliday–Segar)
+                  </div>
+                  <div className="text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                    {mntHr.toFixed(1)} <span className="text-sm font-bold">mL/hr</span>
+                  </div>
+                  <div className="text-xs text-[var(--muted)] mt-1">{mntDay} mL/day</div>
                 </div>
-                <div className="text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
-                  {mntHr.toFixed(1)} <span className="text-sm font-bold">mL/hr</span>
-                </div>
-                <div className="text-xs text-[var(--muted)] mt-1">{mntDay} mL/day</div>
-              </div>
 
-              <div className="clinical-panel-subtle p-4">
-                <div className="text-xs font-semibold text-[var(--muted)]">
-                  Shock Bolus (20 mL/kg)
-                </div>
-                <div className="text-2xl font-extrabold font-mono-tabular text-[var(--danger-text)] mt-1">
-                  {shockBolus.toFixed(0)} <span className="text-sm font-bold">mL</span>
-                </div>
-                <div className="text-xs text-[var(--muted)] mt-1">
-                  Total Deficit ({deficitPct}%): {deficitVol.toFixed(0)} mL
+                <div className="clinical-panel-subtle p-4">
+                  <div className="text-xs font-semibold text-[var(--muted)]">
+                    Shock Bolus (20 mL/kg)
+                  </div>
+                  <div className="text-2xl font-extrabold font-mono-tabular text-[var(--danger-text)] mt-1">
+                    {shockBolus.toFixed(0)} <span className="text-sm font-bold">mL</span>
+                  </div>
+                  <div className="text-xs text-[var(--muted)] mt-1">
+                    Total Deficit ({deficitPct}%): {deficitVol.toFixed(0)} mL
+                  </div>
                 </div>
               </div>
             </div>
@@ -265,12 +299,16 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
               />
             </div>
 
-            <div>
-              <label className="text-xs font-bold text-[var(--muted)] block mb-1">
+            <fieldset className="border-0 p-0 m-0">
+              <legend className="text-xs font-bold text-[var(--muted)] block mb-1">
                 Dilution (mg / mL)
-              </label>
+              </legend>
               <div className="flex items-center gap-1">
+                <label htmlFor="dripDrugMgInput" className="sr-only">
+                  Drug amount (mg)
+                </label>
                 <input
+                  id="dripDrugMgInput"
                   type="number"
                   min="0.1"
                   step="0.5"
@@ -279,8 +317,12 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                   className="clinical-input w-full font-mono-tabular font-bold text-center px-1.5"
                   title="Drug amount (mg)"
                 />
-                <span className="text-xs text-[var(--muted)]">/</span>
+                <span className="text-xs text-[var(--muted)]" aria-hidden="true">/</span>
+                <label htmlFor="dripVolMlInput" className="sr-only">
+                  Diluent volume (mL)
+                </label>
                 <input
+                  id="dripVolMlInput"
                   type="number"
                   min="1"
                   step="5"
@@ -290,7 +332,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                   title="Diluent volume (mL)"
                 />
               </div>
-            </div>
+            </fieldset>
           </div>
 
           {!w ? (
@@ -299,6 +341,26 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
             </div>
           ) : (
             <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-[var(--muted)]">Calculated Infusion Rate</span>
+                {onAddOrder && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onAddOrder({
+                        id: `drip-${dripKey}-${Date.now()}`,
+                        module: 'Drip',
+                        text: `${selectedDripItem.drug} ${dripDose} ${selectedDripItem.unit} → Syringe Pump @ ${fwd.rateMlHr.toFixed(1)} mL/hr (Mix ${mgNum} mg in ${volNum} mL diluent)`,
+                        timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
+                      });
+                    }}
+                    className="px-2.5 py-1 text-xs font-bold rounded border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
+                    title="Add to Active Patient Order Sheet"
+                  >
+                    + Order Sheet
+                  </button>
+                )}
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="clinical-panel-subtle p-4">
                   <div className="text-xs font-semibold text-[var(--muted)]">
@@ -401,32 +463,62 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
               Enter patient Weight (BW) above to calculate transfusion volumes
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="clinical-panel-subtle p-4">
-                <div className="text-xs font-semibold text-[var(--muted)]">PRBC Volume Required</div>
-                <div className="text-2xl font-extrabold font-mono-tabular text-[var(--danger-text)] mt-1">
-                  {tx.prbcVol} <span className="text-sm font-bold">mL</span>
-                </div>
-                <div className="text-xs text-[var(--muted)] mt-1">
-                  Max safe rate ≤ {tx.maxInfusionRate} mL/hr
-                </div>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-[var(--muted)]">Calculated Transfusion Volumes</span>
+                {onAddOrder && tx && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onAddOrder({
+                        id: `tx-${Date.now()}`,
+                        module: 'Transfusion',
+                        text: `PRBC (${prbcType.toUpperCase()}) ${tx.prbcVol} mL IV over 2-4 hr (Max rate ≤ ${tx.maxInfusionRate} mL/hr) [Current Hb ${curHbNum} → Target ${tarHbNum} g/dL]`,
+                        timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
+                      });
+                    }}
+                    className="px-2.5 py-1 text-xs font-bold rounded border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
+                    title="Add to Active Patient Order Sheet"
+                  >
+                    + Order Sheet
+                  </button>
+                )}
               </div>
-
-              <div className="clinical-panel-subtle p-4">
-                <div className="text-xs font-semibold text-[var(--muted)]">Platelets &amp; FFP</div>
-                <div className="text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
-                  Plt {tx.pltVol} mL · FFP {tx.ffpVol} mL
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="clinical-panel-subtle p-4">
+                  <div className="text-xs font-semibold text-[var(--muted)]">PRBC Volume Required</div>
+                  {tx ? (
+                    <>
+                      <div className="text-2xl font-extrabold font-mono-tabular text-[var(--danger-text)] mt-1">
+                        {tx.prbcVol} <span className="text-sm font-bold">mL</span>
+                      </div>
+                      <div className="text-xs text-[var(--muted)] mt-1">
+                        Max safe rate ≤ {tx.maxInfusionRate} mL/hr
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-xs font-bold text-[var(--warning-text)] mt-2">
+                      Enter valid Current &amp; Target Hb
+                    </div>
+                  )}
                 </div>
-                <div className="text-xs text-[var(--muted)] mt-1">Cryo: {tx.cryoVol} mL</div>
-              </div>
 
-              <div className="clinical-panel-subtle p-4">
-                <div className="text-xs font-semibold text-[var(--muted)]">Tranexamic Acid (TXA)</div>
-                <div className="text-2xl font-extrabold font-mono-tabular text-[var(--accent-text)] mt-1">
-                  {tx.txaLoadingMg} <span className="text-sm font-bold">mg IV</span>
+                <div className="clinical-panel-subtle p-4">
+                  <div className="text-xs font-semibold text-[var(--muted)]">Platelets &amp; FFP</div>
+                  <div className="text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                    Plt {baseTx.pltVol} mL · FFP {baseTx.ffpVol} mL
+                  </div>
+                  <div className="text-xs text-[var(--muted)] mt-1">Cryo: {baseTx.cryoVol} mL</div>
                 </div>
-                <div className="text-xs text-[var(--muted)] mt-1">
-                  15 mg/kg over 10 min (Max 1000 mg)
+
+                <div className="clinical-panel-subtle p-4">
+                  <div className="text-xs font-semibold text-[var(--muted)]">Tranexamic Acid (TXA)</div>
+                  <div className="text-2xl font-extrabold font-mono-tabular text-[var(--accent-text)] mt-1">
+                    {baseTx.txaLoadingMg} <span className="text-sm font-bold">mg IV</span>
+                  </div>
+                  <div className="text-xs text-[var(--muted)] mt-1">
+                    15 mg/kg over 10 min (Max 1000 mg)
+                  </div>
                 </div>
               </div>
             </div>
