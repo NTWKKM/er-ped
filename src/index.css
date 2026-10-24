@@ -161,6 +161,24 @@ html, body {
   }
 }
 
+/* iOS Safari auto-zoom prevention: inputs must be >= 16px on mobile viewports */
+@media (max-width: 767px) {
+  .clinical-input,
+  input[type="number"],
+  input[type="text"],
+  select {
+    font-size: 16px !important;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 .clinical-table {
   width: 100%;
   border-collapse: collapse;

@@ -9,6 +9,7 @@ import {
   calcPatientRenalDose,
 } from '../utils/clinicalCalculations';
 import { Search, X, ChevronDown, AlertTriangle } from 'lucide-react';
+import { OrderItem, createOrderId } from './ModalsAndDrawers';
 
 interface MedicationsViewProps {
   activeWeight: number | null;
@@ -16,6 +17,12 @@ interface MedicationsViewProps {
   heightCm: number | null;
   serumCr: string;
   onSerumCrChange: (val: string) => void;
+  onAddOrder?: (order: OrderItem) => void;
+  onInvalidateOrders?: (targetPrefix?: string) => void;
+  selectedKey?: string;
+  onSelectKey?: (key: string) => void;
+  concOverride?: string;
+  onConcOverrideChange?: (val: string) => void;
 }
 
 function cleanEnglishText(text?: string | null): string {
@@ -59,18 +66,27 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
   heightCm,
   serumCr,
   onSerumCrChange,
+  onAddOrder,
+  onInvalidateOrders,
+  selectedKey,
+  onSelectKey,
+  concOverride,
+  onConcOverrideChange,
 }) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const [selectedKey, setSelectedKey] = useState<string>('paracetamol-syrup-120-mg-5-ml');
-  const [concOverride, setConcOverride] = useState<string>('');
+  const [internalSelectedKey, setInternalSelectedKey] = useState<string>('paracetamol-syrup-120-mg-5-ml');
+  const [internalConcOverride, setInternalConcOverride] = useState<string>('');
   const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const currentSelectedKey = selectedKey ?? internalSelectedKey;
+  const currentConcOverride = concOverride ?? internalConcOverride;
 
   const allDrugs = DATASET.pediatricDose;
 
   const selectedDrug = useMemo(() => {
-    return allDrugs.find((d) => d.key === selectedKey) || allDrugs[0];
-  }, [allDrugs, selectedKey]);
+    return allDrugs.find((d) => d.key === currentSelectedKey) || allDrugs[0];
+  }, [allDrugs, currentSelectedKey]);
 
   const filteredDrugs = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -94,10 +110,28 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
   }, []);
 
   const handleSelectDrug = (d: PediatricDrug) => {
-    setSelectedKey(d.key);
+    onInvalidateOrders?.(`med-${d.key}`);
+    if (onSelectKey) {
+      onSelectKey(d.key);
+    } else {
+      setInternalSelectedKey(d.key);
+    }
     setSearchQuery('');
-    setConcOverride('');
+    if (onConcOverrideChange) {
+      onConcOverrideChange('');
+    } else {
+      setInternalConcOverride('');
+    }
     setIsDropdownOpen(false);
+  };
+
+  const handleConcOverrideChange = (val: string) => {
+    onInvalidateOrders?.(`med-${selectedDrug.key}`);
+    if (onConcOverrideChange) {
+      onConcOverrideChange(val);
+    } else {
+      setInternalConcOverride(val);
+    }
   };
 
   const resolved = useMemo(
@@ -110,7 +144,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
     [selectedDrug]
   );
 
-  const customConcNum = parseFloat(concOverride);
+  const customConcNum = parseFloat(currentConcOverride);
   const effectiveMgPerMl =
     Number.isFinite(customConcNum) && customConcNum > 0
       ? customConcNum
@@ -183,6 +217,33 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
   }, [resolved]);
 
   const egfr = calcSchwartzEGFR(parseFloat(serumCr), heightCm);
+
+  const isAgeLimited = selectedDrug?.minAgeYr != null || selectedDrug?.maxAgeYr != null;
+  const isMissingRequiredAge = Boolean(isAgeLimited && (ageYears == null || ageYears <= 0));
+
+  const hasNumericDose = Boolean(
+    resolved &&
+    (
+      (resolved.doseMg != null && Number.isFinite(resolved.doseMg) && resolved.doseMg > 0) ||
+      (resolved.doseMinMg != null && Number.isFinite(resolved.doseMinMg) && resolved.doseMinMg > 0) ||
+      (resolved.doseMaxMg != null && Number.isFinite(resolved.doseMaxMg) && resolved.doseMaxMg > 0) ||
+      (resolved.doseMl != null && Number.isFinite(resolved.doseMl) && resolved.doseMl > 0) ||
+      (resolved.doseMinMl != null && Number.isFinite(resolved.doseMinMl) && resolved.doseMinMl > 0) ||
+      (resolved.doseMaxMl != null && Number.isFinite(resolved.doseMaxMl) && resolved.doseMaxMl > 0) ||
+      (resolved.doseUnits != null && Number.isFinite(resolved.doseUnits) && resolved.doseUnits > 0) ||
+      (resolved.doseMinUnits != null && Number.isFinite(resolved.doseMinUnits) && resolved.doseMinUnits > 0) ||
+      (resolved.doseMaxUnits != null && Number.isFinite(resolved.doseMaxUnits) && resolved.doseMaxUnits > 0)
+    ) &&
+    singleDoseMgText !== '—'
+  );
+
+  const canAddOrder = Boolean(
+    onAddOrder &&
+    resolved &&
+    !resolved.isAgeRestricted &&
+    !isMissingRequiredAge &&
+    hasNumericDose
+  );
 
   return (
     <div className="clinical-card p-5 space-y-5">
@@ -284,6 +345,36 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
         </div>
       ) : (
         <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-[var(--muted)]">Calculated Dosage</span>
+            {canAddOrder && (
+              <button
+                type="button"
+                onClick={() => {
+                  onAddOrder?.({
+                    id: createOrderId(`med-${selectedDrug.key}`),
+                    module: 'Medication',
+                    text: `${selectedDrug.name} ${singleDoseMgText}${singleDoseVolumeText ? ` (${singleDoseVolumeText})` : ''} ${cleanEnglishText(selectedDrug.route) || 'PO'} ${selectedDrug.freq || selectedDrug.split || 'PRN'}`,
+                    timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
+                  });
+                }}
+                className="px-2.5 py-1 text-xs font-bold rounded border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
+                title="Add to Active Patient Order Sheet"
+              >
+                + Order Sheet
+              </button>
+            )}
+          </div>
+
+          {isMissingRequiredAge && (
+            <div className="p-3 rounded-lg border border-[var(--warning)] bg-[var(--warning-soft)] text-[var(--warning-text)] text-xs flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 shrink-0" />
+              <span>
+                Age-limited medication ({selectedDrug.minAgeYr != null ? `≥ ${selectedDrug.minAgeYr} yr` : ''}{selectedDrug.maxAgeYr != null ? ` ≤ ${selectedDrug.maxAgeYr} yr` : ''}). Enter patient Age above to verify eligibility before adding to Order Sheet.
+              </span>
+            </div>
+          )}
+
           {/* 2 Clean Hero Readouts */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="clinical-panel-subtle p-4">
@@ -353,8 +444,8 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                 min="0"
                 step="0.1"
                 placeholder={strength.mgPerMl ? strength.mgPerMl.toFixed(1) : 'mg/mL'}
-                value={concOverride}
-                onChange={(e) => setConcOverride(e.target.value)}
+                value={currentConcOverride}
+                onChange={(e) => handleConcOverrideChange(e.target.value)}
                 className="clinical-input w-20 text-center font-mono-tabular text-xs font-bold py-1"
               />
             </div>

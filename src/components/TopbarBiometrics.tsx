@@ -3,7 +3,7 @@ import {
   getBroselowSpectrumBand,
   calcGrowthZScores,
 } from '../utils/clinicalCalculations';
-import { Sun, Moon, Monitor, Flame } from 'lucide-react';
+import { Sun, Moon, Monitor, Flame, BookOpen, FileText } from 'lucide-react';
 
 export interface BiometricState {
   rawWeight: string;
@@ -29,6 +29,8 @@ interface TopbarBiometricsProps {
   onToggleUseIBW: (checked: boolean) => void;
   onCycleTheme: () => void;
   onOpenBroselowModal: (zoneColor?: string) => void;
+  onOpenEvidenceModal?: (e?: React.MouseEvent<HTMLElement>) => void;
+  onOpenOrderSheetModal?: (e?: React.MouseEvent<HTMLElement>) => void;
 }
 
 export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
@@ -44,6 +46,8 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
   onToggleUseIBW,
   onCycleTheme,
   onOpenBroselowModal,
+  onOpenEvidenceModal,
+  onOpenOrderSheetModal,
 }) => {
   const activeBand = getBroselowSpectrumBand(activeWeight);
 
@@ -133,19 +137,19 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
 
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--card)]/95 backdrop-blur-md no-print shadow-xs">
-      <div className="max-w-5xl mx-auto px-3 sm:px-4 py-2 sm:py-2.5 flex items-center justify-between gap-2 sm:gap-4">
+      <div className="max-w-5xl mx-auto px-2 sm:px-4 py-2 sm:py-2.5 flex flex-wrap lg:flex-nowrap items-center justify-between gap-y-2 gap-x-2 sm:gap-x-3">
         {/* Left Section: Brand & Patient Biometrics Cluster */}
-        <div className="flex items-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 flex-wrap lg:flex-nowrap min-w-0">
           {/* Brand Logo */}
-          <span className="text-sm sm:text-base font-extrabold tracking-tight text-[var(--ink)] select-none">
+          <span className="text-xs sm:text-base font-extrabold tracking-tight text-[var(--ink)] select-none shrink-0">
             ER-PED
           </span>
-          <div className="h-4 w-[1px] bg-[var(--border-strong)] hidden sm:block" />
+          <div className="h-4 w-[1px] bg-[var(--border-strong)] hidden sm:block shrink-0" />
 
           {/* Biometrics Input Fields */}
-          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap sm:flex-nowrap">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap min-w-0">
             {/* 1. Measured Weight (BW) */}
-            <div className="flex items-center gap-1 bg-[var(--panel-subtle)] border border-[var(--border)] rounded-lg px-2 py-1 shadow-2xs">
+            <div className="flex items-center gap-1 bg-[var(--panel-subtle)] border border-[var(--border)] rounded-lg px-1.5 sm:px-2 py-1 shadow-2xs shrink-0">
               <label htmlFor="weight" className="text-xs font-bold text-[var(--muted)] select-none">
                 BW
               </label>
@@ -159,13 +163,13 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                 placeholder="kg"
                 value={bio.rawWeight}
                 onChange={(e) => onWeightChange(e.target.value)}
-                className="w-13 sm:w-16 bg-transparent text-center font-mono-tabular font-bold text-base sm:text-sm text-[var(--ink)] focus:outline-none"
+                className="w-11 sm:w-16 bg-transparent text-center font-mono-tabular font-bold text-base sm:text-sm text-[var(--ink)] focus:outline-none"
               />
               <span className="text-xs text-[var(--muted)] select-none">kg</span>
             </div>
 
             {/* 2. Age Input + Unit Toggle (yr/mo) + Sex Toggle (♂/♀) */}
-            <div className="flex items-center gap-1 bg-[var(--panel-subtle)] border border-[var(--border)] rounded-lg px-2 py-1 shadow-2xs">
+            <div className="flex items-center gap-1 bg-[var(--panel-subtle)] border border-[var(--border)] rounded-lg px-1.5 sm:px-2 py-1 shadow-2xs shrink-0">
               <label htmlFor="age" className="text-xs font-bold text-[var(--muted)] select-none">
                 Age
               </label>
@@ -179,12 +183,12 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                 placeholder="0"
                 value={bio.rawAge}
                 onChange={(e) => onAgeChange(e.target.value)}
-                className="w-10 sm:w-12 bg-transparent text-center font-mono-tabular font-bold text-base sm:text-sm text-[var(--ink)] focus:outline-none"
+                className="w-9 sm:w-12 bg-transparent text-center font-mono-tabular font-bold text-base sm:text-sm text-[var(--ink)] focus:outline-none"
               />
               <button
                 type="button"
                 onClick={onToggleAgeUnit}
-                className="text-xs font-bold px-1 py-0.5 rounded bg-[var(--panel)] text-[var(--ink)] hover:text-[var(--accent-text)] cursor-pointer select-none transition-colors"
+                className="min-h-[22px] min-w-[22px] text-xs font-bold px-1.5 py-0.5 rounded bg-[var(--panel)] text-[var(--ink)] hover:text-[var(--accent-text)] cursor-pointer select-none transition-colors"
                 title="คลิกเพื่อสลับหน่วยอายุ: ปี (yr) / เดือน (mo)"
               >
                 {bio.ageUnit}
@@ -194,7 +198,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
               <button
                 type="button"
                 onClick={onToggleSex}
-                className={`hidden sm:inline-flex text-xs font-extrabold px-1.5 py-0.5 rounded cursor-pointer select-none transition-colors ${
+                className={`hidden sm:inline-flex min-h-[22px] min-w-[22px] text-xs font-extrabold px-1.5 py-0.5 rounded cursor-pointer select-none transition-colors ${
                   bio.sex === 'male'
                     ? 'bg-[var(--accent-soft)] text-[var(--accent-text)]'
                     : 'bg-[var(--danger-soft)] text-[var(--danger-text)]'
@@ -206,7 +210,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
             </div>
 
             {/* 3. Height (HT) & Wt-for-Ht (Desktop/Tablet >= 640px) */}
-            <div className="hidden sm:flex items-center gap-1.5 bg-[var(--panel-subtle)] border border-[var(--border)] rounded-lg px-2 py-1 shadow-2xs">
+            <div className="hidden sm:flex items-center gap-1.5 bg-[var(--panel-subtle)] border border-[var(--border)] rounded-lg px-1.5 sm:px-2 py-1 shadow-2xs shrink-0">
               <label htmlFor="length" className="text-xs font-bold text-[var(--muted)] select-none">
                 HT
               </label>
@@ -220,7 +224,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                 placeholder="cm"
                 value={bio.rawHeight}
                 onChange={(e) => onHeightChange(e.target.value)}
-                className="w-14 bg-transparent text-center font-mono-tabular font-bold text-base sm:text-sm text-[var(--ink)] focus:outline-none"
+                className="w-12 sm:w-14 bg-transparent text-center font-mono-tabular font-bold text-base sm:text-sm text-[var(--ink)] focus:outline-none"
               />
               <span className="text-xs text-[var(--muted)] select-none">cm</span>
 
@@ -249,10 +253,10 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
 
             {/* 4. WHO Growth Standards Z-Score Badge & Neutral BMI Display (Desktop/Large Screen) */}
             {zScores && (
-              <div className="hidden lg:flex items-center gap-1.5 select-none">
+              <div className="hidden xl:flex items-center gap-1.5 select-none shrink-0 max-w-xs">
                 {(zScores.waz !== null || zScores.haz !== null || zScores.nutritionLabel) && (
                   <div
-                    className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold font-mono-tabular border transition-all ${
+                    className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold font-mono-tabular border transition-all truncate ${
                       zScores.wazStatus === 'danger' ||
                       zScores.hazStatus === 'danger' ||
                       zScores.nutritionStatus === 'danger'
@@ -298,11 +302,11 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
           </div>
         </div>
 
-        {/* Right Section: In-Use Active Weight Hero Box + Broselow Band + Theme Toggle */}
-        <div className="flex items-center gap-1.5 sm:gap-2 ml-auto flex-shrink-0">
+        {/* Right Section: In-Use Active Weight Hero Box + Broselow Band + Tools + Theme Toggle */}
+        <div className="flex items-center gap-1 sm:gap-2 ml-auto shrink-0">
           {/* Authoritative In-Use Active Weight Hero Box */}
           <div
-            className={`flex flex-col justify-center px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg border shadow-xs transition-colors ${
+            className={`flex flex-col justify-center px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg border shadow-xs transition-colors shrink-0 ${
               weightProvenance.isEmpty
                 ? 'border-l-[3.5px] border-l-[var(--border-strong)] border-[var(--border)] bg-[var(--panel-subtle)]'
                 : weightProvenance.isDerived
@@ -316,13 +320,13 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
               </span>
               <strong
                 id="activeWeightVal"
-                className="font-mono-tabular font-extrabold text-sm sm:text-base text-[var(--ink)] leading-none"
+                className="font-mono-tabular font-extrabold text-xs sm:text-base text-[var(--ink)] leading-none"
               >
                 {activeWeight ? `${activeWeight.toFixed(1)} kg` : '— kg'}
               </strong>
             </div>
             <span
-              className={`text-[9.5px] sm:text-[10px] leading-tight font-semibold tracking-tight select-none ${
+              className={`text-[9px] sm:text-[10px] leading-tight font-semibold tracking-tight select-none truncate max-w-[90px] sm:max-w-none ${
                 weightProvenance.isDerived ? 'text-[var(--warning-text)]' : 'text-[var(--muted)]'
               }`}
             >
@@ -337,11 +341,37 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
               type="button"
               onClick={() => onOpenBroselowModal(activeBand.color)}
               style={{ backgroundColor: activeBand.bg, color: activeBand.fg }}
-              className="px-2 py-1 rounded-md text-[10.5px] sm:text-[11px] font-bold font-mono-tabular border border-black/15 shadow-xs cursor-pointer hover:opacity-90 transition-opacity select-none"
+              className="min-h-[28px] sm:min-h-[32px] px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-[10px] sm:text-[11px] font-bold font-mono-tabular border border-black/15 shadow-xs cursor-pointer hover:opacity-90 transition-opacity select-none shrink-0"
               title="คลิกเพื่อเปิดตารางอุปกรณ์และยา Broselow Resuscitation Tape"
             >
               <span className="hidden sm:inline">{activeBand.label}</span>
               <span className="sm:hidden">{activeBand.label.split('·')[0].trim()}</span>
+            </button>
+          )}
+
+          {/* Evidence Registry Modal Button */}
+          {onOpenEvidenceModal && (
+            <button
+              type="button"
+              onClick={(e) => onOpenEvidenceModal(e)}
+              aria-label="Clinical Evidence & Guidelines"
+              className="min-h-[28px] min-w-[28px] sm:min-h-[32px] sm:min-w-[32px] p-1.5 sm:p-2 rounded-lg border border-[var(--border)] bg-[var(--panel-subtle)] text-[var(--muted)] hover:text-[var(--accent-text)] cursor-pointer transition-colors shrink-0 flex items-center justify-center"
+              title="Clinical Evidence & Guideline Reference Registry (2024–2026)"
+            >
+              <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            </button>
+          )}
+
+          {/* Bedside Pocket Card & Order Sheet Modal Button */}
+          {onOpenOrderSheetModal && (
+            <button
+              type="button"
+              onClick={(e) => onOpenOrderSheetModal(e)}
+              aria-label="Bedside Pocket Card & Order Sheet"
+              className="min-h-[28px] min-w-[28px] sm:min-h-[32px] sm:min-w-[32px] p-1.5 sm:p-2 rounded-lg border border-[var(--border)] bg-[var(--panel-subtle)] text-[var(--muted)] hover:text-[var(--accent-text)] cursor-pointer transition-colors shrink-0 flex items-center justify-center"
+              title="Bedside Emergency Pocket Card & EHR Order Sheet (Print A4 Card)"
+            >
+              <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>
           )}
 
@@ -350,7 +380,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
             type="button"
             onClick={onCycleTheme}
             aria-label="สลับธีมสี (Light, Dark, Mono, Red)"
-            className="p-1.5 sm:p-2 rounded-lg border border-[var(--border)] bg-[var(--panel-subtle)] text-[var(--muted)] hover:text-[var(--ink)] cursor-pointer transition-colors"
+            className="min-h-[28px] min-w-[28px] sm:min-h-[32px] sm:min-w-[32px] p-1.5 sm:p-2 rounded-lg border border-[var(--border)] bg-[var(--panel-subtle)] text-[var(--muted)] hover:text-[var(--ink)] cursor-pointer transition-colors shrink-0 flex items-center justify-center"
             title={
               theme === 'light'
                 ? 'ธีมปัจจุบัน: Light (Medical Mist) - คลิกเพื่อสลับเป็น Dark'
@@ -361,10 +391,10 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                 : 'ธีมปัจจุบัน: Red (Night-Vision PICU) - คลิกเพื่อสลับเป็น Light'
             }
           >
-            {theme === 'light' && <Sun className="w-4 h-4 text-amber-500" />}
-            {theme === 'dark' && <Moon className="w-4 h-4 text-sky-400" />}
-            {theme === 'mono' && <Monitor className="w-4 h-4 text-slate-400" />}
-            {theme === 'red' && <Flame className="w-4 h-4 text-rose-500" />}
+            {theme === 'light' && <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500" />}
+            {theme === 'dark' && <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-sky-400" />}
+            {theme === 'mono' && <Monitor className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400" />}
+            {theme === 'red' && <Flame className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-rose-500" />}
           </button>
         </div>
       </div>
