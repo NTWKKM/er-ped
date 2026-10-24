@@ -231,7 +231,13 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
             </div>
           ) : (
             (() => {
-              const netDef = Math.max(0, w * currentDkaSeverity * 10 - (parseFloat(currentDkaPriorBolus) || 0));
+              const rawPriorBolus = parseFloat(currentDkaPriorBolus);
+              const isValidPriorBolus =
+                currentDkaPriorBolus.trim() !== '' &&
+                Number.isFinite(rawPriorBolus) &&
+                rawPriorBolus >= 0;
+              const priorBolusVal = isValidPriorBolus ? rawPriorBolus : 0;
+              const netDef = Math.max(0, w * currentDkaSeverity * 10 - priorBolusVal);
               const mnt = calcMaintenanceMlPerHr(w);
               const totalRate = +(mnt + netDef / 48).toFixed(1);
               const riRate = +(w * 0.1).toFixed(1);
@@ -242,7 +248,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                       <div className="text-xs font-semibold text-[var(--muted)]">
                         Combined IV Fluid Rate (48h Rehydration)
                       </div>
-                      {onAddOrder && (
+                      {onAddOrder && isValidPriorBolus && (
                         <button
                           type="button"
                           onClick={() => {
@@ -260,12 +266,20 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                         </button>
                       )}
                     </div>
-                    <div className="text-2xl font-extrabold font-mono-tabular text-[var(--good-text)] mt-1">
-                      {totalRate} mL/hr
-                    </div>
-                    <div className="text-xs text-[var(--muted)] mt-1">
-                      Mnt {mnt} + Deficit {(netDef / 48).toFixed(1)} mL/hr (Add D5W when BG &lt; 250)
-                    </div>
+                    {isValidPriorBolus ? (
+                      <>
+                        <div className="text-2xl font-extrabold font-mono-tabular text-[var(--good-text)] mt-1">
+                          {totalRate} mL/hr
+                        </div>
+                        <div className="text-xs text-[var(--muted)] mt-1">
+                          Mnt {mnt} + Deficit {(netDef / 48).toFixed(1)} mL/hr (Add D5W when BG &lt; 250)
+                        </div>
+                      </>
+                    ) : (
+                      <div className="text-xs font-bold text-[var(--danger-text)] mt-2">
+                        ▲ Enter a valid non-negative fluid bolus (≥ 0 mL)
+                      </div>
+                    )}
                   </div>
                   <div className="clinical-panel-subtle p-4">
                     <div className="flex items-center justify-between">
