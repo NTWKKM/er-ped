@@ -7,7 +7,12 @@ import { MedicationsView } from './components/MedicationsView';
 import { FluidsAndDripsView } from './components/FluidsAndDripsView';
 import { EmergencyResusView, ResusTopic } from './components/EmergencyResusView';
 import { ProtocolsAndCDSView, ProtocolTopic } from './components/ProtocolsAndCDSView';
-import { BroselowModal } from './components/ModalsAndDrawers';
+import {
+  BroselowModal,
+  EvidenceModal,
+  OrderSheetModal,
+  OrderItem,
+} from './components/ModalsAndDrawers';
 import {
   estimateWeightFromAge,
   estimateWeightFromLength,
@@ -28,12 +33,16 @@ export default function App() {
   });
 
   const [mainTab, setMainTab] = useState<MainTab>('dose');
+  const [fluidsTopic, setFluidsTopic] = useState<'fluids' | 'drip' | 'transfusion'>('fluids');
   const [resusTopic, setResusTopic] = useState<ResusTopic>('pals');
   const [protocolTopic, setProtocolTopic] = useState<ProtocolTopic>('asthma');
   const [theme, setTheme] = useState<'light' | 'dark' | 'mono' | 'red'>('light');
 
   const [broselowOpen, setBroselowOpen] = useState<boolean>(false);
   const [broselowPreviewColor, setBroselowPreviewColor] = useState<string | null>(null);
+  const [evidenceOpen, setEvidenceOpen] = useState<boolean>(false);
+  const [orderSheetOpen, setOrderSheetOpen] = useState<boolean>(false);
+  const [orders, setOrders] = useState<OrderItem[]>([]);
 
   const [seizureSeconds, setSeizureSeconds] = useState<number>(0);
   const [seizureRunning, setSeizureRunning] = useState<boolean>(false);
@@ -143,8 +152,8 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[var(--bg)] text-[var(--ink)]">
-      {/* Clean Single-Row Header & Patient Inputs */}
+    <div className="min-h-[100dvh] flex flex-col bg-[var(--bg)] text-[var(--ink)]">
+      {/* Clean Header & Patient Inputs */}
       <TopbarBiometrics
         bio={bio}
         activeWeight={activeWeight}
@@ -161,10 +170,12 @@ export default function App() {
           setBroselowPreviewColor(color || null);
           setBroselowOpen(true);
         }}
+        onOpenEvidenceModal={() => setEvidenceOpen(true)}
+        onOpenOrderSheetModal={() => setOrderSheetOpen(true)}
       />
 
       {/* Focused, Uncluttered Main Workspace */}
-      <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-5 space-y-4">
+      <main className="flex-1 max-w-3xl w-full mx-auto px-3 sm:px-4 py-4 sm:py-5 space-y-4">
         {/* Simple 5-Tab Segmented Bar */}
         <nav
           role="tablist"
@@ -179,10 +190,14 @@ export default function App() {
                 type="button"
                 role="tab"
                 aria-selected={isAct}
-                onClick={() => setMainTab(t.id)}
-                className={`py-2 px-2 text-xs sm:text-sm font-bold rounded-lg transition-colors whitespace-nowrap text-center cursor-pointer ${
+                onClick={() => {
+                  setMainTab(t.id);
+                  if (t.id === 'fluids') setFluidsTopic('fluids');
+                  if (t.id === 'drip') setFluidsTopic('drip');
+                }}
+                className={`py-1.5 sm:py-2 px-1 sm:px-2 text-[11px] sm:text-xs md:text-sm font-bold rounded-lg transition-colors text-center cursor-pointer truncate ${
                   isAct
-                    ? 'bg-[var(--accent)] text-white'
+                    ? 'bg-[var(--accent)] text-white shadow-xs'
                     : 'text-[var(--muted)] hover:text-[var(--ink)]'
                 }`}
               >
@@ -204,7 +219,15 @@ export default function App() {
         )}
 
         {(mainTab === 'fluids' || mainTab === 'drip') && (
-          <FluidsAndDripsView activeSubTab={mainTab} activeWeight={activeWeight} />
+          <FluidsAndDripsView
+            activeSubTab={fluidsTopic}
+            activeWeight={activeWeight}
+            onChangeSubTab={(sub) => {
+              setFluidsTopic(sub);
+              if (sub === 'drip') setMainTab('drip');
+              else if (sub === 'fluids') setMainTab('fluids');
+            }}
+          />
         )}
 
         {mainTab === 'resus' && (
@@ -233,6 +256,7 @@ export default function App() {
         )}
       </main>
 
+      {/* Broselow 9-Color Spectrum Equipment & Drug Modal */}
       <BroselowModal
         isOpen={broselowOpen}
         activeWeight={activeWeight}
@@ -241,6 +265,28 @@ export default function App() {
         onSelectZoneWeight={(kg, color) => {
           handleWeightChange(String(kg), 'broselow');
           setBroselowPreviewColor(color);
+        }}
+      />
+
+      {/* Clinical Evidence & Guideline Reference Registry Modal */}
+      <EvidenceModal
+        isOpen={evidenceOpen}
+        initialTopicKey={null}
+        onClose={() => setEvidenceOpen(false)}
+      />
+
+      {/* Active Patient EHR Order Sheet & Bedside Pocket Summary Modal */}
+      <OrderSheetModal
+        isOpen={orderSheetOpen}
+        orders={orders}
+        activeWeight={activeWeight}
+        ageYears={ageYears}
+        onClose={() => setOrderSheetOpen(false)}
+        onRemoveOrder={(id) => setOrders((prev) => prev.filter((o) => o.id !== id))}
+        onClearOrders={() => setOrders([])}
+        onCopyAll={() => {
+          const text = orders.map((o, idx) => `${idx + 1}. [${o.module}] ${o.text}`).join('\n');
+          navigator.clipboard?.writeText(text);
         }}
       />
     </div>
