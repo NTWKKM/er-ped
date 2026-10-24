@@ -77,10 +77,16 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [internalSelectedKey, setInternalSelectedKey] = useState<string>('paracetamol-syrup-120-mg-5-ml');
   const [internalConcOverride, setInternalConcOverride] = useState<string>('');
+  const [isRenalReviewed, setIsRenalReviewed] = useState<boolean>(false);
+  const [isRenalDetailsOpen, setIsRenalDetailsOpen] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const currentSelectedKey = selectedKey ?? internalSelectedKey;
   const currentConcOverride = concOverride ?? internalConcOverride;
+
+  useEffect(() => {
+    setIsRenalReviewed(false);
+  }, [currentSelectedKey, serumCr, heightCm]);
 
   const allDrugs = DATASET.pediatricDose;
 
@@ -218,6 +224,20 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
 
   const egfr = calcSchwartzEGFR(parseFloat(serumCr), heightCm);
 
+  const matchedRenalTier = useMemo(() => {
+    if (!selectedDrug.renalAdjust || !selectedDrug.renalDosing || egfr === null) {
+      return null;
+    }
+    return selectedDrug.renalDosing.find((t) => egfr >= t.minGfr && egfr <= t.maxGfr) || null;
+  }, [selectedDrug, egfr]);
+
+  const matchedRenalRegimen = useMemo(() => {
+    if (!matchedRenalTier) return null;
+    return cleanEnglishText(calcPatientRenalDose(matchedRenalTier, selectedDrug, activeWeight));
+  }, [matchedRenalTier, selectedDrug, activeWeight]);
+
+  const isRenalReviewRequired = Boolean(matchedRenalTier && !isRenalReviewed);
+
   const isAgeLimited = selectedDrug?.minAgeYr != null || selectedDrug?.maxAgeYr != null;
   const isMissingRequiredAge = Boolean(isAgeLimited && (ageYears == null || ageYears <= 0));
 
@@ -242,8 +262,13 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
     resolved &&
     !resolved.isAgeRestricted &&
     !isMissingRequiredAge &&
+    !isRenalReviewRequired &&
     hasNumericDose
   );
+
+  const orderText = matchedRenalRegimen
+    ? `${selectedDrug.name} ${matchedRenalRegimen} ${cleanEnglishText(selectedDrug.route) || 'PO'} [Renal eGFR ${egfr!.toFixed(1)} mL/min]`
+    : `${selectedDrug.name} ${singleDoseMgText}${singleDoseVolumeText ? ` (${singleDoseVolumeText})` : ''} ${cleanEnglishText(selectedDrug.route) || 'PO'} ${selectedDrug.freq || selectedDrug.split || 'PRN'}`;
 
   return (
     <div className="clinical-card p-5 space-y-5">
@@ -347,14 +372,14 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-[var(--muted)]">Calculated Dosage</span>
-            {canAddOrder && (
+            {canAddOrder ? (
               <button
                 type="button"
                 onClick={() => {
                   onAddOrder?.({
                     id: createOrderId(`med-${selectedDrug.key}`),
                     module: 'Medication',
-                    text: `${selectedDrug.name} ${singleDoseMgText}${singleDoseVolumeText ? ` (${singleDoseVolumeText})` : ''} ${cleanEnglishText(selectedDrug.route) || 'PO'} ${selectedDrug.freq || selectedDrug.split || 'PRN'}`,
+                    text: orderText,
                     timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
                   });
                 }}
@@ -363,7 +388,19 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
               >
                 + Order Sheet
               </button>
-            )}
+            ) : isRenalReviewRequired ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setIsRenalDetailsOpen(true);
+                  setIsRenalReviewed(true);
+                }}
+                className="px-2.5 py-1 text-xs font-bold rounded border border-[var(--warning)] text-[var(--warning-text)] bg-[var(--warning-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
+                title="Review matched renal dosing tier before adding to Order Sheet"
+              >
+                ▲ Review Renal Regimen ({egfr?.toFixed(0)} mL/min)
+              </button>
+            ) : null}
           </div>
 
           {isMissingRequiredAge && (
@@ -453,9 +490,22 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
 
           {/* Collapsible Renal Adjustment */}
           {selectedDrug.renalAdjust && selectedDrug.renalDosing && (
-            <details className="clinical-panel-subtle p-3 text-xs">
-              <summary className="font-bold text-[var(--warning-text)] cursor-pointer">
-                ▲ Renal Dose Adjustment Required (Click to view eGFR table)
+            <details
+              open={isRenalDetailsOpen}
+              onToggle={(e) => {
+                const isOpen = e.currentTarget.open;
+                setIsRenalDetailsOpen(isOpen);
+                if (isOpen) setIsRenalReviewed(true);
+              }}
+              className="clinical-panel-subtle p-3 text-xs"
+            >
+              <summary className="font-bold text-[var(--warning-text)] cursor-pointer flex items-center justify-between">
+                <span>▲ Renal Dose Adjustment Required (Click to view eGFR table)</span>
+                {matchedRenalTier && (
+                  <span className={`text-[11px] font-bold ${isRenalReviewed ? 'text-[var(--good-text)]' : 'text-[var(--warning-text)]'}`}>
+                    [{isRenalReviewed ? '✓ Reviewed' : 'Review Required'}]
+                  </span>
+                )}
               </summary>
               <div className="mt-3 space-y-2">
                 <div className="flex items-center gap-2">
@@ -474,6 +524,27 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                     </span>
                   )}
                 </div>
+                {matchedRenalTier && (
+                  <div className="flex items-center justify-between p-2 rounded bg-[var(--card)] border border-[var(--border)]">
+                    <span className="text-xs text-[var(--ink)]">
+                      Matched Tier ({matchedRenalTier.gfr} mL/min):{' '}
+                      <strong className="text-[var(--accent-text)]">{matchedRenalRegimen}</strong>
+                    </span>
+                    {!isRenalReviewed ? (
+                      <button
+                        type="button"
+                        onClick={() => setIsRenalReviewed(true)}
+                        className="px-2 py-0.5 text-[11px] font-bold rounded bg-[var(--accent)] text-white hover:opacity-90 transition-opacity cursor-pointer shrink-0"
+                      >
+                        ✓ Confirm Review
+                      </button>
+                    ) : (
+                      <span className="text-[11px] font-bold text-[var(--good-text)]">
+                        ✓ Reviewed
+                      </span>
+                    )}
+                  </div>
+                )}
                 <div className="overflow-x-auto border border-[var(--border)] rounded">
                   <table className="clinical-table">
                     <thead>
