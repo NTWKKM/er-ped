@@ -25,6 +25,11 @@ interface ProtocolsAndCDSViewProps {
   ageYears: number | null;
   onChangeTopic: (topic: ProtocolTopic) => void;
   onAddOrder?: (order: OrderItem) => void;
+  onInvalidateOrders?: (targetPrefix?: string) => void;
+  dkaSeverity?: number;
+  onChangeDkaSeverity?: (severity: number) => void;
+  dkaPriorBolus?: string;
+  onChangeDkaPriorBolus?: (bolus: string) => void;
 }
 
 export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
@@ -33,9 +38,35 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
   ageYears,
   onChangeTopic,
   onAddOrder,
+  onInvalidateOrders,
+  dkaSeverity,
+  onChangeDkaSeverity,
+  dkaPriorBolus,
+  onChangeDkaPriorBolus,
 }) => {
-  const [dkaSeverity, setDkaSeverity] = useState<number>(7);
-  const [dkaPriorBolus, setDkaPriorBolus] = useState<string>('0');
+  const [internalDkaSeverity, setInternalDkaSeverity] = useState<number>(7);
+  const [internalDkaPriorBolus, setInternalDkaPriorBolus] = useState<string>('0');
+
+  const currentDkaSeverity = dkaSeverity ?? internalDkaSeverity;
+  const currentDkaPriorBolus = dkaPriorBolus ?? internalDkaPriorBolus;
+
+  const handleDkaSeverityChange = (val: number) => {
+    onInvalidateOrders?.('proto-dka-fluid');
+    if (onChangeDkaSeverity) {
+      onChangeDkaSeverity(val);
+    } else {
+      setInternalDkaSeverity(val);
+    }
+  };
+
+  const handleDkaPriorBolusChange = (val: string) => {
+    onInvalidateOrders?.('proto-dka-fluid');
+    if (onChangeDkaPriorBolus) {
+      onChangeDkaPriorBolus(val);
+    } else {
+      setInternalDkaPriorBolus(val);
+    }
+  };
 
   const [lyteNa, setLyteNa] = useState<string>('130');
   const [lyteGlucose, setLyteGlucose] = useState<string>('350');
@@ -170,8 +201,8 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                 Dehydration Severity (% Deficit)
               </label>
               <select
-                value={dkaSeverity}
-                onChange={(e) => setDkaSeverity(parseInt(e.target.value, 10))}
+                value={currentDkaSeverity}
+                onChange={(e) => handleDkaSeverityChange(parseInt(e.target.value, 10))}
                 className="clinical-input w-full font-bold"
               >
                 <option value={5}>Mild DKA (5%)</option>
@@ -187,8 +218,8 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                 type="number"
                 min="0"
                 step="50"
-                value={dkaPriorBolus}
-                onChange={(e) => setDkaPriorBolus(e.target.value)}
+                value={currentDkaPriorBolus}
+                onChange={(e) => handleDkaPriorBolusChange(e.target.value)}
                 className="clinical-input w-full font-mono-tabular font-bold"
               />
             </div>
@@ -200,7 +231,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
             </div>
           ) : (
             (() => {
-              const netDef = Math.max(0, w * dkaSeverity * 10 - (parseFloat(dkaPriorBolus) || 0));
+              const netDef = Math.max(0, w * currentDkaSeverity * 10 - (parseFloat(currentDkaPriorBolus) || 0));
               const mnt = calcMaintenanceMlPerHr(w);
               const totalRate = +(mnt + netDef / 48).toFixed(1);
               const riRate = +(w * 0.1).toFixed(1);

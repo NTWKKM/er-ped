@@ -41,8 +41,8 @@ export const DEFAULT_FLUIDS_INPUTS: FluidsAndDripsInputs = {
   dripDrugMg: '1',
   dripVolMl: '50',
   reverseRate: '',
-  currentHb: '6.5',
-  targetHb: '10.0',
+  currentHb: '',
+  targetHb: '',
   prbcType: 'cpda',
 };
 
@@ -87,7 +87,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
     DATASET.infusionDrips.find((d) => d.key === dripKey) || DATASET.infusionDrips[0];
 
   const handleSelectDrip = (key: string) => {
-    onInvalidateOrders?.('drip');
+    onInvalidateOrders?.(`drip-${key}`);
     const item = DATASET.infusionDrips.find((d) => d.key === key);
     let nextMg = '1';
     let nextVol = '50';
@@ -352,7 +352,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                 step="0.05"
                 value={dripDose}
                 onChange={(e) => {
-                  onInvalidateOrders?.('drip');
+                  onInvalidateOrders?.(`drip-${dripKey}`);
                   updateInputs({ dripDose: e.target.value });
                 }}
                 className="clinical-input w-full font-mono-tabular font-bold"
@@ -374,7 +374,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                   step="0.5"
                   value={dripDrugMg}
                   onChange={(e) => {
-                    onInvalidateOrders?.('drip');
+                    onInvalidateOrders?.(`drip-${dripKey}`);
                     updateInputs({ dripDrugMg: e.target.value });
                   }}
                   className="clinical-input w-full font-mono-tabular font-bold text-center px-1.5"
@@ -391,7 +391,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                   step="5"
                   value={dripVolMl}
                   onChange={(e) => {
-                    onInvalidateOrders?.('drip');
+                    onInvalidateOrders?.(`drip-${dripKey}`);
                     updateInputs({ dripVolMl: e.target.value });
                   }}
                   className="clinical-input w-full font-mono-tabular font-bold text-center px-1.5"

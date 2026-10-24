@@ -90,6 +90,10 @@ export default function App() {
   const [mainTab, setMainTab] = useState<MainTab>('dose');
   const [fluidsTopic, setFluidsTopic] = useState<'fluids' | 'drip' | 'transfusion'>('fluids');
   const [fluidsInputs, setFluidsInputs] = useState<FluidsAndDripsInputs>(DEFAULT_FLUIDS_INPUTS);
+  const [medSelectedKey, setMedSelectedKey] = useState<string>('paracetamol-syrup-120-mg-5-ml');
+  const [medConcOverride, setMedConcOverride] = useState<string>('');
+  const [dkaSeverity, setDkaSeverity] = useState<number>(7);
+  const [dkaPriorBolus, setDkaPriorBolus] = useState<string>('0');
   const [resusTopic, setResusTopic] = useState<ResusTopic>('pals');
   const [protocolTopic, setProtocolTopic] = useState<ProtocolTopic>('asthma');
   const [theme, setTheme] = useState<'light' | 'dark' | 'mono' | 'red'>('light');
@@ -123,14 +127,17 @@ export default function App() {
     orderSheetTriggerRef.current?.focus();
   };
 
-  const getOrderPrefix = (id: string) => id.replace(/-\d+(?:-\d+)?$/, '');
+  const getOrderPrefix = (id: string) => id.replace(/-\d+-\d+$/, '');
 
   const invalidateCalculatedOrders = (targetPrefix?: string) => {
     setOrders((prev) =>
       prev.length > 0
         ? prev.map((o) => {
-            if (targetPrefix && !o.id.startsWith(targetPrefix)) {
-              return o;
+            if (targetPrefix) {
+              const orderPrefix = getOrderPrefix(o.id);
+              if (orderPrefix !== targetPrefix) {
+                return o;
+              }
             }
             return o.invalidated ? o : { ...o, invalidated: true };
           })
@@ -353,6 +360,11 @@ export default function App() {
             serumCr={bio.serumCr}
             onSerumCrChange={handleSerumCrChange}
             onAddOrder={handleAddOrder}
+            onInvalidateOrders={invalidateCalculatedOrders}
+            selectedKey={medSelectedKey}
+            onSelectKey={setMedSelectedKey}
+            concOverride={medConcOverride}
+            onConcOverrideChange={setMedConcOverride}
           />
         )}
 
@@ -396,6 +408,11 @@ export default function App() {
             ageYears={ageYears}
             onChangeTopic={setProtocolTopic}
             onAddOrder={handleAddOrder}
+            onInvalidateOrders={invalidateCalculatedOrders}
+            dkaSeverity={dkaSeverity}
+            onChangeDkaSeverity={setDkaSeverity}
+            dkaPriorBolus={dkaPriorBolus}
+            onChangeDkaPriorBolus={setDkaPriorBolus}
           />
         )}
       </main>
