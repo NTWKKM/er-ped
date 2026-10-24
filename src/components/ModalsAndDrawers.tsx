@@ -266,6 +266,7 @@ export const EvidenceModal: React.FC<EvidenceModalProps> = ({
         className="clinical-card max-w-4xl w-full max-h-[88vh] flex flex-col overflow-hidden shadow-xl"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
+        aria-modal="true"
         aria-label="Clinical Evidence Registry Modal"
       >
         <div className="p-4 border-b border-[var(--border)] flex items-center justify-between">
@@ -383,6 +384,7 @@ export const OrderSheetModal: React.FC<OrderSheetModalProps> = ({
         className="clinical-card max-w-3xl w-full max-h-[88vh] flex flex-col overflow-hidden shadow-xl"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
+        aria-modal="true"
         aria-label="Active Patient Order Sheet & Bedside Pocket Summary"
       >
         <div className="p-4 border-b border-[var(--border)] flex items-center justify-between">

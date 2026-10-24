@@ -53,6 +53,35 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
   const w = activeWeight || 0;
   const effAgeYr = ageYears ?? (w ? (w < 10 ? 0.5 : w < 20 ? 3 : 8) : 1);
 
+  const palsEpiMg = Math.min(1, 0.01 * w).toFixed(2);
+  const palsEpiMl = (Math.min(1, 0.01 * w) / 0.1).toFixed(1);
+  const anaEpiDose = Math.min(w < 30 ? 0.3 : 0.5, w * 0.01).toFixed(2);
+  const sepsisBolusMl = Math.round(w * 20);
+  const sepsisCefMg = Math.min(2000, Math.round(w * 80));
+
+  const renderOrderButton = (ariaLabel: string, idPrefix: string, module: string, text: string) =>
+    onAddOrder ? (
+      <button
+        type="button"
+        aria-label={ariaLabel}
+        onClick={() =>
+          onAddOrder({
+            id: `${idPrefix}-${Date.now()}`,
+            module,
+            text,
+            timestamp: new Date().toLocaleTimeString('th-TH', {
+              hour: '2-digit',
+              minute: '2-digit',
+            }),
+          })
+        }
+        className="px-2 py-0.5 text-[11px] font-bold rounded border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
+        title="Add to Active Patient Order Sheet"
+      >
+        + Order Sheet
+      </button>
+    ) : null;
+
   const formatTimer = (sec: number) => {
     const m = Math.floor(sec / 60);
     const s = sec % 60;
@@ -97,30 +126,17 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                     <div className="text-xs font-semibold text-[var(--muted)]">
                       Epinephrine Arrest (1:10,000)
                     </div>
-                    {onAddOrder && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const epiMg = Math.min(1, 0.01 * w).toFixed(2);
-                          const epiMl = (Math.min(1, 0.01 * w) / 0.1).toFixed(1);
-                          onAddOrder({
-                            id: `resus-pals-epi-${Date.now()}`,
-                            module: 'Emergency Resus (PALS)',
-                            text: `Epinephrine (1:10,000) ${epiMg} mg (${epiMl} mL) IV/IO push q 3–5 min during cardiac arrest`,
-                            timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
-                          });
-                        }}
-                        className="px-2 py-0.5 text-[11px] font-bold rounded border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
-                        title="Add to Active Patient Order Sheet"
-                      >
-                        + Order Sheet
-                      </button>
+                    {renderOrderButton(
+                      'Add Epinephrine arrest dose to Order Sheet',
+                      'resus-pals-epi',
+                      'Emergency Resus (PALS)',
+                      `Epinephrine (1:10,000) ${palsEpiMg} mg (${palsEpiMl} mL) IV/IO push q 3–5 min during cardiac arrest`
                     )}
                   </div>
                   <div className="text-2xl font-extrabold font-mono-tabular text-[var(--danger-text)] mt-1 flex flex-wrap items-baseline gap-1.5">
-                    <span>{Math.min(1, 0.01 * w).toFixed(2)} mg</span>
+                    <span>{palsEpiMg} mg</span>
                     <span className="text-sm font-bold whitespace-nowrap">
-                      ({(Math.min(1, 0.01 * w) / 0.1).toFixed(1)} mL IV)
+                      ({palsEpiMl} mL IV)
                     </span>
                   </div>
                   <div className="text-xs text-[var(--muted)] mt-1">0.01 mg/kg q 3–5 min</div>
@@ -291,29 +307,17 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                   <div className="text-xs font-semibold text-[var(--muted)]">
                     1st-Line: Epinephrine 1:1,000 IM
                   </div>
-                  {onAddOrder && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const epiDose = Math.min(w < 30 ? 0.3 : 0.5, w * 0.01).toFixed(2);
-                        onAddOrder({
-                          id: `resus-ana-epi-${Date.now()}`,
-                          module: 'Emergency Resus (Anaphylaxis)',
-                          text: `Epinephrine (1:1,000) ${epiDose} mg (${epiDose} mL) IM anterolateral thigh stat q 5–15 min PRN`,
-                          timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
-                        });
-                      }}
-                      className="px-2 py-0.5 text-[11px] font-bold rounded border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
-                      title="Add to Active Patient Order Sheet"
-                    >
-                      + Order Sheet
-                    </button>
+                  {renderOrderButton(
+                    'Add Anaphylaxis Epinephrine IM dose to Order Sheet',
+                    'resus-ana-epi',
+                    'Emergency Resus (Anaphylaxis)',
+                    `Epinephrine (1:1,000) ${anaEpiDose} mg (${anaEpiDose} mL) IM anterolateral thigh stat q 5–15 min PRN`
                   )}
                 </div>
                 <div className="text-2xl font-extrabold font-mono-tabular text-[var(--danger-text)] mt-1">
-                  {Math.min(w < 30 ? 0.3 : 0.5, w * 0.01).toFixed(2)} mg{' '}
+                  {anaEpiDose} mg{' '}
                   <span className="text-sm font-bold">
-                    ({Math.min(w < 30 ? 0.3 : 0.5, w * 0.01).toFixed(2)} mL)
+                    ({anaEpiDose} mL)
                   </span>
                 </div>
                 <div className="text-xs text-[var(--muted)] mt-1">
@@ -495,27 +499,15 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                     <div className="text-xs font-semibold text-[var(--muted)]">
                       1st Fluid Bolus (20 mL/kg)
                     </div>
-                    {onAddOrder && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const bolus = Math.round(w * 20);
-                          onAddOrder({
-                            id: `resus-sepsis-bolus-${Date.now()}`,
-                            module: 'Emergency Resus (Sepsis)',
-                            text: `0.9% NSS ${bolus} mL IV bolus over 15 min (Phoenix Sepsis 1h bundle)`,
-                            timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
-                          });
-                        }}
-                        className="px-2 py-0.5 text-[11px] font-bold rounded border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
-                        title="Add to Active Patient Order Sheet"
-                      >
-                        + Order Sheet
-                      </button>
+                    {renderOrderButton(
+                      'Add Sepsis 1st fluid bolus to Order Sheet',
+                      'resus-sepsis-bolus',
+                      'Emergency Resus (Sepsis)',
+                      `0.9% NSS ${sepsisBolusMl} mL IV bolus over 15 min (Phoenix Sepsis 1h bundle)`
                     )}
                   </div>
                   <div className="text-2xl font-extrabold font-mono-tabular text-[var(--accent-text)] mt-1">
-                    {Math.round(w * 20)} mL
+                    {sepsisBolusMl} mL
                   </div>
                   <div className="text-xs text-[var(--muted)] mt-1">0.9% NS over 15 min</div>
                 </div>
@@ -524,27 +516,15 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                     <div className="text-xs font-semibold text-[var(--muted)]">
                       IV Ceftriaxone (80 mg/kg)
                     </div>
-                    {onAddOrder && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const cefDose = Math.min(2000, Math.round(w * 80));
-                          onAddOrder({
-                            id: `resus-sepsis-cef-${Date.now()}`,
-                            module: 'Emergency Resus (Sepsis)',
-                            text: `Ceftriaxone ${cefDose} mg IV stat (Give within 1st hour for sepsis)`,
-                            timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
-                          });
-                        }}
-                        className="px-2 py-0.5 text-[11px] font-bold rounded border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
-                        title="Add to Active Patient Order Sheet"
-                      >
-                        + Order Sheet
-                      </button>
+                    {renderOrderButton(
+                      'Add IV Ceftriaxone sepsis dose to Order Sheet',
+                      'resus-sepsis-cef',
+                      'Emergency Resus (Sepsis)',
+                      `Ceftriaxone ${sepsisCefMg} mg IV stat (Give within 1st hour for sepsis)`
                     )}
                   </div>
                   <div className="text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
-                    {Math.min(2000, Math.round(w * 80))} mg
+                    {sepsisCefMg} mg
                   </div>
                   <div className="text-xs text-[var(--muted)] mt-1">Give within 1st hour</div>
                 </div>

@@ -20,6 +20,57 @@ import {
 
 type MainTab = 'dose' | 'fluids' | 'drip' | 'resus' | 'protocols';
 
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+function useModalFocusTrap(isOpen: boolean, dialogSelector: string, onClose: () => void) {
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const getDialog = () => document.querySelector<HTMLElement>(dialogSelector);
+    const timer = setTimeout(() => {
+      getDialog()?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)?.focus();
+    }, 0);
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onCloseRef.current();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const dialog = getDialog();
+      if (!dialog) return;
+      const focusables = Array.from(dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
+      if (focusables.length === 0) {
+        e.preventDefault();
+        return;
+      }
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first || !dialog.contains(document.activeElement)) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last || !dialog.contains(document.activeElement)) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, dialogSelector]);
+}
+
 export default function App() {
   const [bio, setBio] = useState<BiometricState>({
     rawWeight: '',
@@ -71,97 +122,16 @@ export default function App() {
     setOrders((prev) => [...prev, order]);
   };
 
-  useEffect(() => {
-    if (!evidenceOpen) return;
-    const dialogSelector = '[role="dialog"][aria-label="Clinical Evidence Registry Modal"]';
-    const timer = setTimeout(() => {
-      const dialog = document.querySelector<HTMLElement>(dialogSelector);
-      const focusable = dialog?.querySelector<HTMLElement>(
-        'input, button, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      focusable?.focus();
-    }, 0);
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab') return;
-      const dialog = document.querySelector<HTMLElement>(dialogSelector);
-      if (!dialog) return;
-      const focusables = Array.from(
-        dialog.querySelectorAll<HTMLElement>(
-          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-        )
-      );
-      if (focusables.length === 0) {
-        e.preventDefault();
-        return;
-      }
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-      if (e.shiftKey) {
-        if (document.activeElement === first || !dialog.contains(document.activeElement)) {
-          e.preventDefault();
-          last.focus();
-        }
-      } else {
-        if (document.activeElement === last || !dialog.contains(document.activeElement)) {
-          e.preventDefault();
-          first.focus();
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [evidenceOpen]);
-
-  useEffect(() => {
-    if (!orderSheetOpen) return;
-    const dialogSelector = '[role="dialog"][aria-label="Active Patient Order Sheet & Bedside Pocket Summary"]';
-    const timer = setTimeout(() => {
-      const dialog = document.querySelector<HTMLElement>(dialogSelector);
-      const focusable = dialog?.querySelector<HTMLElement>(
-        'button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      focusable?.focus();
-    }, 0);
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab') return;
-      const dialog = document.querySelector<HTMLElement>(dialogSelector);
-      if (!dialog) return;
-      const focusables = Array.from(
-        dialog.querySelectorAll<HTMLElement>(
-          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-        )
-      );
-      if (focusables.length === 0) {
-        e.preventDefault();
-        return;
-      }
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-      if (e.shiftKey) {
-        if (document.activeElement === first || !dialog.contains(document.activeElement)) {
-          e.preventDefault();
-          last.focus();
-        }
-      } else {
-        if (document.activeElement === last || !dialog.contains(document.activeElement)) {
-          e.preventDefault();
-          first.focus();
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [orderSheetOpen]);
+  useModalFocusTrap(
+    evidenceOpen,
+    '[role="dialog"][aria-label="Clinical Evidence Registry Modal"]',
+    handleCloseEvidenceModal
+  );
+  useModalFocusTrap(
+    orderSheetOpen,
+    '[role="dialog"][aria-label="Active Patient Order Sheet & Bedside Pocket Summary"]',
+    handleCloseOrderSheetModal
+  );
 
   const [seizureSeconds, setSeizureSeconds] = useState<number>(0);
   const [seizureRunning, setSeizureRunning] = useState<boolean>(false);
@@ -407,9 +377,17 @@ export default function App() {
         onClose={handleCloseOrderSheetModal}
         onRemoveOrder={(id) => setOrders((prev) => prev.filter((o) => o.id !== id))}
         onClearOrders={() => setOrders([])}
-        onCopyAll={() => {
+        onCopyAll={async () => {
           const text = orders.map((o, idx) => `${idx + 1}. [${o.module}] ${o.text}`).join('\n');
-          navigator.clipboard?.writeText(text);
+          if (!navigator.clipboard?.writeText) {
+            window.alert('Copy failed. Clipboard API is unavailable; select the order text and copy it manually.');
+            return;
+          }
+          try {
+            await navigator.clipboard.writeText(text);
+          } catch {
+            window.alert('Copy failed. Select the order text and copy it manually.');
+          }
         }}
       />
     </div>

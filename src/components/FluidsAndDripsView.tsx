@@ -11,32 +11,20 @@ import { AlertTriangle } from 'lucide-react';
 import { OrderItem } from './ModalsAndDrawers';
 
 interface FluidsAndDripsViewProps {
-  activeSubTab?: 'fluids' | 'drip' | 'transfusion';
+  activeSubTab: 'fluids' | 'drip' | 'transfusion';
   activeWeight: number | null;
-  onChangeSubTab?: (sub: 'fluids' | 'drip' | 'transfusion') => void;
+  onChangeSubTab: (sub: 'fluids' | 'drip' | 'transfusion') => void;
   onAddOrder?: (order: OrderItem) => void;
 }
 
 export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
-  activeSubTab = 'fluids',
+  activeSubTab,
   activeWeight,
   onChangeSubTab,
   onAddOrder,
 }) => {
-  const [internalSubTab, setInternalSubTab] = useState<'fluids' | 'drip' | 'transfusion'>(activeSubTab);
-
-  // Sync internal state if prop changes
-  React.useEffect(() => {
-    if (activeSubTab) {
-      setInternalSubTab(activeSubTab);
-    }
-  }, [activeSubTab]);
-
-  const currentTab = internalSubTab;
-
   const handleSubTabChange = (tab: 'fluids' | 'drip' | 'transfusion') => {
-    setInternalSubTab(tab);
-    onChangeSubTab?.(tab);
+    onChangeSubTab(tab);
   };
   // IV Fluids state
   const [deficitPct, setDeficitPct] = useState<number>(5);
@@ -120,10 +108,10 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
         <div className="flex items-center gap-1 p-0.5 rounded-lg bg-[var(--panel)] border border-[var(--border)] self-start sm:self-auto">
           <button
             type="button"
-            aria-pressed={currentTab === 'fluids'}
+            aria-pressed={activeSubTab === 'fluids'}
             onClick={() => handleSubTabChange('fluids')}
             className={`px-2.5 sm:px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer ${
-              currentTab === 'fluids'
+              activeSubTab === 'fluids'
                 ? 'bg-[var(--accent)] text-white shadow-xs'
                 : 'text-[var(--muted)] hover:text-[var(--ink)]'
             }`}
@@ -132,10 +120,10 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
           </button>
           <button
             type="button"
-            aria-pressed={currentTab === 'drip'}
+            aria-pressed={activeSubTab === 'drip'}
             onClick={() => handleSubTabChange('drip')}
             className={`px-2.5 sm:px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer ${
-              currentTab === 'drip'
+              activeSubTab === 'drip'
                 ? 'bg-[var(--accent)] text-white shadow-xs'
                 : 'text-[var(--muted)] hover:text-[var(--ink)]'
             }`}
@@ -144,10 +132,10 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
           </button>
           <button
             type="button"
-            aria-pressed={currentTab === 'transfusion'}
+            aria-pressed={activeSubTab === 'transfusion'}
             onClick={() => handleSubTabChange('transfusion')}
             className={`px-2.5 sm:px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer ${
-              currentTab === 'transfusion'
+              activeSubTab === 'transfusion'
                 ? 'bg-[var(--accent)] text-white shadow-xs'
                 : 'text-[var(--muted)] hover:text-[var(--ink)]'
             }`}
@@ -158,7 +146,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
       </div>
 
       {/* 1. IV FLUIDS VIEW */}
-      {currentTab === 'fluids' && (
+      {activeSubTab === 'fluids' && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
@@ -210,7 +198,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                       onAddOrder({
                         id: `fluids-${Date.now()}`,
                         module: 'IV Fluids',
-                        text: `Maintenance Fluid @ ${mntHr.toFixed(1)} mL/hr (${mntDay} mL/day)${deficitPct ? ` + Deficit ${deficitPct}% replacement (${replaceRate.toFixed(1)} mL/hr) = Total ${combinedRate.toFixed(1)} mL/hr` : ''}`,
+                        text: `Maintenance Fluid @ ${mntHr.toFixed(1)} mL/hr (${mntDay} mL/day)${deficitPct ? ` + Deficit ${deficitPct}% replacement over ${fluidDuration} h (${replaceRate.toFixed(1)} mL/hr) = Total ${combinedRate.toFixed(1)} mL/hr` : ''}`,
                         timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
                       });
                     }}
@@ -262,7 +250,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
       )}
 
       {/* 2. CONTINUOUS DRIP VIEW */}
-      {currentTab === 'drip' && (
+      {activeSubTab === 'drip' && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
             <div className="sm:col-span-2">
@@ -415,7 +403,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
       )}
 
       {/* 3. BLOOD TRANSFUSION VIEW */}
-      {currentTab === 'transfusion' && (
+      {activeSubTab === 'transfusion' && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
