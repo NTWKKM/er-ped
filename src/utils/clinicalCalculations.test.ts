@@ -10,6 +10,7 @@ import {
   getBroselowZone,
   resolveDrugDose,
   calcSchwartzEGFR,
+  calcPatientRenalDose,
   calcMaintenanceMlPerHr,
   calcDripForward,
   calcDripReverse,
@@ -716,6 +717,18 @@ test('Bedside Schwartz eGFR and Holliday-Segar maintenance fluids', () => {
 
   // Holliday-Segar: 25 kg -> (1500 + 5*20)/24 = 1600/24 = 66.7 mL/hr
   assert.equal(calcMaintenanceMlPerHr(25), 66.7);
+
+  // Renal dosing tier evaluation: numeric dose vs qualitative review guidance
+  const cipro = DATASET.pediatricDose.find((d) => d.key === 'ciprofloxacin-po')!;
+  const tierNormal = cipro.renalDosing!.find((t) => t.gfr === '> 50')!;
+  const tierGuidance = cipro.renalDosing!.find((t) => t.gfr === '30–50')!;
+
+  const doseNormal = calcPatientRenalDose(tierNormal, cipro, 10);
+  const doseGuidance = calcPatientRenalDose(tierGuidance, cipro, 10);
+
+  const numRegex = /\d+\s*(?:–|-|\s)*\d*\s*(?:mg|g|mcg|mL|units?|U\b)/i;
+  assert.equal(numRegex.test(doseNormal), true);
+  assert.equal(numRegex.test(doseGuidance), false);
 });
 
 test('Forward and Reverse Vasoactive Drip calculations', () => {

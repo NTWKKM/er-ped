@@ -86,7 +86,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
 
   useEffect(() => {
     setIsRenalReviewed(false);
-  }, [currentSelectedKey, serumCr, heightCm]);
+  }, [currentSelectedKey, serumCr, heightCm, activeWeight]);
 
   const allDrugs = DATASET.pediatricDose;
 
@@ -241,7 +241,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
   const isAgeLimited = selectedDrug?.minAgeYr != null || selectedDrug?.maxAgeYr != null;
   const isMissingRequiredAge = Boolean(isAgeLimited && (ageYears == null || ageYears <= 0));
 
-  const hasNumericDose = Boolean(
+  const hasNumericStandardDose = Boolean(
     resolved &&
     (
       (resolved.doseMg != null && Number.isFinite(resolved.doseMg) && resolved.doseMg > 0) ||
@@ -257,18 +257,28 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
     singleDoseMgText !== '—'
   );
 
+  const hasNumericRenalDose = Boolean(
+    matchedRenalRegimen &&
+    /\d+\s*(?:–|-|\s)*\d*\s*(?:mg|g|mcg|mL|units?|U\b)/i.test(matchedRenalRegimen)
+  );
+
+  const hasNumericDose = matchedRenalTier ? hasNumericRenalDose : hasNumericStandardDose;
+
+  const orderText = (matchedRenalTier && !hasNumericRenalDose)
+    ? ''
+    : matchedRenalRegimen
+    ? `${selectedDrug.name} ${matchedRenalRegimen} ${cleanEnglishText(selectedDrug.route) || 'PO'} [Renal eGFR ${egfr!.toFixed(1)} mL/min/1.73m²]`
+    : `${selectedDrug.name} ${singleDoseMgText}${singleDoseVolumeText ? ` (${singleDoseVolumeText})` : ''} ${cleanEnglishText(selectedDrug.route) || 'PO'} ${selectedDrug.freq || selectedDrug.split || 'PRN'}`;
+
   const canAddOrder = Boolean(
     onAddOrder &&
     resolved &&
     !resolved.isAgeRestricted &&
     !isMissingRequiredAge &&
     !isRenalReviewRequired &&
-    hasNumericDose
+    hasNumericDose &&
+    orderText
   );
-
-  const orderText = matchedRenalRegimen
-    ? `${selectedDrug.name} ${matchedRenalRegimen} ${cleanEnglishText(selectedDrug.route) || 'PO'} [Renal eGFR ${egfr!.toFixed(1)} mL/min]`
-    : `${selectedDrug.name} ${singleDoseMgText}${singleDoseVolumeText ? ` (${singleDoseVolumeText})` : ''} ${cleanEnglishText(selectedDrug.route) || 'PO'} ${selectedDrug.freq || selectedDrug.split || 'PRN'}`;
 
   return (
     <div className="clinical-card p-5 space-y-5">
@@ -398,10 +408,26 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                 className="px-2.5 py-1 text-xs font-bold rounded border border-[var(--warning)] text-[var(--warning-text)] bg-[var(--warning-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
                 title="Review matched renal dosing tier before adding to Order Sheet"
               >
-                ▲ Review Renal Regimen ({egfr?.toFixed(0)} mL/min)
+                ▲ Review Renal Regimen ({egfr?.toFixed(0)} mL/min/1.73m²)
               </button>
+            ) : matchedRenalTier && !hasNumericRenalDose ? (
+              <span
+                className="px-2.5 py-1 text-xs font-semibold rounded border border-[var(--warning)] text-[var(--warning-text)] bg-[var(--warning-soft)] shrink-0"
+                title="Matched renal tier provides qualitative guidance only; manual dose calculation required before ordering"
+              >
+                ▲ Review-Only Guidance
+              </span>
             ) : null}
           </div>
+
+          {matchedRenalTier && !hasNumericRenalDose && (
+            <div className="p-3 rounded-lg border border-[var(--warning)] bg-[var(--warning-soft)] text-[var(--warning-text)] text-xs flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 shrink-0" />
+              <span>
+                Matched renal adjustment is qualitative guidance ({matchedRenalRegimen}). Enter a specific calculated dose manually before adding to Order Sheet.
+              </span>
+            </div>
+          )}
 
           {isMissingRequiredAge && (
             <div className="p-3 rounded-lg border border-[var(--warning)] bg-[var(--warning-soft)] text-[var(--warning-text)] text-xs flex items-center gap-2">
@@ -527,7 +553,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                 {matchedRenalTier && (
                   <div className="flex items-center justify-between p-2 rounded bg-[var(--card)] border border-[var(--border)]">
                     <span className="text-xs text-[var(--ink)]">
-                      Matched Tier ({matchedRenalTier.gfr} mL/min):{' '}
+                      Matched Tier ({matchedRenalTier.gfr} mL/min/1.73m²):{' '}
                       <strong className="text-[var(--accent-text)]">{matchedRenalRegimen}</strong>
                     </span>
                     {!isRenalReviewed ? (
@@ -549,7 +575,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                   <table className="clinical-table">
                     <thead>
                       <tr>
-                        <th>eGFR (mL/min)</th>
+                        <th>eGFR (mL/min/1.73m²)</th>
                         <th>Recommended Dose</th>
                         <th>Interval</th>
                       </tr>
