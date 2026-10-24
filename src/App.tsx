@@ -120,9 +120,16 @@ export default function App() {
 
   const getOrderPrefix = (id: string) => id.replace(/-\d+(?:-\d+)?$/, '');
 
-  const invalidateCalculatedOrders = () => {
+  const invalidateCalculatedOrders = (targetPrefix?: string) => {
     setOrders((prev) =>
-      prev.length > 0 ? prev.map((o) => (o.invalidated ? o : { ...o, invalidated: true })) : prev
+      prev.length > 0
+        ? prev.map((o) => {
+            if (targetPrefix && !o.id.startsWith(targetPrefix)) {
+              return o;
+            }
+            return o.invalidated ? o : { ...o, invalidated: true };
+          })
+        : prev
     );
   };
 
