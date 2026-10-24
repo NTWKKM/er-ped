@@ -90,6 +90,8 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
   const doseNum = parseFloat(dripDose) || 0;
   const mgNum = parseFloat(dripDrugMg) || 1;
   const volNum = parseFloat(dripVolMl) || 50;
+  const hasValidDripInputs =
+    parseFloat(dripDose) > 0 && parseFloat(dripDrugMg) > 0 && parseFloat(dripVolMl) > 0;
   const fwd = calcDripForward(doseNum, w, mgNum, volNum);
   const revNum = parseFloat(reverseRate);
   const revDose =
@@ -343,7 +345,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-[var(--muted)]">Calculated Infusion Rate</span>
-                {onAddOrder && (
+                {onAddOrder && hasValidDripInputs && (
                   <button
                     type="button"
                     onClick={() => {
@@ -466,7 +468,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-[var(--muted)]">Calculated Transfusion Volumes</span>
-                {onAddOrder && tx && (
+                {onAddOrder && tx && tx.prbcVol > 0 && (
                   <button
                     type="button"
                     onClick={() => {

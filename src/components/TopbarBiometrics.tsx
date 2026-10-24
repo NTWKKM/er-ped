@@ -29,8 +29,8 @@ interface TopbarBiometricsProps {
   onToggleUseIBW: (checked: boolean) => void;
   onCycleTheme: () => void;
   onOpenBroselowModal: (zoneColor?: string) => void;
-  onOpenEvidenceModal?: () => void;
-  onOpenOrderSheetModal?: () => void;
+  onOpenEvidenceModal?: (e?: React.MouseEvent<HTMLElement>) => void;
+  onOpenOrderSheetModal?: (e?: React.MouseEvent<HTMLElement>) => void;
 }
 
 export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
@@ -353,7 +353,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
           {onOpenEvidenceModal && (
             <button
               type="button"
-              onClick={onOpenEvidenceModal}
+              onClick={(e) => onOpenEvidenceModal(e)}
               aria-label="Clinical Evidence & Guidelines"
               className="min-h-[28px] min-w-[28px] sm:min-h-[32px] sm:min-w-[32px] p-1.5 sm:p-2 rounded-lg border border-[var(--border)] bg-[var(--panel-subtle)] text-[var(--muted)] hover:text-[var(--accent-text)] cursor-pointer transition-colors shrink-0 flex items-center justify-center"
               title="Clinical Evidence & Guideline Reference Registry (2024–2026)"
@@ -366,7 +366,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
           {onOpenOrderSheetModal && (
             <button
               type="button"
-              onClick={onOpenOrderSheetModal}
+              onClick={(e) => onOpenOrderSheetModal(e)}
               aria-label="Bedside Pocket Card & Order Sheet"
               className="min-h-[28px] min-w-[28px] sm:min-h-[32px] sm:min-w-[32px] p-1.5 sm:p-2 rounded-lg border border-[var(--border)] bg-[var(--panel-subtle)] text-[var(--muted)] hover:text-[var(--accent-text)] cursor-pointer transition-colors shrink-0 flex items-center justify-center"
               title="Bedside Emergency Pocket Card & EHR Order Sheet (Print A4 Card)"

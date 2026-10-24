@@ -47,8 +47,8 @@ export default function App() {
   const evidenceTriggerRef = useRef<HTMLElement | null>(null);
   const orderSheetTriggerRef = useRef<HTMLElement | null>(null);
 
-  const handleOpenEvidenceModal = () => {
-    evidenceTriggerRef.current = (document.activeElement as HTMLElement) || null;
+  const handleOpenEvidenceModal = (e?: React.SyntheticEvent<HTMLElement>) => {
+    evidenceTriggerRef.current = (e?.currentTarget as HTMLElement) || (document.activeElement as HTMLElement) || null;
     setEvidenceOpen(true);
   };
 
@@ -57,8 +57,8 @@ export default function App() {
     evidenceTriggerRef.current?.focus();
   };
 
-  const handleOpenOrderSheetModal = () => {
-    orderSheetTriggerRef.current = (document.activeElement as HTMLElement) || null;
+  const handleOpenOrderSheetModal = (e?: React.SyntheticEvent<HTMLElement>) => {
+    orderSheetTriggerRef.current = (e?.currentTarget as HTMLElement) || (document.activeElement as HTMLElement) || null;
     setOrderSheetOpen(true);
   };
 
@@ -72,33 +72,95 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (evidenceOpen) {
-      const timer = setTimeout(() => {
-        const dialog = document.querySelector<HTMLElement>(
-          '[role="dialog"][aria-label="Clinical Evidence Registry Modal"]'
-        );
-        const focusable = dialog?.querySelector<HTMLElement>(
-          'input, button, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-        focusable?.focus();
-      }, 0);
-      return () => clearTimeout(timer);
-    }
+    if (!evidenceOpen) return;
+    const dialogSelector = '[role="dialog"][aria-label="Clinical Evidence Registry Modal"]';
+    const timer = setTimeout(() => {
+      const dialog = document.querySelector<HTMLElement>(dialogSelector);
+      const focusable = dialog?.querySelector<HTMLElement>(
+        'input, button, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      focusable?.focus();
+    }, 0);
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+      const dialog = document.querySelector<HTMLElement>(dialogSelector);
+      if (!dialog) return;
+      const focusables = Array.from(
+        dialog.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+      );
+      if (focusables.length === 0) {
+        e.preventDefault();
+        return;
+      }
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first || !dialog.contains(document.activeElement)) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last || !dialog.contains(document.activeElement)) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [evidenceOpen]);
 
   useEffect(() => {
-    if (orderSheetOpen) {
-      const timer = setTimeout(() => {
-        const dialog = document.querySelector<HTMLElement>(
-          '[role="dialog"][aria-label="Active Patient Order Sheet & Bedside Pocket Summary"]'
-        );
-        const focusable = dialog?.querySelector<HTMLElement>(
-          'button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-        focusable?.focus();
-      }, 0);
-      return () => clearTimeout(timer);
-    }
+    if (!orderSheetOpen) return;
+    const dialogSelector = '[role="dialog"][aria-label="Active Patient Order Sheet & Bedside Pocket Summary"]';
+    const timer = setTimeout(() => {
+      const dialog = document.querySelector<HTMLElement>(dialogSelector);
+      const focusable = dialog?.querySelector<HTMLElement>(
+        'button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      focusable?.focus();
+    }, 0);
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+      const dialog = document.querySelector<HTMLElement>(dialogSelector);
+      if (!dialog) return;
+      const focusables = Array.from(
+        dialog.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+      );
+      if (focusables.length === 0) {
+        e.preventDefault();
+        return;
+      }
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first || !dialog.contains(document.activeElement)) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last || !dialog.contains(document.activeElement)) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [orderSheetOpen]);
 
   const [seizureSeconds, setSeizureSeconds] = useState<number>(0);

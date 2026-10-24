@@ -80,8 +80,29 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
           <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div className="clinical-panel-subtle p-4">
-                <div className="text-xs font-semibold text-[var(--muted)]">
-                  Salbutamol Nebulizer
+                <div className="flex items-center justify-between">
+                  <div className="text-xs font-semibold text-[var(--muted)]">
+                    Salbutamol Nebulizer
+                  </div>
+                  {onAddOrder && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const nebDose = w < 20 ? '2.5 mg' : '5.0 mg';
+                        const ipraDose = w < 20 ? '250 mcg' : '500 mcg';
+                        onAddOrder({
+                          id: `proto-asthma-neb-${Date.now()}`,
+                          module: 'Protocol (Asthma)',
+                          text: `Salbutamol Nebulizer ${nebDose} + Ipratropium ${ipraDose} neb q 20 min × 3 doses`,
+                          timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
+                        });
+                      }}
+                      className="px-2 py-0.5 text-[11px] font-bold rounded border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
+                      title="Add to Active Patient Order Sheet"
+                    >
+                      + Order Sheet
+                    </button>
+                  )}
                 </div>
                 <div className="text-2xl font-extrabold font-mono-tabular text-[var(--accent-text)] mt-1">
                   {w < 20 ? '2.5 mg' : '5.0 mg'}
@@ -92,8 +113,29 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
               </div>
 
               <div className="clinical-panel-subtle p-4">
-                <div className="text-xs font-semibold text-[var(--muted)]">
-                  Systemic Corticosteroid
+                <div className="flex items-center justify-between">
+                  <div className="text-xs font-semibold text-[var(--muted)]">
+                    Systemic Corticosteroid
+                  </div>
+                  {onAddOrder && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const predDose = Math.min(60, Math.round(w * 1.5));
+                        const dexaDose = Math.min(16, +(w * 0.6).toFixed(1));
+                        onAddOrder({
+                          id: `proto-asthma-steroid-${Date.now()}`,
+                          module: 'Protocol (Asthma)',
+                          text: `Prednisolone ${predDose} mg PO stat (or Dexamethasone ${dexaDose} mg PO/IV stat)`,
+                          timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
+                        });
+                      }}
+                      className="px-2 py-0.5 text-[11px] font-bold rounded border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
+                      title="Add to Active Patient Order Sheet"
+                    >
+                      + Order Sheet
+                    </button>
+                  )}
                 </div>
                 <div className="text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
                   Pred {Math.min(60, Math.round(w * 1.5))} mg PO
@@ -165,8 +207,27 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
               return (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="clinical-panel-subtle p-4">
-                    <div className="text-xs font-semibold text-[var(--muted)]">
-                      Combined IV Fluid Rate (48h Rehydration)
+                    <div className="flex items-center justify-between">
+                      <div className="text-xs font-semibold text-[var(--muted)]">
+                        Combined IV Fluid Rate (48h Rehydration)
+                      </div>
+                      {onAddOrder && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            onAddOrder({
+                              id: `proto-dka-fluid-${Date.now()}`,
+                              module: 'Protocol (DKA)',
+                              text: `DKA IV Rehydration Fluid @ ${totalRate} mL/hr over 48h (Mnt ${mnt} + Deficit ${(netDef / 48).toFixed(1)} mL/hr, add D5W when BG < 250)`,
+                              timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
+                            });
+                          }}
+                          className="px-2 py-0.5 text-[11px] font-bold rounded border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
+                          title="Add to Active Patient Order Sheet"
+                        >
+                          + Order Sheet
+                        </button>
+                      )}
                     </div>
                     <div className="text-2xl font-extrabold font-mono-tabular text-[var(--good-text)] mt-1">
                       {totalRate} mL/hr
@@ -176,8 +237,27 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                     </div>
                   </div>
                   <div className="clinical-panel-subtle p-4">
-                    <div className="text-xs font-semibold text-[var(--muted)]">
-                      Regular Insulin Drip (0.1 U/kg/hr)
+                    <div className="flex items-center justify-between">
+                      <div className="text-xs font-semibold text-[var(--muted)]">
+                        Regular Insulin Drip (0.1 U/kg/hr)
+                      </div>
+                      {onAddOrder && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            onAddOrder({
+                              id: `proto-dka-ri-${Date.now()}`,
+                              module: 'Protocol (DKA)',
+                              text: `Regular Insulin Drip @ ${riRate} U/hr (${riRate} mL/hr) IV via Syringe Pump (Mix 50 U RI in 50 mL 0.9% NSS)`,
+                              timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
+                            });
+                          }}
+                          className="px-2 py-0.5 text-[11px] font-bold rounded border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
+                          title="Add to Active Patient Order Sheet"
+                        >
+                          + Order Sheet
+                        </button>
+                      )}
                     </div>
                     <div className="text-2xl font-extrabold font-mono-tabular text-[var(--accent-text)] mt-1">
                       {riRate} U/hr ({riRate} mL/hr)
@@ -282,8 +362,29 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
           {w > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="clinical-panel-subtle p-3.5">
-                <div className="text-xs font-semibold text-[var(--muted)]">
-                  3% NaCl Bolus (Hyponatremic Seizure)
+                <div className="flex items-center justify-between">
+                  <div className="text-xs font-semibold text-[var(--muted)]">
+                    3% NaCl Bolus (Hyponatremic Seizure)
+                  </div>
+                  {onAddOrder && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const lowVol = Math.min(w * 3, 100).toFixed(0);
+                        const highVol = Math.min(w * 5, 150).toFixed(0);
+                        onAddOrder({
+                          id: `proto-lyte-3nacl-${Date.now()}`,
+                          module: 'Protocol (Electrolytes)',
+                          text: `3% NaCl ${lowVol}–${highVol} mL IV over 20 min for acute symptomatic hyponatremia/seizure`,
+                          timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
+                        });
+                      }}
+                      className="px-2 py-0.5 text-[11px] font-bold rounded border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
+                      title="Add to Active Patient Order Sheet"
+                    >
+                      + Order Sheet
+                    </button>
+                  )}
                 </div>
                 <div className="text-lg font-extrabold font-mono-tabular text-[var(--danger-text)] mt-0.5">
                   {Math.min(w * 3, 100).toFixed(0)}–{Math.min(w * 5, 150).toFixed(0)} mL IV over 20 min
