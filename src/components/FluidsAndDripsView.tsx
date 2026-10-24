@@ -8,7 +8,7 @@ import {
   calcTransfusion,
 } from '../utils/clinicalCalculations';
 import { AlertTriangle } from 'lucide-react';
-import { OrderItem } from './ModalsAndDrawers';
+import { OrderItem, createOrderId } from './ModalsAndDrawers';
 
 interface FluidsAndDripsViewProps {
   activeSubTab: 'fluids' | 'drip' | 'transfusion';
@@ -96,6 +96,10 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
     Number.isFinite(tarHbNum) &&
     tarHbNum > 0;
   const tx = hasValidHb ? calcTransfusion(w, curHbNum, tarHbNum, prbcType) : null;
+  const maxPermittedPrbcVol = tx ? tx.maxInfusionRate * 4 : 0;
+  const isPrbcScheduleConflict = Boolean(
+    tx && tx.prbcVol > 0 && (tx.maxInfusionRate <= 0 || tx.prbcVol > maxPermittedPrbcVol)
+  );
   const baseTx = calcTransfusion(w, 0, 0, prbcType);
 
   return (
@@ -196,7 +200,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                     type="button"
                     onClick={() => {
                       onAddOrder({
-                        id: `fluids-${Date.now()}`,
+                        id: createOrderId('fluids'),
                         module: 'IV Fluids',
                         text: `Maintenance Fluid @ ${mntHr.toFixed(1)} mL/hr (${mntDay} mL/day)${deficitPct ? ` + Deficit ${deficitPct}% replacement over ${fluidDuration} h (${replaceRate.toFixed(1)} mL/hr) = Total ${combinedRate.toFixed(1)} mL/hr` : ''}`,
                         timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
@@ -338,7 +342,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                     type="button"
                     onClick={() => {
                       onAddOrder({
-                        id: `drip-${dripKey}-${Date.now()}`,
+                        id: createOrderId(`drip-${dripKey}`),
                         module: 'Drip',
                         text: `${selectedDripItem.drug} ${dripDose} ${selectedDripItem.unit} → Syringe Pump @ ${fwd.rateMlHr.toFixed(1)} mL/hr (Mix ${mgNum} mg in ${volNum} mL diluent)`,
                         timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
@@ -456,12 +460,13 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-[var(--muted)]">Calculated Transfusion Volumes</span>
-                {onAddOrder && tx && tx.prbcVol > 0 && (
+                {onAddOrder && tx && tx.prbcVol > 0 && !isPrbcScheduleConflict && (
                   <button
                     type="button"
                     onClick={() => {
+                      if (tx.maxInfusionRate <= 0 || tx.prbcVol > tx.maxInfusionRate * 4) return;
                       onAddOrder({
-                        id: `tx-${Date.now()}`,
+                        id: createOrderId('tx'),
                         module: 'Transfusion',
                         text: `PRBC (${prbcType.toUpperCase()}) ${tx.prbcVol} mL IV over 2-4 hr (Max rate ≤ ${tx.maxInfusionRate} mL/hr) [Current Hb ${curHbNum} → Target ${tarHbNum} g/dL]`,
                         timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
@@ -474,6 +479,17 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                   </button>
                 )}
               </div>
+              {tx && isPrbcScheduleConflict && (
+                <div
+                  role="alert"
+                  className="p-3 rounded-lg border border-[var(--danger)] bg-[var(--danger-soft)] text-xs font-bold text-[var(--danger-text)] flex items-center gap-2"
+                >
+                  <AlertTriangle className="w-4 h-4 shrink-0" />
+                  <span>
+                    Calculated PRBC volume ({tx.prbcVol} mL) exceeds the 4-hour maximum volume ({maxPermittedPrbcVol} mL) at max safe rate ({tx.maxInfusionRate} mL/hr). Revise clinical plan (lower Target Hb or divide into aliquots) before queuing order.
+                  </span>
+                </div>
+              )}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="clinical-panel-subtle p-4">
                   <div className="text-xs font-semibold text-[var(--muted)]">PRBC Volume Required</div>

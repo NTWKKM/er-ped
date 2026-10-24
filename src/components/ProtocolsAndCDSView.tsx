@@ -8,7 +8,7 @@ import {
   calcIVKClReplacement,
   fmtMg,
 } from '../utils/clinicalCalculations';
-import { OrderItem } from './ModalsAndDrawers';
+import { OrderItem, createOrderId } from './ModalsAndDrawers';
 
 export type ProtocolTopic =
   | 'asthma'
@@ -91,7 +91,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                         const nebDose = w < 20 ? '2.5 mg' : '5.0 mg';
                         const ipraDose = w < 20 ? '250 mcg' : '500 mcg';
                         onAddOrder({
-                          id: `proto-asthma-neb-${Date.now()}`,
+                          id: createOrderId('proto-asthma-neb'),
                           module: 'Protocol (Asthma)',
                           text: `Salbutamol Nebulizer ${nebDose} + Ipratropium ${ipraDose} neb q 20 min × 3 doses`,
                           timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
@@ -124,7 +124,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                         const predDose = Math.min(60, Math.round(w * 1.5));
                         const dexaDose = Math.min(16, +(w * 0.6).toFixed(1));
                         onAddOrder({
-                          id: `proto-asthma-steroid-${Date.now()}`,
+                          id: createOrderId('proto-asthma-steroid'),
                           module: 'Protocol (Asthma)',
                           text: `Prednisolone ${predDose} mg PO stat (or Dexamethasone ${dexaDose} mg PO/IV stat)`,
                           timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
@@ -216,7 +216,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                           type="button"
                           onClick={() => {
                             onAddOrder({
-                              id: `proto-dka-fluid-${Date.now()}`,
+                              id: createOrderId('proto-dka-fluid'),
                               module: 'Protocol (DKA)',
                               text: `DKA IV Rehydration Fluid @ ${totalRate} mL/hr over 48h (Mnt ${mnt} + Deficit ${(netDef / 48).toFixed(1)} mL/hr, add D5W when BG < 250)`,
                               timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
@@ -246,7 +246,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                           type="button"
                           onClick={() => {
                             onAddOrder({
-                              id: `proto-dka-ri-${Date.now()}`,
+                              id: createOrderId('proto-dka-ri'),
                               module: 'Protocol (DKA)',
                               text: `Regular Insulin Drip @ ${riRate} U/hr (${riRate} mL/hr) IV via Syringe Pump (Mix 50 U RI in 50 mL 0.9% NSS)`,
                               timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
@@ -373,7 +373,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                         const lowVol = Math.min(w * 3, 100).toFixed(0);
                         const highVol = Math.min(w * 5, 150).toFixed(0);
                         onAddOrder({
-                          id: `proto-lyte-3nacl-${Date.now()}`,
+                          id: createOrderId('proto-lyte-3nacl'),
                           module: 'Protocol (Electrolytes)',
                           text: `3% NaCl ${lowVol}–${highVol} mL IV over 20 min for acute symptomatic hyponatremia/seizure`,
                           timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),

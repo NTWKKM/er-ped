@@ -9,7 +9,7 @@ import {
   calcPatientRenalDose,
 } from '../utils/clinicalCalculations';
 import { Search, X, ChevronDown, AlertTriangle } from 'lucide-react';
-import { OrderItem } from './ModalsAndDrawers';
+import { OrderItem, createOrderId } from './ModalsAndDrawers';
 
 interface MedicationsViewProps {
   activeWeight: number | null;
@@ -294,7 +294,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                 type="button"
                 onClick={() => {
                   onAddOrder({
-                    id: `med-${selectedDrug.key}-${Date.now()}`,
+                    id: createOrderId(`med-${selectedDrug.key}`),
                     module: 'Medication',
                     text: `${selectedDrug.name} ${singleDoseMgText}${singleDoseVolumeText ? ` (${singleDoseVolumeText})` : ''} ${cleanEnglishText(selectedDrug.route) || 'PO'} ${selectedDrug.freq || selectedDrug.split || 'PRN'}`,
                     timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),

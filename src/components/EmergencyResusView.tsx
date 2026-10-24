@@ -9,7 +9,7 @@ import {
   calcParklandBurn,
 } from '../utils/clinicalCalculations';
 import { Play, Pause, RotateCcw } from 'lucide-react';
-import { OrderItem } from './ModalsAndDrawers';
+import { OrderItem, createOrderId } from './ModalsAndDrawers';
 
 export type ResusTopic =
   | 'pals'
@@ -66,7 +66,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
         aria-label={ariaLabel}
         onClick={() =>
           onAddOrder({
-            id: `${idPrefix}-${Date.now()}`,
+            id: createOrderId(idPrefix),
             module,
             text,
             timestamp: new Date().toLocaleTimeString('th-TH', {

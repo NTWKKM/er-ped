@@ -118,8 +118,25 @@ export default function App() {
     orderSheetTriggerRef.current?.focus();
   };
 
+  const getOrderPrefix = (id: string) => id.replace(/-\d+(?:-\d+)?$/, '');
+
+  const invalidateCalculatedOrders = () => {
+    setOrders((prev) =>
+      prev.length > 0 ? prev.map((o) => (o.invalidated ? o : { ...o, invalidated: true })) : prev
+    );
+  };
+
   const handleAddOrder = (order: OrderItem) => {
-    setOrders((prev) => [...prev, order]);
+    const prefix = getOrderPrefix(order.id);
+    setOrders((prev) => {
+      const idx = prev.findIndex((o) => o.invalidated && getOrderPrefix(o.id) === prefix);
+      if (idx !== -1) {
+        const next = [...prev];
+        next[idx] = { ...order, invalidated: false };
+        return next;
+      }
+      return [...prev, { ...order, invalidated: false }];
+    });
   };
 
   useModalFocusTrap(
@@ -171,6 +188,7 @@ export default function App() {
     val: string,
     source: 'manual' | 'broselow' = 'manual'
   ) => {
+    invalidateCalculatedOrders();
     setBio((prev) => ({
       ...prev,
       rawWeight: val,
@@ -180,6 +198,7 @@ export default function App() {
   };
 
   const handleAgeChange = (val: string) => {
+    invalidateCalculatedOrders();
     let num = parseFloat(val);
     const maxLimit = bio.ageUnit === 'mo' ? 180 : 15;
     if (Number.isFinite(num) && num > maxLimit) {
@@ -203,6 +222,7 @@ export default function App() {
   };
 
   const handleToggleAgeUnit = () => {
+    invalidateCalculatedOrders();
     setBio((prev) => {
       const nextUnit = prev.ageUnit === 'yr' ? 'mo' : 'yr';
       const raw = parseFloat(prev.rawAge);
@@ -217,10 +237,26 @@ export default function App() {
   };
 
   const handleToggleSex = () => {
+    invalidateCalculatedOrders();
     setBio((prev) => ({
       ...prev,
       sex: prev.sex === 'male' ? 'female' : 'male',
     }));
+  };
+
+  const handleHeightChange = (val: string) => {
+    invalidateCalculatedOrders();
+    setBio((prev) => ({ ...prev, rawHeight: val }));
+  };
+
+  const handleToggleUseIBW = (checked: boolean) => {
+    invalidateCalculatedOrders();
+    setBio((prev) => ({ ...prev, useIBW: checked }));
+  };
+
+  const handleSerumCrChange = (val: string) => {
+    invalidateCalculatedOrders();
+    setBio((prev) => ({ ...prev, serumCr: val }));
   };
 
   const handleCycleTheme = () => {
@@ -252,8 +288,8 @@ export default function App() {
         onAgeChange={handleAgeChange}
         onToggleAgeUnit={handleToggleAgeUnit}
         onToggleSex={handleToggleSex}
-        onHeightChange={(val) => setBio((prev) => ({ ...prev, rawHeight: val }))}
-        onToggleUseIBW={(checked) => setBio((prev) => ({ ...prev, useIBW: checked }))}
+        onHeightChange={handleHeightChange}
+        onToggleUseIBW={handleToggleUseIBW}
         onCycleTheme={handleCycleTheme}
         onOpenBroselowModal={(color) => {
           setBroselowPreviewColor(color || null);
@@ -303,7 +339,7 @@ export default function App() {
             ageYears={ageYears}
             heightCm={parseFloat(bio.rawHeight) || null}
             serumCr={bio.serumCr}
-            onSerumCrChange={(val) => setBio((prev) => ({ ...prev, serumCr: val }))}
+            onSerumCrChange={handleSerumCrChange}
             onAddOrder={handleAddOrder}
           />
         )}
@@ -378,7 +414,14 @@ export default function App() {
         onRemoveOrder={(id) => setOrders((prev) => prev.filter((o) => o.id !== id))}
         onClearOrders={() => setOrders([])}
         onCopyAll={async () => {
-          const text = orders.map((o, idx) => `${idx + 1}. [${o.module}] ${o.text}`).join('\n');
+          const confirmedOrders = orders.filter((o) => !o.invalidated);
+          if (confirmedOrders.length === 0) {
+            window.alert(
+              'Patient inputs changed since these orders were queued. Recalculate and confirm orders via "+ Order Sheet" before copying.'
+            );
+            return;
+          }
+          const text = confirmedOrders.map((o, idx) => `${idx + 1}. [${o.module}] ${o.text}`).join('\n');
           if (!navigator.clipboard?.writeText) {
             window.alert('Copy failed. Clipboard API is unavailable; select the order text and copy it manually.');
             return;

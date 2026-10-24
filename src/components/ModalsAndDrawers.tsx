@@ -27,6 +27,14 @@ export interface OrderItem {
   module: string;
   text: string;
   timestamp: string;
+  invalidated?: boolean;
+}
+
+let orderIdSeq = 0;
+
+export function createOrderId(prefix: string): string {
+  orderIdSeq += 1;
+  return `${prefix}-${Date.now()}-${orderIdSeq}`;
 }
 
 interface BroselowModalProps {
@@ -446,13 +454,22 @@ export const OrderSheetModal: React.FC<OrderSheetModalProps> = ({
                 {orders.map((o, idx) => (
                   <div
                     key={o.id}
-                    className="clinical-panel-subtle p-2.5 flex items-center justify-between gap-2 text-xs"
+                    className={`clinical-panel-subtle p-2.5 flex items-center justify-between gap-2 text-xs ${
+                      o.invalidated ? 'border border-[var(--warning)] bg-[var(--warning-soft)] opacity-80' : ''
+                    }`}
                   >
                     <div className="font-mono-tabular text-[var(--ink)] flex-1">
                       <span className="font-bold text-[var(--accent-text)] mr-2">
                         #{idx + 1} [{o.module}]
                       </span>
-                      {o.text}
+                      <span className={o.invalidated ? 'line-through text-[var(--muted)]' : ''}>
+                        {o.text}
+                      </span>
+                      {o.invalidated && (
+                        <span className="ml-2 font-sans font-bold text-[var(--warning-text)]">
+                          ▲ Outdated (patient inputs changed — recalculate &amp; re-add to confirm)
+                        </span>
+                      )}
                     </div>
                     <button
                       type="button"
