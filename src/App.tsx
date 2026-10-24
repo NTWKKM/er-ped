@@ -4,7 +4,11 @@ import {
   BiometricState,
 } from './components/TopbarBiometrics';
 import { MedicationsView } from './components/MedicationsView';
-import { FluidsAndDripsView } from './components/FluidsAndDripsView';
+import {
+  FluidsAndDripsView,
+  FluidsAndDripsInputs,
+  DEFAULT_FLUIDS_INPUTS,
+} from './components/FluidsAndDripsView';
 import { EmergencyResusView, ResusTopic } from './components/EmergencyResusView';
 import { ProtocolsAndCDSView, ProtocolTopic } from './components/ProtocolsAndCDSView';
 import {
@@ -85,6 +89,7 @@ export default function App() {
 
   const [mainTab, setMainTab] = useState<MainTab>('dose');
   const [fluidsTopic, setFluidsTopic] = useState<'fluids' | 'drip' | 'transfusion'>('fluids');
+  const [fluidsInputs, setFluidsInputs] = useState<FluidsAndDripsInputs>(DEFAULT_FLUIDS_INPUTS);
   const [resusTopic, setResusTopic] = useState<ResusTopic>('pals');
   const [protocolTopic, setProtocolTopic] = useState<ProtocolTopic>('asthma');
   const [theme, setTheme] = useState<'light' | 'dark' | 'mono' | 'red'>('light');
@@ -355,6 +360,8 @@ export default function App() {
           <FluidsAndDripsView
             activeSubTab={fluidsTopic}
             activeWeight={activeWeight}
+            inputs={fluidsInputs}
+            onChangeInputs={setFluidsInputs}
             onChangeSubTab={(sub) => {
               setFluidsTopic(sub);
               if (sub === 'drip') setMainTab('drip');

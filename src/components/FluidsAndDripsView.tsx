@@ -16,7 +16,35 @@ interface FluidsAndDripsViewProps {
   onChangeSubTab: (sub: 'fluids' | 'drip' | 'transfusion') => void;
   onAddOrder?: (order: OrderItem) => void;
   onInvalidateOrders?: (targetPrefix?: string) => void;
+  inputs?: FluidsAndDripsInputs;
+  onChangeInputs?: React.Dispatch<React.SetStateAction<FluidsAndDripsInputs>>;
 }
+
+export interface FluidsAndDripsInputs {
+  deficitPct: number;
+  fluidDuration: number;
+  dripKey: string;
+  dripDose: string;
+  dripDrugMg: string;
+  dripVolMl: string;
+  reverseRate: string;
+  currentHb: string;
+  targetHb: string;
+  prbcType: 'cpda' | 'sagm';
+}
+
+export const DEFAULT_FLUIDS_INPUTS: FluidsAndDripsInputs = {
+  deficitPct: 5,
+  fluidDuration: 24,
+  dripKey: DATASET.infusionDrips[0]?.key || 'epinephrine-drip',
+  dripDose: '0.1',
+  dripDrugMg: '1',
+  dripVolMl: '50',
+  reverseRate: '',
+  currentHb: '6.5',
+  targetHb: '10.0',
+  prbcType: 'cpda',
+};
 
 export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
   activeSubTab,
@@ -24,47 +52,64 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
   onChangeSubTab,
   onAddOrder,
   onInvalidateOrders,
+  inputs,
+  onChangeInputs,
 }) => {
   const handleSubTabChange = (tab: 'fluids' | 'drip' | 'transfusion') => {
     onChangeSubTab(tab);
   };
-  // IV Fluids state
-  const [deficitPct, setDeficitPct] = useState<number>(5);
-  const [fluidDuration, setFluidDuration] = useState<number>(24);
 
-  // Drip state
-  const [dripKey, setDripKey] = useState<string>(
-    DATASET.infusionDrips[0]?.key || 'epinephrine-drip'
-  );
-  const [dripDose, setDripDose] = useState<string>('0.1');
-  const [dripDrugMg, setDripDrugMg] = useState<string>('1');
-  const [dripVolMl, setDripVolMl] = useState<string>('50');
-  const [reverseRate, setReverseRate] = useState<string>('');
+  const [internalInputs, setInternalInputs] = useState<FluidsAndDripsInputs>(DEFAULT_FLUIDS_INPUTS);
+  const currentInputs = inputs ?? internalInputs;
 
-  // Transfusion state
-  const [currentHb, setCurrentHb] = useState<string>('6.5');
-  const [targetHb, setTargetHb] = useState<string>('10.0');
-  const [prbcType, setPrbcType] = useState<'cpda' | 'sagm'>('cpda');
+  const updateInputs = (patch: Partial<FluidsAndDripsInputs>) => {
+    if (onChangeInputs) {
+      onChangeInputs((prev) => ({ ...prev, ...patch }));
+    } else {
+      setInternalInputs((prev) => ({ ...prev, ...patch }));
+    }
+  };
+
+  const {
+    deficitPct,
+    fluidDuration,
+    dripKey,
+    dripDose,
+    dripDrugMg,
+    dripVolMl,
+    reverseRate,
+    currentHb,
+    targetHb,
+    prbcType,
+  } = currentInputs;
 
   const selectedDripItem =
     DATASET.infusionDrips.find((d) => d.key === dripKey) || DATASET.infusionDrips[0];
 
   const handleSelectDrip = (key: string) => {
     onInvalidateOrders?.('drip');
-    setDripKey(key);
-    setReverseRate('');
     const item = DATASET.infusionDrips.find((d) => d.key === key);
+    let nextMg = '1';
+    let nextVol = '50';
+    let nextDose = '0.1';
     if (item) {
-      setDripDose(String(item.doseDefaultMcgKgMin));
+      nextDose = String(item.doseDefaultMcgKgMin);
       const m = (item.standardPrep || '').match(/(\d+(?:\.\d+)?)\s*mg\s*in\s*(\d+(?:\.\d+)?)\s*mL/i);
       if (m) {
-        setDripDrugMg(m[1]);
-        setDripVolMl(m[2]);
+        nextMg = m[1];
+        nextVol = m[2];
       } else {
-        setDripDrugMg(String((item.concMgPerMl || 0.02) * 50));
-        setDripVolMl('50');
+        nextMg = String((item.concMgPerMl || 0.02) * 50);
+        nextVol = '50';
       }
     }
+    updateInputs({
+      dripKey: key,
+      reverseRate: '',
+      dripDose: nextDose,
+      dripDrugMg: nextMg,
+      dripVolMl: nextVol,
+    });
   };
 
   const w = activeWeight || 0;
@@ -174,7 +219,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                 value={deficitPct}
                 onChange={(e) => {
                   onInvalidateOrders?.('fluids');
-                  setDeficitPct(parseInt(e.target.value, 10));
+                  updateInputs({ deficitPct: parseInt(e.target.value, 10) });
                 }}
                 className="clinical-input w-full font-semibold"
               >
@@ -195,7 +240,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                 value={fluidDuration}
                 onChange={(e) => {
                   onInvalidateOrders?.('fluids');
-                  setFluidDuration(parseInt(e.target.value, 10));
+                  updateInputs({ fluidDuration: parseInt(e.target.value, 10) });
                 }}
                 className="clinical-input w-full font-semibold"
               >
@@ -308,7 +353,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                 value={dripDose}
                 onChange={(e) => {
                   onInvalidateOrders?.('drip');
-                  setDripDose(e.target.value);
+                  updateInputs({ dripDose: e.target.value });
                 }}
                 className="clinical-input w-full font-mono-tabular font-bold"
               />
@@ -330,7 +375,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                   value={dripDrugMg}
                   onChange={(e) => {
                     onInvalidateOrders?.('drip');
-                    setDripDrugMg(e.target.value);
+                    updateInputs({ dripDrugMg: e.target.value });
                   }}
                   className="clinical-input w-full font-mono-tabular font-bold text-center px-1.5"
                   title="Drug amount (mg)"
@@ -347,7 +392,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                   value={dripVolMl}
                   onChange={(e) => {
                     onInvalidateOrders?.('drip');
-                    setDripVolMl(e.target.value);
+                    updateInputs({ dripVolMl: e.target.value });
                   }}
                   className="clinical-input w-full font-mono-tabular font-bold text-center px-1.5"
                   title="Diluent volume (mL)"
@@ -406,7 +451,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                       step="0.5"
                       placeholder="Enter mL/hr"
                       value={reverseRate}
-                      onChange={(e) => setReverseRate(e.target.value)}
+                      onChange={(e) => updateInputs({ reverseRate: e.target.value })}
                       className="clinical-input w-28 font-mono-tabular font-bold text-xs"
                     />
                     <span className="text-sm font-extrabold font-mono-tabular text-[var(--accent-text)]">
@@ -448,7 +493,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                 value={currentHb}
                 onChange={(e) => {
                   onInvalidateOrders?.('tx');
-                  setCurrentHb(e.target.value);
+                  updateInputs({ currentHb: e.target.value });
                 }}
                 className="clinical-input w-full font-mono-tabular font-bold"
               />
@@ -464,7 +509,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                 value={targetHb}
                 onChange={(e) => {
                   onInvalidateOrders?.('tx');
-                  setTargetHb(e.target.value);
+                  updateInputs({ targetHb: e.target.value });
                 }}
                 className="clinical-input w-full font-mono-tabular font-bold"
               />
@@ -478,7 +523,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                 value={prbcType}
                 onChange={(e) => {
                   onInvalidateOrders?.('tx');
-                  setPrbcType(e.target.value as 'cpda' | 'sagm');
+                  updateInputs({ prbcType: e.target.value as 'cpda' | 'sagm' });
                 }}
                 className="clinical-input w-full font-bold"
               >
