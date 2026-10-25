@@ -424,7 +424,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
             <div className="p-3 rounded-lg border border-[var(--warning)] bg-[var(--warning-soft)] text-[var(--warning-text)] text-xs flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 shrink-0" />
               <span>
-                Matched renal adjustment is qualitative guidance ({matchedRenalRegimen}). Enter the calculated dose outside this calculator (e.g. directly in the patient's chart or EHR).
+                Matched renal adjustment is qualitative guidance ({matchedRenalRegimen}). Enter the calculated dose outside this calculator (e.g. directly in the patient&apos;s chart or EHR).
               </span>
             </div>
           )}
