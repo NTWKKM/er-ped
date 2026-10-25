@@ -273,6 +273,13 @@ flowchart TD
     - **Safety & Archive**: Legacy vanilla implementation safely archived on branch `archive/v1-legacy`. Cleaned AI Studio temp artifacts (`.aistudio`) and redundant duplicate asset dumps.
     - **Automated Verification**: Verified type-checking (`pnpm run lint`), core clinical unit tests (`pnpm test`), and production build (`pnpm run build`) passing 100% green.
 
+68. **Responsive Geometry Hardening, Transfusion Unlocking & Modal Registry (taste-skill v2.4.2 - October 2026)**:
+    - **Zero-Overflow Responsive Topbar**: Upgraded `TopbarBiometrics` with `flex flex-wrap lg:flex-nowrap` and responsive input clamp styling, eliminating horizontal overflows (`docScrollW > clientW`) across 14 breakpoints (320px up to 1920px).
+    - **18th Clinical Module Access**: Connected Blood Transfusion calculator (`calcTransfusion`, CPDA-1 vs SAGM, PRBC volume, Platelets, FFP, Cryo, TXA) via cohesive 3-subtab navigation (`IV Fluids`, `Continuous Drips`, `Blood Transfusion`) inside `FluidsAndDripsView`.
+    - **Clinical Modals Integration**: Linked `EvidenceModal` (guidelines LOE/COR) and `OrderSheetModal` (EHR prescription order builder & 1-tap Bedside Pocket Card printing) into TopbarBiometrics.
+    - **iOS Safari Non-Zoom Inputs**: Enforced `font-size: 16px !important` on mobile viewports (< 768px) for all form inputs.
+    - **Viewport Stability**: Pinned root container to `min-h-[100dvh]`. All unit tests (`10/10`) and Playwright responsive audits (`0 overflows`) pass 100% green.
+
 
 
 

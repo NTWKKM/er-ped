@@ -9,6 +9,7 @@ import {
   calcPatientRenalDose,
 } from '../utils/clinicalCalculations';
 import { Search, X, ChevronDown, AlertTriangle } from 'lucide-react';
+import { OrderItem, createOrderId } from './ModalsAndDrawers';
 
 interface MedicationsViewProps {
   activeWeight: number | null;
@@ -16,6 +17,12 @@ interface MedicationsViewProps {
   heightCm: number | null;
   serumCr: string;
   onSerumCrChange: (val: string) => void;
+  onAddOrder?: (order: OrderItem) => void;
+  onInvalidateOrders?: (targetPrefix?: string) => void;
+  selectedKey?: string;
+  onSelectKey?: (key: string) => void;
+  concOverride?: string;
+  onConcOverrideChange?: (val: string) => void;
 }
 
 function cleanEnglishText(text?: string | null): string {
@@ -59,18 +66,33 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
   heightCm,
   serumCr,
   onSerumCrChange,
+  onAddOrder,
+  onInvalidateOrders,
+  selectedKey,
+  onSelectKey,
+  concOverride,
+  onConcOverrideChange,
 }) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const [selectedKey, setSelectedKey] = useState<string>('paracetamol-syrup-120-mg-5-ml');
-  const [concOverride, setConcOverride] = useState<string>('');
+  const [internalSelectedKey, setInternalSelectedKey] = useState<string>('paracetamol-syrup-120-mg-5-ml');
+  const [internalConcOverride, setInternalConcOverride] = useState<string>('');
+  const [isRenalReviewed, setIsRenalReviewed] = useState<boolean>(false);
+  const [isRenalDetailsOpen, setIsRenalDetailsOpen] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const currentSelectedKey = selectedKey ?? internalSelectedKey;
+  const currentConcOverride = concOverride ?? internalConcOverride;
+
+  useEffect(() => {
+    setIsRenalReviewed(false);
+  }, [currentSelectedKey, serumCr, heightCm, activeWeight]);
 
   const allDrugs = DATASET.pediatricDose;
 
   const selectedDrug = useMemo(() => {
-    return allDrugs.find((d) => d.key === selectedKey) || allDrugs[0];
-  }, [allDrugs, selectedKey]);
+    return allDrugs.find((d) => d.key === currentSelectedKey) || allDrugs[0];
+  }, [allDrugs, currentSelectedKey]);
 
   const filteredDrugs = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -94,10 +116,28 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
   }, []);
 
   const handleSelectDrug = (d: PediatricDrug) => {
-    setSelectedKey(d.key);
+    onInvalidateOrders?.(`med-${d.key}`);
+    if (onSelectKey) {
+      onSelectKey(d.key);
+    } else {
+      setInternalSelectedKey(d.key);
+    }
     setSearchQuery('');
-    setConcOverride('');
+    if (onConcOverrideChange) {
+      onConcOverrideChange('');
+    } else {
+      setInternalConcOverride('');
+    }
     setIsDropdownOpen(false);
+  };
+
+  const handleConcOverrideChange = (val: string) => {
+    onInvalidateOrders?.(`med-${selectedDrug.key}`);
+    if (onConcOverrideChange) {
+      onConcOverrideChange(val);
+    } else {
+      setInternalConcOverride(val);
+    }
   };
 
   const resolved = useMemo(
@@ -110,7 +150,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
     [selectedDrug]
   );
 
-  const customConcNum = parseFloat(concOverride);
+  const customConcNum = parseFloat(currentConcOverride);
   const effectiveMgPerMl =
     Number.isFinite(customConcNum) && customConcNum > 0
       ? customConcNum
@@ -183,6 +223,62 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
   }, [resolved]);
 
   const egfr = calcSchwartzEGFR(parseFloat(serumCr), heightCm);
+
+  const matchedRenalTier = useMemo(() => {
+    if (!selectedDrug.renalAdjust || !selectedDrug.renalDosing || egfr === null) {
+      return null;
+    }
+    return selectedDrug.renalDosing.find((t) => egfr >= t.minGfr && egfr <= t.maxGfr) || null;
+  }, [selectedDrug, egfr]);
+
+  const matchedRenalRegimen = useMemo(() => {
+    if (!matchedRenalTier) return null;
+    return cleanEnglishText(calcPatientRenalDose(matchedRenalTier, selectedDrug, activeWeight));
+  }, [matchedRenalTier, selectedDrug, activeWeight]);
+
+  const isRenalReviewRequired = Boolean(matchedRenalTier && !isRenalReviewed);
+
+  const isAgeLimited = selectedDrug?.minAgeYr != null || selectedDrug?.maxAgeYr != null;
+  const isMissingRequiredAge = Boolean(isAgeLimited && (ageYears == null || ageYears <= 0));
+
+  const hasNumericStandardDose = Boolean(
+    resolved &&
+    (
+      (resolved.doseMg != null && Number.isFinite(resolved.doseMg) && resolved.doseMg > 0) ||
+      (resolved.doseMinMg != null && Number.isFinite(resolved.doseMinMg) && resolved.doseMinMg > 0) ||
+      (resolved.doseMaxMg != null && Number.isFinite(resolved.doseMaxMg) && resolved.doseMaxMg > 0) ||
+      (resolved.doseMl != null && Number.isFinite(resolved.doseMl) && resolved.doseMl > 0) ||
+      (resolved.doseMinMl != null && Number.isFinite(resolved.doseMinMl) && resolved.doseMinMl > 0) ||
+      (resolved.doseMaxMl != null && Number.isFinite(resolved.doseMaxMl) && resolved.doseMaxMl > 0) ||
+      (resolved.doseUnits != null && Number.isFinite(resolved.doseUnits) && resolved.doseUnits > 0) ||
+      (resolved.doseMinUnits != null && Number.isFinite(resolved.doseMinUnits) && resolved.doseMinUnits > 0) ||
+      (resolved.doseMaxUnits != null && Number.isFinite(resolved.doseMaxUnits) && resolved.doseMaxUnits > 0)
+    ) &&
+    singleDoseMgText !== '—'
+  );
+
+  const hasNumericRenalDose = Boolean(
+    matchedRenalRegimen &&
+    /\d+\s*(?:–|-|\s)*\d*\s*(?:mg|g|mcg|mL|units?|U\b)/i.test(matchedRenalRegimen)
+  );
+
+  const hasNumericDose = matchedRenalTier ? hasNumericRenalDose : hasNumericStandardDose;
+
+  const orderText = (matchedRenalTier && !hasNumericRenalDose)
+    ? ''
+    : matchedRenalRegimen
+    ? `${selectedDrug.name} ${matchedRenalRegimen} ${cleanEnglishText(selectedDrug.route) || 'PO'} [Renal eGFR ${egfr!.toFixed(1)} mL/min/1.73m²]`
+    : `${selectedDrug.name} ${singleDoseMgText}${singleDoseVolumeText ? ` (${singleDoseVolumeText})` : ''} ${cleanEnglishText(selectedDrug.route) || 'PO'} ${selectedDrug.freq || selectedDrug.split || 'PRN'}`;
+
+  const canAddOrder = Boolean(
+    onAddOrder &&
+    resolved &&
+    !resolved.isAgeRestricted &&
+    !isMissingRequiredAge &&
+    !isRenalReviewRequired &&
+    hasNumericDose &&
+    orderText
+  );
 
   return (
     <div className="clinical-card p-5 space-y-5">
@@ -284,6 +380,64 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
         </div>
       ) : (
         <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-[var(--muted)]">Calculated Dosage</span>
+            {canAddOrder ? (
+              <button
+                type="button"
+                onClick={() => {
+                  onAddOrder?.({
+                    id: createOrderId(`med-${selectedDrug.key}`),
+                    module: 'Medication',
+                    text: orderText,
+                    timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
+                  });
+                }}
+                className="px-2.5 py-1 text-xs font-bold rounded border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
+                title="Add to Active Patient Order Sheet"
+              >
+                + Order Sheet
+              </button>
+            ) : isRenalReviewRequired ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setIsRenalDetailsOpen(true);
+                  setIsRenalReviewed(true);
+                }}
+                className="px-2.5 py-1 text-xs font-bold rounded border border-[var(--warning)] text-[var(--warning-text)] bg-[var(--warning-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
+                title="Review matched renal dosing tier before adding to Order Sheet"
+              >
+                ▲ Review Renal Regimen ({egfr?.toFixed(0)} mL/min/1.73m²)
+              </button>
+            ) : matchedRenalTier && !hasNumericRenalDose ? (
+              <span
+                className="px-2.5 py-1 text-xs font-semibold rounded border border-[var(--warning)] text-[var(--warning-text)] bg-[var(--warning-soft)] shrink-0"
+                title="Matched renal tier provides qualitative guidance only; order entry must be completed outside this calculator"
+              >
+                ▲ Review-Only Guidance
+              </span>
+            ) : null}
+          </div>
+
+          {matchedRenalTier && !hasNumericRenalDose && (
+            <div className="p-3 rounded-lg border border-[var(--warning)] bg-[var(--warning-soft)] text-[var(--warning-text)] text-xs flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 shrink-0" />
+              <span>
+                Matched renal adjustment is qualitative guidance ({matchedRenalRegimen}). Enter the calculated dose outside this calculator (e.g. directly in the patient&apos;s chart or EHR).
+              </span>
+            </div>
+          )}
+
+          {isMissingRequiredAge && (
+            <div className="p-3 rounded-lg border border-[var(--warning)] bg-[var(--warning-soft)] text-[var(--warning-text)] text-xs flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 shrink-0" />
+              <span>
+                Age-limited medication ({selectedDrug.minAgeYr != null ? `≥ ${selectedDrug.minAgeYr} yr` : ''}{selectedDrug.maxAgeYr != null ? ` ≤ ${selectedDrug.maxAgeYr} yr` : ''}). Enter patient Age above to verify eligibility before adding to Order Sheet.
+              </span>
+            </div>
+          )}
+
           {/* 2 Clean Hero Readouts */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="clinical-panel-subtle p-4">
@@ -353,8 +507,8 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                 min="0"
                 step="0.1"
                 placeholder={strength.mgPerMl ? strength.mgPerMl.toFixed(1) : 'mg/mL'}
-                value={concOverride}
-                onChange={(e) => setConcOverride(e.target.value)}
+                value={currentConcOverride}
+                onChange={(e) => handleConcOverrideChange(e.target.value)}
                 className="clinical-input w-20 text-center font-mono-tabular text-xs font-bold py-1"
               />
             </div>
@@ -362,9 +516,22 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
 
           {/* Collapsible Renal Adjustment */}
           {selectedDrug.renalAdjust && selectedDrug.renalDosing && (
-            <details className="clinical-panel-subtle p-3 text-xs">
-              <summary className="font-bold text-[var(--warning-text)] cursor-pointer">
-                ▲ Renal Dose Adjustment Required (Click to view eGFR table)
+            <details
+              open={isRenalDetailsOpen}
+              onToggle={(e) => {
+                const isOpen = e.currentTarget.open;
+                setIsRenalDetailsOpen(isOpen);
+                if (isOpen) setIsRenalReviewed(true);
+              }}
+              className="clinical-panel-subtle p-3 text-xs"
+            >
+              <summary className="font-bold text-[var(--warning-text)] cursor-pointer flex items-center justify-between">
+                <span>▲ Renal Dose Adjustment Required (Click to view eGFR table)</span>
+                {matchedRenalTier && (
+                  <span className={`text-[11px] font-bold ${isRenalReviewed ? 'text-[var(--good-text)]' : 'text-[var(--warning-text)]'}`}>
+                    [{isRenalReviewed ? '✓ Reviewed' : 'Review Required'}]
+                  </span>
+                )}
               </summary>
               <div className="mt-3 space-y-2">
                 <div className="flex items-center gap-2">
@@ -383,11 +550,32 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                     </span>
                   )}
                 </div>
+                {matchedRenalTier && (
+                  <div className="flex items-center justify-between p-2 rounded bg-[var(--card)] border border-[var(--border)]">
+                    <span className="text-xs text-[var(--ink)]">
+                      Matched Tier ({matchedRenalTier.gfr} mL/min/1.73m²):{' '}
+                      <strong className="text-[var(--accent-text)]">{matchedRenalRegimen}</strong>
+                    </span>
+                    {!isRenalReviewed ? (
+                      <button
+                        type="button"
+                        onClick={() => setIsRenalReviewed(true)}
+                        className="px-2 py-0.5 text-[11px] font-bold rounded bg-[var(--accent)] text-white hover:opacity-90 transition-opacity cursor-pointer shrink-0"
+                      >
+                        ✓ Confirm Review
+                      </button>
+                    ) : (
+                      <span className="text-[11px] font-bold text-[var(--good-text)]">
+                        ✓ Reviewed
+                      </span>
+                    )}
+                  </div>
+                )}
                 <div className="overflow-x-auto border border-[var(--border)] rounded">
                   <table className="clinical-table">
                     <thead>
                       <tr>
-                        <th>eGFR (mL/min)</th>
+                        <th>eGFR (mL/min/1.73m²)</th>
                         <th>Recommended Dose</th>
                         <th>Interval</th>
                       </tr>
