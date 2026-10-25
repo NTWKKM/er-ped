@@ -15,6 +15,7 @@ import {
   BroselowModal,
   EvidenceModal,
   OrderSheetModal,
+  OrderSheetAndPocketContent,
   OrderItem,
 } from './components/ModalsAndDrawers';
 import {
@@ -103,6 +104,10 @@ export default function App() {
   const [evidenceOpen, setEvidenceOpen] = useState<boolean>(false);
   const [orderSheetOpen, setOrderSheetOpen] = useState<boolean>(false);
   const [orders, setOrders] = useState<OrderItem[]>([]);
+  const [copyMessage, setCopyMessage] = useState<{
+    type: 'success' | 'warning';
+    text: string;
+  } | null>(null);
 
   const evidenceTriggerRef = useRef<HTMLElement | null>(null);
   const orderSheetTriggerRef = useRef<HTMLElement | null>(null);
@@ -119,6 +124,7 @@ export default function App() {
 
   const handleOpenOrderSheetModal = (e?: React.SyntheticEvent<HTMLElement>) => {
     orderSheetTriggerRef.current = (e?.currentTarget as HTMLElement) || (document.activeElement as HTMLElement) || null;
+    setCopyMessage(null);
     setOrderSheetOpen(true);
   };
 
@@ -130,6 +136,7 @@ export default function App() {
   const getOrderPrefix = (id: string) => id.replace(/-\d+-\d+$/, '');
 
   const invalidateCalculatedOrders = (targetPrefix?: string) => {
+    setCopyMessage(null);
     setOrders((prev) =>
       prev.length > 0
         ? prev.map((o) => {
@@ -146,6 +153,7 @@ export default function App() {
   };
 
   const handleAddOrder = (order: OrderItem) => {
+    setCopyMessage(null);
     const prefix = getOrderPrefix(order.id);
     setOrders((prev) => {
       const idx = prev.findIndex((o) => o.invalidated && getOrderPrefix(o.id) === prefix);
@@ -158,6 +166,42 @@ export default function App() {
     });
   };
 
+  const handleCopyAllOrders = async () => {
+    const confirmedOrders = orders.filter((o) => !o.invalidated);
+    if (confirmedOrders.length === 0) {
+      setCopyMessage({
+        type: 'warning',
+        text: 'Patient inputs changed since these orders were queued. Recalculate and confirm orders via "+ Order Sheet" before copying.',
+      });
+      return;
+    }
+    const text = confirmedOrders.map((o, idx) => `${idx + 1}. [${o.module}] ${o.text}`).join('\n');
+    if (!navigator.clipboard?.writeText) {
+      setCopyMessage({
+        type: 'warning',
+        text: 'Copy failed. Clipboard API is unavailable; select the order text and copy it manually.',
+      });
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopyMessage({
+        type: 'success',
+        text: `Copied ${confirmedOrders.length} active order(s) to clipboard.`,
+      });
+    } catch {
+      setCopyMessage({
+        type: 'warning',
+        text: 'Copy failed. Select the order text and copy it manually.',
+      });
+    }
+  };
+
+  useModalFocusTrap(
+    broselowOpen,
+    '[role="dialog"][aria-label="Broselow Tape Reference Modal"]',
+    () => setBroselowOpen(false)
+  );
   useModalFocusTrap(
     evidenceOpen,
     '[role="dialog"][aria-label="Clinical Evidence Registry Modal"]',
@@ -287,6 +331,11 @@ export default function App() {
     });
   };
 
+  const activeOrderCount = useMemo(
+    () => orders.filter((o) => !o.invalidated).length,
+    [orders]
+  );
+
   const TABS: { id: MainTab; label: string }[] = [
     { id: 'dose', label: 'Meds' },
     { id: 'fluids', label: 'Fluids' },
@@ -303,6 +352,7 @@ export default function App() {
         activeWeight={activeWeight}
         ibwWeight={ibwWeight}
         theme={theme}
+        orderCount={activeOrderCount}
         onWeightChange={handleWeightChange}
         onAgeChange={handleAgeChange}
         onToggleAgeUnit={handleToggleAgeUnit}
@@ -318,103 +368,148 @@ export default function App() {
         onOpenOrderSheetModal={handleOpenOrderSheetModal}
       />
 
-      {/* Focused, Uncluttered Main Workspace */}
-      <main className="flex-1 max-w-3xl w-full mx-auto px-3 sm:px-4 py-4 sm:py-5 space-y-4">
-        {/* Simple 5-Tab Segmented Bar */}
-        <nav
-          role="tablist"
-          aria-label="Main calculator tabs"
-          className="grid grid-cols-5 gap-1 p-1 rounded-xl bg-[var(--panel)] border border-[var(--border)]"
-        >
-          {TABS.map((t) => {
-            const isAct = mainTab === t.id;
-            return (
-              <button
-                key={t.id}
-                type="button"
-                role="tab"
-                aria-selected={isAct}
-                onClick={() => {
-                  setMainTab(t.id);
-                  if (t.id === 'fluids') setFluidsTopic('fluids');
-                  if (t.id === 'drip') setFluidsTopic('drip');
+      {/* Responsive Multi-Breakpoint Clinical Workspace */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-5 lg:px-8 py-4 sm:py-5">
+        <div className="lg:grid lg:grid-cols-12 lg:gap-6 items-start">
+          {/* Primary Calculator Column (Full width on Mobile/Tablet, 8 cols on Desktop) */}
+          <div className="lg:col-span-8 space-y-4 min-w-0">
+            {/* Simple 5-Tab Segmented Bar */}
+            <nav
+              role="tablist"
+              aria-label="Main calculator tabs"
+              className="grid grid-cols-5 gap-1 p-1 rounded-xl bg-[var(--panel)] border border-[var(--border)]"
+            >
+              {TABS.map((t) => {
+                const isAct = mainTab === t.id;
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={isAct}
+                    onClick={() => {
+                      setMainTab(t.id);
+                      if (t.id === 'fluids') setFluidsTopic('fluids');
+                      if (t.id === 'drip') setFluidsTopic('drip');
+                    }}
+                    className={`min-h-[38px] sm:min-h-[40px] py-1.5 sm:py-2 px-1 sm:px-2 text-xs sm:text-sm font-bold rounded-lg transition-colors text-center cursor-pointer truncate ${
+                      isAct
+                        ? 'bg-[var(--accent)] text-white shadow-xs'
+                        : 'text-[var(--muted)] hover:text-[var(--ink)]'
+                    }`}
+                  >
+                    {t.label}
+                  </button>
+                );
+              })}
+            </nav>
+
+            {/* Active View */}
+            {mainTab === 'dose' && (
+              <MedicationsView
+                activeWeight={activeWeight}
+                ageYears={ageYears}
+                heightCm={parseFloat(bio.rawHeight) || null}
+                serumCr={bio.serumCr}
+                onSerumCrChange={handleSerumCrChange}
+                onAddOrder={handleAddOrder}
+                onInvalidateOrders={invalidateCalculatedOrders}
+                selectedKey={medSelectedKey}
+                onSelectKey={setMedSelectedKey}
+                concOverride={medConcOverride}
+                onConcOverrideChange={setMedConcOverride}
+              />
+            )}
+
+            {(mainTab === 'fluids' || mainTab === 'drip') && (
+              <FluidsAndDripsView
+                activeSubTab={fluidsTopic}
+                activeWeight={activeWeight}
+                inputs={fluidsInputs}
+                onChangeInputs={setFluidsInputs}
+                onChangeSubTab={(sub) => {
+                  setFluidsTopic(sub);
+                  if (sub === 'drip') setMainTab('drip');
+                  else if (sub === 'fluids' || sub === 'transfusion') setMainTab('fluids');
                 }}
-                className={`py-1.5 sm:py-2 px-1 sm:px-2 text-[11px] sm:text-xs md:text-sm font-bold rounded-lg transition-colors text-center cursor-pointer truncate ${
-                  isAct
-                    ? 'bg-[var(--accent)] text-white shadow-xs'
-                    : 'text-[var(--muted)] hover:text-[var(--ink)]'
-                }`}
-              >
-                {t.label}
-              </button>
-            );
-          })}
-        </nav>
+                onAddOrder={handleAddOrder}
+                onInvalidateOrders={invalidateCalculatedOrders}
+              />
+            )}
 
-        {/* Active View */}
-        {mainTab === 'dose' && (
-          <MedicationsView
-            activeWeight={activeWeight}
-            ageYears={ageYears}
-            heightCm={parseFloat(bio.rawHeight) || null}
-            serumCr={bio.serumCr}
-            onSerumCrChange={handleSerumCrChange}
-            onAddOrder={handleAddOrder}
-            onInvalidateOrders={invalidateCalculatedOrders}
-            selectedKey={medSelectedKey}
-            onSelectKey={setMedSelectedKey}
-            concOverride={medConcOverride}
-            onConcOverrideChange={setMedConcOverride}
-          />
-        )}
+            {mainTab === 'resus' && (
+              <EmergencyResusView
+                activeSubTab={resusTopic}
+                activeWeight={activeWeight}
+                ageYears={ageYears}
+                seizureSeconds={seizureSeconds}
+                seizureRunning={seizureRunning}
+                onToggleSeizureTimer={() => setSeizureRunning((r) => !r)}
+                onResetSeizureTimer={() => {
+                  setSeizureRunning(false);
+                  setSeizureSeconds(0);
+                }}
+                onChangeTopic={setResusTopic}
+                onAddOrder={handleAddOrder}
+              />
+            )}
 
-        {(mainTab === 'fluids' || mainTab === 'drip') && (
-          <FluidsAndDripsView
-            activeSubTab={fluidsTopic}
-            activeWeight={activeWeight}
-            inputs={fluidsInputs}
-            onChangeInputs={setFluidsInputs}
-            onChangeSubTab={(sub) => {
-              setFluidsTopic(sub);
-              if (sub === 'drip') setMainTab('drip');
-              else if (sub === 'fluids' || sub === 'transfusion') setMainTab('fluids');
-            }}
-            onAddOrder={handleAddOrder}
-            onInvalidateOrders={invalidateCalculatedOrders}
-          />
-        )}
+            {mainTab === 'protocols' && (
+              <ProtocolsAndCDSView
+                activeSubTab={protocolTopic}
+                activeWeight={activeWeight}
+                ageYears={ageYears}
+                onChangeTopic={setProtocolTopic}
+                onAddOrder={handleAddOrder}
+                onInvalidateOrders={invalidateCalculatedOrders}
+                dkaSeverity={dkaSeverity}
+                onChangeDkaSeverity={setDkaSeverity}
+                dkaPriorBolus={dkaPriorBolus}
+                onChangeDkaPriorBolus={setDkaPriorBolus}
+              />
+            )}
+          </div>
 
-        {mainTab === 'resus' && (
-          <EmergencyResusView
-            activeSubTab={resusTopic}
-            activeWeight={activeWeight}
-            ageYears={ageYears}
-            seizureSeconds={seizureSeconds}
-            seizureRunning={seizureRunning}
-            onToggleSeizureTimer={() => setSeizureRunning((r) => !r)}
-            onResetSeizureTimer={() => {
-              setSeizureRunning(false);
-              setSeizureSeconds(0);
-            }}
-            onChangeTopic={setResusTopic}
-            onAddOrder={handleAddOrder}
-          />
-        )}
+          {/* Desktop Sticky Companion Rail: Bedside Pocket Summary + Active Order Sheet */}
+          <aside
+            aria-label="Bedside Resuscitation Summary and Active Order Queue"
+            className="hidden lg:block lg:col-span-4 sticky top-[76px]"
+          >
+            <div className="clinical-card p-4 space-y-4">
+              <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-[var(--border)]">
+                <div>
+                  <h2 className="text-xs font-extrabold uppercase tracking-wider text-[var(--ink)]">
+                    Bedside Summary &amp; Order Queue
+                  </h2>
+                  <p className="text-[11px] text-[var(--muted)]">
+                    Live resuscitation reference &amp; EHR clipboard
+                  </p>
+                </div>
+                {activeOrderCount > 0 && (
+                  <span className="px-2 py-0.5 rounded-md text-[11px] font-bold font-mono-tabular bg-[var(--accent-soft)] text-[var(--accent-text)] border border-[var(--accent)]">
+                    {activeOrderCount} active
+                  </span>
+                )}
+              </div>
 
-        {mainTab === 'protocols' && (
-          <ProtocolsAndCDSView
-            activeSubTab={protocolTopic}
-            activeWeight={activeWeight}
-            ageYears={ageYears}
-            onChangeTopic={setProtocolTopic}
-            onAddOrder={handleAddOrder}
-            onInvalidateOrders={invalidateCalculatedOrders}
-            dkaSeverity={dkaSeverity}
-            onChangeDkaSeverity={setDkaSeverity}
-            dkaPriorBolus={dkaPriorBolus}
-            onChangeDkaPriorBolus={setDkaPriorBolus}
-          />
-        )}
+              <OrderSheetAndPocketContent
+                orders={orders}
+                activeWeight={activeWeight}
+                ageYears={ageYears}
+                copyMessage={copyMessage}
+                onRemoveOrder={(id) => {
+                  setCopyMessage(null);
+                  setOrders((prev) => prev.filter((o) => o.id !== id));
+                }}
+                onClearOrders={() => {
+                  setCopyMessage(null);
+                  setOrders([]);
+                }}
+                onCopyAll={handleCopyAllOrders}
+              />
+            </div>
+          </aside>
+        </div>
       </main>
 
       {/* Broselow 9-Color Spectrum Equipment & Drug Modal */}
@@ -442,28 +537,17 @@ export default function App() {
         orders={orders}
         activeWeight={activeWeight}
         ageYears={ageYears}
+        copyMessage={copyMessage}
         onClose={handleCloseOrderSheetModal}
-        onRemoveOrder={(id) => setOrders((prev) => prev.filter((o) => o.id !== id))}
-        onClearOrders={() => setOrders([])}
-        onCopyAll={async () => {
-          const confirmedOrders = orders.filter((o) => !o.invalidated);
-          if (confirmedOrders.length === 0) {
-            window.alert(
-              'Patient inputs changed since these orders were queued. Recalculate and confirm orders via "+ Order Sheet" before copying.'
-            );
-            return;
-          }
-          const text = confirmedOrders.map((o, idx) => `${idx + 1}. [${o.module}] ${o.text}`).join('\n');
-          if (!navigator.clipboard?.writeText) {
-            window.alert('Copy failed. Clipboard API is unavailable; select the order text and copy it manually.');
-            return;
-          }
-          try {
-            await navigator.clipboard.writeText(text);
-          } catch {
-            window.alert('Copy failed. Select the order text and copy it manually.');
-          }
+        onRemoveOrder={(id) => {
+          setCopyMessage(null);
+          setOrders((prev) => prev.filter((o) => o.id !== id));
         }}
+        onClearOrders={() => {
+          setCopyMessage(null);
+          setOrders([]);
+        }}
+        onCopyAll={handleCopyAllOrders}
       />
     </div>
   );

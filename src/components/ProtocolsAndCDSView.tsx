@@ -79,9 +79,9 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
   const effAgeYr = ageYears ?? 0;
 
   return (
-    <div className="clinical-card p-5 space-y-5">
+    <div className="clinical-card p-4 sm:p-5 space-y-4 sm:space-y-5">
       {/* Simple Protocol Selector */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[var(--border)]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-[var(--border)]">
         <label htmlFor="protocolTopicSelect" className="text-xs font-bold text-[var(--muted)]">
           Clinical Protocol &amp; Reference
         </label>
@@ -89,7 +89,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
           id="protocolTopicSelect"
           value={activeSubTab}
           onChange={(e) => onChangeTopic(e.target.value as ProtocolTopic)}
-          className="clinical-input sm:w-80 font-bold"
+          className="clinical-input w-full sm:w-80 md:w-96 font-bold"
         >
           <option value="asthma">Asthma — Acute Exacerbation &amp; HFNC</option>
           <option value="dka">DKA — Diabetic Ketoacidosis</option>
@@ -104,14 +104,14 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
       {/* 1. ASTHMA */}
       {activeSubTab === 'asthma' && (
         !w ? (
-          <div className="clinical-panel-subtle p-6 text-center text-sm text-[var(--muted)]">
+          <div className="clinical-panel-subtle p-5 sm:p-6 text-center text-sm text-[var(--muted)]">
             Enter patient Weight (BW) above to calculate acute asthma and HFNC settings
           </div>
         ) : (
           <div className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
               <div className="clinical-panel-subtle p-4">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-1.5">
                   <div className="text-xs font-semibold text-[var(--muted)]">
                     Salbutamol Nebulizer
                   </div>
@@ -128,14 +128,14 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                           timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
                         });
                       }}
-                      className="px-2 py-0.5 text-[11px] font-bold rounded border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
+                      className="min-h-[28px] px-2.5 py-1 text-[11px] font-bold rounded-md border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
                       title="Add to Active Patient Order Sheet"
                     >
                       + Order Sheet
                     </button>
                   )}
                 </div>
-                <div className="text-2xl font-extrabold font-mono-tabular text-[var(--accent-text)] mt-1">
+                <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--accent-text)] mt-1">
                   {w < 20 ? '2.5 mg' : '5.0 mg'}
                 </div>
                 <div className="text-xs text-[var(--muted)] mt-1">
@@ -144,7 +144,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
               </div>
 
               <div className="clinical-panel-subtle p-4">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-1.5">
                   <div className="text-xs font-semibold text-[var(--muted)]">
                     Systemic Corticosteroid
                   </div>
@@ -161,14 +161,14 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                           timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
                         });
                       }}
-                      className="px-2 py-0.5 text-[11px] font-bold rounded border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
+                      className="min-h-[28px] px-2.5 py-1 text-[11px] font-bold rounded-md border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
                       title="Add to Active Patient Order Sheet"
                     >
                       + Order Sheet
                     </button>
                   )}
                 </div>
-                <div className="text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
                   Pred {Math.min(60, Math.round(w * 1.5))} mg PO
                 </div>
                 <div className="text-xs text-[var(--muted)] mt-1">
@@ -180,7 +180,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                 <div className="text-xs font-semibold text-[var(--muted)]">
                   HFNC Flow &amp; IV MgSO4
                 </div>
-                <div className="text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                <div className="text-lg sm:text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
                   HFNC {Math.min(60, Math.round(w * 2))} L/min
                 </div>
                 <div className="text-xs text-[var(--muted)] mt-1">
@@ -195,9 +195,9 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
       {/* 2. DKA */}
       {activeSubTab === 'dka' && (
         <div className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="text-xs font-bold text-[var(--muted)] block mb-1">
+              <label className="text-xs font-bold text-[var(--muted)] block mb-1.5">
                 Dehydration Severity (% Deficit)
               </label>
               <select
@@ -211,13 +211,14 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
               </select>
             </div>
             <div>
-              <label className="text-xs font-bold text-[var(--muted)] block mb-1">
+              <label className="text-xs font-bold text-[var(--muted)] block mb-1.5">
                 Prior Fluid Boluses Given (mL)
               </label>
               <input
                 type="number"
                 min="0"
                 step="50"
+                inputMode="decimal"
                 value={currentDkaPriorBolus}
                 onChange={(e) => handleDkaPriorBolusChange(e.target.value)}
                 className="clinical-input w-full font-mono-tabular font-bold"
@@ -226,7 +227,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
           </div>
 
           {!w ? (
-            <div className="clinical-panel-subtle p-6 text-center text-sm text-[var(--muted)]">
+            <div className="clinical-panel-subtle p-5 sm:p-6 text-center text-sm text-[var(--muted)]">
               Enter patient Weight (BW) above to calculate DKA fluid and insulin rates
             </div>
           ) : (
@@ -242,9 +243,9 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
               const totalRate = +(mnt + netDef / 48).toFixed(1);
               const riRate = +(w * 0.1).toFixed(1);
               return (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div className="clinical-panel-subtle p-4">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-wrap items-center justify-between gap-1.5">
                       <div className="text-xs font-semibold text-[var(--muted)]">
                         Combined IV Fluid Rate (48h Rehydration)
                       </div>
@@ -259,7 +260,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                               timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
                             });
                           }}
-                          className="px-2 py-0.5 text-[11px] font-bold rounded border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
+                          className="min-h-[28px] px-2.5 py-1 text-[11px] font-bold rounded-md border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
                           title="Add to Active Patient Order Sheet"
                         >
                           + Order Sheet
@@ -268,7 +269,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                     </div>
                     {isValidPriorBolus ? (
                       <>
-                        <div className="text-2xl font-extrabold font-mono-tabular text-[var(--good-text)] mt-1">
+                        <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--good-text)] mt-1">
                           {totalRate} mL/hr
                         </div>
                         <div className="text-xs text-[var(--muted)] mt-1">
@@ -282,7 +283,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                     )}
                   </div>
                   <div className="clinical-panel-subtle p-4">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-wrap items-center justify-between gap-1.5">
                       <div className="text-xs font-semibold text-[var(--muted)]">
                         Regular Insulin Drip (0.1 U/kg/hr)
                       </div>
@@ -297,14 +298,14 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                               timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
                             });
                           }}
-                          className="px-2 py-0.5 text-[11px] font-bold rounded border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
+                          className="min-h-[28px] px-2.5 py-1 text-[11px] font-bold rounded-md border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
                           title="Add to Active Patient Order Sheet"
                         >
                           + Order Sheet
                         </button>
                       )}
                     </div>
-                    <div className="text-2xl font-extrabold font-mono-tabular text-[var(--accent-text)] mt-1">
+                    <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--accent-text)] mt-1">
                       {riRate} U/hr ({riRate} mL/hr)
                     </div>
                     <div className="text-xs text-[var(--muted)] mt-1">
@@ -321,60 +322,66 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
       {/* 3. ELECTROLYTES */}
       {activeSubTab === 'electrolytes' && (
         <div className="space-y-4">
-          <div className="grid grid-cols-2 sm:grid-cols-6 gap-2.5 text-xs">
+          <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3 text-xs">
             <div>
-              <label className="font-bold text-[var(--muted)] block mb-1">Measured Na</label>
+              <label className="font-bold text-[var(--muted)] block mb-1.5">Measured Na</label>
               <input
                 type="number"
+                inputMode="decimal"
                 value={lyteNa}
                 onChange={(e) => setLyteNa(e.target.value)}
                 className="clinical-input w-full font-mono-tabular font-bold"
               />
             </div>
             <div>
-              <label className="font-bold text-[var(--muted)] block mb-1">Glucose</label>
+              <label className="font-bold text-[var(--muted)] block mb-1.5">Glucose</label>
               <input
                 type="number"
+                inputMode="decimal"
                 value={lyteGlucose}
                 onChange={(e) => setLyteGlucose(e.target.value)}
                 className="clinical-input w-full font-mono-tabular font-bold"
               />
             </div>
             <div>
-              <label className="font-bold text-[var(--muted)] block mb-1">Total Ca</label>
+              <label className="font-bold text-[var(--muted)] block mb-1.5">Total Ca</label>
               <input
                 type="number"
                 step="0.1"
+                inputMode="decimal"
                 value={lyteTotalCa}
                 onChange={(e) => setLyteTotalCa(e.target.value)}
                 className="clinical-input w-full font-mono-tabular font-bold"
               />
             </div>
             <div>
-              <label className="font-bold text-[var(--muted)] block mb-1">Albumin</label>
+              <label className="font-bold text-[var(--muted)] block mb-1.5">Albumin</label>
               <input
                 type="number"
                 step="0.1"
+                inputMode="decimal"
                 value={lyteAlbumin}
                 onChange={(e) => setLyteAlbumin(e.target.value)}
                 className="clinical-input w-full font-mono-tabular font-bold"
               />
             </div>
             <div>
-              <label className="font-bold text-[var(--muted)] block mb-1">Serum K+</label>
+              <label className="font-bold text-[var(--muted)] block mb-1.5">Serum K+</label>
               <input
                 type="number"
                 step="0.1"
+                inputMode="decimal"
                 value={lyteK}
                 onChange={(e) => setLyteK(e.target.value)}
                 className="clinical-input w-full font-mono-tabular font-bold"
               />
             </div>
             <div>
-              <label className="font-bold text-[var(--muted)] block mb-1">Blood pH</label>
+              <label className="font-bold text-[var(--muted)] block mb-1.5">Blood pH</label>
               <input
                 type="number"
                 step="0.01"
+                inputMode="decimal"
                 value={lytePH}
                 onChange={(e) => setLytePH(e.target.value)}
                 className="clinical-input w-full font-mono-tabular font-bold"
@@ -382,32 +389,32 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
             <div className="clinical-panel-subtle p-3.5">
               <div className="text-xs text-[var(--muted)]">Corrected Na (Katz / ISPAD)</div>
-              <div className="text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-0.5">
+              <div className="text-lg sm:text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-0.5">
                 {calcCorrectedNa(parseFloat(lyteNa), parseFloat(lyteGlucose), 'katz')?.toFixed(1) || '—'}{' '}
                 / {calcCorrectedNa(parseFloat(lyteNa), parseFloat(lyteGlucose), 'ispad')?.toFixed(1) || '—'} mEq/L
               </div>
             </div>
             <div className="clinical-panel-subtle p-3.5">
               <div className="text-xs text-[var(--muted)]">Corrected Calcium (Payne)</div>
-              <div className="text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-0.5">
+              <div className="text-lg sm:text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-0.5">
                 {calcCorrectedCa(parseFloat(lyteTotalCa), parseFloat(lyteAlbumin))?.toFixed(1) || '—'} mg/dL
               </div>
             </div>
             <div className="clinical-panel-subtle p-3.5">
               <div className="text-xs text-[var(--muted)]">Estimated K+ at pH 7.40</div>
-              <div className="text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-0.5">
+              <div className="text-lg sm:text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-0.5">
                 {calcKShift(parseFloat(lyteK), parseFloat(lytePH))?.toFixed(1) || '—'} mEq/L
               </div>
             </div>
           </div>
 
           {w > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div className="clinical-panel-subtle p-3.5">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-1.5">
                   <div className="text-xs font-semibold text-[var(--muted)]">
                     3% NaCl Bolus (Hyponatremic Seizure)
                   </div>
@@ -424,7 +431,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                           timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
                         });
                       }}
-                      className="px-2 py-0.5 text-[11px] font-bold rounded border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
+                      className="min-h-[28px] px-2.5 py-1 text-[11px] font-bold rounded-md border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
                       title="Add to Active Patient Order Sheet"
                     >
                       + Order Sheet
@@ -458,16 +465,16 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
       {/* 4. CROUP */}
       {activeSubTab === 'croup' && (
         !w ? (
-          <div className="clinical-panel-subtle p-6 text-center text-sm text-[var(--muted)]">
+          <div className="clinical-panel-subtle p-5 sm:p-6 text-center text-sm text-[var(--muted)]">
             Enter patient Weight (BW) above to calculate Croup medications
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div className="clinical-panel-subtle p-4">
               <div className="text-xs font-semibold text-[var(--muted)]">
                 Dexamethasone (0.6 mg/kg Single Dose)
               </div>
-              <div className="text-2xl font-extrabold font-mono-tabular text-[var(--good-text)] mt-1">
+              <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--good-text)] mt-1">
                 {Math.min(16, +(w * 0.6).toFixed(1))} mg PO/IV/IM
               </div>
               <div className="text-xs text-[var(--muted)] mt-1">
@@ -478,7 +485,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
               <div className="text-xs font-semibold text-[var(--muted)]">
                 Nebulized L-Epinephrine (1:1,000)
               </div>
-              <div className="text-2xl font-extrabold font-mono-tabular text-[var(--accent-text)] mt-1">
+              <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--accent-text)] mt-1">
                 {Math.min(5, +(w * 0.5).toFixed(1))} mL Nebulized
               </div>
               <div className="text-xs text-[var(--muted)] mt-1">
@@ -492,11 +499,11 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
       {/* 5. SEDATION (PSA) */}
       {activeSubTab === 'psa' && (
         !w ? (
-          <div className="clinical-panel-subtle p-6 text-center text-sm text-[var(--muted)]">
+          <div className="clinical-panel-subtle p-5 sm:p-6 text-center text-sm text-[var(--muted)]">
             Enter patient Weight (BW) above to calculate PSA doses
           </div>
         ) : (
-          <div className="overflow-x-auto border border-[var(--border)] rounded-lg">
+          <div className="clinical-table-container">
             <table className="clinical-table">
               <thead>
                 <tr>
@@ -522,8 +529,8 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                   const u = isMcg ? 'mcg' : 'mg';
                   return (
                     <tr key={item.key}>
-                      <td className="font-bold">{item.name}</td>
-                      <td className="font-mono-tabular font-bold text-[var(--accent-text)]">
+                      <td className="font-bold whitespace-nowrap">{item.name}</td>
+                      <td className="font-mono-tabular font-bold text-[var(--accent-text)] whitespace-nowrap">
                         {minD === maxD ? `${fmtMg(minD)} ${u}` : `${fmtMg(minD)}–${fmtMg(maxD)} ${u}`}
                       </td>
                       <td className="text-xs text-[var(--muted)]">
@@ -541,11 +548,11 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
       {/* 6. TOXICOLOGY */}
       {activeSubTab === 'tox' && (
         !w ? (
-          <div className="clinical-panel-subtle p-6 text-center text-sm text-[var(--muted)]">
+          <div className="clinical-panel-subtle p-5 sm:p-6 text-center text-sm text-[var(--muted)]">
             Enter patient Weight (BW) above to calculate antidote doses
           </div>
         ) : (
-          <div className="overflow-x-auto border border-[var(--border)] rounded-lg">
+          <div className="clinical-table-container">
             <table className="clinical-table">
               <thead>
                 <tr>
@@ -561,8 +568,8 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                   const unitStr = item.unit === 'g/kg' ? 'g' : 'mg';
                   return (
                     <tr key={item.key}>
-                      <td className="font-bold">{item.name}</td>
-                      <td className="font-mono-tabular font-bold text-[var(--accent-text)]">
+                      <td className="font-bold whitespace-nowrap">{item.name}</td>
+                      <td className="font-mono-tabular font-bold text-[var(--accent-text)] whitespace-nowrap">
                         {fmtMg(finalDose)} {unitStr}
                       </td>
                       <td className="text-xs text-[var(--muted)]">
@@ -579,7 +586,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
 
       {/* 7. VITAL SIGNS */}
       {activeSubTab === 'vitals' && (
-        <div className="overflow-x-auto border border-[var(--border)] rounded-lg">
+        <div className="clinical-table-container">
           <table className="clinical-table">
             <thead>
               <tr>
@@ -598,14 +605,14 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                     key={v.ageBracket}
                     className={isCur ? 'bg-[var(--accent-soft)] font-bold' : ''}
                   >
-                    <td>
+                    <td className="whitespace-nowrap">
                       {isCur ? '▶ ' : ''}
                       {v.ageBracket}
                     </td>
-                    <td className="font-mono-tabular">{v.hrNormal}</td>
-                    <td className="font-mono-tabular">{v.rrNormal}</td>
-                    <td className="font-mono-tabular">{v.sysBpNormal}</td>
-                    <td className="font-mono-tabular font-bold text-[var(--danger-text)]">
+                    <td className="font-mono-tabular whitespace-nowrap">{v.hrNormal}</td>
+                    <td className="font-mono-tabular whitespace-nowrap">{v.rrNormal}</td>
+                    <td className="font-mono-tabular whitespace-nowrap">{v.sysBpNormal}</td>
+                    <td className="font-mono-tabular font-bold text-[var(--danger-text)] whitespace-nowrap">
                       {v.hypotensionSysBp}
                     </td>
                   </tr>
