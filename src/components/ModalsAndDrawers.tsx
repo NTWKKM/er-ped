@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BROSELOW_SPECTRUM, DATASET } from '../data/dataset';
 import {
   weightToETTCuffed,
@@ -37,6 +37,50 @@ export function createOrderId(prefix: string): string {
   return `${prefix}-${Date.now()}-${orderIdSeq}`;
 }
 
+const MODAL_TRANSITION_MS = 200;
+
+function useModalTransition(isOpen: boolean, durationMs = MODAL_TRANSITION_MS) {
+  const [shouldRender, setShouldRender] = useState(isOpen);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    let raf1 = 0;
+    let raf2 = 0;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+
+    if (isOpen) {
+      setShouldRender(true);
+      raf1 = requestAnimationFrame(() => {
+        raf2 = requestAnimationFrame(() => {
+          setIsVisible(true);
+        });
+      });
+    } else {
+      setIsVisible(false);
+      timer = setTimeout(() => {
+        setShouldRender(false);
+      }, durationMs);
+    }
+
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+      if (timer) clearTimeout(timer);
+    };
+  }, [isOpen, durationMs]);
+
+  return {
+    mounted: isOpen || shouldRender,
+    active: isOpen && isVisible,
+  };
+}
+
+const BACKDROP_BASE_CLASS =
+  'fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 transition-opacity duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none';
+
+const DIALOG_MOTION_BASE_CLASS =
+  'transition-[opacity,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none will-change-[opacity,transform]';
+
 interface BroselowModalProps {
   isOpen: boolean;
   activeWeight: number | null;
@@ -52,7 +96,8 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
   onClose,
   onSelectZoneWeight,
 }) => {
-  if (!isOpen) return null;
+  const { mounted, active } = useModalTransition(isOpen);
+  if (!mounted) return null;
 
   const currentBand =
     (previewColor &&
@@ -74,11 +119,17 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4"
+      className={`${BACKDROP_BASE_CLASS} ${
+        active ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      }`}
       onClick={onClose}
     >
       <div
-        className="clinical-card max-w-3xl w-full max-h-[92dvh] sm:max-h-[88dvh] rounded-t-2xl sm:rounded-xl flex flex-col overflow-hidden shadow-xl"
+        className={`clinical-card max-w-3xl w-full max-h-[92dvh] sm:max-h-[88dvh] rounded-t-2xl sm:rounded-xl flex flex-col overflow-hidden shadow-xl ${DIALOG_MOTION_BASE_CLASS} ${
+          active
+            ? 'opacity-100 translate-y-0 sm:scale-100'
+            : 'opacity-0 translate-y-4 sm:translate-y-2 sm:scale-[0.98]'
+        }`}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -237,8 +288,10 @@ export const EvidenceModal: React.FC<EvidenceModalProps> = ({
 }) => {
   const [query, setQuery] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const { mounted, active } = useModalTransition(isOpen);
 
-  React.useEffect(() => {
+  useEffect(() => {
+    if (!isOpen) return;
     if (initialTopicKey && DATASET.evidenceReferences[initialTopicKey]) {
       setQuery(initialTopicKey);
       setSelectedCategory('all');
@@ -247,7 +300,7 @@ export const EvidenceModal: React.FC<EvidenceModalProps> = ({
     }
   }, [initialTopicKey, isOpen]);
 
-  if (!isOpen) return null;
+  if (!mounted) return null;
 
   const entries = Object.entries(DATASET.evidenceReferences).filter(([k, r]) => {
     if (selectedCategory !== 'all' && r.category !== selectedCategory) return false;
@@ -268,11 +321,17 @@ export const EvidenceModal: React.FC<EvidenceModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4"
+      className={`${BACKDROP_BASE_CLASS} ${
+        active ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      }`}
       onClick={onClose}
     >
       <div
-        className="clinical-card max-w-4xl w-full max-h-[92dvh] sm:max-h-[88dvh] rounded-t-2xl sm:rounded-xl flex flex-col overflow-hidden shadow-xl"
+        className={`clinical-card max-w-4xl w-full max-h-[92dvh] sm:max-h-[88dvh] rounded-t-2xl sm:rounded-xl flex flex-col overflow-hidden shadow-xl ${DIALOG_MOTION_BASE_CLASS} ${
+          active
+            ? 'opacity-100 translate-y-0 sm:scale-100'
+            : 'opacity-0 translate-y-4 sm:translate-y-2 sm:scale-[0.98]'
+        }`}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -554,17 +613,24 @@ export const OrderSheetModal: React.FC<OrderSheetModalProps> = ({
   onClearOrders,
   onCopyAll,
 }) => {
-  if (!isOpen) return null;
+  const { mounted, active } = useModalTransition(isOpen);
+  if (!mounted) return null;
 
   const w = activeWeight || 0;
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4"
+      className={`${BACKDROP_BASE_CLASS} ${
+        active ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      }`}
       onClick={onClose}
     >
       <div
-        className="clinical-card max-w-3xl w-full max-h-[92dvh] sm:max-h-[88dvh] rounded-t-2xl sm:rounded-xl flex flex-col overflow-hidden shadow-xl"
+        className={`clinical-card max-w-3xl w-full max-h-[92dvh] sm:max-h-[88dvh] rounded-t-2xl sm:rounded-xl flex flex-col overflow-hidden shadow-xl ${DIALOG_MOTION_BASE_CLASS} ${
+          active
+            ? 'opacity-100 translate-y-0 sm:scale-100'
+            : 'opacity-0 translate-y-4 sm:translate-y-2 sm:scale-[0.98]'
+        }`}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
