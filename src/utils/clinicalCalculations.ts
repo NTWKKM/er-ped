@@ -948,6 +948,85 @@ export function calcMaintenanceMlPerDay(weightKg: number | null | undefined): nu
   return +(1500 + (w - 20) * 20).toFixed(0);
 }
 
+/** Maintenance ceiling (≈ adult requirement; NICE NG29 range 2000–2500 mL/day). */
+export const MAINTENANCE_CAP_ML_DAY = 2400;
+/** Per-aliquot bolus ceilings for 10 mL/kg and 20 mL/kg isotonic crystalloid. */
+export const BOLUS_10_CAP_ML = 500;
+export const BOLUS_20_CAP_ML = 1000;
+
+export interface FluidRegimenInput {
+  weightKg: number;
+  deficitPct: number;
+  durationHr: 24 | 48;
+  /** Isotonic boluses already given (mL); subtracted from the deficit. */
+  priorBolusMl?: number;
+}
+
+export interface FluidRegimen {
+  severity: 'mild' | 'moderate' | 'severe';
+  mntMlDay: number;
+  mntMlHr: number;
+  isMntCapped: boolean;
+  deficitMl: number;
+  netDeficitMl: number;
+  replaceMlHr: number;
+  combinedMlHr: number;
+  /** Maintenance × 24 h + net deficit replaced within the first 24 h. */
+  day1TotalMl: number;
+  bolus10Ml: number;
+  bolus20Ml: number;
+  isBolusCapped: boolean;
+  /** Mild: 50 mL/kg; Moderate (WHO Plan B): 75 mL/kg — both over 4 h. Null when severe. */
+  orsPlan: { mlPerKg: 50 | 75; volumeMl: number; overHr: 4 } | null;
+  uoTargetMlKgHr: number;
+  uoTargetMlHr: number;
+}
+
+/**
+ * Deficit + maintenance regimen for isotonic dehydration.
+ * Values are unrounded (mL, mL/hr); round only at the display layer.
+ */
+export function calcFluidRegimen(input: FluidRegimenInput): FluidRegimen | null {
+  const w = Number(input.weightKg);
+  if (!Number.isFinite(w) || w <= 0) return null;
+  const pct = Number.isFinite(input.deficitPct) && input.deficitPct > 0 ? input.deficitPct : 0;
+  const hours = input.durationHr === 48 ? 48 : 24;
+  const prior = Math.max(0, Number(input.priorBolusMl) || 0);
+
+  const rawMntDay = w <= 10 ? w * 100 : w <= 20 ? 1000 + (w - 10) * 50 : 1500 + (w - 20) * 20;
+  const mntMlDay = Math.min(rawMntDay, MAINTENANCE_CAP_ML_DAY);
+  const mntMlHr = mntMlDay / 24;
+
+  const deficitMl = w * pct * 10;
+  const netDeficitMl = Math.max(0, deficitMl - prior);
+  const replaceMlHr = netDeficitMl / hours;
+
+  const severity: FluidRegimen['severity'] = pct >= 10 ? 'severe' : pct >= 6 ? 'moderate' : 'mild';
+  const orsMlPerKg = severity === 'mild' ? 50 : severity === 'moderate' ? 75 : null;
+
+  const raw10 = w * 10;
+  const raw20 = w * 20;
+  const uoTargetMlKgHr = w >= 50 ? 0.5 : 1;
+
+  return {
+    severity,
+    mntMlDay,
+    mntMlHr,
+    isMntCapped: rawMntDay > MAINTENANCE_CAP_ML_DAY,
+    deficitMl,
+    netDeficitMl,
+    replaceMlHr,
+    combinedMlHr: mntMlHr + replaceMlHr,
+    day1TotalMl: mntMlDay + replaceMlHr * 24,
+    bolus10Ml: Math.min(raw10, BOLUS_10_CAP_ML),
+    bolus20Ml: Math.min(raw20, BOLUS_20_CAP_ML),
+    isBolusCapped: raw10 > BOLUS_10_CAP_ML || raw20 > BOLUS_20_CAP_ML,
+    orsPlan: orsMlPerKg ? { mlPerKg: orsMlPerKg, volumeMl: w * orsMlPerKg, overHr: 4 } : null,
+    uoTargetMlKgHr,
+    uoTargetMlHr: w * uoTargetMlKgHr,
+  };
+}
+
 export function calcDripForward(
   doseMcgKgMin: number,
   weightKg: number,

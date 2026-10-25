@@ -102,6 +102,7 @@ export default function App() {
   const [broselowOpen, setBroselowOpen] = useState<boolean>(false);
   const [broselowPreviewColor, setBroselowPreviewColor] = useState<string | null>(null);
   const [evidenceOpen, setEvidenceOpen] = useState<boolean>(false);
+  const [evidenceTopic, setEvidenceTopic] = useState<string | null>(null);
   const [orderSheetOpen, setOrderSheetOpen] = useState<boolean>(false);
   const [orders, setOrders] = useState<OrderItem[]>([]);
   const [copyMessage, setCopyMessage] = useState<{
@@ -112,8 +113,9 @@ export default function App() {
   const evidenceTriggerRef = useRef<HTMLElement | null>(null);
   const orderSheetTriggerRef = useRef<HTMLElement | null>(null);
 
-  const handleOpenEvidenceModal = (e?: React.SyntheticEvent<HTMLElement>) => {
+  const handleOpenEvidenceModal = (e?: React.SyntheticEvent<HTMLElement>, topicKey: string | null = null) => {
     evidenceTriggerRef.current = (e?.currentTarget as HTMLElement) || (document.activeElement as HTMLElement) || null;
+    setEvidenceTopic(topicKey);
     setEvidenceOpen(true);
   };
 
@@ -434,6 +436,7 @@ export default function App() {
                 }}
                 onAddOrder={handleAddOrder}
                 onInvalidateOrders={invalidateCalculatedOrders}
+                onOpenEvidence={(topicKey, e) => handleOpenEvidenceModal(e, topicKey)}
               />
             )}
 
@@ -527,7 +530,7 @@ export default function App() {
       {/* Clinical Evidence & Guideline Reference Registry Modal */}
       <EvidenceModal
         isOpen={evidenceOpen}
-        initialTopicKey={null}
+        initialTopicKey={evidenceTopic}
         onClose={handleCloseEvidenceModal}
       />
 

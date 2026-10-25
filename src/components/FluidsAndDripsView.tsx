@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { DATASET } from '../data/dataset';
 import {
-  calcMaintenanceMlPerHr,
-  calcMaintenanceMlPerDay,
+  calcFluidRegimen,
   calcDripForward,
   calcDripReverse,
   calcTransfusion,
 } from '../utils/clinicalCalculations';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, BookOpen } from 'lucide-react';
 import { OrderItem, createOrderId } from './ModalsAndDrawers';
 
 interface FluidsAndDripsViewProps {
@@ -16,6 +15,7 @@ interface FluidsAndDripsViewProps {
   onChangeSubTab: (sub: 'fluids' | 'drip' | 'transfusion') => void;
   onAddOrder?: (order: OrderItem) => void;
   onInvalidateOrders?: (targetPrefix?: string) => void;
+  onOpenEvidence?: (topicKey: string, e?: React.SyntheticEvent<HTMLElement>) => void;
   inputs?: FluidsAndDripsInputs;
   onChangeInputs?: React.Dispatch<React.SetStateAction<FluidsAndDripsInputs>>;
 }
@@ -23,6 +23,7 @@ interface FluidsAndDripsViewProps {
 export interface FluidsAndDripsInputs {
   deficitPct: number;
   fluidDuration: number;
+  priorBolusMl: string;
   dripKey: string;
   dripDose: string;
   dripDrugMg: string;
@@ -36,6 +37,7 @@ export interface FluidsAndDripsInputs {
 export const DEFAULT_FLUIDS_INPUTS: FluidsAndDripsInputs = {
   deficitPct: 5,
   fluidDuration: 24,
+  priorBolusMl: '',
   dripKey: DATASET.infusionDrips[0]?.key || 'epinephrine-drip',
   dripDose: '0.1',
   dripDrugMg: '1',
@@ -52,6 +54,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
   onChangeSubTab,
   onAddOrder,
   onInvalidateOrders,
+  onOpenEvidence,
   inputs,
   onChangeInputs,
 }) => {
@@ -73,6 +76,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
   const {
     deficitPct,
     fluidDuration,
+    priorBolusMl,
     dripKey,
     dripDose,
     dripDrugMg,
@@ -114,13 +118,13 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
 
   const w = activeWeight || 0;
 
-  // 1. IV Fluids calculations
-  const mntHr = calcMaintenanceMlPerHr(w);
-  const mntDay = calcMaintenanceMlPerDay(w);
-  const deficitVol = w * deficitPct * 10;
-  const replaceRate = deficitVol / fluidDuration;
-  const combinedRate = mntHr + replaceRate;
-  const shockBolus = w * 20;
+  // 1. IV Fluids calculations (unrounded; rounding at display only)
+  const regimen = calcFluidRegimen({
+    weightKg: w,
+    deficitPct,
+    durationHr: fluidDuration === 48 ? 48 : 24,
+    priorBolusMl: parseFloat(priorBolusMl) || 0,
+  });
 
   // 2. Drip calculations
   const doseNum = parseFloat(dripDose) || 0;
@@ -209,7 +213,24 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
       {/* 1. IV FLUIDS VIEW */}
       {activeSubTab === 'fluids' && (
         <div className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="text-sm font-bold text-[var(--ink)]">
+              IV Maintenance &amp; Deficit Fluids{' '}
+              <span className="font-semibold text-[var(--muted)]">(สารน้ำทางหลอดเลือดดำ)</span>
+            </h2>
+            {onOpenEvidence && (
+              <button
+                type="button"
+                onClick={(e) => onOpenEvidence('fluids', e)}
+                className="min-h-[28px] px-2 py-0.5 text-[11px] font-bold rounded-md border border-[var(--border)] text-[var(--accent-text)] hover:bg-[var(--accent-soft)] transition-colors flex items-center gap-1 cursor-pointer"
+                title="Open evidence & level of evidence"
+              >
+                <BookOpen className="w-3 h-3" aria-hidden="true" /> AAP Isotonic CPG
+              </button>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
             <div>
               <label htmlFor="fDegree" className="text-xs font-bold text-[var(--muted)] block mb-1.5">
                 Dehydration Severity (% Deficit)
@@ -224,10 +245,13 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                 className="clinical-input w-full font-semibold"
               >
                 <option value={3}>3% — Mild (dry mucous membranes)</option>
-                <option value={5}>5% — Mild (decreased urine output)</option>
-                <option value={7}>7% — Moderate (sunken eyes, tachycardia)</option>
-                <option value={9}>9% — Moderate (lethargy, delayed CRT &gt; 2s)</option>
-                <option value={10}>10% — Severe (consider 20 mL/kg Shock Bolus)</option>
+                <option value={4}>4% — Mild (decreased urine output)</option>
+                <option value={5}>5% — Mild (dry skin)</option>
+                <option value={6}>6% — Moderate (sunken eyes)</option>
+                <option value={7}>7% — Moderate (tachycardia)</option>
+                <option value={8}>8% — Moderate (lethargy, reduced turgor)</option>
+                <option value={9}>9% — Moderate (CRT &gt; 2 s)</option>
+                <option value={10}>10% — Severe (assess for shock)</option>
               </select>
             </div>
 
@@ -245,12 +269,32 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                 className="clinical-input w-full font-semibold"
               >
                 <option value={24}>Over 24 Hours</option>
-                <option value={48}>Over 48 Hours</option>
+                <option value={48}>Over 48 Hours (hypernatremia)</option>
               </select>
+            </div>
+
+            <div>
+              <label htmlFor="fPriorBolus" className="text-xs font-bold text-[var(--muted)] block mb-1.5">
+                Boluses Already Given (mL)
+              </label>
+              <input
+                id="fPriorBolus"
+                type="number"
+                min="0"
+                step="10"
+                inputMode="decimal"
+                placeholder="0"
+                value={priorBolusMl}
+                onChange={(e) => {
+                  onInvalidateOrders?.('fluids');
+                  updateInputs({ priorBolusMl: e.target.value });
+                }}
+                className="clinical-input w-full font-mono-tabular font-bold"
+              />
             </div>
           </div>
 
-          {!w ? (
+          {!regimen ? (
             <div className="clinical-panel-subtle p-5 sm:p-6 text-center text-sm text-[var(--muted)]">
               Enter patient Weight (BW) above to calculate IV fluid rates
             </div>
@@ -265,7 +309,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                       onAddOrder({
                         id: createOrderId('fluids'),
                         module: 'IV Fluids',
-                        text: `Maintenance Fluid @ ${mntHr.toFixed(1)} mL/hr (${mntDay} mL/day)${deficitPct ? ` + Deficit ${deficitPct}% replacement over ${fluidDuration} h (${replaceRate.toFixed(1)} mL/hr) = Total ${combinedRate.toFixed(1)} mL/hr` : ''}`,
+                        text: `Isotonic IV fluid @ ${regimen.combinedMlHr.toFixed(1)} mL/hr (Mnt ${regimen.mntMlHr.toFixed(1)} mL/hr + Deficit ${deficitPct}% ${regimen.replaceMlHr.toFixed(1)} mL/hr over ${fluidDuration} h; net deficit ${regimen.netDeficitMl.toFixed(0)} mL) [BW: ${w.toFixed(1)} kg]`,
                         timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
                       });
                     }}
@@ -276,41 +320,113 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                   </button>
                 )}
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+
+              {regimen.severity === 'severe' && (
+                <div
+                  role="alert"
+                  className="p-3 rounded-lg border border-[var(--danger)] bg-[var(--danger-soft)] text-xs font-bold text-[var(--danger-text)] flex items-start gap-2"
+                >
+                  <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+                  <span>
+                    Severe dehydration: assess for shock first. If shock / poor perfusion → isotonic bolus{' '}
+                    {regimen.bolus10Ml.toFixed(0)} mL (10 mL/kg) – {regimen.bolus20Ml.toFixed(0)} mL (20 mL/kg), reassess after each
+                    bolus, then enter the volume given above so it is subtracted from the deficit.
+                  </span>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5">
                 <div className="clinical-panel-subtle p-4">
                   <div className="text-xs font-semibold text-[var(--muted)]">
                     Combined Rate (Maintenance + Deficit)
                   </div>
                   <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--good-text)] mt-1">
-                    {combinedRate.toFixed(1)} <span className="text-sm font-bold">mL/hr</span>
+                    {regimen.combinedMlHr.toFixed(1)} <span className="text-sm font-bold">mL/hr</span>
                   </div>
                   <div className="text-xs text-[var(--muted)] mt-1">
-                    Mnt {mntHr.toFixed(1)} + Deficit {replaceRate.toFixed(1)} mL/hr
+                    Mnt {regimen.mntMlHr.toFixed(1)} + Deficit {regimen.replaceMlHr.toFixed(1)} mL/hr
                   </div>
                 </div>
 
                 <div className="clinical-panel-subtle p-4">
-                  <div className="text-xs font-semibold text-[var(--muted)]">
-                    Maintenance (Holliday–Segar)
-                  </div>
+                  <div className="text-xs font-semibold text-[var(--muted)]">Maintenance (Holliday–Segar)</div>
                   <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
-                    {mntHr.toFixed(1)} <span className="text-sm font-bold">mL/hr</span>
+                    {regimen.mntMlHr.toFixed(1)} <span className="text-sm font-bold">mL/hr</span>
                   </div>
-                  <div className="text-xs text-[var(--muted)] mt-1">{mntDay} mL/day</div>
+                  <div className="text-xs text-[var(--muted)] mt-1">
+                    {regimen.mntMlDay.toFixed(0)} mL/day
+                    {regimen.isMntCapped && ' · capped at 2400 mL/day'}
+                  </div>
                 </div>
 
                 <div className="clinical-panel-subtle p-4">
-                  <div className="text-xs font-semibold text-[var(--muted)]">
-                    Shock Bolus (20 mL/kg)
-                  </div>
-                  <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--danger-text)] mt-1">
-                    {shockBolus.toFixed(0)} <span className="text-sm font-bold">mL</span>
+                  <div className="text-xs font-semibold text-[var(--muted)]">Deficit ({deficitPct}%)</div>
+                  <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--warning-text)] mt-1">
+                    {regimen.netDeficitMl.toFixed(0)} <span className="text-sm font-bold">mL</span>
                   </div>
                   <div className="text-xs text-[var(--muted)] mt-1">
-                    Total Deficit ({deficitPct}%): {deficitVol.toFixed(0)} mL
+                    {regimen.netDeficitMl < regimen.deficitMl
+                      ? `Total ${regimen.deficitMl.toFixed(0)} − bolus given ${(regimen.deficitMl - regimen.netDeficitMl).toFixed(0)} mL`
+                      : `Replace over ${fluidDuration} h`}
+                  </div>
+                </div>
+
+                <div className="clinical-panel-subtle p-4">
+                  <div className="text-xs font-semibold text-[var(--muted)]">First 24 h Total</div>
+                  <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--accent-text)] mt-1">
+                    {regimen.day1TotalMl.toFixed(0)} <span className="text-sm font-bold">mL</span>
+                  </div>
+                  <div className="text-xs text-[var(--muted)] mt-1">
+                    Mnt × 24 h + {fluidDuration === 48 ? '½ net deficit' : 'net deficit'}
                   </div>
                 </div>
               </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div className="clinical-panel-subtle p-4">
+                  <div className="text-xs font-semibold text-[var(--muted)]">
+                    {regimen.orsPlan ? 'Oral Rehydration (ORS) Option' : 'Shock Bolus (only if shock / poor perfusion)'}
+                  </div>
+                  {regimen.orsPlan ? (
+                    <>
+                      <div className="text-lg sm:text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                        ORS {regimen.orsPlan.volumeMl.toFixed(0)} mL over {regimen.orsPlan.overHr} h
+                      </div>
+                      <div className="text-xs text-[var(--muted)] mt-1">
+                        {regimen.orsPlan.mlPerKg} mL/kg
+                        {regimen.severity === 'moderate' ? ' (WHO Plan B)' : ' (mild dehydration)'} + replace ongoing losses;
+                        IV if unable to drink
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-lg sm:text-xl font-extrabold font-mono-tabular text-[var(--danger-text)] mt-1">
+                        {regimen.bolus10Ml.toFixed(0)} – {regimen.bolus20Ml.toFixed(0)} mL
+                      </div>
+                      <div className="text-xs text-[var(--muted)] mt-1">
+                        10–20 mL/kg NS/RL (max 500 / 1000 mL per bolus){regimen.isBolusCapped && ' · capped'}; IV bolus +
+                        deficit model (not WHO Plan C)
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <div className="clinical-panel-subtle p-4">
+                  <div className="text-xs font-semibold text-[var(--muted)]">Urine Output Target</div>
+                  <div className="text-lg sm:text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                    ≥ {regimen.uoTargetMlHr.toFixed(0)} <span className="text-sm font-bold">mL/hr</span>
+                  </div>
+                  <div className="text-xs text-[var(--muted)] mt-1">
+                    ≥ {regimen.uoTargetMlKgHr} mL/kg/hr · check Na, K, BUN/Cr, glucose at baseline &amp; at least q24h
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-[11px] leading-relaxed text-[var(--muted)]">
+                Use isotonic fluid (0.9% NaCl or balanced solution with dextrose ± KCl) for maintenance (AAP 2018). Use the
+                48 h plan for hypernatremic dehydration (Na &gt; 150) and lower Na by ≤ 0.5 mEq/L/hr. Holliday–Segar for
+                maintenance; Deficit = % × BW × 10 mL − boluses already given.
+              </p>
             </div>
           )}
         </div>
