@@ -413,7 +413,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
             ) : matchedRenalTier && !hasNumericRenalDose ? (
               <span
                 className="px-2.5 py-1 text-xs font-semibold rounded border border-[var(--warning)] text-[var(--warning-text)] bg-[var(--warning-soft)] shrink-0"
-                title="Matched renal tier provides qualitative guidance only; manual dose calculation required before ordering"
+                title="Matched renal tier provides qualitative guidance only; order entry must be completed outside this calculator"
               >
                 ▲ Review-Only Guidance
               </span>
@@ -424,7 +424,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
             <div className="p-3 rounded-lg border border-[var(--warning)] bg-[var(--warning-soft)] text-[var(--warning-text)] text-xs flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 shrink-0" />
               <span>
-                Matched renal adjustment is qualitative guidance ({matchedRenalRegimen}). Enter a specific calculated dose manually before adding to Order Sheet.
+                Matched renal adjustment is qualitative guidance ({matchedRenalRegimen}). Enter the calculated dose outside this calculator (e.g. directly in the patient's chart or EHR).
               </span>
             </div>
           )}
