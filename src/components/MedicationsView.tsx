@@ -583,7 +583,12 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                     )}
                   </div>
                 )}
-                <div className="clinical-table-container">
+                <div
+                  className="clinical-table-container"
+                  tabIndex={0}
+                  role="region"
+                  aria-label="Renal dosing reference table"
+                >
                   <table className="clinical-table">
                     <thead>
                       <tr>

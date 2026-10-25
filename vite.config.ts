@@ -4,7 +4,9 @@ import path from 'path';
 import {defineConfig} from 'vite';
 
 // Prevent Vite from exiting when stdin closes in non-interactive container environments
-process.env.CI = 'true';
+if (!process.stdin.isTTY && process.env.CI === undefined) {
+  process.env.CI = 'true';
+}
 
 export default defineConfig(() => {
   return {

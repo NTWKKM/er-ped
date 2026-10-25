@@ -13,6 +13,7 @@ import {
   calcPatientRenalDose,
   calcMaintenanceMlPerHr,
   calcFluidRegimen,
+  MAINTENANCE_CAP_ML_DAY,
   calcDripForward,
   calcDripReverse,
   calcCorrectedNa,
@@ -832,6 +833,10 @@ test('calcFluidRegimen: maintenance capped at 2400 mL/day; boluses capped per al
   assert.equal(r.bolus10Ml, 500);
   assert.equal(r.bolus20Ml, 1000);
   assert.equal(r.isBolusCapped, true);
+  // Verify that calcMaintenanceMlPerHr remains uncapped (104.2 mL/hr) for other callers,
+  // while order sheet display cap caps at 100 mL/hr.
+  assert.equal(calcMaintenanceMlPerHr(70), 104.2);
+  assert.equal(Math.min(calcMaintenanceMlPerHr(70), +(MAINTENANCE_CAP_ML_DAY / 24).toFixed(1)), 100);
 
   const small = calcFluidRegimen({ weightKg: 15, deficitPct: 5, durationHr: 24 })!;
   assert.equal(small.isMntCapped, false);

@@ -11,6 +11,7 @@ import {
   suggestNG,
   suggestFoley,
   calcMaintenanceMlPerHr,
+  MAINTENANCE_CAP_ML_DAY,
 } from '../utils/clinicalCalculations';
 import {
   X,
@@ -220,7 +221,12 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
             </div>
           </div>
 
-          <div className="clinical-table-container">
+          <div
+            className="clinical-table-container"
+            tabIndex={0}
+            role="region"
+            aria-label="Airway equipment reference table"
+          >
             <table className="clinical-table">
               <thead>
                 <tr>
@@ -580,7 +586,7 @@ export const OrderSheetAndPocketContent: React.FC<OrderSheetContentProps> = ({
             <div className="clinical-panel-subtle p-2.5">
               <div className="text-[var(--muted)] font-semibold text-[11px]">Maintenance Fluid</div>
               <div className="font-mono-tabular font-extrabold text-sm text-[var(--ink)] mt-0.5">
-                {calcMaintenanceMlPerHr(w)} mL/hr
+                {Math.min(calcMaintenanceMlPerHr(w), +(MAINTENANCE_CAP_ML_DAY / 24).toFixed(1))} mL/hr
               </div>
             </div>
           </div>

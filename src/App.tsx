@@ -110,8 +110,20 @@ export default function App() {
     text: string;
   } | null>(null);
 
+  const broselowTriggerRef = useRef<HTMLElement | null>(null);
   const evidenceTriggerRef = useRef<HTMLElement | null>(null);
   const orderSheetTriggerRef = useRef<HTMLElement | null>(null);
+
+  const handleOpenBroselowModal = (color?: string, e?: React.SyntheticEvent<HTMLElement>) => {
+    broselowTriggerRef.current = (e?.currentTarget as HTMLElement) || (document.activeElement as HTMLElement) || null;
+    setBroselowPreviewColor(color || null);
+    setBroselowOpen(true);
+  };
+
+  const handleCloseBroselowModal = () => {
+    setBroselowOpen(false);
+    broselowTriggerRef.current?.focus();
+  };
 
   const handleOpenEvidenceModal = (e?: React.SyntheticEvent<HTMLElement>, topicKey: string | null = null) => {
     evidenceTriggerRef.current = (e?.currentTarget as HTMLElement) || (document.activeElement as HTMLElement) || null;
@@ -202,7 +214,7 @@ export default function App() {
   useModalFocusTrap(
     broselowOpen,
     '[role="dialog"][aria-label="Broselow Tape Reference Modal"]',
-    () => setBroselowOpen(false)
+    handleCloseBroselowModal
   );
   useModalFocusTrap(
     evidenceOpen,
@@ -362,10 +374,7 @@ export default function App() {
         onHeightChange={handleHeightChange}
         onToggleUseIBW={handleToggleUseIBW}
         onCycleTheme={handleCycleTheme}
-        onOpenBroselowModal={(color) => {
-          setBroselowPreviewColor(color || null);
-          setBroselowOpen(true);
-        }}
+        onOpenBroselowModal={handleOpenBroselowModal}
         onOpenEvidenceModal={handleOpenEvidenceModal}
         onOpenOrderSheetModal={handleOpenOrderSheetModal}
       />
@@ -520,7 +529,7 @@ export default function App() {
         isOpen={broselowOpen}
         activeWeight={activeWeight}
         previewColor={broselowPreviewColor}
-        onClose={() => setBroselowOpen(false)}
+        onClose={handleCloseBroselowModal}
         onSelectZoneWeight={(kg, color) => {
           handleWeightChange(String(kg), 'broselow');
           setBroselowPreviewColor(color);

@@ -167,7 +167,12 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                 </div>
               </div>
 
-              <div className="clinical-table-container">
+              <div
+                className="clinical-table-container"
+                tabIndex={0}
+                role="region"
+                aria-label="PALS medication reference table"
+              >
                 <table className="clinical-table">
                   <thead>
                     <tr>
@@ -251,7 +256,12 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                 </div>
               </div>
 
-              <div className="clinical-table-container">
+              <div
+                className="clinical-table-container"
+                tabIndex={0}
+                role="region"
+                aria-label="RSI medication reference table"
+              >
                 <table className="clinical-table">
                   <thead>
                     <tr>
@@ -388,7 +398,12 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                 </div>
               </div>
 
-              <div className="clinical-table-container">
+              <div
+                className="clinical-table-container"
+                tabIndex={0}
+                role="region"
+                aria-label="Seizure medication reference table"
+              >
                 <table className="clinical-table">
                   <thead>
                     <tr>

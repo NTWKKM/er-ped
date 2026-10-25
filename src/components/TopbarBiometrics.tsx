@@ -29,7 +29,7 @@ interface TopbarBiometricsProps {
   onHeightChange: (val: string) => void;
   onToggleUseIBW: (checked: boolean) => void;
   onCycleTheme: () => void;
-  onOpenBroselowModal: (zoneColor?: string) => void;
+  onOpenBroselowModal: (zoneColor?: string, e?: React.SyntheticEvent<HTMLElement>) => void;
   onOpenEvidenceModal?: (e?: React.MouseEvent<HTMLElement>) => void;
   onOpenOrderSheetModal?: (e?: React.MouseEvent<HTMLElement>) => void;
 }
@@ -365,7 +365,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
             {/* Broselow Tape Reference Trigger */}
             <button
               type="button"
-              onClick={() => onOpenBroselowModal(activeBand?.color)}
+              onClick={(e) => onOpenBroselowModal(activeBand?.color, e)}
               style={
                 activeBand
                   ? { backgroundColor: activeBand.bg, color: activeBand.fg }

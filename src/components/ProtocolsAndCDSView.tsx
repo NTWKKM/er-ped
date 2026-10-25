@@ -503,7 +503,12 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
             Enter patient Weight (BW) above to calculate PSA doses
           </div>
         ) : (
-          <div className="clinical-table-container">
+          <div
+            className="clinical-table-container"
+            tabIndex={0}
+            role="region"
+            aria-label="Procedural sedation reference table"
+          >
             <table className="clinical-table">
               <thead>
                 <tr>
@@ -552,7 +557,12 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
             Enter patient Weight (BW) above to calculate antidote doses
           </div>
         ) : (
-          <div className="clinical-table-container">
+          <div
+            className="clinical-table-container"
+            tabIndex={0}
+            role="region"
+            aria-label="Toxicology antidote reference table"
+          >
             <table className="clinical-table">
               <thead>
                 <tr>
@@ -586,7 +596,12 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
 
       {/* 7. VITAL SIGNS */}
       {activeSubTab === 'vitals' && (
-        <div className="clinical-table-container">
+        <div
+          className="clinical-table-container"
+          tabIndex={0}
+          role="region"
+          aria-label="Pediatric vital signs reference table"
+        >
           <table className="clinical-table">
             <thead>
               <tr>
