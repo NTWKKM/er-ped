@@ -3,6 +3,11 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig} from 'vite';
 
+// Prevent Vite from exiting when stdin closes in non-interactive container environments
+if (!process.stdin.isTTY && process.env.CI === undefined) {
+  process.env.CI = 'true';
+}
+
 export default defineConfig(() => {
   return {
     base: './',
@@ -11,6 +16,9 @@ export default defineConfig(() => {
       alias: {
         '@': path.resolve(import.meta.dirname, '.'),
       },
+    },
+    optimizeDeps: {
+      include: ['react', 'react-dom', 'react-dom/client', 'lucide-react'],
     },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.

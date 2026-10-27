@@ -12,7 +12,7 @@
 2. **Core Calculators & Search Interfaces**:
    - `Pediatric Dose`: General pediatric medication dosing with integrated Braun Combobox search, preparation concentration parsing (mg/mL, mg/tab), range checks, per-dose & per-day caps.
    - `Pediatric ATB`: Antibiotic dosing calculator per kg per day or per dose with Braun Combobox search, unit conversions, limits, age & weight warnings.
-   - `IV Fluids`: Dehydration assessment (Mild 3–5%, Moderate 6–9%, Severe ≥10%), Holliday–Segar maintenance fluid rate calculation, deficit replacement over 24h/48h, ORS vs IV fluid plans.
+   - `IV Fluids`: Dehydration assessment 3–10% in 1% steps (Mild 3–5%, Moderate 6–9%, Severe ≥10%), Holliday–Segar maintenance capped at 2400 mL/day, net deficit (`% × BW × 10 − boluses already given`) replaced over 24h/48h, first-24h total volume, ORS option (mild 50 mL/kg, moderate 75 mL/kg WHO Plan B, over 4 h), shock bolus 10–20 mL/kg capped 500/1000 mL per aliquot, weight-based urine output target (≥1 mL/kg/hr; ≥0.5 mL/kg/hr if ≥50 kg). Pure engine `calcFluidRegimen()` in `clinicalCalculations.ts` returns unrounded values; rounding happens in `FluidsAndDripsView`.
    - `PALS`: Emergency cardiac arrest protocols (Epi, Amiodarone, Lidocaine, Defib), Bradycardia, Tachycardia (Adenosine, Sync Cardioversion), Torsades MgSO4, rendered with Braun Hero LCD Metric cards.
    - `NCPR`: Neonatal resuscitation protocols, Epinephrine IV/IO & ETT dosing, Volume expanders, PPV & FiO2 targets, Hypoglycemia D10W bolus & infusion, ETT & suction catheter sizing.
    - `Drip Rate`: Vasoactive continuous infusion calculator (mcg/kg/min → mL/hr) for Epinephrine, Norepinephrine, Dopamine, Dobutamine, Midazolam, Milrinone with customizable diluent volume.

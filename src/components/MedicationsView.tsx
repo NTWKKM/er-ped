@@ -281,7 +281,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
   );
 
   return (
-    <div className="clinical-card p-5 space-y-5">
+    <div className="clinical-card p-4 sm:p-5 space-y-4 sm:space-y-5">
       {/* Simple Single-Input Drug Selector */}
       <div ref={wrapperRef} className="relative">
         <label htmlFor="doseSearch" className="text-xs font-bold text-[var(--muted)] block mb-1.5">
@@ -292,6 +292,9 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
           <input
             id="doseSearch"
             type="text"
+            enterKeyHint="search"
+            spellCheck={false}
+            autoComplete="off"
             value={isDropdownOpen ? searchQuery : selectedDrug?.name || ''}
             onFocus={() => {
               setSearchQuery('');
@@ -303,14 +306,14 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
             }}
             placeholder="Search medication e.g. Paracetamol, Amoxicillin, Ceftriaxone..."
             aria-label="Search medication"
-            className="clinical-input w-full pl-10 pr-10 py-2.5 text-sm font-bold"
+            className="clinical-input w-full pl-10 pr-10 py-2.5 text-sm font-bold min-h-[42px]"
           />
           {isDropdownOpen && searchQuery ? (
             <button
               type="button"
               onClick={() => setSearchQuery('')}
               aria-label="Clear search"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted)] hover:text-[var(--ink)] cursor-pointer"
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 min-h-[36px] min-w-[36px] flex items-center justify-center text-[var(--muted)] hover:text-[var(--ink)] cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -319,7 +322,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
               type="button"
               onClick={() => setIsDropdownOpen((o) => !o)}
               aria-label="Toggle medication list"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted)] hover:text-[var(--ink)] cursor-pointer"
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 min-h-[36px] min-w-[36px] flex items-center justify-center text-[var(--muted)] hover:text-[var(--ink)] cursor-pointer"
             >
               <ChevronDown className="w-4 h-4" />
             </button>
@@ -332,7 +335,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
             className="absolute z-50 left-0 right-0 mt-1 max-h-72 overflow-y-auto rounded-lg border border-[var(--border-strong)] bg-[var(--card)] shadow-lg divide-y divide-[var(--border)]"
           >
             {filteredDrugs.length === 0 ? (
-              <div className="p-3 text-xs text-[var(--muted)] text-center">
+              <div className="p-3.5 text-xs text-[var(--muted)] text-center">
                 No matching medications found
               </div>
             ) : (
@@ -340,10 +343,10 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                 <div
                   key={d.key}
                   role="option"
-                  aria-selected={d.key === selectedKey}
+                  aria-selected={d.key === currentSelectedKey}
                   onClick={() => handleSelectDrug(d)}
-                  className={`px-3.5 py-2.5 cursor-pointer flex items-center justify-between gap-2 text-xs ${
-                    d.key === selectedKey
+                  className={`px-3.5 py-2.5 min-h-[40px] cursor-pointer flex items-center justify-between gap-2 text-xs ${
+                    d.key === currentSelectedKey
                       ? 'bg-[var(--accent-soft)] font-bold text-[var(--accent-text)]'
                       : 'hover:bg-[var(--panel-subtle)] text-[var(--ink)]'
                   }`}
@@ -361,7 +364,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
 
       {/* Main Output Area */}
       {!activeWeight ? (
-        <div className="clinical-panel-subtle p-6 text-center text-sm text-[var(--muted)]">
+        <div className="clinical-panel-subtle p-5 sm:p-6 text-center text-sm text-[var(--muted)]">
           Enter patient Weight (BW) or Age above to calculate doses
         </div>
       ) : resolved?.isAgeRestricted ? (
@@ -380,7 +383,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
         </div>
       ) : (
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="text-xs font-bold text-[var(--muted)]">Calculated Dosage</span>
             {canAddOrder ? (
               <button
@@ -393,7 +396,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                     timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
                   });
                 }}
-                className="px-2.5 py-1 text-xs font-bold rounded border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
+                className="min-h-[32px] px-3 py-1 text-xs font-bold rounded-md border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
                 title="Add to Active Patient Order Sheet"
               >
                 + Order Sheet
@@ -405,14 +408,14 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                   setIsRenalDetailsOpen(true);
                   setIsRenalReviewed(true);
                 }}
-                className="px-2.5 py-1 text-xs font-bold rounded border border-[var(--warning)] text-[var(--warning-text)] bg-[var(--warning-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer shrink-0"
+                className="min-h-[32px] px-3 py-1 text-xs font-bold rounded-md border border-[var(--warning)] text-[var(--warning-text)] bg-[var(--warning-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
                 title="Review matched renal dosing tier before adding to Order Sheet"
               >
                 ▲ Review Renal Regimen ({egfr?.toFixed(0)} mL/min/1.73m²)
               </button>
             ) : matchedRenalTier && !hasNumericRenalDose ? (
               <span
-                className="px-2.5 py-1 text-xs font-semibold rounded border border-[var(--warning)] text-[var(--warning-text)] bg-[var(--warning-soft)] shrink-0"
+                className="min-h-[32px] px-3 py-1 text-xs font-semibold rounded-md border border-[var(--warning)] text-[var(--warning-text)] bg-[var(--warning-soft)] flex items-center whitespace-nowrap shrink-0"
                 title="Matched renal tier provides qualitative guidance only; order entry must be completed outside this calculator"
               >
                 ▲ Review-Only Guidance
@@ -421,8 +424,8 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
           </div>
 
           {matchedRenalTier && !hasNumericRenalDose && (
-            <div className="p-3 rounded-lg border border-[var(--warning)] bg-[var(--warning-soft)] text-[var(--warning-text)] text-xs flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 shrink-0" />
+            <div className="p-3 rounded-lg border border-[var(--warning)] bg-[var(--warning-soft)] text-[var(--warning-text)] text-xs flex items-start sm:items-center gap-2">
+              <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 sm:mt-0" />
               <span>
                 Matched renal adjustment is qualitative guidance ({matchedRenalRegimen}). Enter the calculated dose outside this calculator (e.g. directly in the patient&apos;s chart or EHR).
               </span>
@@ -430,8 +433,8 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
           )}
 
           {isMissingRequiredAge && (
-            <div className="p-3 rounded-lg border border-[var(--warning)] bg-[var(--warning-soft)] text-[var(--warning-text)] text-xs flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 shrink-0" />
+            <div className="p-3 rounded-lg border border-[var(--warning)] bg-[var(--warning-soft)] text-[var(--warning-text)] text-xs flex items-start sm:items-center gap-2">
+              <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 sm:mt-0" />
               <span>
                 Age-limited medication ({selectedDrug.minAgeYr != null ? `≥ ${selectedDrug.minAgeYr} yr` : ''}{selectedDrug.maxAgeYr != null ? ` ≤ ${selectedDrug.maxAgeYr} yr` : ''}). Enter patient Age above to verify eligibility before adding to Order Sheet.
               </span>
@@ -439,15 +442,15 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
           )}
 
           {/* 2 Clean Hero Readouts */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div className="clinical-panel-subtle p-4">
               <div className="text-xs font-semibold text-[var(--muted)]">
                 Dose Per Single Administration
               </div>
-              <div className="text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1 flex flex-wrap items-baseline gap-2">
+              <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1 flex flex-wrap items-baseline gap-2">
                 <span>{singleDoseMgText}</span>
                 {singleDoseVolumeText && (
-                  <span className="text-base font-bold text-[var(--accent-text)] whitespace-nowrap">
+                  <span className="text-sm sm:text-base font-bold text-[var(--accent-text)] whitespace-nowrap">
                     ({singleDoseVolumeText})
                   </span>
                 )}
@@ -473,7 +476,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
               <div className="text-xs font-semibold text-[var(--muted)]">
                 Total Daily Dose (24h)
               </div>
-              <div className="text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+              <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
                 {dailyDoseText}
               </div>
               <div className="text-xs text-[var(--muted)] mt-1.5">
@@ -488,7 +491,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
           </div>
 
           {/* Concise Note & Optional Strength Override */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 border-t border-[var(--border)] text-xs text-[var(--muted)]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2.5 border-t border-[var(--border)] text-xs text-[var(--muted)]">
             <div className="flex-1 leading-relaxed">
               {selectedDrug.note && (
                 <span>
@@ -497,8 +500,8 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                 </span>
               )}
             </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <label htmlFor="doseConc" className="whitespace-nowrap">
+            <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0">
+              <label htmlFor="doseConc" className="whitespace-nowrap font-semibold">
                 Custom Conc (mg/mL):
               </label>
               <input
@@ -506,10 +509,11 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                 type="number"
                 min="0"
                 step="0.1"
+                inputMode="decimal"
                 placeholder={strength.mgPerMl ? strength.mgPerMl.toFixed(1) : 'mg/mL'}
                 value={currentConcOverride}
                 onChange={(e) => handleConcOverrideChange(e.target.value)}
-                className="clinical-input w-20 text-center font-mono-tabular text-xs font-bold py-1"
+                className="clinical-input w-24 text-center font-mono-tabular text-xs font-bold py-1.5"
               />
             </div>
           </div>
@@ -523,35 +527,43 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                 setIsRenalDetailsOpen(isOpen);
                 if (isOpen) setIsRenalReviewed(true);
               }}
-              className="clinical-panel-subtle p-3 text-xs"
+              className="clinical-panel-subtle p-3.5 text-xs"
             >
-              <summary className="font-bold text-[var(--warning-text)] cursor-pointer flex items-center justify-between">
+              <summary className="font-bold text-[var(--warning-text)] cursor-pointer flex flex-wrap items-center justify-between gap-2">
                 <span>▲ Renal Dose Adjustment Required (Click to view eGFR table)</span>
                 {matchedRenalTier && (
-                  <span className={`text-[11px] font-bold ${isRenalReviewed ? 'text-[var(--good-text)]' : 'text-[var(--warning-text)]'}`}>
+                  <span className={`text-[11px] font-bold whitespace-nowrap ${isRenalReviewed ? 'text-[var(--good-text)]' : 'text-[var(--warning-text)]'}`}>
                     [{isRenalReviewed ? '✓ Reviewed' : 'Review Required'}]
                   </span>
                 )}
               </summary>
-              <div className="mt-3 space-y-2">
-                <div className="flex items-center gap-2">
-                  <span>Serum Cr (mg/dL):</span>
+              <div className="mt-3 space-y-2.5">
+                <div className="flex flex-wrap items-center gap-2">
+                  <label htmlFor="serumCrInput" className="font-semibold text-[var(--ink)]">
+                    Serum Cr (mg/dL):
+                  </label>
                   <input
+                    id="serumCrInput"
                     type="number"
                     min="0.1"
                     step="0.1"
+                    inputMode="decimal"
                     value={serumCr}
                     onChange={(e) => onSerumCrChange(e.target.value)}
-                    className="clinical-input w-16 text-center font-mono-tabular text-xs font-bold py-0.5"
+                    className="clinical-input w-20 text-center font-mono-tabular text-xs font-bold py-1"
                   />
-                  {egfr !== null && (
+                  {egfr !== null ? (
                     <span className="font-mono-tabular font-bold text-[var(--ink)]">
                       → eGFR: {egfr.toFixed(1)} mL/min/1.73m²
+                    </span>
+                  ) : (
+                    <span className="text-[11px] text-[var(--muted)]">
+                      (Requires Height cm &amp; Serum Cr to calculate Schwartz eGFR)
                     </span>
                   )}
                 </div>
                 {matchedRenalTier && (
-                  <div className="flex items-center justify-between p-2 rounded bg-[var(--card)] border border-[var(--border)]">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2.5 rounded-lg bg-[var(--card)] border border-[var(--border)]">
                     <span className="text-xs text-[var(--ink)]">
                       Matched Tier ({matchedRenalTier.gfr} mL/min/1.73m²):{' '}
                       <strong className="text-[var(--accent-text)]">{matchedRenalRegimen}</strong>
@@ -560,18 +572,23 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                       <button
                         type="button"
                         onClick={() => setIsRenalReviewed(true)}
-                        className="px-2 py-0.5 text-[11px] font-bold rounded bg-[var(--accent)] text-white hover:opacity-90 transition-opacity cursor-pointer shrink-0"
+                        className="min-h-[32px] px-3 py-1 text-[11px] font-bold rounded-md bg-[var(--accent)] text-white hover:opacity-90 transition-opacity cursor-pointer whitespace-nowrap self-start sm:self-auto shrink-0"
                       >
                         ✓ Confirm Review
                       </button>
                     ) : (
-                      <span className="text-[11px] font-bold text-[var(--good-text)]">
+                      <span className="text-[11px] font-bold text-[var(--good-text)] whitespace-nowrap shrink-0">
                         ✓ Reviewed
                       </span>
                     )}
                   </div>
                 )}
-                <div className="overflow-x-auto border border-[var(--border)] rounded">
+                <div
+                  className="clinical-table-container"
+                  tabIndex={0}
+                  role="region"
+                  aria-label="Renal dosing reference table"
+                >
                   <table className="clinical-table">
                     <thead>
                       <tr>
@@ -585,7 +602,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                         const matched = egfr !== null && egfr >= t.minGfr && egfr <= t.maxGfr;
                         return (
                           <tr key={i} className={matched ? 'bg-[var(--warning-soft)] font-bold' : ''}>
-                            <td className="font-mono-tabular">{t.gfr}</td>
+                            <td className="font-mono-tabular whitespace-nowrap">{t.gfr}</td>
                             <td className="font-mono-tabular text-[var(--accent-text)]">
                               {cleanEnglishText(calcPatientRenalDose(t, selectedDrug, activeWeight))}
                             </td>

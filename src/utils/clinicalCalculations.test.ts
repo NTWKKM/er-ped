@@ -12,6 +12,8 @@ import {
   calcSchwartzEGFR,
   calcPatientRenalDose,
   calcMaintenanceMlPerHr,
+  calcFluidRegimen,
+  MAINTENANCE_CAP_ML_DAY,
   calcDripForward,
   calcDripReverse,
   calcCorrectedNa,
@@ -778,4 +780,83 @@ test('Parkland burn resuscitation and PRBC transfusion calculations', () => {
   const tx = calcTransfusion(15, 6, 10, 'cpda');
   assert.equal(tx.prbcVol, 180);
   assert.equal(tx.maxInfusionRate, 75);
+});
+
+const near = (actual: number, expected: number, msg?: string) =>
+  assert.ok(Math.abs(actual - expected) < 1e-9, msg ?? `${actual} ≉ ${expected}`);
+
+test('calcFluidRegimen: rejects missing / invalid weight', () => {
+  assert.equal(calcFluidRegimen({ weightKg: 0, deficitPct: 5, durationHr: 24 }), null);
+  assert.equal(calcFluidRegimen({ weightKg: NaN, deficitPct: 5, durationHr: 24 }), null);
+});
+
+test('calcFluidRegimen: V1 parity — 10 kg, 3% / 8% / 10% over 24 h', () => {
+  const mild = calcFluidRegimen({ weightKg: 10, deficitPct: 3, durationHr: 24 })!;
+  near(mild.mntMlHr, (10 * 100) / 24);
+  near(mild.replaceMlHr, 12.5);
+  near(mild.combinedMlHr, (10 * 100) / 24 + (10 * 3 * 10) / 24);
+  assert.equal(mild.day1TotalMl, 1300);
+  assert.equal(mild.severity, 'mild');
+
+  const mod = calcFluidRegimen({ weightKg: 10, deficitPct: 8, durationHr: 24 })!;
+  near(mod.replaceMlHr, (10 * 8 * 10) / 24);
+  assert.equal(mod.severity, 'moderate');
+
+  const sev = calcFluidRegimen({ weightKg: 10, deficitPct: 10, durationHr: 24 })!;
+  near(sev.replaceMlHr, (10 * 10 * 10) / 24);
+  assert.equal(sev.severity, 'severe');
+  assert.equal(sev.orsPlan, null, 'severe dehydration has no ORS plan');
+});
+
+test('calcFluidRegimen: 48 h plan replaces half the net deficit on day 1', () => {
+  const r = calcFluidRegimen({ weightKg: 10, deficitPct: 10, durationHr: 48 })!;
+  near(r.replaceMlHr, (10 * 10 * 10) / 48);
+  assert.equal(r.day1TotalMl, 1500);
+});
+
+test('calcFluidRegimen: prior boluses are subtracted from the deficit (floor 0)', () => {
+  const r = calcFluidRegimen({ weightKg: 10, deficitPct: 10, durationHr: 24, priorBolusMl: 200 })!;
+  assert.equal(r.deficitMl, 1000);
+  assert.equal(r.netDeficitMl, 800);
+  near(r.replaceMlHr, (10 * 10 * 10 - 200) / 24);
+
+  const over = calcFluidRegimen({ weightKg: 10, deficitPct: 3, durationHr: 24, priorBolusMl: 500 })!;
+  assert.equal(over.netDeficitMl, 0);
+  assert.equal(over.replaceMlHr, 0);
+});
+
+test('calcFluidRegimen: maintenance capped at 2400 mL/day; boluses capped per aliquot', () => {
+  const r = calcFluidRegimen({ weightKg: 70, deficitPct: 5, durationHr: 24 })!;
+  assert.equal(r.mntMlDay, 2400);
+  assert.equal(r.mntMlHr, 100);
+  assert.equal(r.isMntCapped, true);
+  assert.equal(r.bolus10Ml, 500);
+  assert.equal(r.bolus20Ml, 1000);
+  assert.equal(r.isBolusCapped, true);
+  // Verify that calcMaintenanceMlPerHr remains uncapped (104.2 mL/hr) for other callers,
+  // while order sheet display cap caps at 100 mL/hr.
+  assert.equal(calcMaintenanceMlPerHr(70), 104.2);
+  assert.equal(Math.min(calcMaintenanceMlPerHr(70), +(MAINTENANCE_CAP_ML_DAY / 24).toFixed(1)), 100);
+
+  const small = calcFluidRegimen({ weightKg: 15, deficitPct: 5, durationHr: 24 })!;
+  assert.equal(small.isMntCapped, false);
+  assert.equal(small.bolus10Ml, 150);
+  assert.equal(small.bolus20Ml, 300);
+  assert.equal(small.isBolusCapped, false);
+});
+
+test('calcFluidRegimen: ORS plan (mild 50 mL/kg, moderate 75 mL/kg over 4 h)', () => {
+  const mild = calcFluidRegimen({ weightKg: 10, deficitPct: 5, durationHr: 24 })!;
+  assert.deepEqual(mild.orsPlan, { mlPerKg: 50, volumeMl: 500, overHr: 4 });
+  const mod = calcFluidRegimen({ weightKg: 10, deficitPct: 7, durationHr: 24 })!;
+  assert.deepEqual(mod.orsPlan, { mlPerKg: 75, volumeMl: 750, overHr: 4 });
+});
+
+test('calcFluidRegimen: weight-based urine output target', () => {
+  const child = calcFluidRegimen({ weightKg: 10, deficitPct: 5, durationHr: 24 })!;
+  assert.equal(child.uoTargetMlKgHr, 1);
+  assert.equal(child.uoTargetMlHr, 10);
+  const teen = calcFluidRegimen({ weightKg: 60, deficitPct: 5, durationHr: 24 })!;
+  assert.equal(teen.uoTargetMlKgHr, 0.5);
+  assert.equal(teen.uoTargetMlHr, 30);
 });
