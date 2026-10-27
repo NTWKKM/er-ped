@@ -419,7 +419,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                 title="Bedside Emergency Pocket Card & EHR Order Sheet (Print A4 Card)"
               >
                 <FileText className="w-4 h-4 shrink-0" />
-                <span className="hidden md:inline text-xs font-bold whitespace-nowrap">Orders</span>
+                <span className="hidden sm:inline text-xs font-bold whitespace-nowrap">Orders</span>
                 {orderCount > 0 && (
                   <span className="font-mono-tabular text-[11px] font-extrabold">
                     ({orderCount})

@@ -154,6 +154,11 @@
     - **Transfusion & Infusion Calculation Safety Guardrails**: Eliminated implicit `0` and `10.0` fallbacks for `currentHb` and `targetHb` in `FluidsAndDripsView`; `currentHb` and `targetHb` both start blank (`''`), requiring explicit positive numeric values, non-zero calculated PRBC volume, and 4-hour schedule feasibility (`tx.prbcVol <= tx.maxInfusionRate * 4`) before showing the PRBC order button; dynamically sets minimum PRBC infusion duration from `tx.prbcVol / tx.maxInfusionRate` (`minPrbcDurationHr`), indicating `no feasible 4-hr schedule` when conflicted, ensuring that every permitted schedule complies with the maximum safe infusion rate; gated vasoactive drip orders on valid positive dose, drug amount, and diluent volume inputs.
     - **W3C Form Accessibility & ARIA Navigation Sync**: Grouped vasoactive drip dilution inputs into `<fieldset>` with `<legend>` and explicit control labels; added `aria-pressed` states to subtab selector buttons; aligned main navigation state between `fluids` and `transfusion` subtabs.
 
+30. **Streamlined Desktop Layout & Modal-Centric Order Flow (v2.4.3)**:
+    - **Eliminated Fixed Companion Rail**: Removed the persistent desktop companion rail (`Bedside Summary & Order Queue`) to eliminate layout duplication and widen the calculator working area to full width (`max-w-7xl`).
+    - **Modal-Centric Order & Emergency Reference**: Consolidated all EHR prescription orders and bedside emergency resuscitation summary cards into the on-demand `OrderSheetModal`, triggered directly via the `Orders` topbar action button (with dynamic live active count badge).
+    - **Responsive Action Button Visibility**: Broadened the `Orders` button label on the topbar instrument cluster (`hidden sm:inline`) for clear discovery across tablet and desktop screens.
+
 
 
 

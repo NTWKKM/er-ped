@@ -266,5 +266,47 @@ html, body {
     border: 1px solid #000 !important;
     box-shadow: none !important;
   }
+
+  /* Dedicated unconstrained print view for OrderSheetModal (prevents clipping & hides dialog chrome) */
+  body:has(.order-sheet-modal-backdrop) main {
+    display: none !important;
+  }
+
+  .order-sheet-modal-backdrop {
+    position: static !important;
+    display: block !important;
+    inset: auto !important;
+    z-index: auto !important;
+    background: transparent !important;
+    padding: 0 !important;
+    backdrop-filter: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .order-sheet-modal-card {
+    position: static !important;
+    display: block !important;
+    max-width: 100% !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    transform: none !important;
+  }
+
+  .order-sheet-modal-body {
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+
+  .order-sheet-modal-card .clinical-panel-subtle {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
 }
 

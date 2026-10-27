@@ -121,7 +121,7 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
 
   return (
     <div
-      className={`${BACKDROP_BASE_CLASS} ${
+      className={`no-print ${BACKDROP_BASE_CLASS} ${
         active ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
       onClick={onClose}
@@ -328,7 +328,7 @@ export const EvidenceModal: React.FC<EvidenceModalProps> = ({
 
   return (
     <div
-      className={`${BACKDROP_BASE_CLASS} ${
+      className={`no-print ${BACKDROP_BASE_CLASS} ${
         active ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
       onClick={onClose}
@@ -456,7 +456,7 @@ export const OrderSheetAndPocketContent: React.FC<OrderSheetContentProps> = ({
             Queued EHR Prescription Orders ({orders.length})
           </div>
           {orders.length > 0 && (
-            <div className="flex items-center gap-1.5">
+            <div className="no-print flex items-center gap-1.5">
               <button
                 type="button"
                 onClick={onCopyAll}
@@ -480,7 +480,7 @@ export const OrderSheetAndPocketContent: React.FC<OrderSheetContentProps> = ({
         {copyMessage && (
           <div
             role="status"
-            className={`p-2.5 rounded-lg border text-xs font-semibold flex items-center gap-2 ${
+            className={`no-print p-2.5 rounded-lg border text-xs font-semibold flex items-center gap-2 ${
               copyMessage.type === 'success'
                 ? 'border-[var(--good)]/40 bg-[var(--good-soft)] text-[var(--good-text)]'
                 : 'border-[var(--warning)]/40 bg-[var(--warning-soft)] text-[var(--warning-text)]'
@@ -520,7 +520,7 @@ export const OrderSheetAndPocketContent: React.FC<OrderSheetContentProps> = ({
                 <button
                   type="button"
                   onClick={() => onRemoveOrder(o.id)}
-                  className="min-h-[28px] min-w-[28px] flex items-center justify-center text-[var(--muted)] hover:text-[var(--danger-text)] rounded cursor-pointer shrink-0"
+                  className="no-print min-h-[28px] min-w-[28px] flex items-center justify-center text-[var(--muted)] hover:text-[var(--danger-text)] rounded cursor-pointer shrink-0"
                   title="Remove order"
                 >
                   <X className="w-4 h-4" />
@@ -541,7 +541,7 @@ export const OrderSheetAndPocketContent: React.FC<OrderSheetContentProps> = ({
             <button
               type="button"
               onClick={() => window.print()}
-              className="min-h-[30px] px-2.5 py-1 text-xs font-bold rounded-md border border-[var(--border-strong)] bg-[var(--panel-subtle)] text-[var(--ink)] flex items-center gap-1 cursor-pointer whitespace-nowrap"
+              className="no-print min-h-[30px] px-2.5 py-1 text-xs font-bold rounded-md border border-[var(--border-strong)] bg-[var(--panel-subtle)] text-[var(--ink)] flex items-center gap-1 cursor-pointer whitespace-nowrap"
             >
               <Printer className="w-3.5 h-3.5" />
               <span>Print A4 Card</span>
@@ -627,13 +627,13 @@ export const OrderSheetModal: React.FC<OrderSheetModalProps> = ({
 
   return (
     <div
-      className={`${BACKDROP_BASE_CLASS} ${
+      className={`${BACKDROP_BASE_CLASS} order-sheet-modal-backdrop ${
         active ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
       onClick={onClose}
     >
       <div
-        className={`clinical-card max-w-3xl w-full max-h-[92dvh] sm:max-h-[88dvh] rounded-t-2xl sm:rounded-xl flex flex-col overflow-hidden shadow-xl ${DIALOG_MOTION_BASE_CLASS} ${
+        className={`clinical-card order-sheet-modal-card max-w-3xl w-full max-h-[92dvh] sm:max-h-[88dvh] rounded-t-2xl sm:rounded-xl flex flex-col overflow-hidden shadow-xl ${DIALOG_MOTION_BASE_CLASS} ${
           active
             ? 'opacity-100 translate-y-0 sm:scale-100'
             : 'opacity-0 translate-y-4 sm:translate-y-2 sm:scale-[0.98]'
@@ -657,14 +657,14 @@ export const OrderSheetModal: React.FC<OrderSheetModalProps> = ({
             type="button"
             onClick={onClose}
             aria-label="Close Order Sheet modal"
-            className="min-h-[34px] px-3 py-1.5 text-xs font-bold rounded-md border border-[var(--border-strong)] bg-[var(--panel-subtle)] text-[var(--ink)] flex items-center gap-1 cursor-pointer shrink-0"
+            className="no-print min-h-[34px] px-3 py-1.5 text-xs font-bold rounded-md border border-[var(--border-strong)] bg-[var(--panel-subtle)] text-[var(--ink)] flex items-center gap-1 cursor-pointer shrink-0"
           >
             <X className="w-4 h-4" />
             <span>Close</span>
           </button>
         </div>
 
-        <div className="p-3.5 sm:p-4 overflow-y-auto">
+        <div className="order-sheet-modal-body p-3.5 sm:p-4 overflow-y-auto">
           <OrderSheetAndPocketContent
             orders={orders}
             activeWeight={activeWeight}

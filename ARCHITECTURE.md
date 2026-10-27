@@ -280,6 +280,12 @@ flowchart TD
     - **iOS Safari Non-Zoom Inputs**: Enforced `font-size: 16px !important` on mobile viewports (< 768px) for all form inputs.
     - **Viewport Stability**: Pinned root container to `min-h-[100dvh]`. All unit tests (`10/10`) and Playwright responsive audits (`0 overflows`) pass 100% green.
 
+69. **Desktop Workspace Streamlining & Modal-Centric Order Access (taste-skill v2.4.3 - October 2026)**:
+    - **Clean Single-Column Workspace**: Removed the persistent desktop companion rail (`<aside>`) containing the redundant on-page Bedside Summary & Order Queue box. The primary clinical calculator tabs now utilize the full max-width workspace (`max-w-7xl w-full mx-auto space-y-4`) across all viewports.
+    - **Unified Order Modal Access**: Users access the consolidated Queued EHR Prescription Orders and Bedside Emergency Summary on demand via the dedicated `Orders` button in `TopbarBiometrics`, opening `OrderSheetModal` with 1-tap A4 Bedside Emergency Pocket Card printing and clipboard export.
+    - **Responsive Topbar Action**: Broadened `Orders` label visibility on the header cluster (`hidden sm:inline`) with live active-count badge.
+
+
 
 
 
