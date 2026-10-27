@@ -12,6 +12,7 @@ import {
   suggestFoley,
   calcMaintenanceMlPerHr,
   MAINTENANCE_CAP_ML_DAY,
+  BOLUS_20_CAP_ML,
 } from '../utils/clinicalCalculations';
 import {
   X,
@@ -116,7 +117,7 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
   const epiMl = ((0.01 * refW) / 0.1).toFixed(1);
   const defib1 = Math.round(2 * refW);
   const defib2 = Math.round(4 * refW);
-  const bolusMl = Math.round(20 * refW);
+  const bolusMl = Math.min(BOLUS_20_CAP_ML, Math.round(20 * refW));
 
   return (
     <div
@@ -580,7 +581,7 @@ export const OrderSheetAndPocketContent: React.FC<OrderSheetContentProps> = ({
             <div className="clinical-panel-subtle p-2.5">
               <div className="text-[var(--muted)] font-semibold text-[11px]">NS Bolus (20 mL/kg)</div>
               <div className="font-mono-tabular font-extrabold text-sm text-[var(--good-text)] mt-0.5">
-                {Math.round(20 * w)} mL IV
+                {Math.min(BOLUS_20_CAP_ML, Math.round(20 * w))} mL IV
               </div>
             </div>
             <div className="clinical-panel-subtle p-2.5">

@@ -783,7 +783,7 @@ test('Parkland burn resuscitation and PRBC transfusion calculations', () => {
 });
 
 const near = (actual: number, expected: number, msg?: string) =>
-  assert.ok(Math.abs(actual - expected) < 0.01, msg ?? `${actual} ≉ ${expected}`);
+  assert.ok(Math.abs(actual - expected) < 1e-9, msg ?? `${actual} ≉ ${expected}`);
 
 test('calcFluidRegimen: rejects missing / invalid weight', () => {
   assert.equal(calcFluidRegimen({ weightKg: 0, deficitPct: 5, durationHr: 24 }), null);
@@ -792,25 +792,25 @@ test('calcFluidRegimen: rejects missing / invalid weight', () => {
 
 test('calcFluidRegimen: V1 parity — 10 kg, 3% / 8% / 10% over 24 h', () => {
   const mild = calcFluidRegimen({ weightKg: 10, deficitPct: 3, durationHr: 24 })!;
-  near(mild.mntMlHr, 41.667);
+  near(mild.mntMlHr, (10 * 100) / 24);
   near(mild.replaceMlHr, 12.5);
-  near(mild.combinedMlHr, 54.167);
+  near(mild.combinedMlHr, (10 * 100) / 24 + (10 * 3 * 10) / 24);
   assert.equal(mild.day1TotalMl, 1300);
   assert.equal(mild.severity, 'mild');
 
   const mod = calcFluidRegimen({ weightKg: 10, deficitPct: 8, durationHr: 24 })!;
-  near(mod.replaceMlHr, 33.333);
+  near(mod.replaceMlHr, (10 * 8 * 10) / 24);
   assert.equal(mod.severity, 'moderate');
 
   const sev = calcFluidRegimen({ weightKg: 10, deficitPct: 10, durationHr: 24 })!;
-  near(sev.replaceMlHr, 41.667);
+  near(sev.replaceMlHr, (10 * 10 * 10) / 24);
   assert.equal(sev.severity, 'severe');
   assert.equal(sev.orsPlan, null, 'severe dehydration has no ORS plan');
 });
 
 test('calcFluidRegimen: 48 h plan replaces half the net deficit on day 1', () => {
   const r = calcFluidRegimen({ weightKg: 10, deficitPct: 10, durationHr: 48 })!;
-  near(r.replaceMlHr, 20.833);
+  near(r.replaceMlHr, (10 * 10 * 10) / 48);
   assert.equal(r.day1TotalMl, 1500);
 });
 
@@ -818,7 +818,7 @@ test('calcFluidRegimen: prior boluses are subtracted from the deficit (floor 0)'
   const r = calcFluidRegimen({ weightKg: 10, deficitPct: 10, durationHr: 24, priorBolusMl: 200 })!;
   assert.equal(r.deficitMl, 1000);
   assert.equal(r.netDeficitMl, 800);
-  near(r.replaceMlHr, 33.333);
+  near(r.replaceMlHr, (10 * 10 * 10 - 200) / 24);
 
   const over = calcFluidRegimen({ weightKg: 10, deficitPct: 3, durationHr: 24, priorBolusMl: 500 })!;
   assert.equal(over.netDeficitMl, 0);
