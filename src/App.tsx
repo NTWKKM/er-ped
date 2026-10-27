@@ -379,7 +379,11 @@ export default function App() {
       />
 
       {/* Responsive Clinical Workspace */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-5 lg:px-8 py-4 sm:py-5 space-y-4">
+      <main
+        className={`flex-1 max-w-7xl w-full mx-auto px-3 sm:px-5 lg:px-8 py-4 sm:py-5 space-y-4 ${
+          orderSheetOpen ? 'no-print' : ''
+        }`}
+      >
         {/* Simple 5-Tab Segmented Bar */}
         <nav
           role="tablist"
