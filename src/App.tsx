@@ -276,8 +276,23 @@ export default function App() {
   ) => {
     invalidateCalculatedOrders();
     setBio((prev) => {
+      // Preserve age-estimated weight fallback ONLY when no weight was entered
+      if (!val || val.trim() === '') {
+        const ageNum = parseFloat(prev.rawAge);
+        const estW =
+          Number.isFinite(ageNum) && ageNum > 0
+            ? estimateWeightFromAge(ageNum, prev.ageUnit)
+            : null;
+        return {
+          ...prev,
+          rawWeight: estW ? String(estW) : '',
+          useIBW: false,
+          weightSource: estW ? 'estimated' : null,
+        };
+      }
+
       const numW = parseFloat(val);
-      if (val && Number.isFinite(numW) && numW > 0 && numW <= 150) {
+      if (Number.isFinite(numW) && numW > 0 && numW <= 150) {
         return {
           ...prev,
           rawWeight: val,
@@ -285,16 +300,14 @@ export default function App() {
           weightSource: source,
         };
       }
-      const ageNum = parseFloat(prev.rawAge);
-      const estW =
-        Number.isFinite(ageNum) && ageNum > 0
-          ? estimateWeightFromAge(ageNum, prev.ageUnit)
-          : null;
+
+      // Entered weight above 150 kg or <= 0 is rejected as invalid
+      // Retain the entered string so the input reflects validation error, but do NOT fall through to age-estimated fallback
       return {
         ...prev,
-        rawWeight: estW ? String(estW) : '',
+        rawWeight: val,
         useIBW: false,
-        weightSource: estW ? 'estimated' : null,
+        weightSource: null,
       };
     });
   };

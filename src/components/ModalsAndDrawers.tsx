@@ -13,6 +13,7 @@ import {
   calcMaintenanceMlPerHr,
   MAINTENANCE_CAP_ML_DAY,
   BOLUS_20_CAP_ML,
+  getBroselowSpectrumBand,
 } from '../utils/clinicalCalculations';
 import {
   X,
@@ -103,7 +104,7 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
 
   const matchedWeightBand =
     activeWeight != null
-      ? BROSELOW_SPECTRUM.find((b) => activeWeight >= b.min && activeWeight <= b.max)
+      ? getBroselowSpectrumBand(activeWeight) ?? undefined
       : undefined;
 
   const hasSelectedOrMatchedBand = Boolean(previewColor || matchedWeightBand);
@@ -211,14 +212,20 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
             <div className="p-3.5 rounded-lg border border-[var(--border)] bg-[var(--panel-subtle)] flex flex-wrap items-center justify-between gap-2">
               <div>
                 <div className="text-sm sm:text-base font-extrabold text-[var(--ink)]">
-                  {activeWeight != null && activeWeight > 0
-                    ? `Patient Weight: ${activeWeight.toFixed(1)} kg (Outside Broselow 3–36 kg Range)`
-                    : 'No Active Weight or Broselow Zone Selected'}
+                  {activeWeight != null && activeWeight > 0 ? (
+                    activeWeight < 3 || activeWeight > 36
+                      ? `Patient Weight: ${activeWeight.toFixed(1)} kg (Outside Broselow 3–36 kg Range)`
+                      : `Patient Weight: ${activeWeight.toFixed(1)} kg (Unmatched Band)`
+                  ) : (
+                    `No Active Weight or Broselow Zone Selected (Previewing ${refW.toFixed(1)} kg)`
+                  )}
                 </div>
                 <div className="text-xs text-[var(--muted)]">
-                  {activeWeight != null && activeWeight > 0
-                    ? 'Resuscitation doses calculated from patient weight. Tap a color band above to preview reference equipment.'
-                    : 'Tap any color band above to adopt its reference weight and inspect equipment sizing.'}
+                  {activeWeight != null && activeWeight > 0 ? (
+                    `Resuscitation doses calculated from patient weight (${activeWeight.toFixed(1)} kg). Tap a color band above to preview reference equipment.`
+                  ) : (
+                    `Emergency values below preview reference weight ${refW.toFixed(1)} kg. Tap any color band above to adopt its reference weight and inspect equipment sizing.`
+                  )}
                 </div>
               </div>
             </div>

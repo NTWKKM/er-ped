@@ -514,16 +514,23 @@ export function calcGrowthZScores(
 export function getBroselowZone(w: number | null | undefined): BroselowZone | null {
   const num = Number(w);
   if (!Number.isFinite(num) || num <= 0 || !DATASET.broselow) return null;
-  for (const b of DATASET.broselow) {
-    if (num >= b.min && num <= b.max) return b;
-  }
-  return null;
+  return (
+    DATASET.broselow.find((b, idx) => {
+      const next = DATASET.broselow[idx + 1];
+      return next ? num >= b.min && num < next.min : num >= b.min && num <= b.max;
+    }) || null
+  );
 }
 
 export function getBroselowSpectrumBand(w: number | null | undefined) {
   const num = Number(w);
   if (!Number.isFinite(num) || num <= 0) return null;
-  return BROSELOW_SPECTRUM.find((b) => num >= b.min && num <= b.max) || null;
+  return (
+    BROSELOW_SPECTRUM.find((b, idx) => {
+      const next = BROSELOW_SPECTRUM[idx + 1];
+      return next ? num >= b.min && num < next.min : num >= b.min && num <= b.max;
+    }) || null
+  );
 }
 
 export function weightToETTCuffed(kg: number): string {

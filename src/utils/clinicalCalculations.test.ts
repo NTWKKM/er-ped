@@ -8,6 +8,7 @@ import {
   computeWhoWaz,
   getInterpolatedLMS,
   getBroselowZone,
+  getBroselowSpectrumBand,
   resolveDrugDose,
   calcSchwartzEGFR,
   calcPatientRenalDose,
@@ -55,6 +56,20 @@ test('Broselow decimal weight boundary matching (no gaps)', () => {
   assert.ok(redZone && redZone.color.includes('Red'));
   const purpleZone = getBroselowZone(11.4);
   assert.ok(purpleZone && purpleZone.color.includes('Purple'));
+
+  // Gap handling between adjacent bands (e.g. 5.95 kg, 7.95 kg)
+  const greyBand = getBroselowSpectrumBand(5.95);
+  assert.equal(greyBand?.color, 'Grey');
+  const pinkBand = getBroselowSpectrumBand(7.95);
+  assert.equal(pinkBand?.color, 'Pink');
+  const redBand = getBroselowSpectrumBand(9.95);
+  assert.equal(redBand?.color, 'Red');
+  const purpleBand = getBroselowSpectrumBand(11.95);
+  assert.equal(purpleBand?.color, 'Purple');
+
+  // Outside 3–36 kg range
+  assert.equal(getBroselowSpectrumBand(2.5), null);
+  assert.equal(getBroselowSpectrumBand(40), null);
 });
 
 test('WHO Growth Z-Score calculation for weight and height (male and female)', () => {

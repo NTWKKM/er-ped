@@ -288,11 +288,15 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
 
   const hasNumericDose = matchedRenalTier ? hasNumericRenalDose : hasNumericStandardDose;
 
+  const concSuffix = effectiveMgPerMl ? ` [${effectiveMgPerMl} mg/mL]` : '';
+
   const orderText = (matchedRenalTier && !hasNumericRenalDose)
     ? ''
     : matchedRenalRegimen
-    ? `${selectedDrug.name} ${matchedRenalRegimen} ${cleanEnglishText(selectedDrug.route) || 'PO'} [Renal eGFR ${egfr!.toFixed(1)} mL/min/1.73m²]`
-    : `${selectedDrug.name} ${singleDoseMgText}${singleDoseVolumeText ? ` (${singleDoseVolumeText})` : ''} ${cleanEnglishText(selectedDrug.route) || 'PO'} ${selectedDrug.freq || selectedDrug.split || 'PRN'}`;
+    ? `${selectedDrug.name} ${matchedRenalRegimen} ${cleanEnglishText(selectedDrug.route) || 'PO'}${concSuffix} [Renal eGFR ${egfr!.toFixed(1)} mL/min/1.73m²]`
+    : `${selectedDrug.name} ${singleDoseMgText}${singleDoseVolumeText ? ` (${singleDoseVolumeText})` : ''} ${cleanEnglishText(selectedDrug.route) || 'PO'}${concSuffix} ${selectedDrug.freq || selectedDrug.split || 'PRN'}`;
+
+  const hasRequiredConcentration = !strength.hasMultipleConcs || Boolean(effectiveMgPerMl);
 
   const canAddOrder = Boolean(
     onAddOrder &&
@@ -300,6 +304,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
     !resolved.isAgeRestricted &&
     !isMissingRequiredAge &&
     !isRenalReviewRequired &&
+    hasRequiredConcentration &&
     hasNumericDose &&
     orderText
   );
@@ -498,6 +503,13 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
               >
                 ▲ Review-Only Guidance
               </span>
+            ) : strength.hasMultipleConcs && !effectiveMgPerMl ? (
+              <span
+                className="min-h-[32px] px-3 py-1 text-xs font-semibold rounded-md border border-[var(--warning)] text-[var(--warning-text)] bg-[var(--warning-soft)] flex items-center whitespace-nowrap shrink-0"
+                title="Select a preparation concentration below before adding to Order Sheet"
+              >
+                ▲ Select Concentration
+              </span>
             ) : null}
           </div>
 
@@ -515,6 +527,15 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
               <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 sm:mt-0" />
               <span>
                 Age-limited medication ({selectedDrug.minAgeYr != null ? `≥ ${selectedDrug.minAgeYr} yr` : ''}{selectedDrug.maxAgeYr != null ? ` ≤ ${selectedDrug.maxAgeYr} yr` : ''}). Enter patient Age above to verify eligibility before adding to Order Sheet.
+              </span>
+            </div>
+          )}
+
+          {strength.hasMultipleConcs && !effectiveMgPerMl && (
+            <div className="p-3 rounded-lg border border-[var(--warning)] bg-[var(--warning-soft)] text-[var(--warning-text)] text-xs flex items-start sm:items-center gap-2">
+              <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 sm:mt-0" />
+              <span>
+                Medication has multiple available concentrations ({strength.availableConcs?.map((c) => `${c} mg/mL`).join(', ')}). Select a concentration below before adding to Order Sheet.
               </span>
             </div>
           )}

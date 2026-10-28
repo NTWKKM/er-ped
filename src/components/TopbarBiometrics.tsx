@@ -66,8 +66,12 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
   const validHeight = Number.isFinite(heightVal) && heightVal > 0 ? heightVal : null;
 
   const parsedWeight = parseFloat(bio.rawWeight);
+  const isWeightOutOfRange = Boolean(
+    bio.rawWeight &&
+    (Number.isNaN(parsedWeight) || parsedWeight <= 0 || parsedWeight > 150)
+  );
   const measuredWeight =
-    bio.weightSource === 'manual' && Number.isFinite(parsedWeight) && parsedWeight > 0
+    bio.weightSource === 'manual' && Number.isFinite(parsedWeight) && parsedWeight > 0 && parsedWeight <= 150
       ? parsedWeight
       : null;
 
@@ -79,11 +83,21 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
   // Authoritative clinical provenance of the active dosing weight
   const weightProvenance = useMemo(() => {
     if (!activeWeight) {
+      if (isWeightOutOfRange) {
+        return {
+          label: parsedWeight > 150 ? 'weight > 150 kg (exceeds max)' : 'invalid weight',
+          compactLabel: parsedWeight > 150 ? '> 150 kg' : 'invalid BW',
+          isDerived: false,
+          isEmpty: true,
+          isError: true,
+        };
+      }
       return {
         label: 'enter BW or age',
         compactLabel: 'enter BW',
         isDerived: false,
         isEmpty: true,
+        isError: false,
       };
     }
     if (bio.useIBW && ibwWeight) {
@@ -154,7 +168,14 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
             {/* Biometrics Input Fields */}
             <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap min-w-0">
               {/* 1. Measured Weight (BW) */}
-              <div className="flex items-center gap-1 bg-[var(--panel-subtle)] border border-[var(--border)] rounded-lg px-2 py-1 min-h-[36px] shrink-0">
+              <div
+                className={`flex items-center gap-1 rounded-lg px-2 py-1 min-h-[36px] shrink-0 border ${
+                  isWeightOutOfRange
+                    ? 'border-[var(--danger)] bg-[var(--danger-soft)] text-[var(--danger-text)]'
+                    : 'bg-[var(--panel-subtle)] border-[var(--border)]'
+                }`}
+                title={isWeightOutOfRange ? 'Weight exceeds supported maximum of 150 kg' : undefined}
+              >
                 <label htmlFor="weight" className="text-xs font-bold text-[var(--muted)] select-none">
                   BW
                 </label>
@@ -169,7 +190,9 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                   placeholder="kg"
                   value={bio.rawWeight}
                   onChange={(e) => onWeightChange(e.target.value)}
-                  className="w-12 sm:w-16 bg-transparent text-center font-mono-tabular font-bold text-base sm:text-sm text-[var(--ink)] focus:outline-none"
+                  className={`w-12 sm:w-16 bg-transparent text-center font-mono-tabular font-bold text-base sm:text-sm focus:outline-none ${
+                    isWeightOutOfRange ? 'text-[var(--danger-text)]' : 'text-[var(--ink)]'
+                  }`}
                 />
                 <span className="text-xs text-[var(--muted)] select-none">kg</span>
               </div>
@@ -323,7 +346,9 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
             {/* Authoritative In-Use Active Weight Box (All-around hairline border per taste-skill) */}
             <div
               className={`flex flex-col justify-center px-2 sm:px-2.5 py-1 rounded-lg border transition-colors shrink-0 min-h-[36px] ${
-                weightProvenance.isEmpty
+                weightProvenance.isError
+                  ? 'border-[var(--danger)]/50 bg-[var(--danger-soft)] text-[var(--danger-text)]'
+                  : weightProvenance.isEmpty
                   ? 'border-[var(--border)] bg-[var(--panel-subtle)]'
                   : weightProvenance.isDerived
                   ? 'border-[var(--warning)]/40 bg-[var(--warning-soft)]'
@@ -343,7 +368,11 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
               </div>
               <span
                 className={`text-[9.5px] sm:text-[10px] leading-tight font-semibold tracking-tight select-none truncate max-w-[96px] sm:max-w-none ${
-                  weightProvenance.isDerived ? 'text-[var(--warning-text)]' : 'text-[var(--muted)]'
+                  weightProvenance.isError
+                    ? 'text-[var(--danger-text)] font-bold'
+                    : weightProvenance.isDerived
+                    ? 'text-[var(--warning-text)]'
+                    : 'text-[var(--muted)]'
                 }`}
               >
                 <span className="hidden sm:inline">{weightProvenance.label}</span>
