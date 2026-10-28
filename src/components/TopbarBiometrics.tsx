@@ -143,6 +143,8 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
     };
   }, [
     activeWeight,
+    isWeightOutOfRange,
+    parsedWeight,
     bio.useIBW,
     ibwWeight,
     bio.rawHeight,
@@ -174,7 +176,13 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                     ? 'border-[var(--danger)] bg-[var(--danger-soft)] text-[var(--danger-text)]'
                     : 'bg-[var(--panel-subtle)] border-[var(--border)]'
                 }`}
-                title={isWeightOutOfRange ? 'Weight exceeds supported maximum of 150 kg' : undefined}
+                title={
+                  isWeightOutOfRange
+                    ? parsedWeight > 150
+                      ? 'Weight exceeds supported maximum of 150 kg'
+                      : 'Please enter a valid weight (0.1–150 kg)'
+                    : undefined
+                }
               >
                 <label htmlFor="weight" className="text-xs font-bold text-[var(--muted)] select-none">
                   BW

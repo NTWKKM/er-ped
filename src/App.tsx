@@ -322,9 +322,11 @@ export default function App() {
         num = maxLimit;
         nextVal = String(maxLimit);
       }
-      if ((prev.weightSource === 'manual' || prev.weightSource === 'broselow') && parseFloat(prev.rawWeight) > 0) {
+      // If a weight has been entered (whether valid or invalid/out-of-range), preserve it and do not overwrite with age estimate
+      if (prev.rawWeight && prev.rawWeight.trim() !== '') {
         return { ...prev, rawAge: nextVal, useIBW: false };
       }
+      // Only apply estimated weight when no weight has been entered
       const estW =
         Number.isFinite(num) && num > 0 ? estimateWeightFromAge(num, prev.ageUnit) : null;
       return {
@@ -353,7 +355,8 @@ export default function App() {
         convertedNum = Math.min(maxLimit, rawConverted);
         convertedStr = String(convertedNum);
       }
-      if (prev.weightSource === 'estimated' || !prev.weightSource) {
+      // Only apply estimated weight when the current weight was estimated or when no weight was entered
+      if (prev.weightSource === 'estimated' || (!prev.weightSource && (!prev.rawWeight || prev.rawWeight.trim() === ''))) {
         const estW =
           Number.isFinite(convertedNum) && convertedNum > 0
             ? estimateWeightFromAge(convertedNum, nextUnit)

@@ -222,9 +222,9 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
                 </div>
                 <div className="text-xs text-[var(--muted)]">
                   {activeWeight != null && activeWeight > 0 ? (
-                    `Resuscitation doses calculated from patient weight (${activeWeight.toFixed(1)} kg). Tap a color band above to preview reference equipment.`
+                    `Resuscitation doses calculated from patient weight (${activeWeight.toFixed(1)} kg). Selecting a color band above replaces active patient weight and recalculates orders.`
                   ) : (
-                    `Emergency values below preview reference weight ${refW.toFixed(1)} kg. Tap any color band above to adopt its reference weight and inspect equipment sizing.`
+                    `Emergency values below preview reference weight ${refW.toFixed(1)} kg. Selecting a color band above adopts its reference weight and recalculates orders.`
                   )}
                 </div>
               </div>
