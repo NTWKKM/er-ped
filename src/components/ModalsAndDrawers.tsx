@@ -117,8 +117,14 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
     matchedWeightBand ||
     BROSELOW_SPECTRUM[3]; // fallback Purple ~10.5 kg for unselected equipment preview
 
+  const isAutoMatchedColor = Boolean(
+    matchedWeightBand &&
+    previewColor &&
+    previewColor.toLowerCase() === matchedWeightBand.color.toLowerCase()
+  );
+
   const refW =
-    !previewColor && activeWeight != null && activeWeight > 0
+    (!previewColor || isAutoMatchedColor) && activeWeight != null && activeWeight > 0
       ? activeWeight
       : currentBand.approxKg;
   const epiMgVal = Math.min(1, 0.01 * refW);
@@ -204,7 +210,9 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
                   Broselow Zone: {currentBand.label} — {currentBand.range}
                 </div>
                 <div className="text-xs font-semibold">
-                  Reference Weight: {refW.toFixed(1)} kg ({currentBand.ageApprox})
+                  {activeWeight != null && activeWeight > 0 && Math.abs(refW - currentBand.approxKg) > 0.05
+                    ? `Patient Weight: ${refW.toFixed(1)} kg · Band Ref: ${currentBand.approxKg} kg (${currentBand.ageApprox})`
+                    : `Reference Weight: ${refW.toFixed(1)} kg (${currentBand.ageApprox})`}
                 </div>
               </div>
             </div>
@@ -222,9 +230,9 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
                 </div>
                 <div className="text-xs text-[var(--muted)]">
                   {activeWeight != null && activeWeight > 0 ? (
-                    `Resuscitation doses calculated from patient weight (${activeWeight.toFixed(1)} kg). Selecting a color band above replaces active patient weight and recalculates orders.`
+                    `Resuscitation doses calculated from patient weight (${activeWeight.toFixed(1)} kg). Selecting a color band above replaces active patient weight and invalidates affected queued orders; recalculate and re-add those orders.`
                   ) : (
-                    `Emergency values below preview reference weight ${refW.toFixed(1)} kg. Selecting a color band above adopts its reference weight and recalculates orders.`
+                    `Emergency values below preview reference weight ${refW.toFixed(1)} kg. Selecting a color band above adopts its reference weight and invalidates affected queued orders; recalculate and re-add those orders.`
                   )}
                 </div>
               </div>

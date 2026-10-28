@@ -322,11 +322,12 @@ export default function App() {
         num = maxLimit;
         nextVal = String(maxLimit);
       }
-      // If a weight has been entered (whether valid or invalid/out-of-range), preserve it and do not overwrite with age estimate
-      if (prev.rawWeight && prev.rawWeight.trim() !== '') {
+      // Preserve a user-entered weight (manual, broselow, or invalid/out-of-range with weightSource: null)
+      // Only recalculate or clear estimated weights (or when no weight has been entered)
+      if (prev.weightSource !== 'estimated' && prev.rawWeight && prev.rawWeight.trim() !== '') {
         return { ...prev, rawAge: nextVal, useIBW: false };
       }
-      // Only apply estimated weight when no weight has been entered
+      // Apply, recalculate, or clear estimated weight from the updated age
       const estW =
         Number.isFinite(num) && num > 0 ? estimateWeightFromAge(num, prev.ageUnit) : null;
       return {
