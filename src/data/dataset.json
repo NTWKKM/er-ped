@@ -5,6 +5,32 @@
   },
   "pediatricDose": [
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "acetazolamide-po-iv",
+      "drug": "Acetazolamide",
+      "name": "Acetazolamide PO/IV (Diamox Tab 250 mg)",
+      "preparation": "250 mg / tab",
+      "note": "Idiopathic Intracranial Hypertension (Pseudotumor Cerebri) / Hydrocephalus: Start 15–25 mg/kg/day PO div TID–QID; titrate up to 100 mg/kg/day (max 2,000 mg/day). Diuretic / Metabolic Alkalosis: 5 mg/kg/dose PO/IV OD–BID (max 250–500 mg/dose). Epilepsy / Glaucoma: 8–30 mg/kg/day div BID–QID.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 5,
+      "doseMaxMgPerKg": 25,
+      "maxPerDoseMg": 500,
+      "maxPerDayMg": 2000,
+      "freq": "OD–QID (per indication)",
+      "route": "PO/IV",
+      "category": "cardiovascular",
+      "aliases": [
+        "Diamox",
+        "Carbonic anhydrase inhibitor",
+        "IIH",
+        "Glaucoma"
+      ]
+    },
+    {
       "key": "acetylcysteine-sachet-100-200-600",
       "drug": "Acetylcysteine",
       "name": "Acetylcysteine (sachet 100/200 mg; tab 600 mg)",
@@ -23,6 +49,33 @@
       "aliases": [
         "Fluimucil",
         "NAC"
+      ],
+      "category": "respiratory"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "activated-charcoal-po",
+      "drug": "Activated Charcoal",
+      "name": "Activated Charcoal Powder (50 g)",
+      "preparation": "Powder 25 g / 50 g reconstituted with water (1:4 to 1:8 slurry)",
+      "note": "Acute Oral Toxin Decontamination (within 1 hr of ingestion): 1 g/kg PO or via NG tube (Children 1–12 yr: 25–50 g; Adolescents: 50–100 g). ⚠️ Contraindicated in unprotected airway/decreased consciousness, hydrocarbons, caustics (acids/alkalis), heavy metals (Iron, Lithium, Lead), or alcohols.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 1000,
+      "doseMaxMgPerKg": 1000,
+      "maxPerDoseMg": 50000,
+      "freq": "Single dose",
+      "route": "PO/NG",
+      "category": "emergency",
+      "aliases": [
+        "Charcoal",
+        "Poisoning",
+        "Toxicology",
+        "Overdose",
+        "ผงถ่าน"
       ]
     },
     {
@@ -123,7 +176,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Epinephrine 1:1000"
-      ]
+      ],
+      "category": "respiratory"
     },
     {
       "key": "albendazole-syrup-200mg-5ml-tab-200mg",
@@ -149,6 +203,57 @@
       "category": "antibiotic"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "allopurinol-po",
+      "drug": "Allopurinol",
+      "name": "Allopurinol PO (Zyloric Tab 100 mg / 300 mg)",
+      "preparation": "100 mg / tab; 300 mg / tab",
+      "note": "Tumor Lysis Syndrome (TLS) Prophylaxis / Hyperuricemia: 10 mg/kg/day PO div TID (or 150–300 mg/m²/day; max 600–800 mg/day). Reduce dose in renal impairment. ⚠️ HLA-B*5801 associated with SJS/TEN in Thai population.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 10,
+      "doseMaxMgPerKg": 10,
+      "maxPerDoseMg": 300,
+      "maxPerDayMg": 800,
+      "freq": "tid",
+      "route": "PO",
+      "category": "hematology",
+      "aliases": [
+        "Zyloric",
+        "Tumor lysis syndrome",
+        "TLS",
+        "Uric acid"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "alprostadil-pge1-iv",
+      "drug": "Alprostadil (Prostaglandin E1)",
+      "name": "Alprostadil (PGE1) IV Infusion (500 mcg / mL)",
+      "preparation": "500 mcg / 1 mL ampule",
+      "note": "Ductal-Dependent Congenital Heart Disease (maintain PDA patency): Start 0.01–0.05 mcg/kg/min continuous IV infusion (max 0.1 mcg/kg/min); once ductus opens, titrate down to lowest effective rate (0.005–0.01 mcg/kg/min). ⚠️ Watch for apnea (prepare intubation), fever, hypotension.",
+      "unit": "mcg/kg/min",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "Continuous IV infusion",
+      "route": "IV Infusion",
+      "category": "cardiovascular",
+      "aliases": [
+        "PGE1",
+        "Prostin VR",
+        "PDA",
+        "Ductal dependent CHD",
+        "NICU"
+      ]
+    },
+    {
       "key": "aluminium-magnesium-hydroxide-susp",
       "drug": "Aluminium ± Magnesium hydroxide",
       "name": "Alum milk suspension",
@@ -167,7 +272,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Milk of magnesia (separate entry below)"
-      ]
+      ],
+      "category": "gi"
     },
     {
       "key": "ambroxol-syrup-30-mg-5-ml",
@@ -190,7 +296,8 @@
         "Mucosolvan",
         "Ambroxol syr",
         "Ambroxol 30"
-      ]
+      ],
+      "category": "respiratory"
     },
     {
       "key": "amikacin-iv",
@@ -253,6 +360,31 @@
       "category": "antibiotic"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "aminophylline-iv-nicu-asthma",
+      "drug": "Aminophylline",
+      "name": "Aminophylline IV (250 mg / 10 mL = 25 mg/mL)",
+      "preparation": "25 mg / mL ampule (80% Theophylline)",
+      "note": "Neonatal Apnea: Load 5–8 mg/kg IV over 30 min, then Maint 1.5–3 mg/kg/dose IV/PO q8–12h (target level 5–12 mcg/mL). Acute Severe Asthma (PICU): Load 5–6 mg/kg IV over 20–30 min (if no prior theophylline), then infusion 0.5–1 mg/kg/hr (target 10–15 mcg/mL).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 5,
+      "doseMaxMgPerKg": 6,
+      "maxPerDoseMg": 500,
+      "freq": "Load / q 8–12 hr",
+      "route": "IV",
+      "category": "respiratory",
+      "aliases": [
+        "Theophylline",
+        "Apnea of prematurity",
+        "NICU",
+        "Status asthmaticus"
+      ]
+    },
+    {
       "key": "amiodarone-iv",
       "drug": "Amiodarone",
       "name": "Amiodarone IV (50 mg / mL)",
@@ -275,6 +407,58 @@
         "อะมิโอดาโรน"
       ],
       "category": "emergency"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "amitriptyline-po",
+      "drug": "Amitriptyline",
+      "name": "Amitriptyline PO (Tab 10 mg / 25 mg)",
+      "preparation": "10 mg / tab; 25 mg / tab",
+      "note": "Migraine Prophylaxis / Neuropathic Pain / Functional Abdominal Pain: Start 0.25 mg/kg PO OD at bedtime (hs); increase q2 wk by 0.25 mg/kg/day up to 1 mg/kg/day (typical 10–25 mg PO hs; max 50 mg/day). Check baseline ECG (QTc/PR) if >1 mg/kg/day.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 0.25,
+      "doseMaxMgPerKg": 1,
+      "maxPerDoseMg": 50,
+      "maxPerDayMg": 50,
+      "freq": "OD hs",
+      "route": "PO",
+      "category": "neuro",
+      "aliases": [
+        "Tryptanol",
+        "Elavil",
+        "Migraine prophylaxis",
+        "Neuropathic pain"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "amlodipine-po",
+      "drug": "Amlodipine",
+      "name": "Amlodipine PO (Norvasc Tab 5 mg / 10 mg)",
+      "preparation": "5 mg / tab; 10 mg / tab",
+      "note": "Pediatric Hypertension (1st-line long-acting CCB): Start 0.1–0.2 mg/kg/dose PO OD; titrate q1–2 wk up to 0.4–0.6 mg/kg/day PO OD (max 5 mg/day in <6 yr; max 10 mg/day in ≥6 yr).",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 0.1,
+      "doseMaxMgPerKg": 0.6,
+      "maxPerDoseMg": 10,
+      "maxPerDayMg": 10,
+      "freq": "OD",
+      "route": "PO",
+      "category": "cardiovascular",
+      "aliases": [
+        "Norvasc",
+        "CCB",
+        "Hypertension",
+        "ความดันสูง"
+      ]
     },
     {
       "key": "amoxicillin-clav-es-600",
@@ -456,6 +640,131 @@
       "category": "antibiotic"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "aripiprazole-po",
+      "drug": "Aripiprazole",
+      "name": "Aripiprazole PO (Abilify Oral Soln 1 mg/mL; Tab 5/10/15 mg)",
+      "preparation": "1 mg / mL oral solution; 5 mg, 10 mg, 15 mg tab",
+      "note": "ASD Irritability / Tourette Disorder (≥6 yr): Start 2 mg PO OD × 2–7 days, then 5 mg OD, titrate to 5–10 mg/day (max 15 mg/day). Lower weight gain and hyperprolactinemia risk than Risperidone.",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD",
+      "route": "PO",
+      "category": "neuro",
+      "aliases": [
+        "Abilify",
+        "Autism",
+        "ASD",
+        "Tourette",
+        "Tics"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "artesunate-iv-po",
+      "drug": "Artesunate",
+      "name": "Artesunate IV/IM (60 mg vial) & PO (50 mg tab)",
+      "preparation": "Vial 60 mg; 50 mg / tab",
+      "note": "Severe Malaria (WHO): <20 kg: 3 mg/kg/dose IV/IM at 0, 12, 24 hr, then q24h until oral tolerated; ≥20 kg: 2.4 mg/kg/dose IV/IM at 0, 12, 24 hr, then q24h. Follow with full 3-day oral ACT course. Monitor delayed hemolysis at 1–4 wk.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 2.4,
+      "doseMaxMgPerKg": 3,
+      "freq": "0, 12, 24 hr then OD",
+      "route": "IV/IM",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Malaria",
+        "Severe malaria",
+        "มาลาเรีย"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "aspirin-kawasaki-antiplatelet",
+      "drug": "Aspirin (Acetylsalicylic Acid)",
+      "name": "Aspirin (ASA) PO (Baby Aspirin 81 mg; Tab 300 mg)",
+      "preparation": "81 mg / tab; 300 mg / tab",
+      "note": "Kawasaki Disease: (1) Acute Febrile Phase (Anti-inflammatory): 30–50 mg/kg/day (or 80–100 mg/kg/day per AHA) PO div QID until afebrile 48–72h (max 4,000 mg/day); (2) Subacute/Convalescent Phase & Antiplatelet (Shunt/Stent/MIS-C): 3–5 mg/kg PO OD (max 81 mg/day). ⚠️ Hold during active Influenza or Varicella (Reye syndrome risk).",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 3,
+      "doseMaxMgPerKg": 5,
+      "maxPerDoseMg": 81,
+      "maxPerDayMg": 4000,
+      "freq": "OD (Antiplatelet) / QID (Kawasaki acute)",
+      "route": "PO",
+      "category": "cardiovascular",
+      "aliases": [
+        "ASA",
+        "Aspent",
+        "Kawasaki disease",
+        "MIS-C",
+        "Antiplatelet"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "atenolol-po",
+      "drug": "Atenolol",
+      "name": "Atenolol PO (Tenormin Tab 25 mg / 50 mg / 100 mg)",
+      "preparation": "25 mg, 50 mg, 100 mg / tab",
+      "note": "Hypertension / SVT / Long QT Syndrome / Marfan Syndrome: Start 0.5–1 mg/kg/day PO OD or div BID; titrate to 1–2 mg/kg/day (max 100 mg/day).",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 0.5,
+      "doseMaxMgPerKg": 2,
+      "maxPerDoseMg": 100,
+      "maxPerDayMg": 100,
+      "freq": "OD / bid",
+      "route": "PO",
+      "category": "cardiovascular",
+      "aliases": [
+        "Tenormin",
+        "Beta blocker",
+        "Marfan",
+        "LQTS"
+      ]
+    },
+    {
+      "minAgeYr": 6,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "atomoxetine-po",
+      "drug": "Atomoxetine",
+      "name": "Atomoxetine PO (Strattera Cap 10/18/25/40 mg)",
+      "preparation": "10 mg, 18 mg, 25 mg, 40 mg / cap",
+      "note": "ADHD Non-Stimulant (≥6 yr): ≤70 kg: Start 0.5 mg/kg/day PO OD or div BID × ≥3–7 days, then increase to target 1.2 mg/kg/day (max 1.4 mg/kg/day or 100 mg/day). >70 kg: Start 40 mg/day, target 80 mg/day (max 100 mg/day).",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 0.5,
+      "doseMaxMgPerKg": 1.2,
+      "maxPerDayMg": 100,
+      "freq": "OD / bid",
+      "route": "PO",
+      "category": "neuro",
+      "aliases": [
+        "Strattera",
+        "ADHD"
+      ]
+    },
+    {
       "key": "atropine-iv-im",
       "drug": "Atropine Sulfate",
       "name": "Atropine Sulfate IV/IM (0.6 mg / mL)",
@@ -498,6 +807,34 @@
       "maxWeightKg": null,
       "aliases": [
         "Avamys"
+      ],
+      "category": "respiratory"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "azathioprine-po",
+      "drug": "Azathioprine",
+      "name": "Azathioprine PO (Imuran Tab 50 mg)",
+      "preparation": "50 mg / tab",
+      "note": "SLE / Autoimmune Hepatitis / Pediatric IBD: Start 1 mg/kg PO OD, titrate to 1.5–2.5 mg/kg PO OD (max 150–200 mg/day). Consider TPMT/NUDT15 genotype; monitor CBC & LFTs.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 1,
+      "doseMaxMgPerKg": 2.5,
+      "maxPerDoseMg": 200,
+      "maxPerDayMg": 200,
+      "freq": "OD",
+      "route": "PO",
+      "category": "hematology",
+      "aliases": [
+        "Imuran",
+        "AZA",
+        "SLE",
+        "IBD",
+        "Autoimmune hepatitis"
       ]
     },
     {
@@ -521,6 +858,31 @@
       ],
       "isAtb": true,
       "category": "antibiotic"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "aztreonam-iv",
+      "drug": "Aztreonam",
+      "name": "Aztreonam IV (1 g vial)",
+      "preparation": "Vial 1 g",
+      "note": "90–120 mg/kg/day IV div q6–8h (severe/Pseudomonas: 150–200 mg/kg/day div q6h; max 8 g/day).",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 90,
+      "doseMaxMgPerKg": 120,
+      "maxPerDoseMg": 2000,
+      "maxPerDayMg": 8000,
+      "freq": "q 6–8 hr",
+      "route": "IV",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Azactam",
+        "Monobactam"
+      ]
     },
     {
       "key": "baclofen-oral",
@@ -548,6 +910,57 @@
       "category": "neuro"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "benzathine-penicillin-g-im",
+      "drug": "Benzathine Penicillin G",
+      "name": "Benzathine Penicillin G IM (1.2 MU / 2.4 MU vial)",
+      "preparation": "Vial 1.2 million units; 2.4 million units",
+      "note": "GAS Pharyngitis / Rheumatic Fever Prophylaxis: <27 kg: 600,000 units IM single dose (or q3–4 wk); ≥27 kg: 1,200,000 units IM single dose (or q3–4 wk). Congenital/Early Syphilis: 50,000 units/kg IM single dose (max 2.4 MU). ⚠️ IM ONLY — NEVER IV.",
+      "unit": "units/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "Single dose / q 3–4 wk",
+      "route": "Deep IM only",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Penadur",
+        "BPG",
+        "Rheumatic fever",
+        "Syphilis"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "benzydamine-lidocaine-oral-spray-gel",
+      "drug": "Benzydamine Spray / Lidocaine Viscous Oral Gel",
+      "name": "Benzydamine 0.15% Oral Spray (Difflam) / Kamistad Gel",
+      "preparation": "0.15% spray; oral gel",
+      "note": "Herpetic Gingivostomatitis / Hand-Foot-Mouth Disease (HFMD) Oral Ulcers: Benzydamine 0.15% spray: <6 yr: 1 puff per 4 kg (max 4 puffs) q1.5–3h PRN before feeds; 6–12 yr: 4 puffs q1.5–3h PRN. (⚠️ Avoid excessive viscous Lidocaine 2% in infants due to gag reflex suppression, aspiration, and systemic seizure/cardiotoxicity).",
+      "unit": "puffs",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "q 2–3 hr PRN pre-meals",
+      "route": "Oral Topical",
+      "category": "gi",
+      "aliases": [
+        "Difflam",
+        "Kamistad",
+        "HFMD",
+        "Herpangina",
+        "แผลในปาก",
+        "มือเท้าปาก"
+      ]
+    },
+    {
       "key": "benzyl-benzoate-10-25-percent",
       "drug": "Benzyl benzoate",
       "name": "Benzyl benzoate 10–25% (scabies/lice)",
@@ -568,6 +981,51 @@
       "category": "antibiotic"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "betamethasone-valerate-cream-0-1",
+      "drug": "Betamethasone valerate 0.1% Cream",
+      "name": "Betamethasone valerate 0.1% Cream (Betnovate)",
+      "preparation": "0.1% cream (5 g / 15 g tube)",
+      "note": "Severe Eczema / Contact Dermatitis: Apply thin layer OD–BID to trunk/extremities for 5–7 days. ⚠️ Do NOT apply to face or under diaper occlusion (risk of striae and HPA axis suppression).",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD–bid (Topical)",
+      "route": "Topical",
+      "category": "skin",
+      "aliases": [
+        "Betnovate",
+        "Topical steroid"
+      ]
+    },
+    {
+      "minAgeYr": 6,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "bilastine-po",
+      "drug": "Bilastine",
+      "name": "Bilastine PO (Bilaxten Oral Soln 2.5 mg/mL; Tab 10/20 mg)",
+      "preparation": "2.5 mg / mL oral solution; 20 mg / tab",
+      "note": "Allergic Rhinitis / Urticaria (Take on empty stomach 1 hr before or 2 hr after food/juice): Age 6–11 yr (≥20 kg): 10 mg (4 mL) PO OD; Age ≥12 yr: 20 mg (1 tab) PO OD.",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD (empty stomach)",
+      "route": "PO",
+      "category": "respiratory",
+      "aliases": [
+        "Bilaxten",
+        "Antihistamine",
+        "Urticaria"
+      ]
+    },
+    {
       "key": "bioflor-saccharomyces-250mg",
       "drug": "Saccharomyces boulardii",
       "name": "Bioflor",
@@ -583,7 +1041,8 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "gi"
     },
     {
       "key": "biogaia-probiotic",
@@ -603,6 +1062,31 @@
       "maxWeightKg": null,
       "aliases": [
         "Probiotic"
+      ],
+      "category": "gi"
+    },
+    {
+      "minAgeYr": 2,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "bisacodyl-po-rectal",
+      "drug": "Bisacodyl",
+      "name": "Bisacodyl PO (Tab 5 mg) & Rectal Suppository (5 mg / 10 mg)",
+      "preparation": "5 mg / enteric tab; 5 mg, 10 mg rectal suppository",
+      "note": "Constipation / Bowel Prep (0.2–0.3 mg/kg): Oral (swallow whole, do not take within 1 hr of milk/antacids): 3–10 yr: 5 mg PO hs; >10 yr: 5–15 mg PO hs. Rectal Suppository (acts in 15–60 min): 2–10 yr: 5 mg PR × 1; >10 yr: 10 mg PR × 1.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.2,
+      "doseMaxMgPerKg": 0.3,
+      "maxPerDoseMg": 15,
+      "freq": "OD hs / PRN",
+      "route": "PO/PR",
+      "category": "gi",
+      "aliases": [
+        "Dulcolax",
+        "Constipation",
+        "เหน็บก้น"
       ]
     },
     {
@@ -621,7 +1105,8 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "respiratory"
     },
     {
       "key": "bromhexine-syrup-4-mg-5-ml",
@@ -641,7 +1126,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Bisolvon"
-      ]
+      ],
+      "category": "respiratory"
     },
     {
       "key": "brompheniramine-guaifenesin-syrup",
@@ -665,6 +1151,32 @@
         "BPM GG",
         "Dimetapp expectorant",
         "Brompheniramine GG"
+      ],
+      "category": "respiratory"
+    },
+    {
+      "minAgeYr": 6,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "budesonide-formoterol-symbicort",
+      "drug": "Budesonide + Formoterol (Symbicort)",
+      "name": "Budesonide + Formoterol (Symbicort Turbuhaler / Rapihaler 80/4.5 or 160/4.5 mcg)",
+      "preparation": "80/4.5 mcg; 160/4.5 mcg per inhalation",
+      "note": "GINA Preferred Track 1 MART (Maintenance and Reliever Therapy): Age 6–11 yr (80/4.5 mcg): 1 inhalation OD–BID maintenance + 1 inhalation PRN symptom relief (max 8 inhalations/day). Age ≥12 yr (160/4.5 mcg): 1–2 inhalations PRN or 1 inhalation BID + PRN (max 12 inhalations/day).",
+      "unit": "puff",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "bid + PRN (MART)",
+      "route": "Inhaled",
+      "category": "respiratory",
+      "aliases": [
+        "Symbicort",
+        "SMART",
+        "MART",
+        "GINA",
+        "Asthma"
       ]
     },
     {
@@ -705,6 +1217,30 @@
       "category": "respiratory"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "caffeine-citrate-nicu",
+      "drug": "Caffeine Citrate",
+      "name": "Caffeine Citrate IV/PO (Peyona 20 mg/mL = 10 mg/mL caffeine base)",
+      "preparation": "20 mg / mL caffeine citrate (equiv. 10 mg/mL caffeine base)",
+      "note": "Apnea of Prematurity (Dosed as Caffeine Citrate): Loading: 20 mg/kg IV (over 30 min) or PO × 1 dose; Maintenance (start 24h after load): 5–10 mg/kg IV/PO OD (q24h). Hold if HR >180 bpm.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 5,
+      "doseMaxMgPerKg": 20,
+      "freq": "Load x1 then OD",
+      "route": "IV/PO",
+      "category": "emergency",
+      "aliases": [
+        "Peyona",
+        "Apnea of prematurity",
+        "NICU",
+        "AOP"
+      ]
+    },
+    {
       "key": "calamine-lotion-topical",
       "drug": "Calamine Lotion",
       "name": "Calamine Lotion (Topical)",
@@ -730,6 +1266,55 @@
       "category": "skin"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "calcitriol-alfacalcidol-po",
+      "drug": "Calcitriol / Alfacalcidol (Active Vitamin D)",
+      "name": "Calcitriol (Rocaltrol 0.25 mcg) / Alfacalcidol (One-Alpha 0.25/0.5 mcg)",
+      "preparation": "0.25 mcg, 0.5 mcg / cap",
+      "note": "CKD-MBD / Hypoparathyroidism / Vitamin D-Dependent Rickets: 0.01–0.05 mcg/kg/day (10–50 ng/kg/day) PO OD (typical 0.25–0.5 mcg PO OD or 3x/wk). Monitor serum Ca, PO4, and PTH.",
+      "unit": "mcg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD",
+      "route": "PO",
+      "category": "endocrine",
+      "aliases": [
+        "Rocaltrol",
+        "One-Alpha",
+        "Active Vitamin D",
+        "CKD",
+        "Rickets"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "calcium-gluconate-10-iv",
+      "drug": "Calcium Gluconate 10% IV",
+      "name": "Calcium Gluconate 10% IV (100 mg/mL = 9.3 mg elemental Ca = 0.465 mEq/mL)",
+      "preparation": "100 mg / mL (10 mL ampule)",
+      "note": "Symptomatic Hypocalcemia (Tetany/Seizure) / Hyperkalemia Cardioprotection: 50–100 mg/kg/dose (0.5–1 mL/kg of 10% solution) slow IV over 10–20 min with continuous ECG monitoring (max single dose 2,000–3,000 mg = 20–30 mL). Stop infusion if bradycardia (<60 bpm). Avoid extravasation (tissue necrosis); never mix with NaHCO3.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 50,
+      "doseMaxMgPerKg": 100,
+      "maxPerDoseMg": 2000,
+      "freq": "Slow IV over 10–20 min",
+      "route": "IV",
+      "category": "emergency",
+      "aliases": [
+        "Hypocalcemia",
+        "Hyperkalemia",
+        "Tetany"
+      ]
+    },
+    {
       "key": "calcium-supplement",
       "drug": "Calcium supplement",
       "name": "Calcium supplement",
@@ -745,7 +1330,8 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "endocrine"
     },
     {
       "key": "captopril-oral",
@@ -773,6 +1359,31 @@
       "category": "cardiovascular"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "carbamazepine-po",
+      "drug": "Carbamazepine",
+      "name": "Carbamazepine PO (Tegretol Syrup 100 mg/5 mL; Tab 200 mg / CR 200 mg)",
+      "preparation": "100 mg / 5 mL suspension; 200 mg / tab",
+      "note": "⚠️ MANDATORY HLA-B*1502 screening in Thai/Asian patients before initiation (high SJS/TEN risk). Focal Epilepsy: Start 5–10 mg/kg/day PO div BID–TID; increase weekly by 5 mg/kg/day to Maintenance 10–20 mg/kg/day (max 1,000–1,200 mg/day). Target level 4–12 mcg/mL. May worsen absence/myoclonic seizures.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 10,
+      "doseMaxMgPerKg": 20,
+      "maxPerDayMg": 1200,
+      "freq": "bid / tid",
+      "route": "PO",
+      "category": "neuro",
+      "aliases": [
+        "Tegretol",
+        "CBZ",
+        "HLA-B*1502",
+        "Focal seizure"
+      ]
+    },
+    {
       "key": "carbocysteine-lysine-90-mg-ml",
       "drug": "Carbocysteine lysine salt",
       "name": "Carbocysteine lysine syrup (90 mg / mL)",
@@ -790,7 +1401,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Fluifort"
-      ]
+      ],
+      "category": "respiratory"
     },
     {
       "key": "carbocysteine-syrup-250-mg-5-ml",
@@ -810,6 +1422,58 @@
       "maxWeightKg": null,
       "aliases": [
         "Flemex"
+      ],
+      "category": "respiratory"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "carvedilol-po",
+      "drug": "Carvedilol",
+      "name": "Carvedilol PO (Dilatrend Tab 6.25 mg / 12.5 mg / 25 mg)",
+      "preparation": "6.25 mg, 12.5 mg, 25 mg / tab",
+      "note": "Pediatric Heart Failure / Dilated Cardiomyopathy: Start low at 0.05–0.1 mg/kg/dose PO BID with food; double dose every 2 weeks as tolerated to target 0.4–0.5 mg/kg/dose BID (max 25 mg/dose BID).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.05,
+      "doseMaxMgPerKg": 0.4,
+      "maxPerDoseMg": 25,
+      "maxPerDayMg": 50,
+      "freq": "bid",
+      "route": "PO",
+      "category": "cardiovascular",
+      "aliases": [
+        "Dilatrend",
+        "Coreg",
+        "Cardiomyopathy",
+        "Heart failure"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "caspofungin-iv",
+      "drug": "Caspofungin",
+      "name": "Caspofungin IV (Cancidas 50 mg / 70 mg vial)",
+      "preparation": "Vial 50 mg; 70 mg",
+      "note": "BSA-based dosing (3 mo–17 yr): Load 70 mg/m² IV × 1 on Day 1 (max 70 mg), then Maintenance 50 mg/m² IV OD (max 70 mg/day). Neonates/Infants <3 mo: 25 mg/m² IV OD.",
+      "unit": "mg/m2",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD",
+      "route": "IV",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Cancidas",
+        "Echinocandin",
+        "Candida",
+        "Antifungal"
       ]
     },
     {
@@ -959,6 +1623,30 @@
       "category": "antibiotic"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "cefoperazone-sulbactam-iv",
+      "drug": "Cefoperazone/Sulbactam",
+      "name": "Cefoperazone/Sulbactam IV (Sulperazon 1 g / 1.5 g)",
+      "preparation": "Vial 1 g (500/500 mg); 1.5 g (1000/500 mg)",
+      "note": "40–80 mg/kg/day (of Cefoperazone component) IV div q6–12h; severe infection up to 160 mg/kg/day (max Sulbactam 4 g/day). Monitor coagulopathy/Vit K.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 40,
+      "doseMaxMgPerKg": 80,
+      "maxPerDayMg": 4000,
+      "freq": "q 8–12 hr",
+      "route": "IV",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Sulperazon",
+        "ซัลเพอราซอน"
+      ]
+    },
+    {
       "key": "cefotaxime-iv",
       "drug": "Cefotaxime",
       "name": "Cefotaxime IV",
@@ -1015,6 +1703,56 @@
       ],
       "isAtb": true,
       "category": "antibiotic"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "cefoxitin-iv",
+      "drug": "Cefoxitin",
+      "name": "Cefoxitin IV (1 g vial)",
+      "preparation": "Vial 1 g",
+      "note": "80–160 mg/kg/day IV div q4–6h (max 12 g/day). Surgical prophylaxis: 30–40 mg/kg IV (max 2 g) within 60 min pre-incision.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 80,
+      "doseMaxMgPerKg": 160,
+      "maxPerDoseMg": 2000,
+      "maxPerDayMg": 12000,
+      "freq": "q 6 hr",
+      "route": "IV",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Mefoxin",
+        "Cephamycin"
+      ]
+    },
+    {
+      "minAgeYr": 0.17,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "cefpodoxime-po",
+      "drug": "Cefpodoxime proxetil",
+      "name": "Cefpodoxime PO (Susp 50 mg/5 mL; Tab 100/200 mg)",
+      "preparation": "50 mg / 5 mL; 100 mg / tab",
+      "note": "10 mg/kg/day PO div q12h (max 200 mg/dose or 400 mg/day). Age ≥ 2 mo.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 10,
+      "doseMaxMgPerKg": 10,
+      "maxPerDoseMg": 200,
+      "maxPerDayMg": 400,
+      "freq": "bid",
+      "route": "PO",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Banan",
+        "Vantin"
+      ]
     },
     {
       "key": "ceftazidime-iv-im",
@@ -1075,6 +1813,30 @@
       "category": "antibiotic"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "ceftazidime-avibactam-iv",
+      "drug": "Ceftazidime/Avibactam",
+      "name": "Ceftazidime/Avibactam IV (Zavicefta 2.5 g vial)",
+      "preparation": "Vial 2.5 g (Ceftazidime 2 g + Avibactam 0.5 g)",
+      "note": "Dose by Ceftazidime component (infuse over 2 hr): 3–6 mo: 40 mg/kg IV q8h; ≥6 mo to 18 yr: 50 mg/kg IV q8h (max 2,000 mg Ceftazidime/dose). Adjust in renal impairment.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "q 8 hr",
+      "route": "IV",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Zavicefta",
+        "CRE",
+        "MDR Gram negative"
+      ]
+    },
+    {
       "key": "ceftriaxone-iv-im",
       "drug": "Ceftriaxone",
       "name": "Ceftriaxone IV/IM",
@@ -1096,6 +1858,58 @@
       ],
       "isAtb": true,
       "category": "antibiotic"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "cefuroxime-axetil-po",
+      "drug": "Cefuroxime axetil (PO)",
+      "name": "Cefuroxime axetil PO (Zinnat susp 125 mg/5 mL; tab 250/500 mg)",
+      "preparation": "125 mg / 5 mL; 250 mg / tab; 500 mg / tab",
+      "note": "20–30 mg/kg/day PO div BID with food (max 500 mg/dose or 1,000 mg/day). AOM/sinusitis: 30 mg/kg/day div BID.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 20,
+      "doseMaxMgPerKg": 30,
+      "maxPerDoseMg": 500,
+      "maxPerDayMg": 1000,
+      "freq": "bid",
+      "route": "PO",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Zinnat",
+        "เซฟูร็อกซิม"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "cefuroxime-iv-im",
+      "drug": "Cefuroxime (IV/IM)",
+      "name": "Cefuroxime IV/IM (Zinacef 750 mg vial)",
+      "preparation": "Vial 750 mg; 1.5 g",
+      "note": "Standard: 75–150 mg/kg/day IV/IM div q8h (max 4.5–6 g/day). Bone/joint or severe infection: 150 mg/kg/day div q8h.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 75,
+      "doseMaxMgPerKg": 150,
+      "maxPerDoseMg": 1500,
+      "maxPerDayMg": 4500,
+      "freq": "q 8 hr",
+      "route": "IV/IM",
+      "renalAdjust": true,
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Zinacef",
+        "2nd gen cephalosporin",
+        "เซฟูร็อกซิม"
+      ]
     },
     {
       "key": "cephalexin-po",
@@ -1134,7 +1948,8 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "respiratory"
     },
     {
       "key": "cetirizine-syrup-5-mg-5-ml",
@@ -1152,7 +1967,8 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "respiratory"
     },
     {
       "key": "chloral-hydrate-syrup-250-5ml",
@@ -1170,7 +1986,8 @@
       "maxAgeYr": 2,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "analgesic"
     },
     {
       "key": "chloral-hydrate-syrup-500mg-5ml",
@@ -1188,7 +2005,31 @@
       "maxAgeYr": 2,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "analgesic"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "chloroquine-po",
+      "drug": "Chloroquine phosphate",
+      "name": "Chloroquine PO (250 mg tab = 150 mg base)",
+      "preparation": "250 mg salt (150 mg base) / tab",
+      "note": "Uncomplicated P. vivax / P. ovale / P. malariae (Dosed as BASE): Total 25 mg base/kg over 3 days: Day 1: 10 mg base/kg (max 600 mg base); Day 2: 10 mg base/kg (max 600 mg base); Day 3: 5 mg base/kg (max 300 mg base).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "Days 1, 2, 3",
+      "route": "PO",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Vivax",
+        "Malaria"
+      ]
     },
     {
       "key": "chlorpheniramine-tab-4-mg",
@@ -1207,7 +2048,8 @@
       "maxWeightKg": null,
       "aliases": [
         "CPM"
-      ]
+      ],
+      "category": "respiratory"
     },
     {
       "key": "chlorpheniramine-iv-10-mg-ml",
@@ -1224,7 +2066,8 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "respiratory"
     },
     {
       "key": "chlorpheniramine-syrup-2-mg-5-ml",
@@ -1243,7 +2086,8 @@
       "maxWeightKg": null,
       "aliases": [
         "CPM"
-      ]
+      ],
+      "category": "respiratory"
     },
     {
       "key": "ciprofloxacin-po",
@@ -1296,6 +2140,30 @@
       "category": "antibiotic"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "cisatracurium-iv",
+      "drug": "Cisatracurium",
+      "name": "Cisatracurium IV (Nimbex 10 mg / 5 mL = 2 mg/mL)",
+      "preparation": "2 mg / mL (5 mL ampule)",
+      "note": "Neuromuscular Blockade (Hofmann elimination — organ-independent in renal/hepatic failure): Bolus 0.1–0.2 mg/kg IV; Continuous PICU infusion: 1–3 mcg/kg/min.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.1,
+      "doseMaxMgPerKg": 0.2,
+      "freq": "Bolus / Continuous IV",
+      "route": "IV",
+      "category": "emergency",
+      "aliases": [
+        "Nimbex",
+        "Paralytic",
+        "ARDS",
+        "PICU"
+      ]
+    },
+    {
       "key": "clarithromycin-po",
       "drug": "Clarithromycin",
       "name": "Clarithromycin",
@@ -1341,6 +2209,31 @@
       "category": "antibiotic"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "clobazam-po",
+      "drug": "Clobazam",
+      "name": "Clobazam PO (Frisium Tab 10 mg)",
+      "preparation": "10 mg / tab",
+      "note": "Adjunctive Epilepsy / Lennox-Gastaut / Dravet Syndrome: Start 0.25 mg/kg/day PO; titrate to Maintenance 0.5–1 mg/kg/day PO div BID (≤30 kg: 5–20 mg/day; >30 kg: 10–40 mg/day).",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 0.5,
+      "doseMaxMgPerKg": 1,
+      "maxPerDayMg": 40,
+      "freq": "bid",
+      "route": "PO",
+      "category": "neuro",
+      "aliases": [
+        "Frisium",
+        "Onfi",
+        "Lennox-Gastaut",
+        "Dravet"
+      ]
+    },
+    {
       "key": "clonazepam-oral",
       "drug": "Clonazepam",
       "name": "Clonazepam oral (Drop 2.5 mg / mL / Tab 0.5 mg)",
@@ -1363,6 +2256,31 @@
         "โคลนาซีแพม"
       ],
       "category": "neuro"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "clonidine-po",
+      "drug": "Clonidine",
+      "name": "Clonidine PO (Catapres Tab 150 mcg = 0.15 mg)",
+      "preparation": "0.15 mg (150 mcg) / tab",
+      "note": "PICU Dexmedetomidine/Opioid Weaning: 1–3 mcg/kg/dose (0.001–0.003 mg/kg) PO q6–8h. Hypertension: 5–10 mcg/kg/day div q8–12h (max 0.9 mg/day). ADHD / Tics: start 0.05 mg PO hs, titrate by 0.05 mg q3–7d (max 0.3–0.4 mg/day). Neonatal NAS adjunct: 0.5–1 mcg/kg PO q4–6h. Taper gradually to avoid rebound hypertension.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "q 6–12 hr",
+      "route": "PO",
+      "category": "neuro",
+      "aliases": [
+        "Catapres",
+        "Sedation weaning",
+        "ADHD",
+        "Tourette",
+        "Hypertension"
+      ]
     },
     {
       "key": "clotrimazole-oral-topical",
@@ -1483,6 +2401,29 @@
       "category": "antibiotic"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "colchicine-po",
+      "drug": "Colchicine",
+      "name": "Colchicine PO (Tab 0.6 mg)",
+      "preparation": "0.6 mg / tab",
+      "note": "Recurrent Pericarditis / FMF / Behçet / Severe IgA Vasculitis (HSP): <5 yr: 0.3–0.6 mg (½–1 tab) PO OD; ≥5 yr: 0.6 mg PO OD–BID (max 1.2–1.8 mg/day). Reduce dose if diarrhea occurs.",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD / bid",
+      "route": "PO",
+      "category": "hematology",
+      "aliases": [
+        "Pericarditis",
+        "HSP",
+        "FMF"
+      ]
+    },
+    {
       "key": "colistin-iv",
       "drug": "Colistin (Colistimethate)",
       "name": "Colistin IV (Colistimethate sodium / CBA)",
@@ -1545,6 +2486,153 @@
       "isAtb": true
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "cyclosporine-po",
+      "drug": "Cyclosporine (Modified)",
+      "name": "Cyclosporine PO (Neoral Oral Soln 100 mg/mL; Cap 25/100 mg)",
+      "preparation": "100 mg / mL oral solution; 25 mg, 100 mg cap",
+      "note": "Steroid-Dependent / Steroid-Resistant Nephrotic Syndrome: 3–5 mg/kg/day PO div BID (q12h; target C0 trough 80–120 ng/mL). Monitor SCr, BP, K+, Mg, hirsutism, gingival hyperplasia.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 3,
+      "doseMaxMgPerKg": 5,
+      "freq": "bid (q 12 hr)",
+      "route": "PO",
+      "category": "hematology",
+      "aliases": [
+        "Neoral",
+        "Sandimmune",
+        "CsA",
+        "Nephrotic syndrome"
+      ]
+    },
+    {
+      "minAgeYr": 2,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "cyproheptadine-po",
+      "drug": "Cyproheptadine",
+      "name": "Cyproheptadine PO (Periactin Syrup 2 mg/5 mL; Tab 4 mg)",
+      "preparation": "2 mg / 5 mL syrup; 4 mg / tab",
+      "note": "Migraine Prophylaxis / Cyclic Vomiting Syndrome (<5 yr) / Appetite Stimulant / Serotonin Syndrome Antidote: 0.25–0.4 mg/kg/day PO div BID–TID (2–6 yr: 2 mg BID–TID, max 12 mg/day; 7–14 yr: 4 mg BID–TID, max 16 mg/day).",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 0.25,
+      "doseMaxMgPerKg": 0.4,
+      "maxPerDoseMg": 4,
+      "maxPerDayMg": 16,
+      "freq": "bid / tid",
+      "route": "PO",
+      "category": "neuro",
+      "aliases": [
+        "Periactin",
+        "Migraine",
+        "Cyclic vomiting",
+        "Serotonin syndrome"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "daptomycin-iv",
+      "drug": "Daptomycin",
+      "name": "Daptomycin IV (Cubicin 350 mg / 500 mg vial)",
+      "preparation": "Vial 350 mg; 500 mg",
+      "note": "cSSSI (q24h): 1–2 yr: 10 mg/kg; 2–6 yr: 9 mg/kg; 7–11 yr: 7 mg/kg; 12–17 yr: 5 mg/kg IV OD. S. aureus bacteremia: 7–12 mg/kg IV OD by age. ⚠️ Inactivated by pulmonary surfactant (do NOT use for pneumonia). Monitor CPK.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD",
+      "route": "IV",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Cubicin",
+        "MRSA",
+        "VRE"
+      ]
+    },
+    {
+      "minAgeYr": 2,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "deferasirox-po",
+      "drug": "Deferasirox",
+      "name": "Deferasirox PO (Exjade Dispersible 125/250/500 mg; Jadenu Film Tab 90/180/360 mg)",
+      "preparation": "Exjade 125/250/500 mg; Jadenu 90/180/360 mg",
+      "note": "Iron Overload in Thalassemia (≥2 yr): Exjade (dispersible tab on empty stomach): 20–40 mg/kg PO OD. Jadenu (film-coated tab, 30% higher bioavailability): 14–28 mg/kg PO OD. Monitor SCr, urine protein, LFTs, hearing/vision.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 14,
+      "doseMaxMgPerKg": 40,
+      "freq": "OD",
+      "route": "PO",
+      "category": "hematology",
+      "aliases": [
+        "Exjade",
+        "Jadenu",
+        "Thalassemia",
+        "Iron chelation"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "deferiprone-po",
+      "drug": "Deferiprone (L1)",
+      "name": "Deferiprone PO (GPO-L-One Cap 500 mg; Syrup 100 mg/mL)",
+      "preparation": "500 mg / cap; 100 mg / mL oral solution",
+      "note": "Transfusional Iron Overload in Thalassemia (≥6 yr): 75–100 mg/kg/day PO div TID. ⚠️ Monitor CBC/ANC (agranulocytosis risk ~1%), ALT, and serum zinc; supplement Zinc if deficient.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 75,
+      "doseMaxMgPerKg": 100,
+      "freq": "tid",
+      "route": "PO",
+      "category": "hematology",
+      "aliases": [
+        "GPO-L-One",
+        "Ferriprox",
+        "Thalassemia",
+        "Iron chelation"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "deferoxamine-iv-im",
+      "drug": "Deferoxamine (Desferrioxamine)",
+      "name": "Deferoxamine IV/IM/SC (Desferal 500 mg vial)",
+      "preparation": "Vial 500 mg",
+      "note": "Acute Iron Poisoning (Serum Fe >500 mcg/dL, shock, acidosis): Continuous IV Infusion 15 mg/kg/hr (max 6,000 mg/day; causes vin rosé urine). Chronic Thalassemia Iron Chelation: 20–50 mg/kg/day SC infusion over 8–12 hr, 5–7 nights/week.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 15,
+      "doseMaxMgPerKg": 50,
+      "maxPerDayMg": 6000,
+      "freq": "15 mg/kg/hr IV (Toxic) or SC 8–12h (Thal)",
+      "route": "IV/SC",
+      "category": "hematology",
+      "aliases": [
+        "Desferal",
+        "DFO",
+        "Iron overdose",
+        "Thalassemia"
+      ]
+    },
+    {
       "key": "desloratadine-syrup-0-5-mg-ml",
       "drug": "Desloratadine",
       "name": "Desloratadine syrup (0.5 mg / mL)",
@@ -1584,6 +2672,32 @@
       "aliases": [
         "Aerius",
         "Desloratadine syr"
+      ],
+      "category": "respiratory"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "desmopressin-ddavp",
+      "drug": "Desmopressin (DDAVP)",
+      "name": "Desmopressin (Minirin Tab 0.1/0.2 mg; Melt 60/120 mcg; Nasal; IV 4 mcg/mL)",
+      "preparation": "Tab 0.1 mg, 0.2 mg; Melt 60 mcg, 120 mcg; IV 4 mcg/mL",
+      "note": "Central Diabetes Insipidus: Oral Tab: Start 0.05 mg PO BID, titrate (typical 0.1–0.8 mg/day div BID–TID); Sublingual Melt: 30–120 mcg BID–TID; Intranasal: 2.5–10 mcg OD–BID. Primary Nocturnal Enuresis (≥6 yr): 0.2 mg tab (or 120 mcg melt) PO hs (restrict evening fluids). Hemophilia A / Type 1 vWD (>2 yr): 0.3 mcg/kg IV in 50 mL NS over 30 min (max 20 mcg). Monitor Na+ (hyponatremia/seizure).",
+      "unit": "mcg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "bid / hs / Single IV",
+      "route": "PO/SL/IN/IV",
+      "category": "endocrine",
+      "aliases": [
+        "Minirin",
+        "DDAVP",
+        "Diabetes insipidus",
+        "Enuresis",
+        "vWD"
       ]
     },
     {
@@ -1602,7 +2716,58 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "endocrine"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "dexmedetomidine-precedex-iv-in",
+      "drug": "Dexmedetomidine (Precedex)",
+      "name": "Dexmedetomidine IV / Intranasal (200 mcg / 2 mL)",
+      "preparation": "100 mcg / mL (2 mL vial)",
+      "note": "PICU Sedation (preserves respiratory drive): Optional Load 0.5–1 mcg/kg IV over 10 min, then Continuous Infusion 0.2–1.5 mcg/kg/hr. Intranasal Procedural Sedation (EEG/MRI/Echo): 2–3 mcg/kg IN (max 100–200 mcg) 30–45 min pre-procedure. Watch for bradycardia/hypotension.",
+      "unit": "mcg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "Continuous IV or Single IN dose",
+      "route": "IV/IN",
+      "category": "neuro",
+      "aliases": [
+        "Precedex",
+        "Sedation",
+        "PICU",
+        "Intranasal sedation"
+      ]
+    },
+    {
+      "minAgeYr": 4,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "dextromethorphan-po",
+      "drug": "Dextromethorphan",
+      "name": "Dextromethorphan PO (Syrup 15 mg/5 mL; Tab 15 mg)",
+      "preparation": "15 mg / 5 mL syrup; 15 mg / tab",
+      "note": "Antitussive (Dry non-productive cough; avoid in <4 yr per AAP/FDA): 1–2 mg/kg/day PO div q6–8h (4–6 yr: 2.5–5 mg q6–8h, max 30 mg/day; 6–12 yr: 5–10 mg q6–8h, max 60 mg/day; >12 yr: 10–20 mg q6–8h, max 120 mg/day).",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 1,
+      "doseMaxMgPerKg": 2,
+      "maxPerDoseMg": 30,
+      "maxPerDayMg": 120,
+      "freq": "q 6–8 hr PRN",
+      "route": "PO",
+      "category": "respiratory",
+      "aliases": [
+        "Romilar",
+        "DMP",
+        "Dexa",
+        "ยาแก้ไอ"
+      ]
     },
     {
       "key": "diazepam-iv-po-rectal",
@@ -1619,7 +2784,56 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "neuro"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "diazoxide-po",
+      "drug": "Diazoxide",
+      "name": "Diazoxide PO (Proglycem Susp 50 mg/mL; Cap 25/100 mg)",
+      "preparation": "50 mg / mL suspension; 25 mg, 100 mg cap",
+      "note": "Congenital Hyperinsulinism / Persistent Hyperinsulinemic Hypoglycemia: Infants/Neonates: Start 5–10 mg/kg/day PO div q8h (range 5–15 mg/kg/day). Children: 3–8 mg/kg/day PO div q8–12h. Co-administer Chlorothiazide/HCTZ to prevent fluid retention and pulmonary hypertension.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 5,
+      "doseMaxMgPerKg": 15,
+      "freq": "q 8 hr",
+      "route": "PO",
+      "category": "endocrine",
+      "aliases": [
+        "Proglycem",
+        "Hyperinsulinism",
+        "Hypoglycemia"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "diclofenac-po-im",
+      "drug": "Diclofenac",
+      "name": "Diclofenac PO (Tab 25/50 mg) & IM (75 mg/3 mL)",
+      "preparation": "25 mg / tab; 50 mg / tab; 75 mg / 3 mL amp",
+      "note": "Acute Pain / JIA (≥1 yr): 2–3 mg/kg/day PO div BID–TID (max 150 mg/day). Acute severe pain (>2 yr): 0.5–1 mg/kg IM/PO (max 50–75 mg/dose). ⚠️ Avoid in Dengue hemorrhagic fever.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 2,
+      "doseMaxMgPerKg": 3,
+      "maxPerDoseMg": 50,
+      "maxPerDayMg": 150,
+      "freq": "bid / tid",
+      "route": "PO/IM",
+      "category": "analgesic",
+      "aliases": [
+        "Voltaren",
+        "Dosanac",
+        "NSAID"
+      ]
     },
     {
       "key": "dicloxacillin-po",
@@ -1684,7 +2898,8 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "gi"
     },
     {
       "key": "diphenhydramine-tab-50-mg",
@@ -1708,6 +2923,54 @@
         "Benadryl tab",
         "Dimenhydrinate parent",
         "Diphenhydramine 50"
+      ],
+      "category": "respiratory"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "dobutamine-iv-infusion",
+      "drug": "Dobutamine",
+      "name": "Dobutamine IV Infusion (250 mg / 20 mL)",
+      "preparation": "250 mg / 20 mL (12.5 mg / mL)",
+      "note": "Cardiogenic Shock / Myocardial Dysfunction: 2–20 mcg/kg/min continuous IV infusion. May cause reflex tachycardia and peripheral vasodilation (hypotension).",
+      "unit": "mcg/kg/min",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "Continuous IV infusion",
+      "route": "IV Infusion",
+      "category": "emergency",
+      "aliases": [
+        "Dobutrex",
+        "Cardiogenic shock",
+        "Inotrope"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "dolutegravir-dtg-po",
+      "drug": "Dolutegravir (DTG)",
+      "name": "Dolutegravir (DTG) PO (Dispersible tab 10 mg; Film tab 50 mg)",
+      "preparation": "10 mg dispersible tab; 50 mg film-coated tab",
+      "note": "Pediatric HIV (≥4 wk & ≥3 kg): Dispersible tab OD: 3–5.9 kg: 5 mg; 6–9.9 kg: 15 mg; 10–13.9 kg: 20 mg; 14–19.9 kg: 25 mg; ≥20 kg: 30 mg dispersible OR 50 mg film-coated tab OD. Double dose (BID) if co-administered with Rifampicin.",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD",
+      "route": "PO",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Tivicay",
+        "DTG",
+        "Pediatric HIV"
       ]
     },
     {
@@ -1726,7 +2989,8 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "gi"
     },
     {
       "key": "domperidone-syrup-5-mg-5-ml",
@@ -1746,6 +3010,29 @@
       "maxWeightKg": null,
       "aliases": [
         "Motilium"
+      ],
+      "category": "gi"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "dopamine-iv-infusion",
+      "drug": "Dopamine",
+      "name": "Dopamine IV Infusion (250 mg / 10 mL)",
+      "preparation": "250 mg / 10 mL (25 mg / mL)",
+      "note": "Inotrope/Vasopressor (when Epinephrine/Norepinephrine unavailable): 5–20 mcg/kg/min continuous IV infusion. (5–10 mcg/kg/min beta-1 inotropic; >10–20 mcg/kg/min alpha-1 vasopressor).",
+      "unit": "mcg/kg/min",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "Continuous IV infusion",
+      "route": "IV Infusion",
+      "category": "emergency",
+      "aliases": [
+        "Inotrope",
+        "Shock"
       ]
     },
     {
@@ -1772,6 +3059,132 @@
       "category": "antibiotic"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "emla-cream-topical",
+      "drug": "Lidocaine 2.5% + Prilocaine 2.5% (EMLA)",
+      "name": "EMLA Cream 5% (Lidocaine 2.5% + Prilocaine 2.5%)",
+      "preparation": "5 g / 30 g tube",
+      "note": "Topical Dermal Anesthesia (apply 45–60 min under occlusive dressing before venipuncture/LP): 0–3 mo or <5 kg: max 1 g over ≤10 cm² for max 1 hr; 3–12 mo (>5 kg): max 2 g over ≤20 cm²; 1–6 yr (>10 kg): max 10 g over ≤100 cm²; 7–12 yr (>20 kg): max 20 g. ⚠️ Methemoglobinemia risk in young infants / G6PD deficiency.",
+      "unit": "g",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "Apply 60 min pre-procedure",
+      "route": "Topical",
+      "category": "skin",
+      "aliases": [
+        "EMLA",
+        "Topical anesthetic",
+        "Venipuncture",
+        "LP"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "enalapril-po",
+      "drug": "Enalapril",
+      "name": "Enalapril PO (Renitec Tab 5 mg / 20 mg)",
+      "preparation": "5 mg / tab; 20 mg / tab",
+      "note": "Heart Failure / Hypertension / Proteinuria (ACE Inhibitor): Start 0.08–0.1 mg/kg/day PO OD–BID (max initial 5 mg/day); titrate to Maintenance 0.1–0.5 mg/kg/day div OD–BID (max 40 mg/day). Monitor SCr and K+ within 1–2 weeks.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 0.1,
+      "doseMaxMgPerKg": 0.5,
+      "maxPerDoseMg": 20,
+      "maxPerDayMg": 40,
+      "freq": "OD / bid",
+      "route": "PO",
+      "category": "cardiovascular",
+      "aliases": [
+        "Renitec",
+        "Anapril",
+        "ACEI",
+        "Heart failure",
+        "Hypertension"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "enoxaparin-sc",
+      "drug": "Enoxaparin (LMWH)",
+      "name": "Enoxaparin SC (Clexane 40 mg/0.4 mL; 60 mg/0.6 mL)",
+      "preparation": "100 mg / mL prefilled syringe",
+      "note": "Thrombosis Treatment (SC q12h, target 4-hr anti-Xa 0.5–1.0 U/mL): <2 mo: 1.5–1.7 mg/kg/dose SC q12h; ≥2 mo: 1.0 mg/kg/dose SC q12h. Thromboprophylaxis: <2 mo: 0.75 mg/kg/dose SC q12h; ≥2 mo: 0.5 mg/kg/dose SC q12h (or 40 mg SC OD in adolescents).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 1,
+      "doseMaxMgPerKg": 1.5,
+      "freq": "q 12 hr",
+      "route": "SC",
+      "category": "cardiovascular",
+      "aliases": [
+        "Clexane",
+        "LMWH",
+        "DVT",
+        "Thrombosis",
+        "Anticoagulant"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "epinephrine-iv-im-resus",
+      "drug": "Epinephrine (Adrenaline) IV/IM",
+      "name": "Epinephrine IV/IO (1:10,000) & IM (1:1,000)",
+      "preparation": "1 mg / mL (1:1,000); diluted 0.1 mg / mL (1:10,000)",
+      "note": "Cardiac Arrest / Symptomatic Bradycardia (IV/IO 1:10,000 = 0.1 mg/mL): 0.01 mg/kg (0.1 mL/kg) q3–5 min (max 1 mg = 10 mL). Anaphylaxis (IM 1:1,000 = 1 mg/mL in anterolateral thigh): 0.01 mg/kg (0.01 mL/kg) q5–15 min (max 0.3 mg prepubertal; 0.5 mg adolescent).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.01,
+      "doseMaxMgPerKg": 0.01,
+      "maxPerDoseMg": 1,
+      "freq": "q 3–5 min (Arrest) / q 5–15 min (Anaphylaxis)",
+      "route": "IV/IO or IM",
+      "category": "emergency",
+      "aliases": [
+        "Adrenaline",
+        "PALS",
+        "Anaphylaxis",
+        "CPR",
+        "อะดรีนาลีน"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "ertapenem-iv-im",
+      "drug": "Ertapenem",
+      "name": "Ertapenem IV/IM (Invanz 1 g vial)",
+      "preparation": "Vial 1 g",
+      "note": "3 mo–12 yr: 15 mg/kg/dose IV/IM q12h (max 500 mg/dose; 1 g/day). ≥13 yr: 1 g IV/IM OD (q24h). ESBL UTI/intra-abdominal infection.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "q 12–24 hr",
+      "route": "IV/IM",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Invanz",
+        "Carbapenem",
+        "ESBL"
+      ]
+    },
+    {
       "key": "erythromycin-po",
       "drug": "Erythromycin",
       "name": "Erythromycin",
@@ -1793,6 +3206,79 @@
       ],
       "isAtb": true,
       "category": "antibiotic"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "erythropoietin-epo-sc-iv",
+      "drug": "Erythropoietin (Epoetin alfa)",
+      "name": "Erythropoietin (EPO) SC/IV (2,000 / 4,000 / 10,000 IU)",
+      "preparation": "2,000 IU, 4,000 IU prefilled syringe",
+      "note": "Anemia of CKD: 50–150 IU/kg/dose SC/IV 1–3 times/week (target Hb 10–12 g/dL). Anemia of Prematurity: 200–400 IU/kg/dose SC 3 times/week + elemental Iron 4–6 mg/kg/day.",
+      "unit": "units/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "1–3x / week",
+      "route": "SC/IV",
+      "category": "hematology",
+      "aliases": [
+        "Eprex",
+        "Recormon",
+        "EPO",
+        "Anemia of CKD"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "esmolol-iv",
+      "drug": "Esmolol",
+      "name": "Esmolol IV (100 mg / 10 mL = 10 mg/mL)",
+      "preparation": "10 mg / mL (10 mL vial)",
+      "note": "SVT / Hypercyanotic Tet Spell / Post-Coarctation Hypertension (Ultra-short-acting Beta-1 blocker, t½ 9 min): Load 100–500 mcg/kg (0.1–0.5 mg/kg) IV over 1–2 min, then Continuous Infusion 50–300 mcg/kg/min (up to 500–1,000 mcg/kg/min).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.1,
+      "doseMaxMgPerKg": 0.5,
+      "freq": "Load over 1 min + IV infusion",
+      "route": "IV",
+      "category": "cardiovascular",
+      "aliases": [
+        "Brevibloc",
+        "Tet spell",
+        "SVT"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "esomeprazole-po-iv",
+      "drug": "Esomeprazole",
+      "name": "Esomeprazole PO/IV (Nexium Sachet 10 mg; Tab 20/40 mg; Vial 40 mg)",
+      "preparation": "10 mg granule sachet; 20 mg, 40 mg tab; 40 mg IV vial",
+      "note": "GERD / Erosive Esophagitis / Upper GI Bleed: 1–11 mo: 2.5–10 mg PO/IV OD (by weight 3–5 kg: 2.5 mg; 5–7.5 kg: 5 mg; >7.5 kg: 10 mg). 1–11 yr (<20 kg): 10 mg OD; (≥20 kg): 10–20 mg OD. ≥12 yr: 20–40 mg OD. Acute Upper GI Bleed IV: Load 1–2 mg/kg (max 80 mg), then 1–2 mg/kg/day (or 4–8 mg/hr).",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 1,
+      "doseMaxMgPerKg": 2,
+      "maxPerDoseMg": 40,
+      "maxPerDayMg": 80,
+      "freq": "OD ac",
+      "route": "PO/IV",
+      "category": "gi",
+      "aliases": [
+        "Nexium",
+        "PPI",
+        "UGIB",
+        "GERD"
+      ]
     },
     {
       "key": "ethambutol-po",
@@ -1817,6 +3303,53 @@
       "category": "antibiotic"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "ethosuximide-po",
+      "drug": "Ethosuximide",
+      "name": "Ethosuximide PO (Zarontin Syrup 250 mg/5 mL; Cap 250 mg)",
+      "preparation": "250 mg / 5 mL syrup; 250 mg / cap",
+      "note": "Childhood Absence Epilepsy (1st-line): Start 10–15 mg/kg/day PO div BID; titrate every 4–7 days to Maintenance 20–30 mg/kg/day div BID with food (max 1,500 mg/day). Target trough 40–100 mcg/mL.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 20,
+      "doseMaxMgPerKg": 30,
+      "maxPerDayMg": 1500,
+      "freq": "bid",
+      "route": "PO",
+      "category": "neuro",
+      "aliases": [
+        "Zarontin",
+        "Absence seizure"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "etomidate-iv-rsi",
+      "drug": "Etomidate",
+      "name": "Etomidate IV (20 mg / 10 mL = 2 mg/mL)",
+      "preparation": "2 mg / mL (10 mL ampule)",
+      "note": "Rapid Sequence Intubation (RSI) Induction (hemodynamically neutral in trauma/hypotension): 0.3 mg/kg IV push over 30–60 sec (max 20 mg). ⚠️ Avoid in septic shock (causes transient 11β-hydroxylase adrenal suppression).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.3,
+      "doseMaxMgPerKg": 0.3,
+      "maxPerDoseMg": 20,
+      "freq": "STAT (RSI)",
+      "route": "IV",
+      "category": "emergency",
+      "aliases": [
+        "Amidate",
+        "RSI",
+        "Intubation"
+      ]
+    },
+    {
       "key": "famotidine-tab-20-mg",
       "drug": "Famotidine",
       "name": "Famotidine (20 mg tablet)",
@@ -1831,7 +3364,8 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "gi"
     },
     {
       "key": "favipiravir-day1-loading-po",
@@ -1901,7 +3435,8 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "analgesic"
     },
     {
       "key": "fexofenadine-syrup-30-mg-5-ml",
@@ -1939,6 +3474,31 @@
         "Telfast",
         "Allegra",
         "Fexofenadine 30"
+      ],
+      "category": "respiratory"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "filgrastim-gcsf-sc-iv",
+      "drug": "Filgrastim (G-CSF)",
+      "name": "Filgrastim (G-CSF) SC/IV (300 mcg / mL)",
+      "preparation": "300 mcg / mL prefilled syringe / vial",
+      "note": "Chemotherapy-Induced Febrile Neutropenia / Post-Chemo ANC Recovery: 5–10 mcg/kg/dose SC or IV infusion OD starting ≥24 hr after chemotherapy until ANC >1,000–1,500/mm³. Severe Congenital Neutropenia: Start 6 mcg/kg SC BID.",
+      "unit": "mcg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD",
+      "route": "SC/IV",
+      "category": "hematology",
+      "aliases": [
+        "Neupogen",
+        "G-CSF",
+        "Neutropenia",
+        "Febrile neutropenia"
       ]
     },
     {
@@ -1959,7 +3519,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Flixonase"
-      ]
+      ],
+      "category": "respiratory"
     },
     {
       "key": "fluconazole-iv-po",
@@ -2015,6 +3576,154 @@
       "isAtb": true
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "fludrocortisone-po",
+      "drug": "Fludrocortisone",
+      "name": "Fludrocortisone PO (Florinef Tab 0.1 mg = 100 mcg)",
+      "preparation": "0.1 mg (100 mcg) / tab",
+      "note": "Congenital Adrenal Hyperplasia (Salt-Wasting CAH) / Primary Adrenal Insufficiency (Mineralocorticoid replacement): 0.05–0.2 mg (50–200 mcg) PO OD (or div BID in infants). Infants with CAH also require NaCl supplementation (1–2 g/day = 17–34 mEq/day). Monitor BP, K+, Na+, plasma renin activity.",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD",
+      "route": "PO",
+      "category": "endocrine",
+      "aliases": [
+        "Florinef",
+        "CAH",
+        "Adrenal insufficiency",
+        "Mineralocorticoid"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "flumazenil-iv",
+      "drug": "Flumazenil",
+      "name": "Flumazenil IV (Anexate 0.5 mg / 5 mL = 0.1 mg/mL)",
+      "preparation": "0.1 mg / mL (5 mL ampule)",
+      "note": "Benzodiazepine Reversal: 0.01 mg/kg IV over 15 sec (max 0.2 mg/dose); may repeat q1 min up to max cumulative 0.05 mg/kg or 1 mg. ⚠️ Contraindicated in chronic benzodiazepine/AED users, TCA co-ingestion, or seizure disorder (precipitates refractory status epilepticus).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.01,
+      "doseMaxMgPerKg": 0.01,
+      "maxPerDoseMg": 0.2,
+      "maxPerDayMg": 1,
+      "freq": "q 1 min PRN (max 5 doses)",
+      "route": "IV",
+      "category": "emergency",
+      "aliases": [
+        "Anexate",
+        "Midazolam reversal",
+        "Diazepam reversal"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "flunarizine-po",
+      "drug": "Flunarizine",
+      "name": "Flunarizine PO (Sibelium Cap 5 mg)",
+      "preparation": "5 mg / cap",
+      "note": "Pediatric Migraine Prophylaxis / Alternating Hemiplegia: <40 kg: 5 mg PO OD at bedtime (hs); ≥40 kg: 5–10 mg PO OD hs. Side effects: drowsiness, weight gain.",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "fixedDose": {
+        "doseMg": 5
+      },
+      "freq": "OD hs",
+      "route": "PO",
+      "category": "neuro",
+      "aliases": [
+        "Sibelium",
+        "Migraine prophylaxis",
+        "ไมเกรน"
+      ]
+    },
+    {
+      "minAgeYr": 7,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "fluoxetine-po",
+      "drug": "Fluoxetine",
+      "name": "Fluoxetine PO (Prozac Cap 20 mg)",
+      "preparation": "20 mg / cap",
+      "note": "Pediatric Major Depressive Disorder (≥8 yr) & OCD (≥7 yr): Start 10 mg PO OD in the morning; after 1–2 wk may increase to 20 mg PO OD (max 40–60 mg/day). Monitor closely for behavioral activation or suicidality in early weeks.",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD AM",
+      "route": "PO",
+      "category": "neuro",
+      "aliases": [
+        "Prozac",
+        "SSRI",
+        "Depression",
+        "OCD",
+        "Anxiety"
+      ]
+    },
+    {
+      "minAgeYr": 4,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "fluticasone-salmeterol-seretide",
+      "drug": "Fluticasone + Salmeterol (Seretide)",
+      "name": "Fluticasone + Salmeterol (Seretide Evohaler 25/50, 25/125; Accuhaler 50/100, 50/250)",
+      "preparation": "MDI 25/50 mcg, 25/125 mcg; DPI Accuhaler 50/100 mcg, 50/250 mcg",
+      "note": "Asthma Step 3–4 Controller (ICS + LABA, ≥4 yr): Evohaler MDI: 2 puffs of 25/50 mcg or 25/125 mcg BID via spacer. Accuhaler DPI (≥4–6 yr with adequate inspiratory flow): 1 inhalation of 50/100 mcg BID. Rinse mouth after use.",
+      "unit": "puff",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "bid",
+      "route": "Inhaled",
+      "category": "respiratory",
+      "aliases": [
+        "Seretide",
+        "Advair",
+        "ICS LABA",
+        "Asthma"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "fluticasone-mdi-flixotide",
+      "drug": "Fluticasone propionate MDI (Flixotide)",
+      "name": "Fluticasone MDI (Flixotide Evohaler 50 mcg / 125 mcg per puff)",
+      "preparation": "50 mcg / puff; 125 mcg / puff MDI",
+      "note": "Asthma Controller (ICS via Spacer, rinse mouth after use): Age ≤5 yr: Low dose 50 mcg BID (1 puff of 50 mcg BID). Age 6–11 yr: Low 50 mcg BID; Medium 100–200 mcg BID; High >200 mcg BID. Age ≥12 yr: Low 100–250 mcg/day; Medium 250–500 mcg/day.",
+      "unit": "mcg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "bid",
+      "route": "Inhaled (MDI + Spacer)",
+      "category": "respiratory",
+      "aliases": [
+        "Flixotide",
+        "ICS",
+        "Asthma controller",
+        "ยาพ่นควบคุมหอบหืด"
+      ]
+    },
+    {
       "key": "folic-acid-5mg-tab",
       "drug": "Folic acid",
       "name": "Folic acid (5 mg tablet)",
@@ -2030,7 +3739,57 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "hematology"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "fosfomycin-iv-po",
+      "drug": "Fosfomycin",
+      "name": "Fosfomycin IV (2 g / 4 g vial) & PO (Monurol 3 g sachet)",
+      "preparation": "IV vial 2 g, 4 g; PO sachet 3 g",
+      "note": "IV (severe infection): 100–200 mg/kg/day (up to 300–400 mg/kg/day in meningitis/bone/MDR) div q6–8h (max 16–24 g/day; high Na+ load 14.4 mEq/g). PO (uncomplicated cystitis): >12 yr: 3 g single dose; 1–12 yr: 2 g single dose.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 100,
+      "doseMaxMgPerKg": 200,
+      "maxPerDayMg": 16000,
+      "freq": "q 6–8 hr",
+      "route": "IV/PO",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Fomicyt",
+        "Monurol",
+        "Fosmicin"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "fosphenytoin-iv-im",
+      "drug": "Fosphenytoin",
+      "name": "Fosphenytoin IV/IM (75 mg/mL = 50 mg PE/mL)",
+      "preparation": "50 mg PE (Phenytoin Equivalents) / mL",
+      "note": "Status Epilepticus Loading Dose (Always dosed in mg PE): 20 mg PE/kg IV (max 1,500 mg PE) infused at 1–3 mg PE/kg/min (max 150 mg PE/min). Maintenance: 4–6 mg PE/kg/day div q8–12h. Compatible with NS and D5W; lower extravasation/purple-glove risk than Phenytoin.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 20,
+      "doseMaxMgPerKg": 20,
+      "maxPerDoseMg": 1500,
+      "freq": "STAT Load / q 12 hr Maint",
+      "route": "IV/IM",
+      "category": "neuro",
+      "aliases": [
+        "Cerebyx",
+        "Phenytoin equivalents",
+        "Status epilepticus"
+      ]
     },
     {
       "key": "furosemide-iv-im",
@@ -2080,6 +3839,101 @@
         "ยาขับปัสสาวะกิน"
       ],
       "category": "cardiovascular"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "fusidic-acid-2-cream",
+      "drug": "Fusidic acid 2% Cream",
+      "name": "Fusidic acid 2% Cream (Fucidin)",
+      "preparation": "2% cream/ointment (5 g / 15 g tube)",
+      "note": "Impetigo / Infected Eczema / Superficial Staphylococcal Skin Infection: Apply thin layer TID × 7 days.",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "tid (Topical)",
+      "route": "Topical",
+      "isAtb": true,
+      "category": "skin",
+      "aliases": [
+        "Fucidin",
+        "Fucicort",
+        "Impetigo"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "gabapentin-po",
+      "drug": "Gabapentin",
+      "name": "Gabapentin PO (Neurontin Cap 100/300 mg; Tab 600 mg)",
+      "preparation": "100 mg / cap; 300 mg / cap; 600 mg / tab",
+      "note": "Neuropathic Pain / Dystonia / Visceral Hyperalgesia: Day 1: 5 mg/kg/dose PO hs; Day 2: 5 mg/kg BID; Day 3: 5 mg/kg TID; then titrate to 15–45 mg/kg/day div TID (max 1,800–3,600 mg/day). Focal Epilepsy adjunct (≥3 yr): 25–40 mg/kg/day div TID. Adjust in renal impairment.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 15,
+      "doseMaxMgPerKg": 45,
+      "maxPerDayMg": 2400,
+      "freq": "tid",
+      "route": "PO",
+      "category": "neuro",
+      "aliases": [
+        "Neurontin",
+        "Neuropathic pain"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "ganciclovir-iv",
+      "drug": "Ganciclovir",
+      "name": "Ganciclovir IV (Cymevene 500 mg vial)",
+      "preparation": "Vial 500 mg",
+      "note": "Congenital CMV / CMV Disease Induction: 6 mg/kg/dose IV q12h (or 5 mg/kg IV q12h in older children) infused over 1 hr × 14–21 d (or 6 wk for congenital CMV). Maintenance: 5 mg/kg IV OD. Monitor ANC (neutropenia) & platelets.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 5,
+      "doseMaxMgPerKg": 6,
+      "freq": "q 12 hr",
+      "route": "IV",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Cymevene",
+        "CMV",
+        "Antiviral"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "gaviscon-alginate-po",
+      "drug": "Sodium Alginate + Bicarbonate (Gaviscon)",
+      "name": "Gaviscon Suspension / Gaviscon Infant Sachet",
+      "preparation": "Liquid suspension 10 mL sachet / bottle",
+      "note": "GERD (Post-prandial): Gaviscon Infant (<4.5 kg: 1 dose-sachet; ≥4.5 kg: 2 dose-sachets mixed with milk/water after feeds, max 6x/day). Children 6–12 yr: 5–10 mL PO after meals and at bedtime. ≥12 yr: 10–20 mL PO after meals and at bedtime.",
+      "unit": "mL",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "pc & hs",
+      "route": "PO",
+      "category": "gi",
+      "aliases": [
+        "Gaviscon",
+        "Alginate",
+        "GERD",
+        "กรดไหลย้อน"
+      ]
     },
     {
       "key": "gentamicin-iv",
@@ -2182,6 +4036,29 @@
       "category": "emergency"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "glycerin-suppository-rectal",
+      "drug": "Glycerin Suppository",
+      "name": "Glycerin Rectal Suppository (Pediatric 1 g / Adult 2 g)",
+      "preparation": "Infant/Child suppository ~1–1.5 g; Adult ~2–2.5 g",
+      "note": "Acute Constipation / Dyschezia (Osmotic rectal laxative, acts in 15–30 min): Neonates/Infants: ½–1 infant suppository PR PRN; Children <6 yr: 1 pediatric suppository PR PRN; ≥6 yr: 1 adult suppository PR PRN.",
+      "unit": "supp",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "PRN",
+      "route": "Rectal (PR)",
+      "category": "gi",
+      "aliases": [
+        "Glycerin supp",
+        "Constipation",
+        "ยาเหน็บท้องผูก"
+      ]
+    },
+    {
       "key": "griseofulvin-125mg-tab",
       "drug": "Griseofulvin",
       "name": "Griseofulvin",
@@ -2220,6 +4097,103 @@
       "aliases": [
         "Glyceryl Guaiacolate",
         "GG syrup"
+      ],
+      "category": "respiratory"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "haloperidol-po-im",
+      "drug": "Haloperidol",
+      "name": "Haloperidol PO (Tab 0.5/2/5 mg) & IM (5 mg/mL)",
+      "preparation": "0.5 mg, 2 mg, 5 mg tab; 5 mg / mL ampule",
+      "note": "Acute Severe Agitation / Delirium (≥3 yr): 0.025–0.05 mg/kg/dose PO/IM (max 1–2.5 mg/dose in child; 5 mg in adolescent). Tourette/Psychosis Maintenance: 0.05–0.15 mg/kg/day PO div BID–TID. ⚠️ High risk of acute dystonia (treat with Diphenhydramine or Benztropine/Trihexyphenidyl) & QTc prolongation.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.025,
+      "doseMaxMgPerKg": 0.05,
+      "maxPerDoseMg": 5,
+      "freq": "PRN / bid",
+      "route": "PO/IM",
+      "category": "neuro",
+      "aliases": [
+        "Haldol",
+        "Delirium",
+        "Agitation",
+        "Chorea"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "hbig-hepatitis-b-ig",
+      "drug": "Hepatitis B Immunoglobulin (HBIG)",
+      "name": "Hepatitis B Immunoglobulin (HBIG) IM",
+      "preparation": "100 IU / 0.5 mL or 200 IU / mL vial",
+      "note": "Newborn of HBsAg-positive mother: 0.5 mL (100 IU) IM within 12 hours of birth in anterolateral thigh (at separate site from Hep B vaccine). Post-exposure (>1 yr): 0.06 mL/kg IM.",
+      "unit": "mL",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "STAT within 12 hr of birth",
+      "route": "IM",
+      "category": "emergency",
+      "aliases": [
+        "HBIG",
+        "HBsAg",
+        "Newborn prophylaxis"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "hydralazine-iv-po",
+      "drug": "Hydralazine",
+      "name": "Hydralazine IV (20 mg/mL) & PO (Tab 25 mg)",
+      "preparation": "IV 20 mg / mL; Tab 25 mg",
+      "note": "Hypertensive Emergency/Urgency (IV/IM): 0.1–0.2 mg/kg/dose IV/IM q4–6h PRN (max 0.6 mg/kg/dose or 20 mg/dose). Oral Maintenance / Afterload Reduction: 0.75–1 mg/kg/day PO div q6–12h, titrate up to 7.5 mg/kg/day (max 200 mg/day).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.1,
+      "doseMaxMgPerKg": 0.2,
+      "maxPerDoseMg": 20,
+      "freq": "q 4–6 hr PRN (IV)",
+      "route": "IV/IM/PO",
+      "category": "cardiovascular",
+      "aliases": [
+        "Apresoline",
+        "Hypertensive emergency"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "hydrochlorothiazide-hctz-po",
+      "drug": "Hydrochlorothiazide (HCTZ)",
+      "name": "Hydrochlorothiazide (HCTZ) PO (Tab 25 mg / 50 mg)",
+      "preparation": "25 mg / tab; 50 mg / tab",
+      "note": "Edema / BPD / Hypertension / Nephrogenic DI: <6 mo: 2–3 mg/kg/day PO div BID; ≥6 mo: 1–2 mg/kg/day PO OD–BID (max 37.5 mg/day in <2 yr; max 100 mg/day in 2–12 yr). Monitor electrolytes (hypokalemia, hyponatremia).",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 1,
+      "doseMaxMgPerKg": 3,
+      "maxPerDayMg": 100,
+      "freq": "OD / bid",
+      "route": "PO",
+      "category": "cardiovascular",
+      "aliases": [
+        "HCTZ",
+        "Thiazide",
+        "Diuretic",
+        "BPD"
       ]
     },
     {
@@ -2239,7 +4213,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Cortef (tab 10 mg not commonly used pediatric)"
-      ]
+      ],
+      "category": "endocrine"
     },
     {
       "key": "hydrocortisone-1-cream",
@@ -2267,6 +4242,55 @@
       "category": "skin"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "hydroxychloroquine-po",
+      "drug": "Hydroxychloroquine (HCQ)",
+      "name": "Hydroxychloroquine PO (Plaquenil Tab 200 mg)",
+      "preparation": "200 mg / tab",
+      "note": "Pediatric SLE / Juvenile Dermatomyositis: ≤5 mg/kg/day (actual body weight) PO OD with food/milk (max 400 mg/day). Annual ophthalmology retinal screening required.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 4,
+      "doseMaxMgPerKg": 5,
+      "maxPerDoseMg": 400,
+      "maxPerDayMg": 400,
+      "freq": "OD pc",
+      "route": "PO",
+      "category": "hematology",
+      "aliases": [
+        "Plaquenil",
+        "HCQ",
+        "SLE",
+        "Lupus"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "hydroxyurea-po",
+      "drug": "Hydroxyurea",
+      "name": "Hydroxyurea PO (Hydrea Cap 500 mg)",
+      "preparation": "500 mg / cap",
+      "note": "Non-Transfusion-Dependent Beta-Thalassemia / HbE-Beta-Thalassemia: 10–20 mg/kg PO OD. Sickle Cell Disease: Start 15–20 mg/kg PO OD, titrate by 5 mg/kg every 8–12 wk to max tolerated dose (max 35 mg/kg/day). Monitor CBC q4–8 wk.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 10,
+      "doseMaxMgPerKg": 20,
+      "freq": "OD",
+      "route": "PO",
+      "category": "hematology",
+      "aliases": [
+        "Hydrea",
+        "Thalassemia",
+        "Sickle cell"
+      ]
+    },
+    {
       "key": "hydroxyzine-tab-10-25-mg",
       "drug": "Hydroxyzine",
       "name": "Hydroxyzine (10/25 mg tablet)",
@@ -2284,7 +4308,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Atarax"
-      ]
+      ],
+      "category": "respiratory"
     },
     {
       "key": "hydroxyzine-syrup-10-mg-5-ml",
@@ -2304,7 +4329,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Atarax"
-      ]
+      ],
+      "category": "respiratory"
     },
     {
       "key": "hyoscine-butylbromide-syrup-tab",
@@ -2327,6 +4353,32 @@
         "Buscopan",
         "Hyoscine butylbromide",
         "Scopolamine butylbromide"
+      ],
+      "category": "gi"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "hypertonic-saline-3-percent-iv",
+      "drug": "Hypertonic Saline (3% NaCl)",
+      "name": "Hypertonic Saline 3% NaCl IV (513 mEq Na / L = 0.5 mEq/mL)",
+      "preparation": "3% NaCl (0.513 mEq/mL)",
+      "note": "Acute Increased ICP / Traumatic Brain Injury: Bolus 2–5 mL/kg IV over 10–20 min (max 250 mL); Continuous infusion: 0.1–1 mL/kg/hr (target Na 145–155 mEq/L, Osm <360). Symptomatic Severe Hyponatremia (Seizure): 3–5 mL/kg IV over 15–20 min (raises Na by ~2.5–4 mEq/L).",
+      "unit": "mL/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 2,
+      "doseMaxMgPerKg": 5,
+      "maxPerDoseMg": 250,
+      "freq": "Bolus over 10–20 min",
+      "route": "IV",
+      "category": "emergency",
+      "aliases": [
+        "3% NaCl",
+        "Increased ICP",
+        "Hyponatremia",
+        "TBI"
       ]
     },
     {
@@ -2347,7 +4399,8 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "analgesic"
     },
     {
       "key": "ibuprofen-tab-400-mg",
@@ -2367,7 +4420,31 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "analgesic"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "ibuprofen-pda-closure-nicu",
+      "drug": "Ibuprofen (Neonatal PDA Closure)",
+      "name": "Ibuprofen Neonatal PDA Closure Regimen (PO/IV)",
+      "preparation": "Syrup 100 mg / 5 mL (20 mg/mL) or IV Ibuprofen lysinate",
+      "note": "Hemodynamically Significant PDA in Preterm Neonates (3-Dose Course at 24-hr intervals): Dose 1: 10 mg/kg; Dose 2 (at 24h): 5 mg/kg; Dose 3 (at 48h): 5 mg/kg PO/IV. Hold if urine output <0.6 mL/kg/hr, SCr >1.5 mg/dL, platelets <50,000, or NEC/GI bleed.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 5,
+      "doseMaxMgPerKg": 10,
+      "freq": "q 24 hr × 3 doses (10-5-5 mg/kg)",
+      "route": "PO/IV",
+      "category": "cardiovascular",
+      "aliases": [
+        "PDA closure",
+        "Preterm PDA",
+        "NICU"
+      ]
     },
     {
       "key": "ibuprofen-syrup-100-mg-5-ml",
@@ -2387,7 +4464,8 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "analgesic"
     },
     {
       "key": "imipenem-cilastatin-iv",
@@ -2450,6 +4528,30 @@
       "category": "antibiotic"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "indomethacin-pda-jia",
+      "drug": "Indomethacin",
+      "name": "Indomethacin IV (Neonatal PDA) & PO (Cap 25 mg)",
+      "preparation": "IV vial 1 mg; PO cap 25 mg",
+      "note": "Neonatal PDA Closure (IV q12–24h × 3 doses): <48h old: 0.2 mg/kg, then 0.1 mg/kg, then 0.1 mg/kg; 2–7 days old: 0.2, 0.2, 0.2 mg/kg; >7 days old: 0.2, 0.25, 0.25 mg/kg. JIA / Pericarditis / Nephrogenic DI (>2 yr PO): 1–3 mg/kg/day div TID (max 150–200 mg/day).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "Per PDA or PO regimen",
+      "route": "IV/PO",
+      "category": "cardiovascular",
+      "aliases": [
+        "Indocin",
+        "PDA",
+        "Nephrogenic DI",
+        "JIA"
+      ]
+    },
+    {
       "key": "infloran-capsule",
       "drug": "L. acidophilus + B. bifidum",
       "name": "Infloran capsule",
@@ -2467,6 +4569,34 @@
       "maxWeightKg": null,
       "aliases": [
         "Probiotic"
+      ],
+      "category": "gi"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "insulin-pediatric-regimens",
+      "drug": "Insulin (Regular, Rapid-Acting, Basal)",
+      "name": "Insulin SC/IV (Regular RI, Lispro/Aspart, Glargine/Detemir)",
+      "preparation": "100 units / mL vial or pen",
+      "note": "Pediatric Type 1 DM Total Daily Dose (TDD): Prepubertal: 0.5–0.8 U/kg/day; Pubertal: 0.8–1.2 U/kg/day (Basal Glargine/Detemir ~40–50% of TDD given OD; Rapid-acting Aspart/Lispro ~50–60% divided pre-meals; ISF = 1800/TDD; ICR = 500/TDD). DKA IV Infusion: Regular Insulin 0.05–0.1 U/kg/hr IV started 1–2 hr after initial fluid therapy. Hyperkalemia: Regular Insulin 0.1 U/kg IV (max 10 U) + Dextrose 0.5 g/kg.",
+      "unit": "units/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "Basal-Bolus SC / Continuous IV",
+      "route": "SC/IV",
+      "category": "endocrine",
+      "aliases": [
+        "Humulin R",
+        "Actrapid",
+        "Novorapid",
+        "Humalog",
+        "Lantus",
+        "DKA",
+        "T1DM"
       ]
     },
     {
@@ -2488,7 +4618,8 @@
       "aliases": [
         "Berodual",
         "Combivent"
-      ]
+      ],
+      "category": "respiratory"
     },
     {
       "key": "iron-elemental",
@@ -2509,7 +4640,8 @@
       "aliases": [
         "Fer-in-sol",
         "Eurofer"
-      ]
+      ],
+      "category": "hematology"
     },
     {
       "key": "isoniazid-po",
@@ -2575,6 +4707,54 @@
       "category": "antibiotic"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "ivig-intravenous-immunoglobulin",
+      "drug": "Intravenous Immunoglobulin (IVIG)",
+      "name": "IVIG (5% = 50 mg/mL; 10% = 100 mg/mL)",
+      "preparation": "2.5 g / 50 mL, 5 g / 100 mL (5%) or 10 g / 100 mL (10%)",
+      "note": "Kawasaki Disease / MIS-C: 2 g/kg (2,000 mg/kg) single IV infusion over 10–12 hr. Acute ITP: 0.8–1 g/kg IV over 6–8 hr × 1–2 doses. Guillain-Barré / Autoimmune Encephalitis / Myasthenia Crisis: 2 g/kg total divided over 2–5 days (0.4 g/kg/day × 5d or 1 g/kg/day × 2d). Neonatal Isoimmune Hemolysis: 0.5–1 g/kg over 2–4 hr. Start slow (0.5 mL/kg/hr × 30 min), step up gradually.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 800,
+      "doseMaxMgPerKg": 2000,
+      "freq": "Single infusion or over 2–5 days",
+      "route": "IV Infusion",
+      "category": "emergency",
+      "aliases": [
+        "IVIG",
+        "Kawasaki",
+        "ITP",
+        "GBS",
+        "MIS-C"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "calcium-polystyrene-kalimate-kayexalate",
+      "drug": "Calcium / Sodium Polystyrene Sulfonate",
+      "name": "Kalimate (Ca Polystyrene) / Kayexalate (Na Polystyrene) PO/PR",
+      "preparation": "5 g / sachet; 15 g / 60 mL suspension",
+      "note": "Hyperkalemia GI K+ Exchange Resin: 0.5–1 g/kg/dose PO or Rectal retention enema q6–8h PRN (max 15–30 g/dose). ⚠️ Contraindicated in neonates (especially preterm), ileus, or bowel obstruction due to intestinal necrosis risk (never mix with Sorbitol).",
+      "unit": "g/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "q 6–8 hr PRN",
+      "route": "PO/PR",
+      "category": "endocrine",
+      "aliases": [
+        "Kalimate",
+        "Kayexalate",
+        "Hyperkalemia"
+      ]
+    },
+    {
       "key": "ketamine-iv-im",
       "drug": "Ketamine",
       "name": "Ketamine IV/IM (50 mg / mL)",
@@ -2599,6 +4779,125 @@
       "category": "neuro"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "ketoconazole-shampoo-po",
+      "drug": "Ketoconazole",
+      "name": "Ketoconazole 2% Shampoo / Cream (Nizoral)",
+      "preparation": "2% shampoo; 2% cream",
+      "note": "Tinea versicolor / Seborrheic dermatitis / Cradle cap: Apply 2% shampoo to affected area/scalp for 5 min then rinse, 2–3 times/week (or OD × 3–5 days for Tinea versicolor). Cream: apply OD–BID × 2–4 wk. (Oral ketoconazole avoided due to hepatotoxicity).",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "2–3x/wk or OD",
+      "route": "Topical",
+      "category": "skin",
+      "aliases": [
+        "Nizoral",
+        "เกลื้อน",
+        "รังแค",
+        "Cradle cap"
+      ]
+    },
+    {
+      "minAgeYr": 2,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "ketorolac-iv-im",
+      "drug": "Ketorolac",
+      "name": "Ketorolac IV/IM (30 mg / mL)",
+      "preparation": "30 mg / mL (1 mL ampule)",
+      "note": "Short-term Moderate-to-Severe Post-op/Renal Colic Pain (≥2 yr): 0.5 mg/kg/dose IV/IM q6h (max 15–30 mg/dose; max duration ≤5 days). Avoid in bleeding risk, Dengue, or renal dysfunction.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.5,
+      "doseMaxMgPerKg": 0.5,
+      "maxPerDoseMg": 30,
+      "maxPerDayMg": 120,
+      "freq": "q 6 hr (max 5 days)",
+      "route": "IV/IM",
+      "category": "analgesic",
+      "aliases": [
+        "Toradol",
+        "Ketolac",
+        "NSAID"
+      ]
+    },
+    {
+      "minAgeYr": 0.5,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "ketotifen-po",
+      "drug": "Ketotifen",
+      "name": "Ketotifen PO (Zaditen Syrup 1 mg/5 mL; Tab 1 mg)",
+      "preparation": "1 mg / 5 mL syrup; 1 mg / tab",
+      "note": "Allergic Rhinitis / Conjunctivitis / Atopic Prophylaxis: 6 mo–3 yr: 0.05 mg/kg/dose (or 0.5 mg = 2.5 mL) PO BID; >3 yr: 1 mg (5 mL or 1 tab) PO BID.",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "bid",
+      "route": "PO",
+      "category": "respiratory",
+      "aliases": [
+        "Zaditen",
+        "Mast cell stabilizer"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "labetalol-iv-po",
+      "drug": "Labetalol",
+      "name": "Labetalol IV (5 mg/mL) & PO (Tab 100/200 mg)",
+      "preparation": "IV 5 mg / mL; Tab 100 mg, 200 mg",
+      "note": "Hypertensive Emergency: IV Bolus: 0.2–1 mg/kg/dose slow IV over 2 min (max 20–40 mg/dose) q10–15 min; or Continuous IV Infusion: 0.25–3 mg/kg/hr. Oral Maintenance: Start 1–3 mg/kg/day PO div BID (max 10–12 mg/kg/day or 1,200 mg/day). Contraindicated in asthma, acute heart failure, heart block.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.2,
+      "doseMaxMgPerKg": 1,
+      "maxPerDoseMg": 40,
+      "freq": "STAT Bolus / Continuous IV",
+      "route": "IV/PO",
+      "category": "cardiovascular",
+      "aliases": [
+        "Trandate",
+        "Hypertensive emergency"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "lacosamide-iv-po",
+      "drug": "Lacosamide",
+      "name": "Lacosamide IV/PO (Vimpat Syrup 10 mg/mL; Tab 50/100 mg; IV 200 mg/20 mL)",
+      "preparation": "10 mg / mL syrup; 50 mg, 100 mg tab; 10 mg / mL IV",
+      "note": "Focal/Refractory Epilepsy (≥1 mo): Start 2 mg/kg/day IV/PO div BID; increase by 2 mg/kg/day weekly to Maintenance: <30 kg: 6–12 mg/kg/day div BID; 30–50 kg: 4–8 mg/kg/day div BID; ≥50 kg: 200–400 mg/day div BID. Status Epilepticus Load: 8–10 mg/kg IV (max 400 mg) over 15–30 min. Check PR interval.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 4,
+      "doseMaxMgPerKg": 12,
+      "maxPerDoseMg": 200,
+      "maxPerDayMg": 400,
+      "freq": "bid",
+      "route": "PO/IV",
+      "category": "neuro",
+      "aliases": [
+        "Vimpat",
+        "ASM",
+        "Epilepsy"
+      ]
+    },
+    {
       "key": "lactulose-10g-5ml",
       "drug": "Lactulose",
       "name": "Lactulose syrup (10 g / 5 mL)",
@@ -2618,6 +4917,82 @@
       "aliases": [
         "Hepalac",
         "Duphalac"
+      ],
+      "category": "gi"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "lamivudine-3tc-po",
+      "drug": "Lamivudine (3TC)",
+      "name": "Lamivudine (3TC) PO (Solution 10 mg/mL; Tab 150/300 mg)",
+      "preparation": "10 mg / mL oral solution; 150 mg / tab",
+      "note": "Neonatal HIV (<4 wk): 2 mg/kg/dose PO BID. Infants/Children (≥4 wk): 4–5 mg/kg/dose PO BID (max 150 mg/dose) or 8–10 mg/kg PO OD (max 300 mg/day). Chronic HBV: 3 mg/kg PO OD (max 100 mg/day).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "bid / OD",
+      "route": "PO",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Epivir",
+        "3TC",
+        "HIV",
+        "HBV"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "lamotrigine-po",
+      "drug": "Lamotrigine",
+      "name": "Lamotrigine PO (Lamictal Dispersible Tab 5/25/50/100 mg)",
+      "preparation": "25 mg, 50 mg, 100 mg / tab",
+      "note": "⚠️ SJS/TEN Risk — Strictly follow slow 6-week titration based on concomitant meds: (1) WITH Valproate (inhibitor): Wk 1–2: 0.15 mg/kg/day; Wk 3–4: 0.3 mg/kg/day; Maint: 1–5 mg/kg/day div OD–BID (max 200 mg/day). (2) WITHOUT Valproate / no enzyme inducer: Wk 1–2: 0.3 mg/kg/day; Wk 3–4: 0.6 mg/kg/day; Maint: 4.5–7.5 mg/kg/day div BID (max 300 mg/day).",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD / bid (slow titration)",
+      "route": "PO",
+      "category": "neuro",
+      "aliases": [
+        "Lamictal",
+        "LTG",
+        "Lennox-Gastaut",
+        "Absence"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "lansoprazole-po",
+      "drug": "Lansoprazole",
+      "name": "Lansoprazole PO (Prevacid FDT 15 mg / 30 mg)",
+      "preparation": "15 mg, 30 mg orally disintegrating tablet (FDT)",
+      "note": "GERD / Peptic Ulcer (Give 30 min before breakfast): Infants <1 yr: 1–1.5 mg/kg/day PO OD; ≥1 yr & ≤30 kg: 15 mg PO OD; >30 kg: 30 mg PO OD (or 15 mg BID). Do not crush enteric microgranules; may disperse FDT in water/apple juice.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 1,
+      "doseMaxMgPerKg": 1.5,
+      "maxPerDoseMg": 30,
+      "maxPerDayMg": 60,
+      "freq": "OD ac",
+      "route": "PO",
+      "category": "gi",
+      "aliases": [
+        "Prevacid",
+        "PPI",
+        "GERD",
+        "กรดไหลย้อน"
       ]
     },
     {
@@ -2638,6 +5013,31 @@
       "maxWeightKg": null,
       "aliases": [
         "Keppra"
+      ],
+      "category": "neuro"
+    },
+    {
+      "minAgeYr": 0.5,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "levocetirizine-po",
+      "drug": "Levocetirizine",
+      "name": "Levocetirizine PO (Xyzal Syrup 2.5 mg/5 mL; Tab 5 mg)",
+      "preparation": "2.5 mg / 5 mL syrup (0.5 mg/mL); 5 mg / tab",
+      "note": "Allergic Rhinitis / Urticaria (Non-sedating 2nd-gen H1 antihistamine): 6 mo–5 yr: 1.25 mg (2.5 mL) PO OD hs; 6–11 yr: 2.5 mg (5 mL or ½ tab) PO OD hs; ≥12 yr: 5 mg (1 tab) PO OD hs.",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD hs",
+      "route": "PO",
+      "category": "respiratory",
+      "aliases": [
+        "Xyzal",
+        "Antihistamine",
+        "Allergy",
+        "Urticaria"
       ]
     },
     {
@@ -2657,7 +5057,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Levopront"
-      ]
+      ],
+      "category": "respiratory"
     },
     {
       "key": "levofloxacin-po-iv",
@@ -2710,6 +5111,32 @@
       "category": "endocrine"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "lidocaine-iv-local",
+      "drug": "Lidocaine (Lignocaine)",
+      "name": "Lidocaine 1% (10 mg/mL) & 2% (20 mg/mL) IV / Local Infiltration",
+      "preparation": "1% (10 mg/mL); 2% (20 mg/mL)",
+      "note": "VF/pVT Antiarrhythmic (PALS): Load 1 mg/kg IV/IO (max 100 mg), then infusion 20–50 mcg/kg/min. IO Pain (awake): 0.5 mg/kg 2% preservative-free slow IO (max 40 mg). Local Infiltration Max Safe Dose: Plain Lidocaine: max 4.5 mg/kg (max 300 mg); Lidocaine with Epinephrine: max 7 mg/kg (max 500 mg).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 1,
+      "doseMaxMgPerKg": 4.5,
+      "maxPerDoseMg": 300,
+      "freq": "STAT / Local",
+      "route": "IV/IO / Local SC",
+      "category": "emergency",
+      "aliases": [
+        "Xylocaine",
+        "Lignocaine",
+        "Local anesthetic",
+        "VF",
+        "VT"
+      ]
+    },
+    {
       "key": "linezolid-iv-po",
       "drug": "Linezolid",
       "name": "Linezolid IV/PO (2 mg/mL IV / Tab 600 mg)",
@@ -2735,6 +5162,31 @@
       ],
       "category": "antibiotic",
       "isAtb": true
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "amphotericin-b-liposomal-iv",
+      "drug": "Amphotericin B Liposomal (AmBisome)",
+      "name": "Liposomal Amphotericin B IV (AmBisome 50 mg vial)",
+      "preparation": "Vial 50 mg",
+      "note": "Systemic fungal infection / Empiric febrile neutropenia: 3–5 mg/kg/dose IV OD infused over 2 hr (CNS/Mucormycosis: 5–10 mg/kg/day). Visceral Leishmaniasis: 3 mg/kg/day days 1–5, 14, 21. Reconstitute & dilute in D5W only.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 3,
+      "doseMaxMgPerKg": 5,
+      "freq": "OD",
+      "route": "IV (in D5W only)",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "AmBisome",
+        "L-AmB",
+        "Antifungal",
+        "Fungal"
+      ]
     },
     {
       "key": "liquid-paraffin-oral",
@@ -2797,6 +5249,130 @@
         "Claritin",
         "Lorano",
         "Antihistamine"
+      ],
+      "category": "respiratory"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "lorazepam-iv-po",
+      "drug": "Lorazepam (Ativan)",
+      "name": "Lorazepam IV (2 mg/mL) & PO (Tab 0.5/1/2 mg)",
+      "preparation": "IV 2 mg/mL; Tab 0.5 mg, 1 mg, 2 mg",
+      "note": "Status Epilepticus (1st-line benzodiazepine): 0.1 mg/kg IV/IO slow push over 1–2 min (max 4 mg/dose); may repeat × 1 in 5–10 min. Acute Anxiety/Agitation: 0.05 mg/kg/dose PO/IV q4–8h (max 2 mg/dose).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.05,
+      "doseMaxMgPerKg": 0.1,
+      "maxPerDoseMg": 4,
+      "freq": "STAT / PRN",
+      "route": "IV/PO/SL",
+      "category": "neuro",
+      "aliases": [
+        "Ativan",
+        "Status epilepticus",
+        "Seizure"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "losartan-po",
+      "drug": "Losartan",
+      "name": "Losartan PO (Cozaar Tab 50 mg / 100 mg)",
+      "preparation": "50 mg / tab; 100 mg / tab",
+      "note": "Hypertension / Proteinuria / Marfan Syndrome Aortopathy (≥6 yr): Start 0.7 mg/kg PO OD (max initial 50 mg/day); titrate up to 1.4 mg/kg/day PO OD (max 100 mg/day). Monitor SCr and K+.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 0.7,
+      "doseMaxMgPerKg": 1.4,
+      "maxPerDoseMg": 100,
+      "maxPerDayMg": 100,
+      "freq": "OD",
+      "route": "PO",
+      "category": "cardiovascular",
+      "aliases": [
+        "Cozaar",
+        "ARB",
+        "Marfan",
+        "Proteinuria"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "lugols-solution-sski-po",
+      "drug": "Lugol's Solution / Potassium Iodide",
+      "name": "Lugol's Solution (8 mg Iodine / drop) PO",
+      "preparation": "Lugol's 5% solution (~6.3–8 mg iodine/drop); SSKI (50 mg/drop)",
+      "note": "Thyroid Storm / Pre-Thyroidectomy Preparation: Lugol's solution: 5–10 drops PO TID (or SSKI 1–5 drops PO q6–8h). ⚠️ Give at least 1 hour AFTER Methimazole/PTU to prevent iodine from fueling new thyroid hormone synthesis (Jod-Basedow effect).",
+      "unit": "drops",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "tid (1 hr after MMI)",
+      "route": "PO",
+      "category": "endocrine",
+      "aliases": [
+        "Lugol",
+        "SSKI",
+        "Thyroid storm",
+        "Iodine"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "magnesium-sulfate-iv",
+      "drug": "Magnesium Sulfate (MgSO4) IV",
+      "name": "Magnesium Sulfate 50% IV (500 mg / mL = 4 mEq/mL)",
+      "preparation": "50% solution (500 mg / mL = 0.5 g / mL)",
+      "note": "Acute Severe / Life-Threatening Asthma (GINA/PALS): 40–50 mg/kg (range 25–75 mg/kg) IV diluted in NS/D5W infused over 20–30 min (max 2,000 mg = 2 g). Torsades de Pointes: 25–50 mg/kg IV/IO over 2–15 min (max 2 g). Symptomatic Hypomagnesemia: 25–50 mg/kg IV over 2–4 hr. Watch for hypotension.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 25,
+      "doseMaxMgPerKg": 50,
+      "maxPerDoseMg": 2000,
+      "freq": "Single IV infusion over 20–30 min",
+      "route": "IV Infusion",
+      "category": "respiratory",
+      "aliases": [
+        "MgSO4",
+        "Status asthmaticus",
+        "Torsades",
+        "Hypomagnesemia"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "mannitol-20-iv",
+      "drug": "Mannitol 20%",
+      "name": "Mannitol 20% IV (20 g / 100 mL = 0.2 g/mL)",
+      "preparation": "200 mg / mL (0.2 g/mL) — 250 mL / 500 mL bottle",
+      "note": "Increased ICP / Cerebral Edema / Brain Herniation: 0.25–1 g/kg/dose (1.25–5 mL/kg of 20% solution) IV infused over 15–30 min via in-line filter; repeat q4–6h PRN. Hold if serum osmolality >320 mOsm/kg or hypovolemia.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 250,
+      "doseMaxMgPerKg": 1000,
+      "maxPerDoseMg": 50000,
+      "freq": "STAT / q 4–6 hr PRN",
+      "route": "IV (via filter)",
+      "category": "neuro",
+      "aliases": [
+        "Cerebral edema",
+        "Increased ICP",
+        "Herniation"
       ]
     },
     {
@@ -2822,6 +5398,55 @@
       ],
       "isAtb": true,
       "category": "antibiotic"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "mefenamic-acid-po",
+      "drug": "Mefenamic acid",
+      "name": "Mefenamic acid PO (Ponstan Cap 250 mg / Tab 500 mg)",
+      "preparation": "250 mg / cap; 500 mg / tab",
+      "note": "Pain / Primary Dysmenorrhea (≥14 yr or >40 kg): Initial 500 mg PO, then 250 mg PO q6h PRN with food for ≤7 days. (Pediatric weight-based >6 mo: 6–8 mg/kg/dose TID, max 500 mg/dose). ⚠️ Avoid in Dengue.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 6,
+      "doseMaxMgPerKg": 8,
+      "maxPerDoseMg": 500,
+      "maxPerDayMg": 1500,
+      "freq": "tid / q 6 hr",
+      "route": "PO",
+      "category": "analgesic",
+      "aliases": [
+        "Ponstan",
+        "Dysmenorrhea",
+        "พอนสแตน"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "melatonin-po",
+      "drug": "Melatonin",
+      "name": "Melatonin PO (1 mg / 2 mg / 3 mg / 5 mg)",
+      "preparation": "1 mg, 2 mg, 3 mg, 5 mg tab/gummy",
+      "note": "Pediatric Insomnia / ASD & ADHD Sleep-Onset Delay / EEG Sleep Deprivation: Give 30–60 min before bedtime: Preschool (1–5 yr): 1–2 mg; School-age (6–12 yr): 2–3 mg (up to 5 mg); Adolescents: 3–5 mg (max 10 mg). Pre-EEG sedation: 3–6 mg.",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD 30–60 min pre-bedtime",
+      "route": "PO",
+      "category": "neuro",
+      "aliases": [
+        "Circadin",
+        "Sleep",
+        "Insomnia",
+        "EEG sedation"
+      ]
     },
     {
       "key": "meropenem-iv",
@@ -2884,6 +5509,180 @@
       "category": "antibiotic"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "mesalamine-sulfasalazine-ibd",
+      "drug": "Mesalamine (5-ASA) & Sulfasalazine",
+      "name": "Mesalamine PO (Pentasa 500 mg) & Sulfasalazine (500 mg tab)",
+      "preparation": "500 mg / tab; 1 g suppository/enema",
+      "note": "Pediatric Ulcerative Colitis / IBD: Mesalamine (5-ASA): Induction 60–80 mg/kg/day PO div BID–TID (max 4.8 g/day); Maintenance 30–50 mg/kg/day (max 2.4 g/day). Sulfasalazine: Start 25 mg/kg/day, titrate to 40–70 mg/kg/day div TID–QID (max 4 g/day) + Folic acid 1 mg OD.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 30,
+      "doseMaxMgPerKg": 80,
+      "maxPerDayMg": 4000,
+      "freq": "bid / tid",
+      "route": "PO/PR",
+      "category": "gi",
+      "aliases": [
+        "Pentasa",
+        "Salofalk",
+        "Salazopyrin",
+        "IBD",
+        "Ulcerative colitis"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "methadone-po-iv",
+      "drug": "Methadone",
+      "name": "Methadone PO/IV (Syrup 1 mg/mL; Tab 5/10 mg)",
+      "preparation": "1 mg / mL oral solution; 5 mg / tab",
+      "note": "PICU Iatrogenic Opioid Weaning / Severe Pain: 0.05–0.1 mg/kg/dose PO/IV q6–12h (max initial 5–10 mg/dose), tapered by 10–20% every 24–48h. Neonatal Abstinence Syndrome (NAS): 0.05–0.1 mg/kg/dose PO q6–12h titrated to Finnegan score. Monitor QTc.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.05,
+      "doseMaxMgPerKg": 0.1,
+      "maxPerDoseMg": 10,
+      "freq": "q 6–12 hr",
+      "route": "PO/IV",
+      "category": "analgesic",
+      "aliases": [
+        "Opioid weaning",
+        "NAS",
+        "PICU"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "methimazole-po",
+      "drug": "Methimazole (MMI)",
+      "name": "Methimazole PO (Tapazole Tab 5 mg / 10 mg)",
+      "preparation": "5 mg / tab; 10 mg / tab",
+      "note": "Pediatric Graves Disease / Hyperthyroidism (1st-line antithyroid drug; PTU contraindicated for routine use in children due to fulminant liver failure): Initial 0.2–0.5 mg/kg/day PO OD or div BID (severe/thyroid storm: 0.5–1 mg/kg/day, max 30 mg/day); Maintenance 0.1–0.25 mg/kg/day. ⚠️ Warn patient to stop immediately and check CBC if fever/sore throat (agranulocytosis) or jaundice.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 0.2,
+      "doseMaxMgPerKg": 0.5,
+      "maxPerDoseMg": 20,
+      "maxPerDayMg": 30,
+      "freq": "OD / bid",
+      "route": "PO",
+      "category": "endocrine",
+      "aliases": [
+        "Tapazole",
+        "MMI",
+        "Graves disease",
+        "Hyperthyroidism",
+        "ไทรอยด์เป็นพิษ"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "methotrexate-weekly-jia-rheum",
+      "drug": "Methotrexate (Low-Dose Weekly)",
+      "name": "Methotrexate PO/SC (Tab 2.5 mg; Inj 25 mg/mL)",
+      "preparation": "2.5 mg / tab; 25 mg / mL vial",
+      "note": "⚠️ ONCE WEEKLY DOSING (JIA / Uveitis / SLE / Dermatomyositis): 10–15 mg/m²/dose PO or SC ONCE WEEKLY (approx 0.3–0.6 mg/kg once weekly; max 25 mg/week) + Folic acid 5 mg PO once weekly (24–48 hr after MTX) or 1 mg PO OD. Never give daily for rheumatologic indications.",
+      "unit": "mg/m2",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "ONCE WEEKLY",
+      "route": "PO/SC",
+      "category": "hematology",
+      "aliases": [
+        "MTX",
+        "JIA",
+        "Rheumatology",
+        "ALL"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "methylene-blue-iv",
+      "drug": "Methylene Blue 1%",
+      "name": "Methylene Blue 1% IV (10 mg / mL)",
+      "preparation": "10 mg / mL (1% solution)",
+      "note": "Acquired Methemoglobinemia (MetHb >20–30% or symptomatic hypoxia): 1–2 mg/kg (0.1–0.2 mL/kg of 1% solution) slow IV over 5–10 min; may repeat 1 mg/kg in 30–60 min if needed (max cumulative 7 mg/kg). ⚠️ CONTRAINDICATED in G6PD deficiency (causes paradoxical hemolysis; use high-dose Ascorbic acid / exchange transfusion instead).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 1,
+      "doseMaxMgPerKg": 2,
+      "maxPerDoseMg": 100,
+      "freq": "Slow IV over 5–10 min",
+      "route": "IV",
+      "category": "emergency",
+      "aliases": [
+        "Methemoglobinemia",
+        "Dapsone toxicity",
+        "Antidote"
+      ]
+    },
+    {
+      "minAgeYr": 6,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "methylphenidate-oros-concerta",
+      "drug": "Methylphenidate Extended-Release (OROS)",
+      "name": "Methylphenidate ER PO (Concerta 18 mg / 27 mg / 36 mg)",
+      "preparation": "18 mg, 27 mg, 36 mg / OROS tab",
+      "note": "ADHD (≥6 yr, swallow whole — do NOT chew/crush): Stimulant-naive: Start 18 mg PO OD in the morning; titrate by 9–18 mg weekly (max 54 mg/day for 6–12 yr; max 72 mg/day for ≥13 yr). Conversion from Ritalin IR: 5 mg BID/TID → 18 mg OD; 10 mg BID/TID → 36 mg OD.",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD AM",
+      "route": "PO (swallow whole)",
+      "category": "neuro",
+      "aliases": [
+        "Concerta",
+        "ADHD",
+        "สมาธิสั้น"
+      ]
+    },
+    {
+      "minAgeYr": 6,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "methylphenidate-ir-po",
+      "drug": "Methylphenidate Immediate-Release",
+      "name": "Methylphenidate IR PO (Ritalin / Rubifen Tab 10 mg)",
+      "preparation": "10 mg / tab",
+      "note": "ADHD (≥6 yr): Start 2.5–5 mg PO BID (breakfast & lunch; last dose before 16:00); increase by 2.5–5 mg/day weekly to optimal dose 0.3–1 mg/kg/day (max 2 mg/kg/day or 60 mg/day). Monitor growth (weight/height), BP, HR, appetite, sleep.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 0.3,
+      "doseMaxMgPerKg": 1,
+      "maxPerDoseMg": 20,
+      "maxPerDayMg": 60,
+      "freq": "bid (AM & noon)",
+      "route": "PO",
+      "category": "neuro",
+      "aliases": [
+        "Ritalin",
+        "Rubifen",
+        "ADHD",
+        "สมาธิสั้น"
+      ]
+    },
+    {
       "key": "methylprednisolone-iv-load",
       "drug": "Methylprednisolone (Loading)",
       "name": "Methylprednisolone IV Loading Dose",
@@ -2902,7 +5701,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Solu-Medrol Load"
-      ]
+      ],
+      "category": "endocrine"
     },
     {
       "key": "methylprednisolone-iv-maint",
@@ -2924,7 +5724,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Solu-Medrol Maint"
-      ]
+      ],
+      "category": "endocrine"
     },
     {
       "key": "metoclopramide-forms",
@@ -2943,7 +5744,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Plasil"
-      ]
+      ],
+      "category": "gi"
     },
     {
       "key": "metronidazole-iv-po",
@@ -2965,6 +5767,32 @@
       "aliases": [],
       "isAtb": true,
       "category": "antibiotic"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "micafungin-iv",
+      "drug": "Micafungin",
+      "name": "Micafungin IV (Mycamine 50 mg vial)",
+      "preparation": "Vial 50 mg",
+      "note": "Invasive Candidiasis: 2–4 mg/kg IV OD (max 100–150 mg/day). Neonatal Candidiasis (high CNS penetration): 4–10 mg/kg IV OD. Fungal Prophylaxis (HSCT): 1 mg/kg IV OD (max 50 mg/day).",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 2,
+      "doseMaxMgPerKg": 4,
+      "maxPerDoseMg": 150,
+      "maxPerDayMg": 150,
+      "freq": "OD",
+      "route": "IV",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Mycamine",
+        "Echinocandin",
+        "Neonatal candidiasis"
+      ]
     },
     {
       "key": "miconazole-topical-oral-gel",
@@ -3004,7 +5832,8 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "neuro"
     },
     {
       "key": "milk-of-magnesia-susp",
@@ -3022,7 +5851,56 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "gi"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "milrinone-iv-infusion",
+      "drug": "Milrinone",
+      "name": "Milrinone IV (10 mg / 10 mL = 1 mg/mL)",
+      "preparation": "1 mg / mL (10 mL vial)",
+      "note": "Low Cardiac Output / Cold Normotensive Shock / PPHN (Inodilator, PDE-3 inhibitor): Optional Load: 50 mcg/kg IV over 15–60 min (omit load if hypotensive); Continuous Infusion: 0.25–0.75 mcg/kg/min. Reduce dose in renal impairment.",
+      "unit": "mcg/kg/min",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "Continuous IV infusion",
+      "route": "IV Infusion",
+      "category": "cardiovascular",
+      "aliases": [
+        "Primacor",
+        "Inodilator",
+        "LCOS",
+        "PPHN",
+        "PICU"
+      ]
+    },
+    {
+      "minAgeYr": 2,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "mometasone-cream-0-1",
+      "drug": "Mometasone furoate 0.1% Cream",
+      "name": "Mometasone 0.1% Cream / Lotion (Elomet — Mid-High Potency)",
+      "preparation": "0.1% cream/lotion (5 g / 15 g tube)",
+      "note": "Atopic Dermatitis / Psoriasis (≥2 yr): Apply thin layer ONCE DAILY (OD) to affected trunk/extremities for ≤2 weeks. Avoid face, axilla, and groin.",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD (Topical)",
+      "route": "Topical",
+      "category": "skin",
+      "aliases": [
+        "Elomet",
+        "Topical steroid",
+        "Eczema"
+      ]
     },
     {
       "key": "montelukast-tab-10-mg",
@@ -3040,7 +5918,8 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "respiratory"
     },
     {
       "key": "montelukast-chew-4-5-mg",
@@ -3058,7 +5937,8 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "respiratory"
     },
     {
       "key": "montelukast-granule-4-mg",
@@ -3079,7 +5959,8 @@
       "aliases": [
         "Singulair",
         "Montek"
-      ]
+      ],
+      "category": "respiratory"
     },
     {
       "key": "morphine-iv",
@@ -3107,6 +5988,32 @@
       "category": "neuro"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "moxifloxacin-po-iv",
+      "drug": "Moxifloxacin",
+      "name": "Moxifloxacin PO/IV (Avelox 400 mg tab/vial)",
+      "preparation": "400 mg / tab; 400 mg / 250 mL IV",
+      "note": "MDR-TB / Mycobacterial infection: 10–15 mg/kg PO/IV OD (max 400 mg/day). Monitor QTc interval.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 10,
+      "doseMaxMgPerKg": 15,
+      "maxPerDoseMg": 400,
+      "maxPerDayMg": 400,
+      "freq": "OD",
+      "route": "PO/IV",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Avelox",
+        "Fluoroquinolone",
+        "MDR-TB"
+      ]
+    },
+    {
       "key": "multivitamin",
       "drug": "Multivitamin",
       "name": "Multivitamin",
@@ -3124,6 +6031,131 @@
       "maxWeightKg": null,
       "aliases": [
         "MTV"
+      ],
+      "category": "hematology"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "mupirocin-2-ointment",
+      "drug": "Mupirocin 2% Ointment",
+      "name": "Mupirocin 2% Ointment (Bactroban)",
+      "preparation": "2% ointment (5 g / 15 g tube)",
+      "note": "Localized Impetigo / Folliculitis / Nasal MRSA Decolonization: Apply to lesions TID × 5–10 days (Nasal MRSA: apply intranasally BID × 5 days).",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "tid (Topical)",
+      "route": "Topical",
+      "isAtb": true,
+      "category": "skin",
+      "aliases": [
+        "Bactroban",
+        "Impetigo",
+        "แผลพุพอง"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "mycophenolate-mofetil-mmf-po",
+      "drug": "Mycophenolate Mofetil (MMF)",
+      "name": "Mycophenolate Mofetil PO (CellCept Cap 250 mg / Tab 500 mg)",
+      "preparation": "250 mg / cap; 500 mg / tab",
+      "note": "Lupus Nephritis / Steroid-Dependent Nephrotic Syndrome / Autoimmune Disease / Transplant: 600 mg/m²/dose PO BID (1,200 mg/m²/day) or 15–23 mg/kg/dose PO BID (max 1,000 mg/dose BID = 2,000 mg/day). Monitor CBC (leukopenia) and GI symptoms.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 15,
+      "doseMaxMgPerKg": 23,
+      "maxPerDoseMg": 1000,
+      "maxPerDayMg": 2000,
+      "freq": "bid",
+      "route": "PO",
+      "category": "hematology",
+      "aliases": [
+        "CellCept",
+        "MMF",
+        "Lupus nephritis",
+        "Nephrotic syndrome"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "acetylcysteine-nac-iv-paracetamol-od",
+      "drug": "N-Acetylcysteine (NAC) IV (Paracetamol Overdose)",
+      "name": "N-Acetylcysteine (NAC) IV 20% (Fluimucil 300 mg / 3 mL = 100 mg/mL)",
+      "preparation": "100 mg / mL (300 mg / 3 mL ampule) or 200 mg / mL",
+      "note": "Paracetamol Overdose / Acute Liver Failure (21-Hour 3-Bag IV Protocol — total 300 mg/kg): Bag 1: 150 mg/kg in 3 mL/kg D5W (max 200 mL) over 1 hr; Bag 2: 50 mg/kg in 7 mL/kg D5W (max 500 mL) over 4 hr; Bag 3: 100 mg/kg in 14 mL/kg D5W (max 1,000 mL) over 16 hr. (Alternative 12-hr 2-Bag SNAP protocol: 100 mg/kg over 2 hr, then 200 mg/kg over 10 hr). Adjust fluid volume in children <40 kg to prevent hyponatremia.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 150,
+      "doseMaxMgPerKg": 300,
+      "freq": "21-hr (150-50-100 mg/kg) or 12-hr SNAP",
+      "route": "IV Infusion",
+      "category": "emergency",
+      "aliases": [
+        "NAC IV",
+        "Fluimucil IV",
+        "Paracetamol overdose",
+        "Acetaminophen toxicity"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "naloxone-iv-im-in",
+      "drug": "Naloxone (Narcan)",
+      "name": "Naloxone IV/IM/IN (0.4 mg / mL)",
+      "preparation": "0.4 mg / mL (1 mL ampule)",
+      "note": "Opioid Overdose / Apnea Reversal: Full reversal (<20 kg or <5 yr): 0.1 mg/kg IV/IO/IM/IN (≥20 kg: 2 mg); repeat q2–3 min PRN. Post-op opioid respiratory depression (avoid acute pain/withdrawal): titrate 0.001–0.01 mg/kg (1–10 mcg/kg) IV q2–3 min.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.01,
+      "doseMaxMgPerKg": 0.1,
+      "maxPerDoseMg": 2,
+      "freq": "q 2–3 min PRN",
+      "route": "IV/IO/IM/IN",
+      "category": "emergency",
+      "aliases": [
+        "Narcan",
+        "Opioid antidote",
+        "Morphine reversal",
+        "Fentanyl reversal"
+      ]
+    },
+    {
+      "minAgeYr": 2,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "naproxen-po",
+      "drug": "Naproxen",
+      "name": "Naproxen PO (Tab 250 mg)",
+      "preparation": "250 mg / tab",
+      "note": "Pain / Fever / Juvenile Idiopathic Arthritis (JIA, ≥2 yr): 10–20 mg/kg/day PO div BID with food (5–10 mg/kg/dose q12h; max 1,000 mg/day). Avoid in suspected Dengue, dehydration, or renal impairment.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 10,
+      "doseMaxMgPerKg": 20,
+      "maxPerDoseMg": 500,
+      "maxPerDayMg": 1000,
+      "freq": "bid",
+      "route": "PO",
+      "category": "analgesic",
+      "aliases": [
+        "Naprosyn",
+        "NSAID",
+        "JIA"
       ]
     },
     {
@@ -3144,7 +6176,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Nasocort"
-      ]
+      ],
+      "category": "respiratory"
     },
     {
       "key": "mometasone-nasonex-50-mcg-puff",
@@ -3164,6 +6197,176 @@
       "maxWeightKg": null,
       "aliases": [
         "Nasonex"
+      ],
+      "category": "respiratory"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "neostigmine-iv",
+      "drug": "Neostigmine",
+      "name": "Neostigmine IV (2.5 mg / mL or 0.5 mg / mL)",
+      "preparation": "0.5 mg / mL; 2.5 mg / mL ampule",
+      "note": "Non-depolarizing NMB Reversal: 0.03–0.07 mg/kg IV (max 5 mg) ALWAYS co-administered with Atropine 0.02 mg/kg (or Glycopyrrolate 0.01 mg/kg) to prevent severe cholinergic bradycardia.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.03,
+      "doseMaxMgPerKg": 0.07,
+      "maxPerDoseMg": 5,
+      "freq": "Single dose",
+      "route": "IV",
+      "category": "emergency",
+      "aliases": [
+        "Prostigmin",
+        "NMB reversal"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "nevirapine-nvp-neonatal-peds",
+      "drug": "Nevirapine (NVP)",
+      "name": "Nevirapine (NVP) PO (Suspension 10 mg/mL; Tab 200 mg)",
+      "preparation": "10 mg / mL suspension; 200 mg / tab",
+      "note": "High-Risk Neonatal HIV Prophylaxis: ≥37 wk GA: 6 mg/kg/dose PO OD (or birthweight 1.5–2 kg: 8 mg OD; >2 kg: 12 mg OD for 3-dose regimen at birth, 48h, 96h). 34–37 wk GA: 4 mg/kg OD × 1 wk then 6 mg/kg OD.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD / Per PMTCT protocol",
+      "route": "PO",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Viramune",
+        "NVP",
+        "PMTCT",
+        "Neonatal HIV"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "nicardipine-iv-infusion",
+      "drug": "Nicardipine",
+      "name": "Nicardipine IV Infusion (10 mg / 10 mL = 1 mg/mL)",
+      "preparation": "1 mg / mL (10 mL ampule)",
+      "note": "Hypertensive Emergency (1st-line titratable IV CCB in PICU): Start 0.5–1 mcg/kg/min continuous IV infusion; titrate every 15–30 min up to 3–5 mcg/kg/min (max 15 mg/hr). Lower BP by no more than 25% of planned reduction in first 8 hours.",
+      "unit": "mcg/kg/min",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "Continuous IV infusion",
+      "route": "IV Infusion",
+      "category": "cardiovascular",
+      "aliases": [
+        "Cardene",
+        "Hypertensive crisis",
+        "PICU"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "niclosamide-po",
+      "drug": "Niclosamide",
+      "name": "Niclosamide PO (500 mg chewable tab)",
+      "preparation": "500 mg / chewable tab",
+      "note": "Taenia saginata / T. solium / Diphyllobothrium (Single dose, chew thoroughly): <11 kg: 500 mg (1 tab); 11–34 kg: 1,000 mg (2 tabs); >34 kg: 1,500–2,000 mg (3–4 tabs). H. nana: Day 1 dose above, then half dose OD × 6 days.",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "Single dose",
+      "route": "PO (chew)",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Yomesan",
+        "Tapeworm",
+        "พยาธิตัวตืด"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "nifedipine-po",
+      "drug": "Nifedipine",
+      "name": "Nifedipine IR Cap (5 mg / 10 mg) & SR/XL Tab (20 mg / 30 mg)",
+      "preparation": "IR 5 mg, 10 mg cap; SR 20 mg, 30 mg tab",
+      "note": "Acute Severe Hypertension / Hypertensive Urgency (IR): 0.1–0.25 mg/kg/dose PO q4–6h PRN (max 10 mg/dose; max 1–2 mg/kg/day). Chronic Hypertension (Extended-Release XL/SR, swallow whole): 0.25–0.5 mg/kg/day PO OD–BID (max 3 mg/kg/day or 120 mg/day).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.1,
+      "doseMaxMgPerKg": 0.25,
+      "maxPerDoseMg": 10,
+      "freq": "q 4–6 hr PRN (Acute IR)",
+      "route": "PO",
+      "category": "cardiovascular",
+      "aliases": [
+        "Adalat",
+        "Hypertensive urgency",
+        "AGN hypertension"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "nitrofurantoin-po",
+      "drug": "Nitrofurantoin",
+      "name": "Nitrofurantoin PO (Tab 50 mg / 100 mg)",
+      "preparation": "50 mg / tab; 100 mg / tab",
+      "note": "Uncomplicated UTI treatment (>1 mo): 5–7 mg/kg/day PO div q6h (max 400 mg/day) × 5–7 d. UTI Prophylaxis: 1–2 mg/kg PO OD at bedtime (max 100 mg/day). ⚠️ Contraindicated in G6PD deficiency, neonates <1 mo, and CrCl <60 mL/min.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 5,
+      "doseMaxMgPerKg": 7,
+      "maxPerDoseMg": 100,
+      "maxPerDayMg": 400,
+      "freq": "q 6 hr (Tx) / OD hs (Prophylaxis)",
+      "route": "PO",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Furadantin",
+        "Macrobid",
+        "UTI prophylaxis"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "norepinephrine-iv-infusion",
+      "drug": "Norepinephrine (Levophed)",
+      "name": "Norepinephrine IV Infusion (4 mg / 4 mL)",
+      "preparation": "4 mg / 4 mL (1 mg / mL)",
+      "note": "Fluid-Refractory Warm/Vasodilatory Septic Shock: Start 0.05–0.1 mcg/kg/min continuous IV/IO infusion; titrate to normotension/perfusion up to 1–2 mcg/kg/min. Prefer central line (peripheral diluted ≤16 mcg/mL safe for initial resuscitation). Extravasation antidote: Phentolamine.",
+      "unit": "mcg/kg/min",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "Continuous IV infusion",
+      "route": "IV Infusion",
+      "category": "emergency",
+      "aliases": [
+        "Levophed",
+        "Noradrenaline",
+        "Septic shock",
+        "Vasopressor"
       ]
     },
     {
@@ -3227,6 +6430,57 @@
       "category": "antibiotic"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "octreotide-iv-sc",
+      "drug": "Octreotide",
+      "name": "Octreotide IV/SC (Sandostatin 0.1 mg / mL)",
+      "preparation": "100 mcg / mL (0.1 mg / mL) ampule",
+      "note": "Acute Variceal / Portal Hypertensive GI Bleed: Load 1–2 mcg/kg IV bolus (max 50 mcg), then Continuous IV Infusion 1–2 mcg/kg/hr (up to 5 mcg/kg/hr; max 50 mcg/hr). Chylothorax: 1–10 mcg/kg/hr IV or 10–40 mcg/kg/day SC div q8h. Congenital Hyperinsulinism: 5–25 mcg/kg/day SC/IV div q6–8h. Monitor blood glucose.",
+      "unit": "mcg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "Continuous IV or SC q6–8h",
+      "route": "IV/SC",
+      "category": "gi",
+      "aliases": [
+        "Sandostatin",
+        "Variceal bleed",
+        "Chylothorax",
+        "Hyperinsulinism"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "ofloxacin-otic-ophthalmic-drops",
+      "drug": "Ofloxacin 0.3% Otic / Eye Drops",
+      "name": "Ofloxacin 0.3% Ear Drops / Eye Drops (Tarivid)",
+      "preparation": "0.3% (3 mg/mL) drops (5 mL bottle)",
+      "note": "Otitis Externa: 6 mo–13 yr: 5 drops in affected ear OD × 7 days; ≥13 yr: 10 drops OD × 7 days. Acute Otitis Media with Tympanostomy Tubes / CSOM (safe with perforated TM): 5 drops BID × 10 days. Bacterial Conjunctivitis: 1–2 drops q2–4h × 2d, then QID × 5d.",
+      "unit": "drops",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD / bid (Otic) or qid (Eye)",
+      "route": "Otic / Ophthalmic",
+      "isAtb": true,
+      "category": "skin",
+      "aliases": [
+        "Tarivid",
+        "Exocin",
+        "Ear drops",
+        "Eye drops",
+        "CSOM",
+        "Otitis externa"
+      ]
+    },
+    {
       "key": "omeprazole-iv-40-mg-tab-20-mg",
       "drug": "Omeprazole",
       "name": "Omeprazole IV/PO",
@@ -3242,7 +6496,8 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "gi"
     },
     {
       "key": "ondansetron-iv-4-mg",
@@ -3260,7 +6515,35 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "gi"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "ondansetron-po",
+      "drug": "Ondansetron (Oral)",
+      "name": "Ondansetron PO (Syrup 4 mg/5 mL; Tab / ODT 4 mg, 8 mg)",
+      "preparation": "4 mg / 5 mL syrup; 4 mg, 8 mg tab/ODT",
+      "note": "Acute Gastroenteritis / Vomiting (0.15 mg/kg/dose or Weight-Banded): 8–15 kg: 2 mg PO; 15–30 kg: 4 mg PO; >30 kg: 8 mg PO (single dose 15–30 min before ORT, or q8h PRN; max 8 mg/dose).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.15,
+      "doseMaxMgPerKg": 0.15,
+      "maxPerDoseMg": 8,
+      "maxPerDayMg": 24,
+      "freq": "Single dose / q 8 hr PRN",
+      "route": "PO",
+      "category": "gi",
+      "aliases": [
+        "Zofran",
+        "Onsia",
+        "Zondan",
+        "Antiemetic",
+        "ยาแก้อาเจียน"
+      ]
     },
     {
       "key": "oseltamivir-weight-based",
@@ -3305,6 +6588,55 @@
       "category": "antibiotic"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "oxcarbazepine-po",
+      "drug": "Oxcarbazepine",
+      "name": "Oxcarbazepine PO (Trileptal Susp 60 mg/mL; Tab 300/600 mg)",
+      "preparation": "60 mg / mL suspension; 300 mg / tab",
+      "note": "Focal Epilepsy: Start 8–10 mg/kg/day PO div BID (max initial 600 mg/day); titrate over 2 weeks to Maintenance: 20–29 kg: 900 mg/day; 29.1–39 kg: 1,200 mg/day; >39 kg: 1,800 mg/day (or 20–40 mg/kg/day div BID). ⚠️ Screen HLA-B*1502; monitor serum Na+ (hyponatremia).",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 20,
+      "doseMaxMgPerKg": 40,
+      "maxPerDayMg": 1800,
+      "freq": "bid",
+      "route": "PO",
+      "category": "neuro",
+      "aliases": [
+        "Trileptal",
+        "OXC",
+        "Focal epilepsy"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "oxybutynin-po",
+      "drug": "Oxybutynin",
+      "name": "Oxybutynin PO (Ditropan Tab 5 mg)",
+      "preparation": "5 mg / tab",
+      "note": "Neurogenic Bladder / Overactive Bladder: 0.2 mg/kg/dose PO BID–TID (≥5 yr: 2.5–5 mg PO BID–TID, max 15 mg/day). Anticholinergic side effects: dry mouth, flushing, constipation, heat intolerance.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.2,
+      "doseMaxMgPerKg": 0.2,
+      "maxPerDoseMg": 5,
+      "maxPerDayMg": 15,
+      "freq": "bid / tid",
+      "route": "PO",
+      "category": "endocrine",
+      "aliases": [
+        "Ditropan",
+        "Neurogenic bladder",
+        "Enuresis"
+      ]
+    },
+    {
       "key": "oxymetazoline-drops-0-025-0-05",
       "drug": "Oxymetazoline",
       "name": "Oxymetazoline nasal drops/spray",
@@ -3322,7 +6654,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Iliadin"
-      ]
+      ],
+      "category": "respiratory"
     },
     {
       "key": "paracetamol-kit-60-mg-0-6-ml",
@@ -3344,7 +6677,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Paracetamol drop"
-      ]
+      ],
+      "category": "analgesic"
     },
     {
       "key": "paracetamol-tab-325-mg",
@@ -3364,7 +6698,8 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "analgesic"
     },
     {
       "key": "paracetamol-tab-500-mg",
@@ -3384,7 +6719,33 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "analgesic"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "paracetamol-iv-perfalgan",
+      "drug": "Paracetamol IV",
+      "name": "Paracetamol IV (Perfalgan 1,000 mg / 100 mL = 10 mg/mL)",
+      "preparation": "10 mg / mL (100 mL vial)",
+      "note": "Infuse over 15 min: Neonates/Infants <10 kg: 7.5 mg/kg/dose IV q6h (max 30 mg/kg/day). Children 10–50 kg: 15 mg/kg/dose IV q6h (max 60 mg/kg/day, max 750 mg/dose). >50 kg: 1,000 mg IV q6h (max 4,000 mg/day). ⚠️ Verify mL vs mg carefully (10 mg = 1 mL) to prevent 10-fold overdose.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 7.5,
+      "doseMaxMgPerKg": 15,
+      "maxPerDoseMg": 1000,
+      "maxPerDayMg": 4000,
+      "freq": "q 6 hr",
+      "route": "IV Infusion (15 min)",
+      "category": "analgesic",
+      "aliases": [
+        "Perfalgan",
+        "IV Acetaminophen",
+        "พาราเซตามอลฉีด"
+      ]
     },
     {
       "key": "paracetamol-syrup-120-mg-5-ml",
@@ -3406,7 +6767,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Acetaminophen"
-      ]
+      ],
+      "category": "analgesic"
     },
     {
       "key": "paracetamol-syrup-160-mg-5-ml",
@@ -3430,7 +6792,8 @@
         "Tempra",
         "Calpol 160",
         "Acetaminophen 160"
-      ]
+      ],
+      "category": "analgesic"
     },
     {
       "key": "paracetamol-syrup-250-mg-5-ml",
@@ -3450,7 +6813,8 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "analgesic"
     },
     {
       "key": "peg-forlax-10g-sachet-disimpaction",
@@ -3470,7 +6834,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Forlax Disimpaction"
-      ]
+      ],
+      "category": "gi"
     },
     {
       "key": "peg-forlax-10g-sachet-maint",
@@ -3490,7 +6855,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Forlax Maint"
-      ]
+      ],
+      "category": "gi"
     },
     {
       "key": "penicillin-g-iv",
@@ -3534,6 +6900,28 @@
       "category": "antibiotic"
     },
     {
+      "minAgeYr": 4,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "perampanel-po",
+      "drug": "Perampanel",
+      "name": "Perampanel PO (Fycompa Oral Susp 0.5 mg/mL; Tab 2/4/6/8 mg)",
+      "preparation": "0.5 mg / mL suspension; 2 mg, 4 mg, 8 mg tab",
+      "note": "Focal / Generalized Tonic-Clonic Epilepsy (≥4 yr): Start 2 mg PO OD at bedtime (hs); increase by 2 mg/day no more frequently than q1–2 wk to Maintenance 4–8 mg PO OD hs (max 12 mg/day). Monitor for irritability/aggression.",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD hs",
+      "route": "PO",
+      "category": "neuro",
+      "aliases": [
+        "Fycompa",
+        "AMPA antagonist"
+      ]
+    },
+    {
       "key": "permethrin-1-percent-shampoo",
       "drug": "Permethrin",
       "name": "Permethrin 1% lotion/shampoo (pediculosis)",
@@ -3574,6 +6962,31 @@
       "category": "antibiotic"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "pethidine-meperidine-iv-im",
+      "drug": "Pethidine (Meperidine)",
+      "name": "Pethidine (Meperidine) IV/IM (50 mg / mL)",
+      "preparation": "50 mg / mL (1 mL ampule)",
+      "note": "Post-anesthesia Rigors / Amphotericin B Rigors: 0.5–1 mg/kg slow IV/IM single dose (max 50 mg). (Not recommended for routine repetitive pain management due to neurotoxic normeperidine accumulation and seizures).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.5,
+      "doseMaxMgPerKg": 1,
+      "maxPerDoseMg": 50,
+      "freq": "PRN rigors",
+      "route": "IV/IM",
+      "category": "analgesic",
+      "aliases": [
+        "Meperidine",
+        "Demerol",
+        "Shivering",
+        "Rigors"
+      ]
+    },
+    {
       "key": "phenobarbital-iv-tab",
       "drug": "Phenobarbital",
       "name": "Phenobarbital IV/Tab",
@@ -3588,7 +7001,8 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "neuro"
     },
     {
       "key": "phenylephrine-elixir-combo-5-mg-5-ml",
@@ -3608,7 +7022,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Dimetapp combo"
-      ]
+      ],
+      "category": "respiratory"
     },
     {
       "key": "phenytoin-iv-load",
@@ -3631,7 +7046,8 @@
       "aliases": [
         "Dilantin",
         "Phenytoin Load"
-      ]
+      ],
+      "category": "neuro"
     },
     {
       "key": "phenytoin-iv-maint",
@@ -3653,7 +7069,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Dilantin"
-      ]
+      ],
+      "category": "neuro"
     },
     {
       "key": "piperacillin-tazobactam-iv",
@@ -3711,6 +7128,79 @@
       "category": "antibiotic"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "polymyxin-b-iv",
+      "drug": "Polymyxin B",
+      "name": "Polymyxin B IV (500,000 units = 50 mg vial)",
+      "preparation": "Vial 500,000 units (1 mg = 10,000 units)",
+      "note": "Load: 2–2.5 mg/kg (20,000–25,000 U/kg) IV over 1 hr; Maintenance: 2.5–3 mg/kg/day (25,000–30,000 U/kg/day) div q12h. Does NOT require renal dose reduction (unlike Colistin). Monitor nephro/neurotoxicity.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 2.5,
+      "doseMaxMgPerKg": 3,
+      "freq": "q 12 hr",
+      "route": "IV",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "MDR",
+        "CRE",
+        "CRAB"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "posaconazole-po-iv",
+      "drug": "Posaconazole",
+      "name": "Posaconazole PO/IV (Noxafil susp 40 mg/mL; DR tab 100 mg)",
+      "preparation": "Oral susp 40 mg/mL; DR tab 100 mg; IV 300 mg",
+      "note": "DR Tablet / IV (≥2 yr, weight-banded): 10–20 kg: 120–150 mg; 20–30 kg: 180–200 mg; 30–40 kg: 210–250 mg; >40 kg: 300 mg q12h Day 1, then OD. Oral suspension: 4 mg/kg/dose TID with high-fat meal.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD / TID",
+      "route": "PO/IV",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Noxafil",
+        "Antifungal",
+        "Mucor"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "pralidoxime-2-pam-iv",
+      "drug": "Pralidoxime (2-PAM)",
+      "name": "Pralidoxime (2-PAM) IV (1 g vial)",
+      "preparation": "Vial 1 g",
+      "note": "Organophosphate Poisoning (Nicotinic weakness/fasciculations — give WITH Atropine): Load 25–50 mg/kg IV (max 2,000 mg) diluted in NS infused over 15–30 min, followed by Continuous IV Infusion 10–20 mg/kg/hr (max 500 mg/hr).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 25,
+      "doseMaxMgPerKg": 50,
+      "maxPerDoseMg": 2000,
+      "freq": "Load over 30 min + IV infusion",
+      "route": "IV",
+      "category": "emergency",
+      "aliases": [
+        "2-PAM",
+        "Organophosphate",
+        "Cholinergic",
+        "Antidote"
+      ]
+    },
+    {
       "key": "praziquantel-po",
       "drug": "Praziquantel",
       "name": "Praziquantel PO (Tab 600 mg)",
@@ -3753,7 +7243,59 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "endocrine"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "primaquine-po",
+      "drug": "Primaquine",
+      "name": "Primaquine PO (7.5 mg / 15 mg base tab)",
+      "preparation": "7.5 mg base / tab; 15 mg base / tab",
+      "note": "P. vivax / P. ovale radical cure: 0.25–0.5 mg base/kg PO OD × 14 days (max 30 mg/day). P. falciparum gametocytocidal: 0.25 mg base/kg single dose. ⚠️ MANDATORY G6PD test before radical cure (hemolytic crisis risk).",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 0.25,
+      "doseMaxMgPerKg": 0.5,
+      "maxPerDoseMg": 30,
+      "maxPerDayMg": 30,
+      "freq": "OD",
+      "route": "PO",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Malaria",
+        "Vivax",
+        "G6PD"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "propofol-iv",
+      "drug": "Propofol",
+      "name": "Propofol 1% IV (10 mg / mL)",
+      "preparation": "10 mg / mL (20 mL ampule / 50 mL vial)",
+      "note": "Induction / RSI (hemodynamically stable): 1.5–3 mg/kg slow IV push. Procedural Sedation: Initial 1–2 mg/kg IV, then 0.5 mg/kg boluses PRN or infusion 50–150 mcg/kg/min. ⚠️ Avoid prolonged high-dose PICU infusion (>4 mg/kg/hr for >48h) due to fatal Propofol Infusion Syndrome (PRIS: lactic acidosis, rhabdomyolysis, lipemia).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 1,
+      "doseMaxMgPerKg": 2.5,
+      "maxPerDoseMg": 200,
+      "freq": "STAT / Titrate",
+      "route": "IV",
+      "category": "emergency",
+      "aliases": [
+        "Diprivan",
+        "RSI",
+        "Procedural sedation",
+        "Anesthesia"
+      ]
     },
     {
       "key": "propranolol-oral",
@@ -3795,7 +7337,8 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "general"
     },
     {
       "key": "pseudoephedrine-syrup-30-mg-5-ml",
@@ -3812,7 +7355,8 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "general"
     },
     {
       "key": "pyrazinamide-po",
@@ -3837,6 +7381,53 @@
       "category": "antibiotic"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "pyridostigmine-po",
+      "drug": "Pyridostigmine",
+      "name": "Pyridostigmine PO (Mestinon Tab 60 mg)",
+      "preparation": "60 mg / tab",
+      "note": "Myasthenia Gravis: Start 0.5–1 mg/kg/dose PO q4–6h; titrate to 7 mg/kg/day div in 5–6 doses (max 300–600 mg/day). Watch for cholinergic crisis (salivation, bradycardia, weakness).",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 4,
+      "doseMaxMgPerKg": 7,
+      "maxPerDoseMg": 120,
+      "maxPerDayMg": 600,
+      "freq": "q 4–6 hr",
+      "route": "PO",
+      "category": "neuro",
+      "aliases": [
+        "Mestinon",
+        "Myasthenia gravis"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "pyridoxine-vit-b6-iv-po",
+      "drug": "Pyridoxine (Vitamin B6)",
+      "name": "Pyridoxine (Vitamin B6) IV (50/100 mg/mL) & PO (Tab 10/50/100 mg)",
+      "preparation": "IV 50 mg/mL or 100 mg/mL; Tab 10 mg, 50 mg, 100 mg",
+      "note": "Neonatal Pyridoxine-Dependent Epilepsy Trial: 100 mg IV push × 1 (with cardiorespiratory/EEG monitoring; watch for transient apnea), followed by 15–30 mg/kg/day PO (max 500 mg/day). INH Toxic Seizure Antidote: 70 mg/kg IV (max 5 g) or gram-for-gram INH ingested. INH Neuropathy Prophylaxis: 1–2 mg/kg PO OD (10–25 mg/day).",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD / STAT",
+      "route": "PO/IV",
+      "category": "neuro",
+      "aliases": [
+        "Vitamin B6",
+        "INH overdose",
+        "Neonatal seizure"
+      ]
+    },
+    {
       "key": "racecadotril-hidrasec-sachet-30g",
       "drug": "Racecadotril",
       "name": "Racecadotril (Hidrasec)",
@@ -3853,7 +7444,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Hidrasec"
-      ]
+      ],
+      "category": "gi"
     },
     {
       "key": "ranitidine-iv-50-mg",
@@ -3896,7 +7488,8 @@
           "freq": "q 12–24 hr",
           "clinicalNote": "ลดขนาดลง 50% หรือให้ทุก 12–24 ชม."
         }
-      ]
+      ],
+      "category": "gi"
     },
     {
       "key": "ranitidine-tab-150-mg-po",
@@ -3940,6 +7533,56 @@
           "freq": "q 24 hr",
           "clinicalNote": "ลดขนาดลง 50% หรือให้ทุก 24 ชม."
         }
+      ],
+      "category": "gi"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "rasburicase-iv",
+      "drug": "Rasburicase",
+      "name": "Rasburicase IV (Fasturtec 1.5 mg / 7.5 mg vial)",
+      "preparation": "1.5 mg, 7.5 mg vial",
+      "note": "High-Risk Tumor Lysis Syndrome (Severe Hyperuricemia): 0.15–0.2 mg/kg IV infused over 30 min × 1 dose (single fixed 3 mg or 0.15 mg/kg often sufficient; may repeat OD up to 5 days). ⚠️ ABSOLUTELY CONTRAINDICATED in G6PD deficiency (causes severe methemoglobinemia and hemolysis). Transport blood samples for uric acid on ice.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.15,
+      "doseMaxMgPerKg": 0.2,
+      "freq": "Single IV dose (or OD PRN)",
+      "route": "IV Infusion (30 min)",
+      "category": "hematology",
+      "aliases": [
+        "Fasturtec",
+        "Elitek",
+        "Tumor lysis syndrome",
+        "TLS"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "remdesivir-iv",
+      "drug": "Remdesivir",
+      "name": "Remdesivir IV (Veklury 100 mg vial)",
+      "preparation": "Vial 100 mg",
+      "note": "COVID-19 (≥28 days old & ≥3 kg to <40 kg): Day 1 Load: 5 mg/kg IV × 1, then Days 2–5 (or up to Day 10): 2.5 mg/kg IV OD. Weight ≥40 kg: Day 1 Load 200 mg IV, then 100 mg IV OD.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 2.5,
+      "doseMaxMgPerKg": 5,
+      "maxPerDoseMg": 200,
+      "maxPerDayMg": 200,
+      "freq": "OD",
+      "route": "IV",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Veklury",
+        "COVID-19"
       ]
     },
     {
@@ -3965,6 +7608,83 @@
       "category": "antibiotic"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "risperidone-po",
+      "drug": "Risperidone",
+      "name": "Risperidone PO (Oral Soln 1 mg/mL; Tab 0.5/1/2 mg)",
+      "preparation": "1 mg / mL oral solution; 0.5 mg, 1 mg, 2 mg tab",
+      "note": "ASD Irritability / Aggression / Tourette Tics (≥5 yr): <20 kg: Start 0.25 mg PO OD, increase at Day 4 to 0.5 mg/day (effective range 0.5–1.5 mg/day); ≥20 kg: Start 0.5 mg PO OD, increase at Day 4 to 1 mg/day (effective range 0.5–3 mg/day). Monitor weight, metabolic profile, prolactin, EPS.",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD / bid",
+      "route": "PO",
+      "category": "neuro",
+      "aliases": [
+        "Risperdal",
+        "Autism",
+        "ASD",
+        "Tics",
+        "Tourette",
+        "Aggression"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "rocuronium-iv-rsi",
+      "drug": "Rocuronium",
+      "name": "Rocuronium IV (50 mg / 5 mL = 10 mg/mL)",
+      "preparation": "10 mg / mL (5 mL vial)",
+      "note": "RSI Neuromuscular Blockade: 1–1.2 mg/kg IV push (onset 45–60 sec, duration 30–45 min). Routine intubation/bolus: 0.6 mg/kg IV. Continuous PICU infusion: 5–12 mcg/kg/min. Reversal: Sugammadex 2–16 mg/kg IV.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.6,
+      "doseMaxMgPerKg": 1.2,
+      "maxPerDoseMg": 100,
+      "freq": "STAT (RSI)",
+      "route": "IV",
+      "category": "emergency",
+      "aliases": [
+        "Esmeron",
+        "Zemuron",
+        "RSI",
+        "Paralytic",
+        "NMB"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "salbutamol-mdi-100mcg",
+      "drug": "Salbutamol MDI (Ventolin Evohaler)",
+      "name": "Salbutamol MDI (100 mcg / puff — use with Spacer)",
+      "preparation": "100 mcg / puff MDI (200 puffs)",
+      "note": "Acute Asthma Exacerbation (MDI + Spacer ± Mask): Mild–Moderate: 2–4 puffs (<6 yr) or 4–8 puffs (≥6 yr) q20 min × 3 doses in 1st hour, then q1–4h PRN. Routine Bronchodilator / Exercise-Induced: 1–2 puffs q4–6h PRN.",
+      "unit": "puff",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "q 20 min x3 (Acute) / q 4–6 hr PRN",
+      "route": "Inhaled (MDI + Spacer)",
+      "category": "respiratory",
+      "aliases": [
+        "Ventolin",
+        "Albuterol",
+        "SABA",
+        "Asthma",
+        "ยาพ่นขยายหลอดลม"
+      ]
+    },
+    {
       "key": "salbutamol-neb-2-5mg-2-5ml-5mg-ml",
       "drug": "Salbutamol",
       "name": "Salbutamol neb solution (2.5 mg / 2.5 mL; 5 mg / mL)",
@@ -3983,6 +7703,154 @@
       "aliases": [
         "Ventolin",
         "Asmasal"
+      ],
+      "category": "respiratory"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "salbutamol-oral-syrup-2mg-5ml",
+      "drug": "Salbutamol (Oral Syrup)",
+      "name": "Salbutamol Oral Syrup (2 mg / 5 mL)",
+      "preparation": "2 mg / 5 mL syrup; 2 mg / tab",
+      "note": "0.1–0.15 mg/kg/dose PO TID–QID (max 2 mg/dose in <6 yr; max 4 mg/dose in ≥6 yr). Note: Inhaled SABA is strongly preferred over oral Salbutamol due to faster onset and fewer systemic side effects (tachycardia/tremor).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.1,
+      "doseMaxMgPerKg": 0.15,
+      "maxPerDoseMg": 4,
+      "maxPerDayMg": 16,
+      "freq": "tid / qid",
+      "route": "PO",
+      "category": "respiratory",
+      "aliases": [
+        "Ventolin syrup",
+        "Salbutamol syrup"
+      ]
+    },
+    {
+      "minAgeYr": 2,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "senna-senokot-po",
+      "drug": "Senna (Sennosides)",
+      "name": "Senna PO (Senokot Tab 7.5 mg)",
+      "preparation": "7.5 mg sennosides / tab",
+      "note": "Stimulant Laxative for Functional Constipation / Opioid-Induced Constipation: 2–6 yr: 3.75–7.5 mg (½–1 tab) PO OD hs; 6–12 yr: 7.5–15 mg (1–2 tabs) PO OD hs; ≥12 yr: 15–30 mg (2–4 tabs) PO OD hs.",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD hs",
+      "route": "PO",
+      "category": "gi",
+      "aliases": [
+        "Senokot",
+        "มะขามแขก",
+        "Constipation",
+        "ยาระบาย"
+      ]
+    },
+    {
+      "minAgeYr": 6,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "sertraline-po",
+      "drug": "Sertraline",
+      "name": "Sertraline PO (Zoloft Tab 50 mg)",
+      "preparation": "50 mg / tab",
+      "note": "Pediatric Anxiety / OCD: 6–12 yr: Start 12.5–25 mg PO OD; 13–17 yr: Start 25–50 mg PO OD; titrate by 25 mg/day at ≥1-wk intervals (max 200 mg/day).",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD",
+      "route": "PO",
+      "category": "neuro",
+      "aliases": [
+        "Zoloft",
+        "SSRI",
+        "Anxiety",
+        "OCD"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "shohls-polycitra-solution-po",
+      "drug": "Potassium / Sodium Citrate (Shohl's / Polycitra)",
+      "name": "Shohl's Solution / Polycitra-K PO (1–2 mEq/mL)",
+      "preparation": "Oral solution 1 mEq/mL or 2 mEq/mL",
+      "note": "Renal Tubular Acidosis (RTA) / Hypocitraturic Nephrolithiasis: Distal RTA (Type 1): 1–4 mEq/kg/day PO div TID–QID after meals; Proximal RTA (Type 2): 5–15 mEq/kg/day PO div QID. Dilute in water/juice to minimize GI irritation.",
+      "unit": "mEq/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "tid / qid pc",
+      "route": "PO",
+      "category": "endocrine",
+      "aliases": [
+        "Shohl's solution",
+        "Polycitra",
+        "Potassium citrate",
+        "RTA"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "sildenafil-pah-pphn",
+      "drug": "Sildenafil",
+      "name": "Sildenafil PO (Revatio Susp 10 mg/mL; Tab 20 mg / 50 mg)",
+      "preparation": "20 mg / tab; 50 mg / tab",
+      "note": "Neonatal PPHN: 0.5–2 mg/kg/dose PO/NG q6–8h. Pediatric Pulmonary Arterial Hypertension (PAH, ≥1 yr): <20 kg: 10 mg PO TID; 20–45 kg: 20 mg PO TID; >45 kg: 20–40 mg PO TID (or 0.5–1 mg/kg/dose TID).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 0.5,
+      "doseMaxMgPerKg": 2,
+      "maxPerDoseMg": 20,
+      "maxPerDayMg": 60,
+      "freq": "tid / q 6–8 hr",
+      "route": "PO",
+      "category": "cardiovascular",
+      "aliases": [
+        "Revatio",
+        "Viagra",
+        "PPHN",
+        "Pulmonary hypertension",
+        "NICU"
+      ]
+    },
+    {
+      "minAgeYr": 0.17,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "silver-sulfadiazine-1-cream",
+      "drug": "Silver Sulfadiazine 1% Cream",
+      "name": "Silver Sulfadiazine 1% Cream (Silvadene / Dermazin)",
+      "preparation": "1% cream (25 g / 500 g jar)",
+      "note": "Partial/Full-Thickness Burns: Apply 1–2 mm layer to clean burn wound OD–BID. ⚠️ Contraindicated in neonates/infants <2 mo (kernicterus risk), G6PD deficiency, and sulfonamide allergy; avoid on face (ocular argyria).",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD–bid (Topical)",
+      "route": "Topical",
+      "category": "skin",
+      "aliases": [
+        "Silvadene",
+        "Dermazin",
+        "Burn cream",
+        "แผลไฟไหม้"
       ]
     },
     {
@@ -4015,7 +7883,8 @@
         "Disento",
         "Simethicone Dicyclomine",
         "Baby colic drop"
-      ]
+      ],
+      "category": "gi"
     },
     {
       "key": "simethicone-drops-40mg-0-6ml-tab-80mg",
@@ -4035,7 +7904,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Air-X"
-      ]
+      ],
+      "category": "gi"
     },
     {
       "key": "smecta-3g-sachet",
@@ -4053,7 +7923,32 @@
       "maxAgeYr": null,
       "minWeightKg": null,
       "maxWeightKg": null,
-      "aliases": []
+      "aliases": [],
+      "category": "gi"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "sodium-bicarbonate-po-iv",
+      "drug": "Sodium Bicarbonate (NaHCO3 / Sodamint)",
+      "name": "Sodium Bicarbonate IV (7.5% = 0.9 mEq/mL) & PO (Sodamint 300 mg = 3.6 mEq/tab)",
+      "preparation": "7.5% IV (0.892 mEq/mL); 8.4% IV (1 mEq/mL); Sodamint 300 mg tab (3.6 mEq)",
+      "note": "Severe Metabolic Acidosis / TCA Overdose / Hyperkalemia IV: 1–2 mEq/kg slow IV (dilute 1:1 with sterile water to 4.2% in neonates/infants to prevent IVH). Chronic Metabolic Acidosis (CKD / Distal RTA): 1–4 mEq/kg/day PO div BID–QID (Proximal RTA requires 5–15 mEq/kg/day).",
+      "unit": "mEq/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "Slow IV / PO bid–qid",
+      "route": "IV/PO",
+      "category": "endocrine",
+      "aliases": [
+        "Sodamint",
+        "NaHCO3",
+        "RTA",
+        "Metabolic acidosis"
+      ]
     },
     {
       "key": "spironolactone-oral",
@@ -4080,6 +7975,104 @@
       "category": "cardiovascular"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "streptomycin-im",
+      "drug": "Streptomycin",
+      "name": "Streptomycin IM (1 g vial)",
+      "preparation": "Vial 1 g",
+      "note": "Pediatric TB: 15–20 mg/kg/dose (up to 40 mg/kg) IM OD (max 1,000 mg/day). Monitor CN VIII ototoxicity and renal function.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 15,
+      "doseMaxMgPerKg": 20,
+      "maxPerDoseMg": 1000,
+      "maxPerDayMg": 1000,
+      "freq": "OD",
+      "route": "IM",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Anti-TB",
+        "Tuberculosis"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "succinylcholine-iv-im",
+      "drug": "Succinylcholine (Suxamethonium)",
+      "name": "Succinylcholine IV/IM (50 mg / mL)",
+      "preparation": "50 mg / mL (2 mL / 10 mL vial)",
+      "note": "RSI Depolarizing Paralytic: Infants/Young children (<2 yr): 2 mg/kg IV; Older children/Adolescents: 1–1.5 mg/kg IV (max 150 mg). IM (if no IV): 3–4 mg/kg IM (max 150 mg). ⚠️ Black Box: Contraindicated in muscular dystrophy/myopathy, burns >48h, crush injury, hyperkalemia, personal/family hx of Malignant Hyperthermia.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 1,
+      "doseMaxMgPerKg": 2,
+      "maxPerDoseMg": 150,
+      "freq": "STAT (RSI)",
+      "route": "IV/IM",
+      "category": "emergency",
+      "aliases": [
+        "Anectine",
+        "Suxamethonium",
+        "RSI",
+        "Laryngospasm"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "sucralfate-po",
+      "drug": "Sucralfate",
+      "name": "Sucralfate PO (Ulsanic Susp 1 g/5 mL; Tab 1 g)",
+      "preparation": "1 g / 5 mL suspension; 1,000 mg / tab",
+      "note": "Mucosal Protectant / Esophagitis / Peptic Ulcer (Give on empty stomach 1 hr before meals and hs): 40–80 mg/kg/day PO div QID (or <6 yr: 250–500 mg QID; ≥6 yr: 500–1,000 mg QID; max 4,000 mg/day). Separate from other oral drugs by 2 hours.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 40,
+      "doseMaxMgPerKg": 80,
+      "maxPerDoseMg": 1000,
+      "maxPerDayMg": 4000,
+      "freq": "qid ac & hs",
+      "route": "PO",
+      "category": "gi",
+      "aliases": [
+        "Ulsanic",
+        "Carafate",
+        "Ulcer"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "sugammadex-iv",
+      "drug": "Sugammadex",
+      "name": "Sugammadex IV (Bridion 200 mg / 2 mL = 100 mg/mL)",
+      "preparation": "100 mg / mL (2 mL vial)",
+      "note": "Reversal of Rocuronium / Vecuronium: Moderate blockade: 2 mg/kg IV; Deep blockade: 4 mg/kg IV; Immediate CICO emergency reversal: 16 mg/kg IV single bolus.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 2,
+      "doseMaxMgPerKg": 16,
+      "freq": "STAT",
+      "route": "IV",
+      "category": "emergency",
+      "aliases": [
+        "Bridion",
+        "Rocuronium reversal",
+        "CICO"
+      ]
+    },
+    {
       "key": "sulfur-5-10-percent-scabies",
       "drug": "Sulfur",
       "name": "Sulfur 5–10% topical (scabies)",
@@ -4100,6 +8093,150 @@
       ],
       "isAtb": true,
       "category": "antibiotic"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "surfactant-beractant-survanta",
+      "drug": "Beractant (Survanta)",
+      "name": "Surfactant — Beractant (Survanta 25 mg/mL, 4 mL/kg)",
+      "preparation": "Intratracheal suspension 25 mg phospholipids/mL (8 mL vial)",
+      "note": "Neonatal RDS: 4 mL/kg (100 mg phospholipids/kg) intratracheally via ETT / LISA / INSURE. Divide into 2–4 aliquots; may repeat q6h up to 4 total doses within first 48h of life. Warm to room temp before administration; do NOT shake.",
+      "unit": "mL/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 4,
+      "doseMaxMgPerKg": 4,
+      "freq": "q 6 hr PRN (max 4 doses)",
+      "route": "Intratracheal (ETT/LISA)",
+      "category": "respiratory",
+      "aliases": [
+        "Survanta",
+        "RDS",
+        "Surfactant",
+        "NICU"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "surfactant-poractant-curosurf",
+      "drug": "Poractant alfa (Curosurf)",
+      "name": "Surfactant — Poractant alfa (Curosurf 80 mg/mL)",
+      "preparation": "Intratracheal suspension 80 mg/mL (1.5 mL / 3 mL vial)",
+      "note": "Neonatal RDS: Initial dose: 2.5 mL/kg (200 mg/kg) intratracheally; Subsequent doses (if needed): 1.25 mL/kg (100 mg/kg) q12h × up to 2 additional doses (max total 5 mL/kg).",
+      "unit": "mL/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 1.25,
+      "doseMaxMgPerKg": 2.5,
+      "freq": "Initial 2.5 mL/kg, repeat 1.25 mL/kg q12h",
+      "route": "Intratracheal (ETT/LISA)",
+      "category": "respiratory",
+      "aliases": [
+        "Curosurf",
+        "RDS",
+        "Surfactant",
+        "NICU"
+      ]
+    },
+    {
+      "minAgeYr": 2,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "tacrolimus-ointment-protopic",
+      "drug": "Tacrolimus 0.03% / 0.1% Ointment",
+      "name": "Tacrolimus 0.03% Ointment (Protopic — Steroid-Sparing)",
+      "preparation": "0.03% ointment (≥2 yr); 0.1% ointment (≥16 yr)",
+      "note": "Facial / Eyelid / Sensitive-Area Atopic Dermatitis (Steroid-sparing calcineurin inhibitor, ≥2 yr): Apply thin layer of 0.03% ointment BID until cleared, then twice weekly (proactive maintenance). Does NOT cause skin atrophy.",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "bid (Topical)",
+      "route": "Topical",
+      "category": "skin",
+      "aliases": [
+        "Protopic",
+        "Elidel",
+        "Pimecrolimus",
+        "Atopic dermatitis"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "tacrolimus-po",
+      "drug": "Tacrolimus (Systemic)",
+      "name": "Tacrolimus PO (Prograf Cap 0.5 mg / 1 mg)",
+      "preparation": "0.5 mg, 1 mg / cap",
+      "note": "Nephrotic Syndrome (SDNS/SRNS): 0.1–0.15 mg/kg/day PO div q12h (target trough 5–8 ng/mL). Organ Transplant: 0.15–0.3 mg/kg/day PO div q12h. Monitor trough, SCr, glucose, K+, Mg.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 0.1,
+      "doseMaxMgPerKg": 0.2,
+      "freq": "q 12 hr",
+      "route": "PO",
+      "category": "hematology",
+      "aliases": [
+        "Prograf",
+        "FK506",
+        "Nephrotic syndrome",
+        "Transplant"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "teicoplanin-iv-im",
+      "drug": "Teicoplanin",
+      "name": "Teicoplanin IV/IM (Targocid 200 mg / 400 mg vial)",
+      "preparation": "Vial 200 mg; 400 mg",
+      "note": "Loading (>2 mo): 10 mg/kg IV q12h × 3 doses, then Maintenance: 6–10 mg/kg IV/IM OD (q24h). Neonates: Load 16 mg/kg × 1, then 8 mg/kg q24h.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "q 12 hr x3 then OD",
+      "route": "IV/IM",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Targocid",
+        "Glycopeptide",
+        "MRSA"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "terbinafine-po-topical",
+      "drug": "Terbinafine",
+      "name": "Terbinafine PO (Tab 250 mg) & 1% Cream",
+      "preparation": "250 mg / tab; 1% cream",
+      "note": "Tinea capitis / Onychomycosis PO (once daily): <20 kg: 62.5 mg (¼ tab) OD; 20–40 kg: 125 mg (½ tab) OD; >40 kg: 250 mg (1 tab) OD × 2–6 wk. Topical 1% cream: apply OD–BID × 1–2 wk.",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD",
+      "route": "PO/Topical",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Lamisil",
+        "Tinea capitis",
+        "Ringworm"
+      ]
     },
     {
       "key": "terbutaline-guaifenesin-syrup",
@@ -4123,7 +8260,8 @@
         "Bricanyl Expectorant",
         "Terbu GG",
         "Terbutaline expectorant"
-      ]
+      ],
+      "category": "respiratory"
     },
     {
       "key": "terbutaline-0-5mg-ml",
@@ -4142,7 +8280,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Bricanyl"
-      ]
+      ],
+      "category": "respiratory"
     },
     {
       "key": "terbutaline-syrup-1-5mg-5ml",
@@ -4166,6 +8305,80 @@
         "Bricanyl syrup",
         "Bricanyl oral",
         "Terbutaline syr"
+      ],
+      "category": "respiratory"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "thiamine-vit-b1-iv-po",
+      "drug": "Thiamine (Vitamin B1)",
+      "name": "Thiamine (Vitamin B1) IV (100 mg/mL) & PO (Tab 100 mg)",
+      "preparation": "IV 100 mg / mL; Tab 100 mg",
+      "note": "Infantile Beriberi (Cardiogenic Shock / Pulmonary Hypertension / Hoarseness / Lactic Acidosis): 50–100 mg slow IV/IM STAT, then 10–50 mg IV/IM/PO OD until recovery, followed by 10 mg PO OD. Refeeding Syndrome Prophylaxis: 2 mg/kg/day (max 100 mg) PO/IV OD × 5–7 days.",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "STAT / OD",
+      "route": "IV/IM/PO",
+      "category": "emergency",
+      "aliases": [
+        "Vitamin B1",
+        "Beriberi",
+        "Refeeding syndrome",
+        "เหน็บชา"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "tigecycline-iv",
+      "drug": "Tigecycline",
+      "name": "Tigecycline IV (Tygacil 50 mg vial)",
+      "preparation": "Vial 50 mg",
+      "note": "Reserve for MDR infections: 8–11 yr: 1.2 mg/kg IV q12h (max 50 mg/dose); ≥12 yr: Load 100 mg IV × 1, then 50 mg IV q12h. ⚠️ Tooth discoloration & enamel hypoplasia risk <8 yr.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "q 12 hr",
+      "route": "IV",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Tygacil",
+        "MDR",
+        "Acinetobacter"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "tobramycin-eye-drops-ointment",
+      "drug": "Tobramycin 0.3% Eye Drops / Ointment",
+      "name": "Tobramycin 0.3% Eye Drops / Ointment (Tobrex)",
+      "preparation": "0.3% ophthalmic solution (5 mL) or ointment (3.5 g)",
+      "note": "Bacterial Conjunctivitis (≥2 mo): Eye drops: 1–2 drops in affected eye(s) q4h × 7 days (severe: 2 drops q1–2h initially). Eye ointment: 1 cm ribbon BID–TID (or at bedtime).",
+      "unit": "drops",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "q 4 hr (Drops) / bid–tid (Ointment)",
+      "route": "Ophthalmic",
+      "isAtb": true,
+      "category": "skin",
+      "aliases": [
+        "Tobrex",
+        "Conjunctivitis",
+        "ตาแดง",
+        "ยาหยอดตา"
       ]
     },
     {
@@ -4217,6 +8430,84 @@
       "category": "neuro"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "tranexamic-acid-txa-iv-po",
+      "drug": "Tranexamic Acid (TXA)",
+      "name": "Tranexamic Acid IV (250 mg / 5 mL) & PO (Transamin Cap 250 mg)",
+      "preparation": "IV 50 mg / mL (5 mL amp); PO 250 mg / cap",
+      "note": "Pediatric Trauma / Severe Hemorrhage (within 3 hr of injury): Load 15–30 mg/kg IV over 10 min (max 1,000 mg), then 2 mg/kg/hr IV × 8 hr. Epistaxis / Mucosal Bleeding / Menorrhagia / Dental Bleed: IV 10 mg/kg/dose q8h (max 1,000 mg/dose); PO 15–25 mg/kg/dose TID (max 1,000–1,500 mg/dose).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 10,
+      "doseMaxMgPerKg": 25,
+      "maxPerDoseMg": 1000,
+      "maxPerDayMg": 3000,
+      "freq": "tid / q 8 hr",
+      "route": "IV/PO",
+      "category": "emergency",
+      "aliases": [
+        "Transamin",
+        "TXA",
+        "Bleeding",
+        "Epistaxis",
+        "Trauma"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "triamcinolone-cream-0-02-0-1",
+      "drug": "Triamcinolone Acetonide Cream / Oral Paste",
+      "name": "Triamcinolone 0.02% & 0.1% Cream / Lotion; 0.1% Oral Paste (Kenalog in Orabase)",
+      "preparation": "0.02% cream (low-mid potency); 0.1% cream/lotion (mid potency); 0.1% oral paste",
+      "note": "Atopic Dermatitis / Eczema: Apply thin layer BID × 5–14 days (Use 0.02% on thin skin/young children; 0.1% on trunk/extremities; avoid 0.1% on face, eyelids, or diaper area). Aphthous Ulcers: dab 0.1% oral paste at bedtime and after meals.",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "bid (Topical)",
+      "route": "Topical / Oral Mucosa",
+      "category": "skin",
+      "aliases": [
+        "TA 0.02%",
+        "TA 0.1%",
+        "Aristocort",
+        "Kenalog",
+        "Eczema",
+        "Aphthous ulcer"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "trihexyphenidyl-po",
+      "drug": "Trihexyphenidyl (Benzhexol)",
+      "name": "Trihexyphenidyl PO (Artane Tab 2 mg / 5 mg)",
+      "preparation": "2 mg / tab; 5 mg / tab",
+      "note": "Dystonic Cerebral Palsy / Drug-Induced Extrapyramidal Symptoms (EPS): Start 0.05–0.1 mg/kg/day PO div BID–TID; titrate slowly every 1–2 wk up to 0.5–0.75 mg/kg/day div TID (max 15–30 mg/day). Anticholinergic side effects: dry mouth, constipation, urinary retention.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 0.1,
+      "doseMaxMgPerKg": 0.5,
+      "maxPerDayMg": 30,
+      "freq": "bid / tid",
+      "route": "PO",
+      "category": "neuro",
+      "aliases": [
+        "Artane",
+        "Benzhexol",
+        "Dystonia",
+        "EPS"
+      ]
+    },
+    {
       "key": "ursodeoxycholic-acid-oral",
       "drug": "Ursodeoxycholic Acid (UDCA)",
       "name": "Ursodeoxycholic acid oral (Cap 250 mg)",
@@ -4243,6 +8534,58 @@
       "category": "gi"
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "valacyclovir-po",
+      "drug": "Valacyclovir",
+      "name": "Valacyclovir PO (Valtrex 500 mg / 1000 mg tab)",
+      "preparation": "500 mg / tab; 1000 mg / tab",
+      "note": "Varicella (Chickenpox, ≥2 yr): 20 mg/kg/dose PO TID × 5 days (max 1,000 mg/dose). Herpes Labialis (≥12 yr): 2,000 mg PO q12h × 1 day (2 doses). HSV mucocutaneous: 20 mg/kg/dose BID (max 1,000 mg/dose).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 20,
+      "doseMaxMgPerKg": 20,
+      "maxPerDoseMg": 1000,
+      "maxPerDayMg": 3000,
+      "freq": "tid / bid",
+      "route": "PO",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Valtrex",
+        "HSV",
+        "VZV",
+        "Herpes"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "valganciclovir-po",
+      "drug": "Valganciclovir",
+      "name": "Valganciclovir PO (Valcyte 50 mg/mL soln; Tab 450 mg)",
+      "preparation": "50 mg / mL oral solution; 450 mg / tab",
+      "note": "Congenital symptomatic CMV (<1 mo start): 16 mg/kg/dose PO BID × 6 months. Pediatric solid organ transplant prophylaxis: Dose (mg) = 7 × BSA × CrCl OD (max 900 mg/day). Monitor CBC/ANC.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": 16,
+      "doseMaxMgPerKg": 16,
+      "maxPerDoseMg": 900,
+      "maxPerDayMg": 1800,
+      "freq": "bid",
+      "route": "PO",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Valcyte",
+        "Congenital CMV"
+      ]
+    },
+    {
       "key": "valproate-sol-tab-iv",
       "drug": "Sodium valproate",
       "name": "Valproate solution/tab/IV",
@@ -4260,7 +8603,8 @@
       "maxWeightKg": null,
       "aliases": [
         "Depakine"
-      ]
+      ],
+      "category": "neuro"
     },
     {
       "key": "vancomycin-iv",
@@ -4324,6 +8668,200 @@
       "isAtb": true
     },
     {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "vigabatrin-po",
+      "drug": "Vigabatrin",
+      "name": "Vigabatrin PO (Sabril 500 mg sachet / tablet)",
+      "preparation": "500 mg / sachet; 500 mg / tab",
+      "note": "Infantile Spasms (West Syndrome — 1st-line in Tuberous Sclerosis Complex): Start 50 mg/kg/day PO div BID; titrate every 3 days by 25–50 mg/kg/day up to 100–150 mg/kg/day div BID (max 3,000 mg/day). ⚠️ Risk of permanent concentric visual field loss (monitor ophthalmology).",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 50,
+      "doseMaxMgPerKg": 150,
+      "maxPerDayMg": 3000,
+      "freq": "bid",
+      "route": "PO",
+      "category": "neuro",
+      "aliases": [
+        "Sabril",
+        "Infantile spasms",
+        "West syndrome",
+        "Tuberous sclerosis"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "vitamin-a-retinol-po",
+      "drug": "Vitamin A (Retinol)",
+      "name": "Vitamin A (Retinol) PO (Cap 25,000 IU / 50,000 IU / 200,000 IU)",
+      "preparation": "25,000 IU, 50,000 IU, 200,000 IU capsule",
+      "note": "Severe / Hospitalized Measles (WHO Age-Banded Regimen — Give on Day 1 and Day 2; plus Day 14 if xerophthalmia): <6 mo: 50,000 IU PO OD × 2 days; 6–11 mo: 100,000 IU PO OD × 2 days; ≥12 mo: 200,000 IU PO OD × 2 days.",
+      "unit": "IU",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD × 2 days (Measles)",
+      "route": "PO",
+      "category": "hematology",
+      "aliases": [
+        "Retinol",
+        "Measles",
+        "หัด"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "vitamin-d-ergocalciferol-cholecalciferol",
+      "drug": "Vitamin D2 (Ergocalciferol) / D3 (Cholecalciferol)",
+      "name": "Vitamin D2 (20,000 IU cap) / Vitamin D3 Drops (400 IU/drop)",
+      "preparation": "D3 drops 400 IU/drop; D2 20,000 IU / cap",
+      "note": "Daily Prevention (AAP): <1 yr: 400 IU PO OD; 1–18 yr: 600 IU PO OD. Vitamin D Deficiency / Nutritional Rickets Treatment (× 6–12 wk): <1 yr: 2,000 IU/day (or 50,000 IU once weekly); 1–18 yr: 2,000–4,000 IU/day (or 50,000 IU once weekly) + elemental Calcium 30–75 mg/kg/day.",
+      "unit": "IU",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "OD / Weekly",
+      "route": "PO",
+      "category": "endocrine",
+      "aliases": [
+        "Calciferol",
+        "Vitamin D",
+        "Rickets"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "vitamin-k1-phytomenadione",
+      "drug": "Vitamin K1 (Phytomenadione)",
+      "name": "Vitamin K1 (Phytomenadione 1 mg/0.5 mL; 10 mg/mL)",
+      "preparation": "2 mg / mL; 10 mg / mL ampule",
+      "note": "Newborn VKDB Prophylaxis at Birth: Term (>1.5 kg): 1 mg IM single dose; Preterm <1.5 kg: 0.5 mg IM single dose. VKDB / Coagulopathy / Cholestasis Treatment: 1–5 mg slow IV/SC/PO (max 10 mg; slow IV ≤1 mg/min to avoid anaphylactoid reaction).",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "Single dose / PRN",
+      "route": "IM/IV/PO",
+      "category": "emergency",
+      "aliases": [
+        "Konakion",
+        "Phytomenadione",
+        "VKDB",
+        "Vitamin K"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "voriconazole-iv-po",
+      "drug": "Voriconazole",
+      "name": "Voriconazole IV/PO (Vfend Vial 200 mg; Tab 50/200 mg)",
+      "preparation": "Vial 200 mg; 200 mg / tab; 50 mg / tab",
+      "note": "Age 2–12 yr (or 12–14 yr <50 kg): IV Load 9 mg/kg q12h × 2 doses, then 8 mg/kg IV q12h; PO: 9 mg/kg q12h (max 350 mg/dose). ≥15 yr or ≥50 kg: IV Load 6 mg/kg q12h × 2, then 4 mg/kg q12h; PO 200 mg q12h. Target trough 1–5.5 mcg/mL.",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "q 12 hr",
+      "route": "IV/PO",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "Vfend",
+        "Aspergillosis",
+        "Antifungal"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "warfarin-po",
+      "drug": "Warfarin",
+      "name": "Warfarin PO (Orfarin Tab 1 / 2 / 3 / 5 mg)",
+      "preparation": "1 mg, 2 mg, 3 mg, 5 mg / tab",
+      "note": "Pediatric Anticoagulation: Initial Day 1 (if baseline INR 1.0–1.3): 0.2 mg/kg PO OD (max 5–10 mg; reduce to 0.1 mg/kg in Fontan/liver dysfunction). Titrate Days 2–4 and Maintenance (0.05–0.34 mg/kg/day) to target INR (typically 2.0–3.0; mechanical mitral valve 2.5–3.5). Antidote: Vitamin K1 / FFP / PCC.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 0.1,
+      "doseMaxMgPerKg": 0.2,
+      "maxPerDoseMg": 10,
+      "maxPerDayMg": 10,
+      "freq": "OD (per INR)",
+      "route": "PO",
+      "category": "cardiovascular",
+      "aliases": [
+        "Orfarin",
+        "Coumadin",
+        "INR",
+        "Anticoagulant"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "zidovudine-azt-neonatal-peds",
+      "drug": "Zidovudine (AZT)",
+      "name": "Zidovudine (AZT) PO/IV (Syrup 10 mg/mL; Cap 100/300 mg)",
+      "preparation": "10 mg / mL syrup; 100 mg / cap",
+      "note": "Neonatal HIV Perinatal Prophylaxis (GA-stratified): ≥35 wk GA: 4 mg/kg/dose PO BID × 4 wk (or IV 3 mg/kg q12h). 30–34 wk GA: 2 mg/kg PO q12h × 2 wk, then 3 mg/kg q12h. <30 wk GA: 2 mg/kg PO q12h × 4 wk. Pediatric HIV treatment (≥4 wk): 9–12 mg/kg/dose PO BID (max 300 mg/dose).",
+      "unit": "mg/kg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "bid",
+      "route": "PO/IV",
+      "isAtb": true,
+      "category": "antibiotic",
+      "aliases": [
+        "AZT",
+        "Retrovir",
+        "PMTCT",
+        "Neonatal HIV"
+      ]
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "zinc-oxide-paste-diaper",
+      "drug": "Zinc Oxide Barrier Paste",
+      "name": "Zinc Oxide 10–40% Barrier Cream / Paste",
+      "preparation": "Topical barrier paste",
+      "note": "Irritant Diaper Dermatitis: Apply thick protective layer (like icing on a cake) with every diaper change. If satellite pustules/beefy red plaques present (Candidal diaper rash), apply Clotrimazole/Miconazole 1–2% cream BID underneath Zinc Oxide.",
+      "unit": "mg",
+      "unitType": "perDose",
+      "doseMinMgPerKg": null,
+      "doseMaxMgPerKg": null,
+      "freq": "Every diaper change",
+      "route": "Topical",
+      "category": "skin",
+      "aliases": [
+        "Sudocrem",
+        "Desitin",
+        "Diaper rash",
+        "ผื่นผ้าอ้อม"
+      ]
+    },
+    {
       "key": "zinc-sulfate-oral",
       "drug": "Zinc Sulfate (Elemental Zinc)",
       "name": "Zinc Sulfate oral (10 mg / 5 mL / Tab 20 mg)",
@@ -4360,6 +8898,29 @@
         "ท้องเสีย"
       ],
       "category": "gi"
+    },
+    {
+      "minAgeYr": null,
+      "maxAgeYr": null,
+      "minWeightKg": null,
+      "maxWeightKg": null,
+      "key": "zonisamide-po",
+      "drug": "Zonisamide",
+      "name": "Zonisamide PO (Zonegran Cap 25/100 mg)",
+      "preparation": "100 mg / tab or cap",
+      "note": "Adjunctive Epilepsy: Start 1–2 mg/kg/day PO OD–BID; increase q2 wk by 1–2 mg/kg/day to Maintenance 4–8 mg/kg/day (max 400–600 mg/day). Sulfonamide derivative — watch for oligohidrosis/hyperthermia and nephrolithiasis.",
+      "unit": "mg/kg",
+      "unitType": "perDay",
+      "doseMinMgPerKg": 4,
+      "doseMaxMgPerKg": 8,
+      "maxPerDayMg": 500,
+      "freq": "OD / bid",
+      "route": "PO",
+      "category": "neuro",
+      "aliases": [
+        "Zonegran",
+        "Excegran"
+      ]
     }
   ],
   "pediatricATB": [
