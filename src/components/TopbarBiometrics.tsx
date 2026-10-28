@@ -83,6 +83,16 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
   // Authoritative clinical provenance of the active dosing weight
   const weightProvenance = useMemo(() => {
     if (!activeWeight) {
+      if (bio.useIBW) {
+        const hasHeight = Boolean(bio.rawHeight && parseFloat(bio.rawHeight) > 0);
+        return {
+          label: hasHeight ? 'IBW > 150 kg (exceeds max)' : 'enter height for IBW',
+          compactLabel: hasHeight ? 'invalid IBW' : 'enter ht for IBW',
+          isDerived: true,
+          isEmpty: true,
+          isError: hasHeight,
+        };
+      }
       if (isWeightOutOfRange) {
         return {
           label: parsedWeight > 150 ? 'weight > 150 kg (exceeds max)' : 'invalid weight',

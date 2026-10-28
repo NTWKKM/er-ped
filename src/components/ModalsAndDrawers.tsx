@@ -87,6 +87,8 @@ const DIALOG_MOTION_BASE_CLASS =
 interface BroselowModalProps {
   isOpen: boolean;
   activeWeight: number | null;
+  weightSource?: 'manual' | 'estimated' | 'broselow' | null;
+  useIBW?: boolean;
   previewColor: string | null;
   onClose: () => void;
   onSelectZoneWeight: (kg: number, color: string) => void;
@@ -95,6 +97,8 @@ interface BroselowModalProps {
 export const BroselowModal: React.FC<BroselowModalProps> = ({
   isOpen,
   activeWeight,
+  weightSource,
+  useIBW,
   previewColor,
   onClose,
   onSelectZoneWeight,
@@ -122,6 +126,14 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
     previewColor &&
     previewColor.toLowerCase() === matchedWeightBand.color.toLowerCase()
   );
+
+  const provenanceLabel = useIBW
+    ? 'IBW'
+    : weightSource === 'estimated'
+    ? 'estimated'
+    : weightSource === 'broselow'
+    ? 'Broselow'
+    : 'measured';
 
   const refW =
     (!previewColor || isAutoMatchedColor) && activeWeight != null && activeWeight > 0
@@ -210,8 +222,8 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
                   Broselow Zone: {currentBand.label} — {currentBand.range}
                 </div>
                 <div className="text-xs font-semibold">
-                  {activeWeight != null && activeWeight > 0 && Math.abs(refW - currentBand.approxKg) > 0.05
-                    ? `Patient Weight: ${refW.toFixed(1)} kg · Band Ref: ${currentBand.approxKg} kg (${currentBand.ageApprox})`
+                  {activeWeight != null && activeWeight > 0
+                    ? `Patient Weight: ${refW.toFixed(1)} kg (${provenanceLabel}) · Band Ref: ${currentBand.approxKg} kg (${currentBand.ageApprox})`
                     : `Reference Weight: ${refW.toFixed(1)} kg (${currentBand.ageApprox})`}
                 </div>
               </div>
@@ -222,15 +234,15 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
                 <div className="text-sm sm:text-base font-extrabold text-[var(--ink)]">
                   {activeWeight != null && activeWeight > 0 ? (
                     activeWeight < 3 || activeWeight > 36
-                      ? `Patient Weight: ${activeWeight.toFixed(1)} kg (Outside Broselow 3–36 kg Range)`
-                      : `Patient Weight: ${activeWeight.toFixed(1)} kg (Unmatched Band)`
+                      ? `Patient Weight: ${activeWeight.toFixed(1)} kg (${provenanceLabel}) (Outside Broselow 3–36 kg Range)`
+                      : `Patient Weight: ${activeWeight.toFixed(1)} kg (${provenanceLabel}) (Unmatched Band)`
                   ) : (
                     `No Active Weight or Broselow Zone Selected (Previewing ${refW.toFixed(1)} kg)`
                   )}
                 </div>
                 <div className="text-xs text-[var(--muted)]">
                   {activeWeight != null && activeWeight > 0 ? (
-                    `Resuscitation doses calculated from patient weight (${activeWeight.toFixed(1)} kg). Selecting a color band above replaces active patient weight and invalidates affected queued orders; recalculate and re-add those orders.`
+                    `Resuscitation doses calculated from patient weight (${activeWeight.toFixed(1)} kg, ${provenanceLabel}). Selecting a color band above replaces active patient weight and invalidates affected queued orders; recalculate and re-add those orders.`
                   ) : (
                     `Emergency values below preview reference weight ${refW.toFixed(1)} kg. Selecting a color band above adopts its reference weight and invalidates affected queued orders; recalculate and re-add those orders.`
                   )}

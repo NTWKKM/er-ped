@@ -264,7 +264,9 @@ export default function App() {
   }, [bio.rawAge, bio.ageUnit]);
 
   const activeWeight = useMemo(() => {
-    if (bio.useIBW && ibwWeight && ibwWeight > 0 && ibwWeight <= 150) return ibwWeight;
+    if (bio.useIBW) {
+      return ibwWeight && ibwWeight > 0 && ibwWeight <= 150 ? ibwWeight : null;
+    }
     const w = parseFloat(bio.rawWeight);
     if (Number.isFinite(w) && w > 0 && w <= 150) return w;
     return null;
@@ -548,6 +550,8 @@ export default function App() {
       <BroselowModal
         isOpen={broselowOpen}
         activeWeight={activeWeight}
+        weightSource={bio.weightSource}
+        useIBW={bio.useIBW}
         previewColor={broselowPreviewColor}
         onClose={handleCloseBroselowModal}
         onSelectZoneWeight={(kg, color) => {
