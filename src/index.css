@@ -131,12 +131,6 @@ html, body {
   border-radius: 12px;
 }
 
-.clinical-panel {
-  background-color: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-}
-
 .clinical-panel-subtle {
   background-color: var(--panel-subtle);
   border: 1px solid var(--border);
@@ -192,14 +186,6 @@ html, body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-}
-
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }
 
 .clinical-table-container {

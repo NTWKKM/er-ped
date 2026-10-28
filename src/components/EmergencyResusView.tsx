@@ -7,6 +7,7 @@ import {
   suggestBlade,
   fmtMg,
   calcParklandBurn,
+  BOLUS_20_CAP_ML,
 } from '../utils/clinicalCalculations';
 import { Play, Pause, RotateCcw } from 'lucide-react';
 import { OrderItem, createOrderId } from './ModalsAndDrawers';
@@ -56,7 +57,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
   const palsEpiMg = Math.min(1, 0.01 * w).toFixed(2);
   const palsEpiMl = (Math.min(1, 0.01 * w) / 0.1).toFixed(1);
   const anaEpiDose = Math.min(w < 30 ? 0.3 : 0.5, w * 0.01).toFixed(2);
-  const sepsisBolusMl = Math.round(w * 20);
+  const sepsisBolusMl = Math.min(BOLUS_20_CAP_ML, Math.round(w * 20));
   const sepsisCefMg = Math.min(2000, Math.round(w * 80));
 
   const renderOrderButton = (ariaLabel: string, idPrefix: string, module: string, text: string) =>
@@ -355,7 +356,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                   Methylpred {Math.min(60, w * 1.5).toFixed(0)} mg IV
                 </div>
                 <div className="text-xs text-[var(--muted)] mt-1">
-                  NSS Bolus: {Math.round(w * 20)} mL (20 mL/kg)
+                  NSS Bolus: {Math.min(BOLUS_20_CAP_ML, Math.round(w * 20))} mL (20 mL/kg)
                 </div>
               </div>
             </div>

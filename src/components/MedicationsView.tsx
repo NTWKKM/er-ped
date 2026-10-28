@@ -131,6 +131,9 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
   }, []);
 
   const handleSelectDrug = (d: PediatricDrug) => {
+    if (currentConcOverride) {
+      onInvalidateOrders?.(`med-${selectedDrug.key}`);
+    }
     onInvalidateOrders?.(`med-${d.key}`);
     if (onSelectKey) {
       onSelectKey(d.key);

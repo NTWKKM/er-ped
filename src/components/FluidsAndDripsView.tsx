@@ -91,7 +91,10 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
     DATASET.infusionDrips.find((d) => d.key === dripKey) || DATASET.infusionDrips[0];
 
   const handleSelectDrip = (key: string) => {
-    onInvalidateOrders?.(`drip-${key}`);
+    onInvalidateOrders?.(`drip-${dripKey}`);
+    if (key !== dripKey) {
+      onInvalidateOrders?.(`drip-${key}`);
+    }
     const item = DATASET.infusionDrips.find((d) => d.key === key);
     let nextMg = '1';
     let nextVol = '50';
@@ -127,17 +130,22 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
   });
 
   // 2. Drip calculations
-  const doseNum = parseFloat(dripDose) || 0;
-  const mgNum = parseFloat(dripDrugMg) || 1;
-  const volNum = parseFloat(dripVolMl) || 50;
-  const hasValidDripInputs =
-    parseFloat(dripDose) > 0 && parseFloat(dripDrugMg) > 0 && parseFloat(dripVolMl) > 0;
+  const parsedDose = parseFloat(dripDose);
+  const parsedMg = parseFloat(dripDrugMg);
+  const parsedVol = parseFloat(dripVolMl);
+  const doseNum = Number.isFinite(parsedDose) && parsedDose > 0 ? parsedDose : 0;
+  const mgNum = Number.isFinite(parsedMg) && parsedMg > 0 ? parsedMg : 0;
+  const volNum = Number.isFinite(parsedVol) && parsedVol > 0 ? parsedVol : 0;
+  const hasValidDripInputs = doseNum > 0 && mgNum > 0 && volNum > 0;
   const fwd = calcDripForward(doseNum, w, mgNum, volNum);
   const revNum = parseFloat(reverseRate);
   const revDose =
-    Number.isFinite(revNum) && revNum > 0 ? calcDripReverse(revNum, w, mgNum, volNum) : null;
-  const isExceededMax =
-    selectedDripItem?.maxRateMcgKgMin && doseNum > selectedDripItem.maxRateMcgKgMin;
+    Number.isFinite(revNum) && revNum > 0 && mgNum > 0 && volNum > 0
+      ? calcDripReverse(revNum, w, mgNum, volNum)
+      : null;
+  const isExceededMax = Boolean(
+    selectedDripItem?.maxRateMcgKgMin && doseNum > selectedDripItem.maxRateMcgKgMin
+  );
 
   // 3. Transfusion calculations
   const curHbNum = parseFloat(currentHb);
@@ -555,7 +563,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                     {fwd.rateMlHr.toFixed(1)} <span className="text-sm font-bold">mL/hr</span>
                   </div>
                   <div className="text-xs text-[var(--muted)] mt-1">
-                    Mix {mgNum} mg in {volNum} mL ({fwd.concMcgPerMl} mcg/mL)
+                    Mix {mgNum || '—'} mg in {volNum || '—'} mL ({fwd.concMcgPerMl} mcg/mL)
                   </div>
                 </div>
 

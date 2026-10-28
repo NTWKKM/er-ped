@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { DATASET } from '../data/dataset';
 import {
   calcMaintenanceMlPerHr,
+  MAINTENANCE_CAP_ML_DAY,
   calcCorrectedNa,
   calcCorrectedCa,
   calcKShift,
@@ -239,7 +240,10 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                 rawPriorBolus >= 0;
               const priorBolusVal = isValidPriorBolus ? rawPriorBolus : 0;
               const netDef = Math.max(0, w * currentDkaSeverity * 10 - priorBolusVal);
-              const mnt = calcMaintenanceMlPerHr(w);
+              const mnt = Math.min(
+                calcMaintenanceMlPerHr(w),
+                +(MAINTENANCE_CAP_ML_DAY / 24).toFixed(1)
+              );
               const totalRate = +(mnt + netDef / 48).toFixed(1);
               const riRate = +(w * 0.1).toFixed(1);
               return (

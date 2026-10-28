@@ -101,22 +101,26 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
   const { mounted, active } = useModalTransition(isOpen);
   if (!mounted) return null;
 
+  const matchedWeightBand =
+    activeWeight != null
+      ? BROSELOW_SPECTRUM.find((b) => activeWeight >= b.min && activeWeight <= b.max)
+      : undefined;
+
   const currentBand =
     (previewColor &&
       BROSELOW_SPECTRUM.find(
         (b) => b.color.toLowerCase() === previewColor.toLowerCase()
       )) ||
-    (activeWeight &&
-      BROSELOW_SPECTRUM.find(
-        (b) => activeWeight >= b.min && activeWeight <= b.max
-      )) ||
+    matchedWeightBand ||
     BROSELOW_SPECTRUM[3]; // default Purple ~10.5 kg
 
-  const refW = activeWeight && !previewColor ? activeWeight : currentBand.approxKg;
-  const epiMg = (0.01 * refW).toFixed(2);
-  const epiMl = ((0.01 * refW) / 0.1).toFixed(1);
-  const defib1 = Math.round(2 * refW);
-  const defib2 = Math.round(4 * refW);
+  const refW =
+    activeWeight && !previewColor && matchedWeightBand ? activeWeight : currentBand.approxKg;
+  const epiMgVal = Math.min(1, 0.01 * refW);
+  const epiMg = epiMgVal.toFixed(2);
+  const epiMl = (epiMgVal / 0.1).toFixed(1);
+  const defib1 = Math.min(200, Math.round(2 * refW));
+  const defib2 = Math.min(200, Math.round(4 * refW));
   const bolusMl = Math.min(BOLUS_20_CAP_ML, Math.round(20 * refW));
 
   return (
@@ -430,7 +434,6 @@ export const EvidenceModal: React.FC<EvidenceModalProps> = ({
 interface OrderSheetContentProps {
   orders: OrderItem[];
   activeWeight: number | null;
-  ageYears: number | null;
   copyMessage?: { type: 'success' | 'warning'; text: string } | null;
   onRemoveOrder: (id: string) => void;
   onClearOrders: () => void;
@@ -668,7 +671,6 @@ export const OrderSheetModal: React.FC<OrderSheetModalProps> = ({
           <OrderSheetAndPocketContent
             orders={orders}
             activeWeight={activeWeight}
-            ageYears={ageYears}
             copyMessage={copyMessage}
             onRemoveOrder={onRemoveOrder}
             onClearOrders={onClearOrders}

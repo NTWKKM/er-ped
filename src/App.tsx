@@ -265,12 +265,28 @@ export default function App() {
     source: 'manual' | 'broselow' = 'manual'
   ) => {
     invalidateCalculatedOrders();
-    setBio((prev) => ({
-      ...prev,
-      rawWeight: val,
-      useIBW: false,
-      weightSource: val && parseFloat(val) > 0 ? source : null,
-    }));
+    setBio((prev) => {
+      const numW = parseFloat(val);
+      if (val && Number.isFinite(numW) && numW > 0) {
+        return {
+          ...prev,
+          rawWeight: val,
+          useIBW: false,
+          weightSource: source,
+        };
+      }
+      const ageNum = parseFloat(prev.rawAge);
+      const estW =
+        Number.isFinite(ageNum) && ageNum > 0
+          ? estimateWeightFromAge(ageNum, prev.ageUnit)
+          : null;
+      return {
+        ...prev,
+        rawWeight: estW ? String(estW) : '',
+        useIBW: false,
+        weightSource: estW ? 'estimated' : null,
+      };
+    });
   };
 
   const handleAgeChange = (val: string) => {
@@ -303,10 +319,26 @@ export default function App() {
       const nextUnit = prev.ageUnit === 'yr' ? 'mo' : 'yr';
       const raw = parseFloat(prev.rawAge);
       let convertedStr = prev.rawAge;
+      let convertedNum = NaN;
       if (Number.isFinite(raw) && raw > 0) {
-        const converted =
+        const maxLimit = nextUnit === 'mo' ? 180 : 15;
+        const rawConverted =
           prev.ageUnit === 'yr' ? Math.round(raw * 12) : Math.round((raw / 12) * 10) / 10;
-        convertedStr = String(converted);
+        convertedNum = Math.min(maxLimit, Math.max(0.1, rawConverted));
+        convertedStr = String(convertedNum);
+      }
+      if (prev.weightSource === 'estimated' || !prev.weightSource) {
+        const estW =
+          Number.isFinite(convertedNum) && convertedNum > 0
+            ? estimateWeightFromAge(convertedNum, nextUnit)
+            : null;
+        return {
+          ...prev,
+          ageUnit: nextUnit,
+          rawAge: convertedStr,
+          rawWeight: estW ? String(estW) : prev.rawWeight,
+          weightSource: estW ? 'estimated' : prev.weightSource,
+        };
       }
       return { ...prev, ageUnit: nextUnit, rawAge: convertedStr };
     });

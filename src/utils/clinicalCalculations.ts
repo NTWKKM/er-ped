@@ -64,9 +64,6 @@ export interface GrowthZScoreResult {
   hazLabel: string | null;
   hazStatus: 'good' | 'warning' | 'danger' | null;
   bmi: number | null;
-  nutritionIndicator: 'WFH' | 'BMI' | null;
-  nutritionLabel: string | null;
-  nutritionStatus: 'good' | 'warning' | 'danger' | null;
   refAgeMo: number;
   medianWeight: number;
   medianHeight: number;
@@ -397,22 +394,19 @@ export function calcGrowthZScores(
     }
   }
 
-  let wMed: number, wSD: number, hMed: number, hSD: number;
+  let wMed: number, hMed: number, hSD: number;
   if (rowA[0] === rowB[0] || ageMo <= table[0][0]) {
     wMed = table[0][1];
-    wSD = table[0][2];
     hMed = table[0][3];
     hSD = table[0][4];
   } else if (ageMo >= table[table.length - 1][0]) {
     const last = table[table.length - 1];
     wMed = last[1];
-    wSD = last[2];
     hMed = last[3];
     hSD = last[4];
   } else {
     const t = (ageMo - rowA[0]) / (rowB[0] - rowA[0]);
     wMed = rowA[1] + t * (rowB[1] - rowA[1]);
-    wSD = rowA[2] + t * (rowB[2] - rowA[2]);
     hMed = rowA[3] + t * (rowB[3] - rowA[3]);
     hSD = rowA[4] + t * (rowB[4] - rowA[4]);
   }
@@ -487,17 +481,12 @@ export function calcGrowthZScores(
     haz = roundedHaz === 0 ? 0 : roundedHaz;
   }
 
-  // Raw BMI calculation when height is provided; suppress unvalidated ratio-based WFH/BMI-for-age
-  // classifications because WHO sex-specific LMS reference tables for WFH/BMI-for-age are not included in dataset
+  // Raw BMI calculation when height is provided
   let bmi: number | null = null;
   if (Number.isFinite(h) && h > 0) {
     const heightM = h / 100;
     bmi = +(w / (heightM * heightM)).toFixed(1);
   }
-
-  const nutritionIndicator: 'WFH' | 'BMI' | null = null;
-  const nutritionLabel: string | null = null;
-  const nutritionStatus: 'good' | 'warning' | 'danger' | null = null;
 
   // If age > 10y and no height was entered, no supported growth indicator can be computed
   if (waz === null && haz === null) {
@@ -512,9 +501,6 @@ export function calcGrowthZScores(
     hazLabel,
     hazStatus,
     bmi,
-    nutritionIndicator,
-    nutritionLabel,
-    nutritionStatus,
     refAgeMo: Math.round(ageMo * 10) / 10,
     medianWeight: Math.round(wMed * 10) / 10,
     medianHeight: Math.round(hMed * 10) / 10,
@@ -938,14 +924,6 @@ export function calcMaintenanceMlPerHr(weightKg: number | null | undefined): num
   else if (w <= 20) mlDay = 1000 + (w - 10) * 50;
   else mlDay = 1500 + (w - 20) * 20;
   return +(mlDay / 24).toFixed(1);
-}
-
-export function calcMaintenanceMlPerDay(weightKg: number | null | undefined): number {
-  const w = Number(weightKg);
-  if (!Number.isFinite(w) || w <= 0) return 0;
-  if (w <= 10) return +(w * 100).toFixed(0);
-  if (w <= 20) return +(1000 + (w - 10) * 50).toFixed(0);
-  return +(1500 + (w - 20) * 20).toFixed(0);
 }
 
 /** Maintenance ceiling (≈ adult requirement; NICE NG29 range 2000–2500 mL/day). */

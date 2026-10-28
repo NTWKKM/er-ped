@@ -86,9 +86,6 @@ test('WHO Growth Z-Score calculation for weight and height (male and female)', (
   const heavyChild = calcGrowthZScores(3, 19, 96, 'male');
   assert.ok(heavyChild);
   assert.equal(heavyChild.wazLabel, 'High Weight');
-  assert.equal(heavyChild.nutritionIndicator, null);
-  assert.equal(heavyChild.nutritionLabel, null);
-  assert.equal(heavyChild.nutritionStatus, null);
   assert.equal(heavyChild.bmi, 20.6);
 
   // Adolescent children (> 10 yr): WAZ is suppressed (null); HAZ and raw BMI are preserved
@@ -98,8 +95,6 @@ test('WHO Growth Z-Score calculation for weight and height (male and female)', (
   assert.equal(adolescent.wazLabel, null);
   assert.ok(adolescent.haz !== null);
   assert.equal(adolescent.bmi, 20);
-  assert.equal(adolescent.nutritionIndicator, null);
-  assert.equal(adolescent.nutritionLabel, null);
 
   // Adolescent children without height: returns null (hides unsupported WAZ badge)
   assert.equal(calcGrowthZScores(12, 45, null, 'male'), null);
@@ -122,8 +117,6 @@ test('WHO Growth Z-Score calculation for weight and height (male and female)', (
   const edge976 = calcGrowthZScores(3, 15, 97.6, 'male');
   assert.ok(edge975 && edge976);
   assert.ok(Math.abs((edge975.haz ?? 0) - (edge976.haz ?? 0)) <= 0.05);
-  assert.equal(edge975.nutritionLabel, null);
-  assert.equal(edge976.nutritionLabel, null);
 
   // Helper to compute exact threshold weight W = M * (1 + L * S * SD)^(1 / L)
   const getExactWeight = (l: number, m: number, s: number, sd: number) =>

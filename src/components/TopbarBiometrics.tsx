@@ -281,16 +281,12 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
               {/* 4. WHO Growth Standards Z-Score Metadata (Unboxed typographic telemetry on xl:) */}
               {zScores && (
                 <div className="hidden xl:flex items-center gap-1.5 select-none shrink-0 text-xs font-mono-tabular">
-                  {(zScores.waz !== null || zScores.haz !== null || zScores.nutritionLabel) && (
+                  {(zScores.waz !== null || zScores.haz !== null) && (
                     <div
                       className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[11px] font-semibold border transition-colors truncate ${
-                        zScores.wazStatus === 'danger' ||
-                        zScores.hazStatus === 'danger' ||
-                        zScores.nutritionStatus === 'danger'
+                        zScores.wazStatus === 'danger' || zScores.hazStatus === 'danger'
                           ? 'bg-[var(--danger-soft)] text-[var(--danger-text)] border-[var(--danger)]/30'
-                          : zScores.wazStatus === 'warning' ||
-                            zScores.hazStatus === 'warning' ||
-                            zScores.nutritionStatus === 'warning'
+                          : zScores.wazStatus === 'warning' || zScores.hazStatus === 'warning'
                           ? 'bg-[var(--warning-soft)] text-[var(--warning-text)] border-[var(--warning)]/30'
                           : 'bg-[var(--good-soft)] text-[var(--good-text)] border-[var(--good)]/30'
                       }`}
@@ -305,13 +301,6 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                         <span>
                           {zScores.waz !== null ? ' · ' : ''}
                           HAZ {zScores.haz >= 0 ? `+${zScores.haz}` : zScores.haz} ({zScores.hazLabel})
-                        </span>
-                      )}
-                      {zScores.nutritionLabel && (
-                        <span>
-                          {zScores.waz !== null || zScores.haz !== null ? ' · ' : ''}
-                          {zScores.nutritionIndicator ? `${zScores.nutritionIndicator} ` : ''}
-                          ({zScores.nutritionLabel})
                         </span>
                       )}
                     </div>
