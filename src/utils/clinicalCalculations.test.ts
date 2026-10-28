@@ -28,6 +28,7 @@ import {
   interpretDeltaRatio,
   calcParklandBurn,
   calcTransfusion,
+  parseStrength,
 } from './clinicalCalculations';
 import { DATASET } from '../data/dataset';
 
@@ -703,6 +704,12 @@ test('Unified drug dose resolution with safety ceilings and age restriction', ()
   const resChild = resolveDrugDose(tramadol, 20, 6);
   assert.ok(resChild);
   assert.equal(resChild.isAgeRestricted, true);
+
+  // Test parseStrength with explicit and implicit mL denominators and tablets
+  assert.equal(parseStrength('120 mg / 5 mL').mgPerMl, 24);
+  assert.equal(parseStrength('100 mg/mL').mgPerMl, 100);
+  assert.equal(parseStrength('50 mg / mL').mgPerMl, 50);
+  assert.equal(parseStrength('500 mg / tab').mgPerTab, 500);
 });
 
 test('Bedside Schwartz eGFR and Holliday-Segar maintenance fluids', () => {

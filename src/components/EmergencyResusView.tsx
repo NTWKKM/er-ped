@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { DATASET } from '../data/dataset';
 import {
   weightToETTCuffed,
@@ -21,6 +21,24 @@ export type ResusTopic =
   | 'ncpr'
   | 'trauma';
 
+export interface EmergencyResusInputs {
+  ncprWeight: string;
+  burnTBSA: string;
+  sepsisResp: number;
+  sepsisCardio: number;
+  sepsisCoag: number;
+  sepsisNeuro: number;
+}
+
+export const DEFAULT_RESUS_INPUTS: EmergencyResusInputs = {
+  ncprWeight: '',
+  burnTBSA: '15',
+  sepsisResp: 0,
+  sepsisCardio: 0,
+  sepsisCoag: 0,
+  sepsisNeuro: 0,
+};
+
 interface EmergencyResusViewProps {
   activeSubTab: ResusTopic;
   activeWeight: number | null;
@@ -31,6 +49,8 @@ interface EmergencyResusViewProps {
   onResetSeizureTimer: () => void;
   onChangeTopic: (topic: ResusTopic) => void;
   onAddOrder?: (order: OrderItem) => void;
+  inputs: EmergencyResusInputs;
+  onChangeInputs: React.Dispatch<React.SetStateAction<EmergencyResusInputs>>;
 }
 
 export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
@@ -43,13 +63,13 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
   onResetSeizureTimer,
   onChangeTopic,
   onAddOrder,
+  inputs,
+  onChangeInputs,
 }) => {
-  const [ncprWeight, setNcprWeight] = useState<string>('');
-  const [burnTBSA, setBurnTBSA] = useState<string>('15');
-  const [sepsisResp, setSepsisResp] = useState<number>(0);
-  const [sepsisCardio, setSepsisCardio] = useState<number>(0);
-  const [sepsisCoag, setSepsisCoag] = useState<number>(0);
-  const [sepsisNeuro, setSepsisNeuro] = useState<number>(0);
+  const { ncprWeight, burnTBSA, sepsisResp, sepsisCardio, sepsisCoag, sepsisNeuro } = inputs;
+  const updateInputs = (patch: Partial<EmergencyResusInputs>) => {
+    onChangeInputs((prev) => ({ ...prev, ...patch }));
+  };
 
   const w = activeWeight || 0;
   const effAgeYr = ageYears ?? (w ? (w < 10 ? 0.5 : w < 20 ? 3 : 8) : 1);
@@ -450,7 +470,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                   <label className="font-bold text-[var(--muted)] block mb-1.5">1. Respiratory</label>
                   <select
                     value={sepsisResp}
-                    onChange={(e) => setSepsisResp(parseInt(e.target.value, 10))}
+                    onChange={(e) => updateInputs({ sepsisResp: parseInt(e.target.value, 10) })}
                     className="clinical-input w-full text-xs font-bold"
                   >
                     <option value={0}>0: Normal</option>
@@ -463,7 +483,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                   <label className="font-bold text-[var(--muted)] block mb-1.5">2. Cardiovascular</label>
                   <select
                     value={sepsisCardio}
-                    onChange={(e) => setSepsisCardio(parseInt(e.target.value, 10))}
+                    onChange={(e) => updateInputs({ sepsisCardio: parseInt(e.target.value, 10) })}
                     className="clinical-input w-full text-xs font-bold"
                   >
                     <option value={0}>0: Normal</option>
@@ -476,7 +496,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                   <label className="font-bold text-[var(--muted)] block mb-1.5">3. Coagulation</label>
                   <select
                     value={sepsisCoag}
-                    onChange={(e) => setSepsisCoag(parseInt(e.target.value, 10))}
+                    onChange={(e) => updateInputs({ sepsisCoag: parseInt(e.target.value, 10) })}
                     className="clinical-input w-full text-xs font-bold"
                   >
                     <option value={0}>0: Normal</option>
@@ -488,7 +508,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                   <label className="font-bold text-[var(--muted)] block mb-1.5">4. Neurological</label>
                   <select
                     value={sepsisNeuro}
-                    onChange={(e) => setSepsisNeuro(parseInt(e.target.value, 10))}
+                    onChange={(e) => updateInputs({ sepsisNeuro: parseInt(e.target.value, 10) })}
                     className="clinical-input w-full text-xs font-bold"
                   >
                     <option value={0}>0: GCS 15</option>
@@ -563,7 +583,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                   inputMode="decimal"
                   placeholder={w ? String(w) : '3.0'}
                   value={ncprWeight}
-                  onChange={(e) => setNcprWeight(e.target.value)}
+                  onChange={(e) => updateInputs({ ncprWeight: e.target.value })}
                   className="clinical-input w-28 font-mono-tabular font-bold"
                 />
               </div>
@@ -621,7 +641,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                   max="100"
                   inputMode="decimal"
                   value={burnTBSA}
-                  onChange={(e) => setBurnTBSA(e.target.value)}
+                  onChange={(e) => updateInputs({ burnTBSA: e.target.value })}
                   className="clinical-input w-24 font-mono-tabular font-bold"
                 />
               </div>

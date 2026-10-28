@@ -9,8 +9,18 @@ import {
   FluidsAndDripsInputs,
   DEFAULT_FLUIDS_INPUTS,
 } from './components/FluidsAndDripsView';
-import { EmergencyResusView, ResusTopic } from './components/EmergencyResusView';
-import { ProtocolsAndCDSView, ProtocolTopic } from './components/ProtocolsAndCDSView';
+import {
+  EmergencyResusView,
+  ResusTopic,
+  EmergencyResusInputs,
+  DEFAULT_RESUS_INPUTS,
+} from './components/EmergencyResusView';
+import {
+  ProtocolsAndCDSView,
+  ProtocolTopic,
+  ProtocolsInputs,
+  DEFAULT_PROTOCOLS_INPUTS,
+} from './components/ProtocolsAndCDSView';
 import {
   BroselowModal,
   EvidenceModal,
@@ -92,10 +102,10 @@ export default function App() {
   const [fluidsInputs, setFluidsInputs] = useState<FluidsAndDripsInputs>(DEFAULT_FLUIDS_INPUTS);
   const [medSelectedKey, setMedSelectedKey] = useState<string>('paracetamol-syrup-120-mg-5-ml');
   const [medConcOverride, setMedConcOverride] = useState<string>('');
-  const [dkaSeverity, setDkaSeverity] = useState<number>(7);
-  const [dkaPriorBolus, setDkaPriorBolus] = useState<string>('0');
   const [resusTopic, setResusTopic] = useState<ResusTopic>('pals');
+  const [resusInputs, setResusInputs] = useState<EmergencyResusInputs>(DEFAULT_RESUS_INPUTS);
   const [protocolTopic, setProtocolTopic] = useState<ProtocolTopic>('asthma');
+  const [protocolsInputs, setProtocolsInputs] = useState<ProtocolsInputs>(DEFAULT_PROTOCOLS_INPUTS);
   const [theme, setTheme] = useState<'light' | 'dark' | 'mono' | 'red'>('light');
 
   const [broselowOpen, setBroselowOpen] = useState<boolean>(false);
@@ -291,21 +301,22 @@ export default function App() {
 
   const handleAgeChange = (val: string) => {
     invalidateCalculatedOrders();
-    let num = parseFloat(val);
-    const maxLimit = bio.ageUnit === 'mo' ? 180 : 15;
-    if (Number.isFinite(num) && num > maxLimit) {
-      num = maxLimit;
-      val = String(maxLimit);
-    }
     setBio((prev) => {
+      let nextVal = val;
+      let num = parseFloat(nextVal);
+      const maxLimit = prev.ageUnit === 'mo' ? 180 : 15;
+      if (Number.isFinite(num) && num > maxLimit) {
+        num = maxLimit;
+        nextVal = String(maxLimit);
+      }
       if ((prev.weightSource === 'manual' || prev.weightSource === 'broselow') && parseFloat(prev.rawWeight) > 0) {
-        return { ...prev, rawAge: val, useIBW: false };
+        return { ...prev, rawAge: nextVal, useIBW: false };
       }
       const estW =
         Number.isFinite(num) && num > 0 ? estimateWeightFromAge(num, prev.ageUnit) : null;
       return {
         ...prev,
-        rawAge: val,
+        rawAge: nextVal,
         rawWeight: estW ? String(estW) : '',
         weightSource: estW ? 'estimated' : null,
         useIBW: false,
@@ -495,6 +506,8 @@ export default function App() {
             }}
             onChangeTopic={setResusTopic}
             onAddOrder={handleAddOrder}
+            inputs={resusInputs}
+            onChangeInputs={setResusInputs}
           />
         )}
 
@@ -506,10 +519,8 @@ export default function App() {
             onChangeTopic={setProtocolTopic}
             onAddOrder={handleAddOrder}
             onInvalidateOrders={invalidateCalculatedOrders}
-            dkaSeverity={dkaSeverity}
-            onChangeDkaSeverity={setDkaSeverity}
-            dkaPriorBolus={dkaPriorBolus}
-            onChangeDkaPriorBolus={setDkaPriorBolus}
+            inputs={protocolsInputs}
+            onChangeInputs={setProtocolsInputs}
           />
         )}
       </main>

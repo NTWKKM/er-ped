@@ -19,10 +19,10 @@ interface MedicationsViewProps {
   onSerumCrChange: (val: string) => void;
   onAddOrder?: (order: OrderItem) => void;
   onInvalidateOrders?: (targetPrefix?: string) => void;
-  selectedKey?: string;
-  onSelectKey?: (key: string) => void;
-  concOverride?: string;
-  onConcOverrideChange?: (val: string) => void;
+  selectedKey: string;
+  onSelectKey: (key: string) => void;
+  concOverride: string;
+  onConcOverrideChange: (val: string) => void;
 }
 
 function cleanEnglishText(text?: string | null): string {
@@ -75,24 +75,19 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const [internalSelectedKey, setInternalSelectedKey] = useState<string>('paracetamol-syrup-120-mg-5-ml');
-  const [internalConcOverride, setInternalConcOverride] = useState<string>('');
   const [isRenalReviewed, setIsRenalReviewed] = useState<boolean>(false);
   const [isRenalDetailsOpen, setIsRenalDetailsOpen] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const currentSelectedKey = selectedKey ?? internalSelectedKey;
-  const currentConcOverride = concOverride ?? internalConcOverride;
-
   useEffect(() => {
     setIsRenalReviewed(false);
-  }, [currentSelectedKey, serumCr, heightCm, activeWeight]);
+  }, [selectedKey, serumCr, heightCm, activeWeight]);
 
   const allDrugs = DATASET.pediatricDose;
 
   const selectedDrug = useMemo(() => {
-    return allDrugs.find((d) => d.key === currentSelectedKey) || allDrugs[0];
-  }, [allDrugs, currentSelectedKey]);
+    return allDrugs.find((d) => d.key === selectedKey) || allDrugs[0];
+  }, [allDrugs, selectedKey]);
 
   const filteredDrugs = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -131,31 +126,18 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
   }, []);
 
   const handleSelectDrug = (d: PediatricDrug) => {
-    if (currentConcOverride) {
+    if (concOverride) {
       onInvalidateOrders?.(`med-${selectedDrug.key}`);
-    }
-    onInvalidateOrders?.(`med-${d.key}`);
-    if (onSelectKey) {
-      onSelectKey(d.key);
-    } else {
-      setInternalSelectedKey(d.key);
-    }
-    setSearchQuery('');
-    if (onConcOverrideChange) {
       onConcOverrideChange('');
-    } else {
-      setInternalConcOverride('');
     }
+    onSelectKey(d.key);
+    setSearchQuery('');
     setIsDropdownOpen(false);
   };
 
   const handleConcOverrideChange = (val: string) => {
     onInvalidateOrders?.(`med-${selectedDrug.key}`);
-    if (onConcOverrideChange) {
-      onConcOverrideChange(val);
-    } else {
-      setInternalConcOverride(val);
-    }
+    onConcOverrideChange(val);
   };
 
   const isReferenceOnlyDrug = useMemo(() => {
@@ -179,7 +161,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
     [selectedDrug]
   );
 
-  const customConcNum = parseFloat(currentConcOverride);
+  const customConcNum = parseFloat(concOverride);
   const effectiveMgPerMl =
     Number.isFinite(customConcNum) && customConcNum > 0
       ? customConcNum
@@ -372,10 +354,10 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                 <div
                   key={d.key}
                   role="option"
-                  aria-selected={d.key === currentSelectedKey}
+                  aria-selected={d.key === selectedKey}
                   onClick={() => handleSelectDrug(d)}
                   className={`px-3.5 py-2.5 min-h-[40px] cursor-pointer flex items-center justify-between gap-2 text-xs ${
-                    d.key === currentSelectedKey
+                    d.key === selectedKey
                       ? 'bg-[var(--accent-soft)] font-bold text-[var(--accent-text)]'
                       : 'hover:bg-[var(--panel-subtle)] text-[var(--ink)]'
                   }`}
@@ -586,7 +568,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                 step="0.1"
                 inputMode="decimal"
                 placeholder={strength.mgPerMl ? strength.mgPerMl.toFixed(1) : 'mg/mL'}
-                value={currentConcOverride}
+                value={concOverride}
                 onChange={(e) => handleConcOverrideChange(e.target.value)}
                 className="clinical-input w-24 text-center font-mono-tabular text-xs font-bold py-1.5"
               />

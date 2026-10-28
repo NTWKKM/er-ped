@@ -440,7 +440,7 @@ interface OrderSheetContentProps {
   onCopyAll: () => void;
 }
 
-export const OrderSheetAndPocketContent: React.FC<OrderSheetContentProps> = ({
+const OrderSheetAndPocketContent: React.FC<OrderSheetContentProps> = ({
   orders,
   activeWeight,
   copyMessage,

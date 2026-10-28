@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { DATASET } from '../data/dataset';
 import {
   calcMaintenanceMlPerHr,
@@ -20,6 +20,28 @@ export type ProtocolTopic =
   | 'tox'
   | 'vitals';
 
+export interface ProtocolsInputs {
+  dkaSeverity: number;
+  dkaPriorBolus: string;
+  lyteNa: string;
+  lyteGlucose: string;
+  lyteTotalCa: string;
+  lyteAlbumin: string;
+  lyteK: string;
+  lytePH: string;
+}
+
+export const DEFAULT_PROTOCOLS_INPUTS: ProtocolsInputs = {
+  dkaSeverity: 7,
+  dkaPriorBolus: '0',
+  lyteNa: '130',
+  lyteGlucose: '350',
+  lyteTotalCa: '7.4',
+  lyteAlbumin: '2.5',
+  lyteK: '3.2',
+  lytePH: '7.15',
+};
+
 interface ProtocolsAndCDSViewProps {
   activeSubTab: ProtocolTopic;
   activeWeight: number | null;
@@ -27,10 +49,8 @@ interface ProtocolsAndCDSViewProps {
   onChangeTopic: (topic: ProtocolTopic) => void;
   onAddOrder?: (order: OrderItem) => void;
   onInvalidateOrders?: (targetPrefix?: string) => void;
-  dkaSeverity?: number;
-  onChangeDkaSeverity?: (severity: number) => void;
-  dkaPriorBolus?: string;
-  onChangeDkaPriorBolus?: (bolus: string) => void;
+  inputs: ProtocolsInputs;
+  onChangeInputs: React.Dispatch<React.SetStateAction<ProtocolsInputs>>;
 }
 
 export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
@@ -40,41 +60,33 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
   onChangeTopic,
   onAddOrder,
   onInvalidateOrders,
-  dkaSeverity,
-  onChangeDkaSeverity,
-  dkaPriorBolus,
-  onChangeDkaPriorBolus,
+  inputs,
+  onChangeInputs,
 }) => {
-  const [internalDkaSeverity, setInternalDkaSeverity] = useState<number>(7);
-  const [internalDkaPriorBolus, setInternalDkaPriorBolus] = useState<string>('0');
+  const {
+    dkaSeverity,
+    dkaPriorBolus,
+    lyteNa,
+    lyteGlucose,
+    lyteTotalCa,
+    lyteAlbumin,
+    lyteK,
+    lytePH,
+  } = inputs;
 
-  const currentDkaSeverity = dkaSeverity ?? internalDkaSeverity;
-  const currentDkaPriorBolus = dkaPriorBolus ?? internalDkaPriorBolus;
+  const updateInputs = (patch: Partial<ProtocolsInputs>) => {
+    onChangeInputs((prev) => ({ ...prev, ...patch }));
+  };
 
   const handleDkaSeverityChange = (val: number) => {
     onInvalidateOrders?.('proto-dka-fluid');
-    if (onChangeDkaSeverity) {
-      onChangeDkaSeverity(val);
-    } else {
-      setInternalDkaSeverity(val);
-    }
+    updateInputs({ dkaSeverity: val });
   };
 
   const handleDkaPriorBolusChange = (val: string) => {
     onInvalidateOrders?.('proto-dka-fluid');
-    if (onChangeDkaPriorBolus) {
-      onChangeDkaPriorBolus(val);
-    } else {
-      setInternalDkaPriorBolus(val);
-    }
+    updateInputs({ dkaPriorBolus: val });
   };
-
-  const [lyteNa, setLyteNa] = useState<string>('130');
-  const [lyteGlucose, setLyteGlucose] = useState<string>('350');
-  const [lyteTotalCa, setLyteTotalCa] = useState<string>('7.4');
-  const [lyteAlbumin, setLyteAlbumin] = useState<string>('2.5');
-  const [lyteK, setLyteK] = useState<string>('3.2');
-  const [lytePH, setLytePH] = useState<string>('7.15');
 
   const w = activeWeight || 0;
   const effAgeYr = ageYears ?? 0;
@@ -202,7 +214,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                 Dehydration Severity (% Deficit)
               </label>
               <select
-                value={currentDkaSeverity}
+                value={dkaSeverity}
                 onChange={(e) => handleDkaSeverityChange(parseInt(e.target.value, 10))}
                 className="clinical-input w-full font-bold"
               >
@@ -220,7 +232,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                 min="0"
                 step="50"
                 inputMode="decimal"
-                value={currentDkaPriorBolus}
+                value={dkaPriorBolus}
                 onChange={(e) => handleDkaPriorBolusChange(e.target.value)}
                 className="clinical-input w-full font-mono-tabular font-bold"
               />
@@ -233,13 +245,13 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
             </div>
           ) : (
             (() => {
-              const rawPriorBolus = parseFloat(currentDkaPriorBolus);
+              const rawPriorBolus = parseFloat(dkaPriorBolus);
               const isValidPriorBolus =
-                currentDkaPriorBolus.trim() !== '' &&
+                dkaPriorBolus.trim() !== '' &&
                 Number.isFinite(rawPriorBolus) &&
                 rawPriorBolus >= 0;
               const priorBolusVal = isValidPriorBolus ? rawPriorBolus : 0;
-              const netDef = Math.max(0, w * currentDkaSeverity * 10 - priorBolusVal);
+              const netDef = Math.max(0, w * dkaSeverity * 10 - priorBolusVal);
               const mnt = Math.min(
                 calcMaintenanceMlPerHr(w),
                 +(MAINTENANCE_CAP_ML_DAY / 24).toFixed(1)
@@ -333,7 +345,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                 type="number"
                 inputMode="decimal"
                 value={lyteNa}
-                onChange={(e) => setLyteNa(e.target.value)}
+                onChange={(e) => updateInputs({ lyteNa: e.target.value })}
                 className="clinical-input w-full font-mono-tabular font-bold"
               />
             </div>
@@ -343,7 +355,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                 type="number"
                 inputMode="decimal"
                 value={lyteGlucose}
-                onChange={(e) => setLyteGlucose(e.target.value)}
+                onChange={(e) => updateInputs({ lyteGlucose: e.target.value })}
                 className="clinical-input w-full font-mono-tabular font-bold"
               />
             </div>
@@ -354,7 +366,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                 step="0.1"
                 inputMode="decimal"
                 value={lyteTotalCa}
-                onChange={(e) => setLyteTotalCa(e.target.value)}
+                onChange={(e) => updateInputs({ lyteTotalCa: e.target.value })}
                 className="clinical-input w-full font-mono-tabular font-bold"
               />
             </div>
@@ -365,7 +377,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                 step="0.1"
                 inputMode="decimal"
                 value={lyteAlbumin}
-                onChange={(e) => setLyteAlbumin(e.target.value)}
+                onChange={(e) => updateInputs({ lyteAlbumin: e.target.value })}
                 className="clinical-input w-full font-mono-tabular font-bold"
               />
             </div>
@@ -376,7 +388,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                 step="0.1"
                 inputMode="decimal"
                 value={lyteK}
-                onChange={(e) => setLyteK(e.target.value)}
+                onChange={(e) => updateInputs({ lyteK: e.target.value })}
                 className="clinical-input w-full font-mono-tabular font-bold"
               />
             </div>
@@ -387,7 +399,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                 step="0.01"
                 inputMode="decimal"
                 value={lytePH}
-                onChange={(e) => setLytePH(e.target.value)}
+                onChange={(e) => updateInputs({ lytePH: e.target.value })}
                 className="clinical-input w-full font-mono-tabular font-bold"
               />
             </div>

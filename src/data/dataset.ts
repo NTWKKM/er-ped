@@ -127,7 +127,6 @@ export const DATASET = rawDataset as {
 export interface BroselowSpectrumBand {
   color: string;
   label: string;
-  thaiLabel: string;
   range: string;
   min: number;
   max: number;
@@ -135,26 +134,17 @@ export interface BroselowSpectrumBand {
   ageApprox: string;
   bg: string;
   fg: string;
-  solid: string;
 }
 
 export const BROSELOW_SPECTRUM: BroselowSpectrumBand[] = [
-  { color: 'Grey', label: 'Grey', thaiLabel: 'เทา', range: '3–5.9 kg', min: 3, max: 5.9, approxKg: 5, ageApprox: '~1–2 mo', bg: '#E5E7EB', fg: '#1F2937', solid: '#9CA3AF' },
-  { color: 'Pink', label: 'Pink', thaiLabel: 'ชมพู', range: '6–7.9 kg', min: 6, max: 7.9, approxKg: 7, ageApprox: '~4–6 mo', bg: '#FCE7F3', fg: '#9D174D', solid: '#F472B6' },
-  { color: 'Red', label: 'Red', thaiLabel: 'แดง', range: '8–9.9 kg', min: 8, max: 9.9, approxKg: 9, ageApprox: '~8–10 mo', bg: '#FEE2E2', fg: '#991B1B', solid: '#EF4444' },
-  { color: 'Purple', label: 'Purple', thaiLabel: 'ม่วง', range: '10–11.9 kg', min: 10, max: 11.9, approxKg: 10.5, ageApprox: '~1–1.5 yr', bg: '#F3E8FF', fg: '#6B21A8', solid: '#A855F7' },
-  { color: 'Yellow', label: 'Yellow', thaiLabel: 'เหลือง', range: '12–14.9 kg', min: 12, max: 14.9, approxKg: 13, ageApprox: '~2–3 yr', bg: '#FEF3C7', fg: '#92400E', solid: '#EAB308' },
-  { color: 'White', label: 'White', thaiLabel: 'ขาว', range: '15–18.9 kg', min: 15, max: 18.9, approxKg: 16.5, ageApprox: '~4–5 yr', bg: '#F8FAFC', fg: '#0F172A', solid: '#CBD5E1' },
-  { color: 'Blue', label: 'Blue', thaiLabel: 'น้ำเงิน', range: '19–23.9 kg', min: 19, max: 23.9, approxKg: 21, ageApprox: '~6–7 yr', bg: '#DBEAFE', fg: '#1E40AF', solid: '#3B82F6' },
-  { color: 'Orange', label: 'Orange', thaiLabel: 'ส้ม', range: '24–29.9 kg', min: 24, max: 29.9, approxKg: 26.5, ageApprox: '~8–9 yr', bg: '#FFEDD5', fg: '#9A3412', solid: '#F97316' },
-  { color: 'Green', label: 'Green', thaiLabel: 'เขียว', range: '30–36 kg', min: 30, max: 36, approxKg: 33, ageApprox: '~10–11 yr', bg: '#DCFCE7', fg: '#166534', solid: '#22C55E' },
+  { color: 'Grey', label: 'Grey', range: '3–5.9 kg', min: 3, max: 5.9, approxKg: 5, ageApprox: '~1–2 mo', bg: '#E5E7EB', fg: '#1F2937' },
+  { color: 'Pink', label: 'Pink', range: '6–7.9 kg', min: 6, max: 7.9, approxKg: 7, ageApprox: '~4–6 mo', bg: '#FCE7F3', fg: '#9D174D' },
+  { color: 'Red', label: 'Red', range: '8–9.9 kg', min: 8, max: 9.9, approxKg: 9, ageApprox: '~8–10 mo', bg: '#FEE2E2', fg: '#991B1B' },
+  { color: 'Purple', label: 'Purple', range: '10–11.9 kg', min: 10, max: 11.9, approxKg: 10.5, ageApprox: '~1–1.5 yr', bg: '#F3E8FF', fg: '#6B21A8' },
+  { color: 'Yellow', label: 'Yellow', range: '12–14.9 kg', min: 12, max: 14.9, approxKg: 13, ageApprox: '~2–3 yr', bg: '#FEF3C7', fg: '#92400E' },
+  { color: 'White', label: 'White', range: '15–18.9 kg', min: 15, max: 18.9, approxKg: 16.5, ageApprox: '~4–5 yr', bg: '#F8FAFC', fg: '#0F172A' },
+  { color: 'Blue', label: 'Blue', range: '19–23.9 kg', min: 19, max: 23.9, approxKg: 21, ageApprox: '~6–7 yr', bg: '#DBEAFE', fg: '#1E40AF' },
+  { color: 'Orange', label: 'Orange', range: '24–29.9 kg', min: 24, max: 29.9, approxKg: 26.5, ageApprox: '~8–9 yr', bg: '#FFEDD5', fg: '#9A3412' },
+  { color: 'Green', label: 'Green', range: '30–36 kg', min: 30, max: 36, approxKg: 33, ageApprox: '~10–11 yr', bg: '#DCFCE7', fg: '#166534' },
 ];
 
-export const NRP_SPO2_TARGETS = [
-  { minute: '1 min', target: '60–65%' },
-  { minute: '2 min', target: '65–70%' },
-  { minute: '3 min', target: '70–75%' },
-  { minute: '4 min', target: '75–80%' },
-  { minute: '5 min', target: '80–85%' },
-  { minute: '10 min', target: '85–95%' },
-];

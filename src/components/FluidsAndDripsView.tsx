@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { DATASET } from '../data/dataset';
 import {
   calcFluidRegimen,
@@ -16,8 +16,8 @@ interface FluidsAndDripsViewProps {
   onAddOrder?: (order: OrderItem) => void;
   onInvalidateOrders?: (targetPrefix?: string) => void;
   onOpenEvidence?: (topicKey: string, e?: React.SyntheticEvent<HTMLElement>) => void;
-  inputs?: FluidsAndDripsInputs;
-  onChangeInputs?: React.Dispatch<React.SetStateAction<FluidsAndDripsInputs>>;
+  inputs: FluidsAndDripsInputs;
+  onChangeInputs: React.Dispatch<React.SetStateAction<FluidsAndDripsInputs>>;
 }
 
 export interface FluidsAndDripsInputs {
@@ -62,15 +62,8 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
     onChangeSubTab(tab);
   };
 
-  const [internalInputs, setInternalInputs] = useState<FluidsAndDripsInputs>(DEFAULT_FLUIDS_INPUTS);
-  const currentInputs = inputs ?? internalInputs;
-
   const updateInputs = (patch: Partial<FluidsAndDripsInputs>) => {
-    if (onChangeInputs) {
-      onChangeInputs((prev) => ({ ...prev, ...patch }));
-    } else {
-      setInternalInputs((prev) => ({ ...prev, ...patch }));
-    }
+    onChangeInputs((prev) => ({ ...prev, ...patch }));
   };
 
   const {
@@ -85,7 +78,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
     currentHb,
     targetHb,
     prbcType,
-  } = currentInputs;
+  } = inputs;
 
   const selectedDripItem =
     DATASET.infusionDrips.find((d) => d.key === dripKey) || DATASET.infusionDrips[0];

@@ -610,16 +610,11 @@ export function parseStrength(prepText?: string | null): { mgPerMl?: number; mgP
   if (!prepText) return {};
   const s = String(prepText).replace(/\s+/g, ' ').trim();
 
-  let m = s.match(/(\d+(?:\.\d+)?)\s*mg\s*\/\s*(\d+(?:\.\d+)?)\s*mL/i);
+  let m = s.match(/(\d+(?:\.\d+)?)\s*mg\s*\/\s*(?:(\d+(?:\.\d+)?)\s*)?mL/i);
   if (m) {
     const mg = parseFloat(m[1]);
-    const ml = parseFloat(m[2]);
+    const ml = m[2] ? parseFloat(m[2]) : 1;
     if (mg > 0 && ml > 0) return { mgPerMl: mg / ml };
-  }
-  m = s.match(/(\d+(?:\.\d+)?)\s*mg\s*\/\s*5\s*mL/i);
-  if (m) {
-    const mg = parseFloat(m[1]);
-    if (mg > 0) return { mgPerMl: mg / 5 };
   }
   m = s.match(/(\d+(?:\.\d+)?)\s*mg\s*\/\s*(?:tab|tablet|cap)/i);
   if (m) {
