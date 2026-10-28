@@ -710,6 +710,17 @@ test('Unified drug dose resolution with safety ceilings and age restriction', ()
   assert.equal(parseStrength('100 mg/mL').mgPerMl, 100);
   assert.equal(parseStrength('50 mg / mL').mgPerMl, 50);
   assert.equal(parseStrength('500 mg / tab').mgPerTab, 500);
+
+  // Multiple distinct concentrations: must not silently default to one
+  const multi = parseStrength('1 mg / mL (1:1,000); diluted 0.1 mg / mL (1:10,000)');
+  assert.equal(multi.mgPerMl, undefined);
+  assert.equal(multi.hasMultipleConcs, true);
+  assert.deepEqual(multi.availableConcs, [1, 0.1]);
+
+  // Multiple identical concentrations: collapses to single mgPerMl
+  const same = parseStrength('10 mg / 10 mL = 1 mg/mL');
+  assert.equal(same.mgPerMl, 1);
+  assert.equal(same.hasMultipleConcs, undefined);
 });
 
 test('Bedside Schwartz eGFR and Holliday-Segar maintenance fluids', () => {

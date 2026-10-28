@@ -106,16 +106,20 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
       ? BROSELOW_SPECTRUM.find((b) => activeWeight >= b.min && activeWeight <= b.max)
       : undefined;
 
+  const hasSelectedOrMatchedBand = Boolean(previewColor || matchedWeightBand);
+
   const currentBand =
     (previewColor &&
       BROSELOW_SPECTRUM.find(
         (b) => b.color.toLowerCase() === previewColor.toLowerCase()
       )) ||
     matchedWeightBand ||
-    BROSELOW_SPECTRUM[3]; // default Purple ~10.5 kg
+    BROSELOW_SPECTRUM[3]; // fallback Purple ~10.5 kg for unselected equipment preview
 
   const refW =
-    activeWeight && !previewColor && matchedWeightBand ? activeWeight : currentBand.approxKg;
+    !previewColor && activeWeight != null && activeWeight > 0
+      ? activeWeight
+      : currentBand.approxKg;
   const epiMgVal = Math.min(1, 0.01 * refW);
   const epiMg = epiMgVal.toFixed(2);
   const epiMl = (epiMgVal / 0.1).toFixed(1);
@@ -165,7 +169,11 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
           {/* Interactive 9-Band Spectrum */}
           <div className="grid grid-cols-3 sm:grid-cols-9 gap-1.5">
             {BROSELOW_SPECTRUM.map((b) => {
-              const isAct = b.color === currentBand.color;
+              const isAct = previewColor
+                ? b.color.toLowerCase() === previewColor.toLowerCase()
+                : matchedWeightBand
+                ? b.color === matchedWeightBand.color
+                : false;
               return (
                 <button
                   key={b.color}
@@ -185,19 +193,36 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
             })}
           </div>
 
-          <div
-            className="p-3.5 rounded-lg border border-black/15 flex flex-wrap items-center justify-between gap-2"
-            style={{ backgroundColor: currentBand.bg, color: currentBand.fg }}
-          >
-            <div>
-              <div className="text-sm sm:text-base font-extrabold">
-                Broselow Zone: {currentBand.label} — {currentBand.range}
-              </div>
-              <div className="text-xs font-semibold">
-                Reference Weight: {refW.toFixed(1)} kg ({currentBand.ageApprox})
+          {hasSelectedOrMatchedBand ? (
+            <div
+              className="p-3.5 rounded-lg border border-black/15 flex flex-wrap items-center justify-between gap-2"
+              style={{ backgroundColor: currentBand.bg, color: currentBand.fg }}
+            >
+              <div>
+                <div className="text-sm sm:text-base font-extrabold">
+                  Broselow Zone: {currentBand.label} — {currentBand.range}
+                </div>
+                <div className="text-xs font-semibold">
+                  Reference Weight: {refW.toFixed(1)} kg ({currentBand.ageApprox})
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="p-3.5 rounded-lg border border-[var(--border)] bg-[var(--panel-subtle)] flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <div className="text-sm sm:text-base font-extrabold text-[var(--ink)]">
+                  {activeWeight != null && activeWeight > 0
+                    ? `Patient Weight: ${activeWeight.toFixed(1)} kg (Outside Broselow 3–36 kg Range)`
+                    : 'No Active Weight or Broselow Zone Selected'}
+                </div>
+                <div className="text-xs text-[var(--muted)]">
+                  {activeWeight != null && activeWeight > 0
+                    ? 'Resuscitation doses calculated from patient weight. Tap a color band above to preview reference equipment.'
+                    : 'Tap any color band above to adopt its reference weight and inspect equipment sizing.'}
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="clinical-panel-subtle p-3.5">

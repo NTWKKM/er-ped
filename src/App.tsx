@@ -264,9 +264,9 @@ export default function App() {
   }, [bio.rawAge, bio.ageUnit]);
 
   const activeWeight = useMemo(() => {
-    if (bio.useIBW && ibwWeight && ibwWeight > 0) return ibwWeight;
+    if (bio.useIBW && ibwWeight && ibwWeight > 0 && ibwWeight <= 150) return ibwWeight;
     const w = parseFloat(bio.rawWeight);
-    if (Number.isFinite(w) && w > 0) return w;
+    if (Number.isFinite(w) && w > 0 && w <= 150) return w;
     return null;
   }, [bio.useIBW, bio.rawWeight, ibwWeight]);
 
@@ -277,7 +277,7 @@ export default function App() {
     invalidateCalculatedOrders();
     setBio((prev) => {
       const numW = parseFloat(val);
-      if (val && Number.isFinite(numW) && numW > 0) {
+      if (val && Number.isFinite(numW) && numW > 0 && numW <= 150) {
         return {
           ...prev,
           rawWeight: val,
@@ -334,8 +334,10 @@ export default function App() {
       if (Number.isFinite(raw) && raw > 0) {
         const maxLimit = nextUnit === 'mo' ? 180 : 15;
         const rawConverted =
-          prev.ageUnit === 'yr' ? Math.round(raw * 12) : Math.round((raw / 12) * 10) / 10;
-        convertedNum = Math.min(maxLimit, Math.max(0.1, rawConverted));
+          prev.ageUnit === 'yr'
+            ? parseFloat((raw * 12).toFixed(2))
+            : parseFloat((raw / 12).toFixed(4));
+        convertedNum = Math.min(maxLimit, rawConverted);
         convertedStr = String(convertedNum);
       }
       if (prev.weightSource === 'estimated' || !prev.weightSource) {

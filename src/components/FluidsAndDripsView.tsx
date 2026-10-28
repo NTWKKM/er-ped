@@ -553,10 +553,20 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                     Syringe Pump Rate
                   </div>
                   <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--danger-text)] mt-1">
-                    {fwd.rateMlHr.toFixed(1)} <span className="text-sm font-bold">mL/hr</span>
+                    {hasValidDripInputs ? (
+                      <>
+                        {fwd.rateMlHr.toFixed(1)} <span className="text-sm font-bold">mL/hr</span>
+                      </>
+                    ) : (
+                      <span className="text-base sm:text-lg font-bold text-[var(--muted)]">
+                        Enter dose & dilution
+                      </span>
+                    )}
                   </div>
                   <div className="text-xs text-[var(--muted)] mt-1">
-                    Mix {mgNum || '—'} mg in {volNum || '—'} mL ({fwd.concMcgPerMl} mcg/mL)
+                    {hasValidDripInputs
+                      ? `Mix ${mgNum} mg in ${volNum} mL (${fwd.concMcgPerMl} mcg/mL)`
+                      : '—'}
                   </div>
                 </div>
 

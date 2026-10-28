@@ -606,22 +606,46 @@ export function fmtMl(n: number | null | undefined): string {
   return n >= 10 ? n.toFixed(1) : n.toFixed(2);
 }
 
-export function parseStrength(prepText?: string | null): { mgPerMl?: number; mgPerTab?: number } {
+export interface ParsedStrength {
+  mgPerMl?: number;
+  mgPerTab?: number;
+  availableConcs?: number[];
+  hasMultipleConcs?: boolean;
+}
+
+export function parseStrength(prepText?: string | null): ParsedStrength {
   if (!prepText) return {};
   const s = String(prepText).replace(/\s+/g, ' ').trim();
 
-  let m = s.match(/(\d+(?:\.\d+)?)\s*mg\s*\/\s*(?:(\d+(?:\.\d+)?)\s*)?mL/i);
-  if (m) {
+  const concMatches = Array.from(s.matchAll(/(\d+(?:\.\d+)?)\s*mg\s*\/\s*(?:(\d+(?:\.\d+)?)\s*)?mL/gi));
+  const concs: number[] = [];
+  for (const m of concMatches) {
     const mg = parseFloat(m[1]);
     const ml = m[2] ? parseFloat(m[2]) : 1;
-    if (mg > 0 && ml > 0) return { mgPerMl: mg / ml };
+    if (mg > 0 && ml > 0) {
+      const val = mg / ml;
+      if (!concs.some((c) => Math.abs(c - val) < 1e-4)) {
+        concs.push(val);
+      }
+    }
   }
-  m = s.match(/(\d+(?:\.\d+)?)\s*mg\s*\/\s*(?:tab|tablet|cap)/i);
-  if (m) {
-    const mg = parseFloat(m[1]);
-    if (mg > 0) return { mgPerTab: mg };
+
+  const tabMatch = s.match(/(\d+(?:\.\d+)?)\s*mg\s*\/\s*(?:tab|tablet|cap)/i);
+  const mgPerTab = tabMatch && parseFloat(tabMatch[1]) > 0 ? parseFloat(tabMatch[1]) : undefined;
+
+  if (concs.length === 1) {
+    return { mgPerMl: concs[0], mgPerTab };
   }
-  return {};
+  if (concs.length > 1) {
+    return {
+      mgPerTab,
+      availableConcs: concs,
+      hasMultipleConcs: true,
+      // Require explicit concentration selection; do not silently default to one
+    };
+  }
+
+  return mgPerTab ? { mgPerTab } : {};
 }
 
 export function dosesPerDayFromFreq(freq?: string | null): number | null {
