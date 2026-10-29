@@ -267,7 +267,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                 onClick={() => setMobileMoreOpen((o) => !o)}
                 aria-expanded={mobileMoreOpen}
                 aria-label="Toggle Height and Sex inputs"
-                className={`sm:hidden inline-flex items-center gap-1 min-h-[36px] px-1.5 py-1 rounded-lg border text-xs font-bold transition-colors cursor-pointer select-none whitespace-nowrap shrink-0 ${
+                className={`sm:hidden inline-flex items-center gap-1 min-h-[36px] px-1.5 py-1 rounded-lg border text-xs font-bold transition-colors cursor-pointer select-none whitespace-nowrap min-w-0 ${
                   mobileMoreOpen || bio.rawHeight
                     ? 'border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent-text)]'
                     : 'border-[var(--border)] bg-[var(--panel-subtle)] text-[var(--muted)]'
@@ -275,9 +275,9 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                 title="ระบุส่วนสูง (HT cm) และเพศ (♂/♀) สำหรับคำนวณ eGFR และ Wt-for-Ht"
               >
                 <Ruler className="w-3.5 h-3.5 shrink-0 max-[360px]:hidden" />
-                <span>{bio.rawHeight ? `${bio.rawHeight}cm` : 'HT'}</span>
-                <span>·</span>
-                <span>{bio.sex === 'male' ? '♂' : '♀'}</span>
+                <span className="truncate min-w-0">{bio.rawHeight ? `${bio.rawHeight}cm` : 'HT'}</span>
+                <span className="shrink-0">·</span>
+                <span className="shrink-0">{bio.sex === 'male' ? '♂' : '♀'}</span>
               </button>
 
               {/* 3. Height (HT) & Wt-for-Ht (Tablet/Desktop >= 640px inline) */}
@@ -441,7 +441,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                   type="button"
                   onClick={(e) => onOpenEvidenceModal(e)}
                   aria-label="Clinical Evidence & Guidelines"
-                  className="hidden sm:flex min-h-[36px] min-w-[36px] px-2 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--panel-subtle)] text-[var(--muted)] hover:text-[var(--accent-text)] cursor-pointer transition-colors shrink-0 items-center justify-center gap-1.5"
+                  className="flex min-h-[36px] min-w-[36px] px-2 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--panel-subtle)] text-[var(--muted)] hover:text-[var(--accent-text)] cursor-pointer transition-colors shrink-0 items-center justify-center gap-1.5"
                   title="Clinical Evidence & Guideline Reference Registry (2024–2026)"
                 >
                   <BookOpen className="w-4 h-4 shrink-0" />

@@ -164,6 +164,7 @@
     - **Atomic Cluster Tablet Wrapping**: Configured biometrics input section as `flex-auto` and utilities/actions as `flex-none ml-auto` so tablet viewports (640px–1023px) wrap cleanly as complete functional blocks rather than breaking mid-input.
     - **Responsive Fluids & Drips Subtab Text**: Shortened `FluidsAndDripsView` subtabs on mobile screens (`< sm`) to `Fluids`, `Drips`, `Transfusion` with full descriptive titles preserved on `sm+`, maintaining `bg-[var(--accent)] text-white shadow-xs` active states and ARIA labels.
     - **Zero-Overflow Mobile Viewport Hardening**: Reduced lateral padding in `App.tsx` `<main>` to `px-2.5 sm:px-5 lg:px-8` and hardened 5-tab main segment with `max-[360px]:text-[11px] max-[360px]:px-0.5 whitespace-nowrap`, completely eliminating horizontal scrolling across 320px–1440px viewports (`scrollWidth <= clientWidth`).
+    - **Evidence Modal & Mobile Height Overflow Safeguards**: Activated Evidence Registry modal button below `sm` (`flex` replacing `hidden sm:flex`) with icon-only rendering preserved below `xl`. Hardened mobile secondary biometrics trigger with `truncate min-w-0` on the height text span and `min-w-0` flex shrinking, preventing long fractional height values from causing horizontal scroll.
 
 
 
