@@ -84,6 +84,11 @@ const BACKDROP_BASE_CLASS =
 const DIALOG_MOTION_BASE_CLASS =
   'transition-[opacity,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none will-change-[opacity,transform]';
 
+const formatWeightVal = (w: number): string => {
+  const str = String(parseFloat(w.toFixed(3)));
+  return str.includes('.') ? str : `${str}.0`;
+};
+
 interface BroselowModalProps {
   isOpen: boolean;
   activeWeight: number | null;
@@ -140,8 +145,8 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
       ? activeWeight
       : currentBand.approxKg;
   const epiMgVal = Math.min(1, 0.01 * refW);
-  const epiMg = epiMgVal.toFixed(2);
-  const epiMl = (epiMgVal / 0.1).toFixed(1);
+  const epiMg = epiMgVal.toFixed(3);
+  const epiMl = (epiMgVal / 0.1).toFixed(2);
   const defib1 = Math.min(200, Math.round(2 * refW));
   const defib2 = Math.min(200, Math.round(4 * refW));
   const bolusMl = Math.min(BOLUS_20_CAP_ML, Math.round(20 * refW));
@@ -223,8 +228,8 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
                 </div>
                 <div className="text-xs font-semibold">
                   {activeWeight != null && activeWeight > 0
-                    ? `Patient Weight: ${refW.toFixed(1)} kg (${provenanceLabel}) · Band Ref: ${currentBand.approxKg} kg (${currentBand.ageApprox})`
-                    : `Reference Weight: ${refW.toFixed(1)} kg (${currentBand.ageApprox})`}
+                    ? `Patient Weight: ${formatWeightVal(refW)} kg (${provenanceLabel}) · Band Ref: ${currentBand.approxKg} kg (${currentBand.ageApprox})`
+                    : `Reference Weight: ${formatWeightVal(refW)} kg (${currentBand.ageApprox})`}
                 </div>
               </div>
             </div>
@@ -234,17 +239,17 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
                 <div className="text-sm sm:text-base font-extrabold text-[var(--ink)]">
                   {activeWeight != null && activeWeight > 0 ? (
                     activeWeight < 3 || activeWeight > 36
-                      ? `Patient Weight: ${activeWeight.toFixed(1)} kg (${provenanceLabel}) (Outside Broselow 3–36 kg Range)`
-                      : `Patient Weight: ${activeWeight.toFixed(1)} kg (${provenanceLabel}) (Unmatched Band)`
+                      ? `Patient Weight: ${formatWeightVal(activeWeight)} kg (${provenanceLabel}) (Outside Broselow 3–36 kg Range)`
+                      : `Patient Weight: ${formatWeightVal(activeWeight)} kg (${provenanceLabel}) (Unmatched Band)`
                   ) : (
-                    `No Active Weight or Broselow Zone Selected (Previewing ${refW.toFixed(1)} kg)`
+                    `No Active Weight or Broselow Zone Selected (Previewing ${formatWeightVal(refW)} kg)`
                   )}
                 </div>
                 <div className="text-xs text-[var(--muted)]">
                   {activeWeight != null && activeWeight > 0 ? (
-                    `Resuscitation doses calculated from patient weight (${activeWeight.toFixed(1)} kg, ${provenanceLabel}). Selecting a color band above replaces active patient weight and invalidates affected queued orders; recalculate and re-add those orders.`
+                    `Resuscitation doses calculated from patient weight (${formatWeightVal(activeWeight)} kg, ${provenanceLabel}). Selecting a color band above replaces active patient weight and invalidates affected queued orders; recalculate and re-add those orders.`
                   ) : (
-                    `Emergency values below preview reference weight ${refW.toFixed(1)} kg. Selecting a color band above adopts its reference weight and invalidates affected queued orders; recalculate and re-add those orders.`
+                    `Emergency values below preview reference weight ${formatWeightVal(refW)} kg. Selecting a color band above adopts its reference weight and invalidates affected queued orders; recalculate and re-add those orders.`
                   )}
                 </div>
               </div>
@@ -288,7 +293,7 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
               <thead>
                 <tr>
                   <th>Equipment / Airway Parameter</th>
-                  <th>Recommended Size for {refW.toFixed(1)} kg</th>
+                  <th>Recommended Size for {formatWeightVal(refW)} kg</th>
                 </tr>
               </thead>
               <tbody>

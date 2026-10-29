@@ -580,15 +580,31 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                 <input
                   type="number"
                   step="0.1"
+                  min="0.1"
+                  max="150"
                   inputMode="decimal"
-                  placeholder={w ? String(w) : '3.0'}
+                  placeholder={w ? String(w) : 'kg'}
                   value={ncprWeight}
                   onChange={(e) => updateInputs({ ncprWeight: e.target.value })}
                   className="clinical-input w-28 font-mono-tabular font-bold"
                 />
               </div>
               {(() => {
-                const bw = parseFloat(ncprWeight) || w || 3.0;
+                const parsedNcpr = parseFloat(ncprWeight);
+                const validNcpr =
+                  Number.isFinite(parsedNcpr) && parsedNcpr > 0 && parsedNcpr <= 150
+                    ? parsedNcpr
+                    : null;
+                const validActive =
+                  Number.isFinite(w) && w! > 0 && w! <= 150 ? w! : null;
+                const bw = validNcpr ?? validActive;
+                if (!bw) {
+                  return (
+                    <div className="clinical-panel-subtle p-6 text-center text-xs text-[var(--muted)]">
+                      กรุณาระบุน้ำหนักแรกเกิด (Birth Weight) หรือระบุน้ำหนักผู้ป่วยด้านบนเพื่อคำนวณขนาดยา NCPR
+                    </div>
+                  );
+                }
                 return (
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                     <div className="clinical-panel-subtle p-4">

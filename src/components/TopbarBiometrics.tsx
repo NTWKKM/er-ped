@@ -296,11 +296,13 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                 />
                 <span className="text-xs text-[var(--muted)] select-none">cm</span>
 
-                {ibwWeight && (
+                {(ibwWeight || bio.useIBW) && (
                   <div className="flex items-center gap-1.5 border-l border-[var(--border)] pl-1.5">
-                    <span className="text-[11px] text-[var(--muted)] font-mono-tabular whitespace-nowrap">
-                      Wt-for-Ht: <strong className="text-[var(--ink)]">{ibwWeight.toFixed(1)}k</strong>
-                    </span>
+                    {ibwWeight && (
+                      <span className="text-[11px] text-[var(--muted)] font-mono-tabular whitespace-nowrap">
+                        Wt-for-Ht: <strong className="text-[var(--ink)]">{ibwWeight.toFixed(1)}k</strong>
+                      </span>
+                    )}
                     <label
                       htmlFor="useIBW"
                       className="flex items-center gap-1 text-[11px] font-semibold text-[var(--muted)] cursor-pointer hover:text-[var(--ink)] select-none whitespace-nowrap"
@@ -527,7 +529,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
               </button>
 
               {/* Mobile Wt-for-Ht Checkbox */}
-              {ibwWeight && (
+              {(ibwWeight || bio.useIBW) && (
                 <label
                   htmlFor="mobile-useIBW"
                   className="flex items-center gap-1.5 min-h-[36px] px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--panel-subtle)] text-xs font-semibold text-[var(--ink)] cursor-pointer select-none"
@@ -540,7 +542,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                     className="w-4 h-4 accent-[var(--accent)] rounded"
                   />
                   <span className="font-mono-tabular">
-                    Use Wt-for-Ht ({ibwWeight.toFixed(1)} kg)
+                    {ibwWeight ? `Use Wt-for-Ht (${ibwWeight.toFixed(1)} kg)` : 'Use Wt-for-Ht'}
                   </span>
                 </label>
               )}
