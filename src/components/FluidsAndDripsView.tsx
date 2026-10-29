@@ -174,6 +174,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
         <div className="w-full sm:w-auto grid grid-cols-3 sm:inline-flex items-center gap-1 p-1 rounded-lg bg-[var(--panel)] border border-[var(--border)]">
           <button
             type="button"
+            aria-label="IV Fluids"
             aria-pressed={activeSubTab === 'fluids'}
             onClick={() => handleSubTabChange('fluids')}
             className={`min-h-[34px] px-2 sm:px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer whitespace-nowrap truncate text-center ${
@@ -182,10 +183,12 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                 : 'text-[var(--muted)] hover:text-[var(--ink)]'
             }`}
           >
-            IV Fluids
+            <span className="sm:hidden">Fluids</span>
+            <span className="hidden sm:inline">IV Fluids</span>
           </button>
           <button
             type="button"
+            aria-label="Continuous Drips"
             aria-pressed={activeSubTab === 'drip'}
             onClick={() => handleSubTabChange('drip')}
             className={`min-h-[34px] px-2 sm:px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer whitespace-nowrap truncate text-center ${
@@ -194,10 +197,12 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                 : 'text-[var(--muted)] hover:text-[var(--ink)]'
             }`}
           >
-            Continuous Drips
+            <span className="sm:hidden">Drips</span>
+            <span className="hidden sm:inline">Continuous Drips</span>
           </button>
           <button
             type="button"
+            aria-label="Blood Transfusion"
             aria-pressed={activeSubTab === 'transfusion'}
             onClick={() => handleSubTabChange('transfusion')}
             className={`min-h-[34px] px-2 sm:px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer whitespace-nowrap truncate text-center ${
@@ -206,7 +211,8 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                 : 'text-[var(--muted)] hover:text-[var(--ink)]'
             }`}
           >
-            Blood Transfusion
+            <span className="sm:hidden">Transfusion</span>
+            <span className="hidden sm:inline">Blood Transfusion</span>
           </button>
         </div>
       </div>
