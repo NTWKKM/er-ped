@@ -166,22 +166,26 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
 
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--card)]/95 backdrop-blur-md no-print">
-      <div className="max-w-7xl mx-auto px-3 sm:px-5 lg:px-8 py-2 sm:py-2.5 flex flex-col gap-2">
-        {/* Main Instrument Row */}
-        <div className="flex flex-wrap lg:flex-nowrap items-center justify-between gap-2 sm:gap-3">
+      <div className="max-w-7xl mx-auto px-2.5 sm:px-5 lg:px-8 py-2 sm:py-2.5 flex flex-col gap-2">
+        {/* Main Instrument Container:
+            Mobile (< sm): 3-col Grid (Row 1: Utility & In-Use, Row 2: Biometrics full-width)
+            Tablet/Desktop (sm+): Flex row where whole clusters wrap */}
+        <div className="grid grid-cols-[auto_1fr_auto] gap-x-1.5 gap-y-1.5 items-center sm:flex sm:flex-wrap lg:flex-nowrap sm:items-center sm:justify-between sm:gap-x-3 sm:gap-y-2">
           {/* Left Section: Brand & Patient Biometrics Cluster */}
-          <div className="flex items-center gap-1.5 sm:gap-2.5 flex-wrap lg:flex-nowrap min-w-0 flex-1">
-            {/* Brand Wordmark */}
-            <span className="text-sm sm:text-base font-extrabold tracking-tight text-[var(--ink)] select-none whitespace-nowrap shrink-0">
-              ER-PED
-            </span>
-            <div className="h-4 w-[1px] bg-[var(--border-strong)] hidden sm:block shrink-0" />
+          <div className="contents sm:flex sm:flex-auto sm:min-w-0 sm:items-center sm:gap-2.5">
+            {/* Brand Wordmark (hidden on mobile) */}
+            <div className="hidden sm:flex items-center gap-2.5 shrink-0">
+              <span className="text-base font-extrabold tracking-tight text-[var(--ink)] select-none whitespace-nowrap">
+                ER-PED
+              </span>
+              <div className="h-4 w-[1px] bg-[var(--border-strong)] shrink-0" />
+            </div>
 
             {/* Biometrics Input Fields */}
-            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap min-w-0">
+            <div className="col-span-3 row-start-2 flex items-center gap-1 flex-nowrap min-w-0 sm:gap-2 sm:flex-wrap lg:flex-nowrap">
               {/* 1. Measured Weight (BW) */}
               <div
-                className={`flex items-center gap-1 rounded-lg px-2 py-1 min-h-[36px] shrink-0 border ${
+                className={`flex items-center gap-1 rounded-lg px-1.5 sm:px-2 py-1 min-h-[36px] shrink-0 border ${
                   isWeightOutOfRange
                     ? 'border-[var(--danger)] bg-[var(--danger-soft)] text-[var(--danger-text)]'
                     : 'bg-[var(--panel-subtle)] border-[var(--border)]'
@@ -208,15 +212,15 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                   placeholder="kg"
                   value={bio.rawWeight}
                   onChange={(e) => onWeightChange(e.target.value)}
-                  className={`w-12 sm:w-16 bg-transparent text-center font-mono-tabular font-bold text-base sm:text-sm focus:outline-none ${
+                  className={`w-11 sm:w-16 bg-transparent text-center font-mono-tabular font-bold text-base sm:text-sm focus:outline-none ${
                     isWeightOutOfRange ? 'text-[var(--danger-text)]' : 'text-[var(--ink)]'
                   }`}
                 />
-                <span className="text-xs text-[var(--muted)] select-none">kg</span>
+                <span className="text-xs text-[var(--muted)] select-none hidden sm:inline">kg</span>
               </div>
 
               {/* 2. Age Input + Unit Toggle (yr/mo) + Sex Toggle (♂/♀) */}
-              <div className="flex items-center gap-1 bg-[var(--panel-subtle)] border border-[var(--border)] rounded-lg px-2 py-1 min-h-[36px] shrink-0">
+              <div className="flex items-center gap-1 bg-[var(--panel-subtle)] border border-[var(--border)] rounded-lg px-1.5 sm:px-2 py-1 min-h-[36px] shrink-0">
                 <label htmlFor="age" className="text-xs font-bold text-[var(--muted)] select-none">
                   Age
                 </label>
@@ -231,7 +235,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                   placeholder="0"
                   value={bio.rawAge}
                   onChange={(e) => onAgeChange(e.target.value)}
-                  className="w-10 sm:w-12 bg-transparent text-center font-mono-tabular font-bold text-base sm:text-sm text-[var(--ink)] focus:outline-none"
+                  className="w-9 sm:w-12 bg-transparent text-center font-mono-tabular font-bold text-base sm:text-sm text-[var(--ink)] focus:outline-none"
                 />
                 <button
                   type="button"
@@ -263,14 +267,14 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                 onClick={() => setMobileMoreOpen((o) => !o)}
                 aria-expanded={mobileMoreOpen}
                 aria-label="Toggle Height and Sex inputs"
-                className={`sm:hidden inline-flex items-center gap-1 min-h-[36px] px-2 py-1 rounded-lg border text-xs font-bold transition-colors cursor-pointer select-none whitespace-nowrap shrink-0 ${
+                className={`sm:hidden inline-flex items-center gap-1 min-h-[36px] px-1.5 py-1 rounded-lg border text-xs font-bold transition-colors cursor-pointer select-none whitespace-nowrap shrink-0 ${
                   mobileMoreOpen || bio.rawHeight
                     ? 'border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent-text)]'
                     : 'border-[var(--border)] bg-[var(--panel-subtle)] text-[var(--muted)]'
                 }`}
                 title="ระบุส่วนสูง (HT cm) และเพศ (♂/♀) สำหรับคำนวณ eGFR และ Wt-for-Ht"
               >
-                <Ruler className="w-3.5 h-3.5 shrink-0" />
+                <Ruler className="w-3.5 h-3.5 shrink-0 max-[360px]:hidden" />
                 <span>{bio.rawHeight ? `${bio.rawHeight}cm` : 'HT'}</span>
                 <span>·</span>
                 <span>{bio.sex === 'male' ? '♂' : '♀'}</span>
@@ -362,10 +366,10 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
           </div>
 
           {/* Right Section: In-Use Active Weight Readout + Broselow Band + Tools + Theme Toggle */}
-          <div className="flex items-center gap-1.5 sm:gap-2 ml-auto shrink-0">
+          <div className="contents sm:flex sm:flex-none sm:items-center sm:gap-2 sm:ml-auto">
             {/* Authoritative In-Use Active Weight Box (All-around hairline border per taste-skill) */}
             <div
-              className={`flex flex-col justify-center px-2 sm:px-2.5 py-1 rounded-lg border transition-colors shrink-0 min-h-[36px] ${
+              className={`col-start-1 row-start-1 min-w-[84px] max-w-[132px] sm:max-w-none sm:min-w-[96px] flex flex-col justify-center px-2 sm:px-2.5 py-1 rounded-lg border min-h-[36px] shrink-0 transition-colors ${
                 weightProvenance.isError
                   ? 'border-[var(--danger)]/50 bg-[var(--danger-soft)] text-[var(--danger-text)]'
                   : weightProvenance.isEmpty
@@ -387,7 +391,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                 </strong>
               </div>
               <span
-                className={`text-[9.5px] sm:text-[10px] leading-tight font-semibold tracking-tight select-none truncate max-w-[96px] sm:max-w-none ${
+                className={`text-[9.5px] sm:text-[10px] leading-tight font-semibold tracking-tight select-none truncate ${
                   weightProvenance.isError
                     ? 'text-[var(--danger-text)] font-bold'
                     : weightProvenance.isDerived
@@ -409,7 +413,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                   ? { backgroundColor: activeBand.bg, color: activeBand.fg }
                   : undefined
               }
-              className={`min-h-[36px] px-2 sm:px-2.5 py-1 rounded-lg text-[11px] font-bold font-mono-tabular border cursor-pointer transition-opacity select-none whitespace-nowrap shrink-0 flex items-center gap-1 ${
+              className={`col-start-2 row-start-1 justify-self-start min-h-[36px] min-w-[44px] px-2 sm:px-2.5 py-1 rounded-lg text-[11px] font-bold font-mono-tabular border cursor-pointer select-none whitespace-nowrap shrink-0 flex items-center justify-center gap-1 transition-opacity ${
                 activeBand
                   ? 'border-black/15 hover:opacity-90'
                   : 'border-[var(--border)] bg-[var(--panel-subtle)] text-[var(--muted)] hover:text-[var(--ink)]'
@@ -429,64 +433,67 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
               )}
             </button>
 
-            {/* Evidence Registry Modal Button */}
-            {onOpenEvidenceModal && (
+            {/* Quick Action Tools Wrapper */}
+            <div className="col-start-3 row-start-1 justify-self-end flex items-center gap-1.5 sm:gap-2 shrink-0">
+              {/* Evidence Registry Modal Button */}
+              {onOpenEvidenceModal && (
+                <button
+                  type="button"
+                  onClick={(e) => onOpenEvidenceModal(e)}
+                  aria-label="Clinical Evidence & Guidelines"
+                  className="hidden sm:flex min-h-[36px] min-w-[36px] px-2 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--panel-subtle)] text-[var(--muted)] hover:text-[var(--accent-text)] cursor-pointer transition-colors shrink-0 items-center justify-center gap-1.5"
+                  title="Clinical Evidence & Guideline Reference Registry (2024–2026)"
+                >
+                  <BookOpen className="w-4 h-4 shrink-0" />
+                  <span className="hidden xl:inline text-xs font-bold whitespace-nowrap">Evidence</span>
+                </button>
+              )}
+
+              {/* Bedside Pocket Card & Order Sheet Modal Button */}
+              {onOpenOrderSheetModal && (
+                <button
+                  type="button"
+                  onClick={(e) => onOpenOrderSheetModal(e)}
+                  aria-label="Bedside Pocket Card & Order Sheet"
+                  className={`min-h-[36px] min-w-[36px] px-2 py-1.5 rounded-lg border cursor-pointer transition-colors shrink-0 flex items-center justify-center gap-1.5 ${
+                    orderCount > 0
+                      ? 'border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent-text)] font-bold'
+                      : 'border-[var(--border)] bg-[var(--panel-subtle)] text-[var(--muted)] hover:text-[var(--accent-text)]'
+                  }`}
+                  title="Bedside Emergency Pocket Card & EHR Order Sheet (Print A4 Card)"
+                >
+                  <FileText className="w-4 h-4 shrink-0" />
+                  <span className="hidden sm:inline text-xs font-bold whitespace-nowrap">Orders</span>
+                  {orderCount > 0 && (
+                    <span className="font-mono-tabular text-[11px] font-extrabold">
+                      ({orderCount})
+                    </span>
+                  )}
+                </button>
+              )}
+
+              {/* 4-Theme Cycle Toggle Button */}
               <button
                 type="button"
-                onClick={(e) => onOpenEvidenceModal(e)}
-                aria-label="Clinical Evidence & Guidelines"
-                className="min-h-[36px] min-w-[36px] px-2 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--panel-subtle)] text-[var(--muted)] hover:text-[var(--accent-text)] cursor-pointer transition-colors shrink-0 flex items-center justify-center gap-1.5"
-                title="Clinical Evidence & Guideline Reference Registry (2024–2026)"
+                onClick={onCycleTheme}
+                aria-label="สลับธีมสี (Light, Dark, Mono, Red)"
+                className="min-h-[36px] min-w-[36px] p-2 rounded-lg border border-[var(--border)] bg-[var(--panel-subtle)] text-[var(--muted)] hover:text-[var(--ink)] cursor-pointer transition-colors shrink-0 flex items-center justify-center"
+                title={
+                  theme === 'light'
+                    ? 'ธีมปัจจุบัน: Light (Medical Mist) - คลิกเพื่อสลับเป็น Dark'
+                    : theme === 'dark'
+                    ? 'ธีมปัจจุบัน: Dark (Obsidian) - คลิกเพื่อสลับเป็น Mono'
+                    : theme === 'mono'
+                    ? 'ธีมปัจจุบัน: Mono (High-Contrast Grayscale) - คลิกเพื่อสลับเป็น Red'
+                    : 'ธีมปัจจุบัน: Red (Night-Vision PICU) - คลิกเพื่อสลับเป็น Light'
+                }
               >
-                <BookOpen className="w-4 h-4 shrink-0" />
-                <span className="hidden xl:inline text-xs font-bold whitespace-nowrap">Evidence</span>
+                {theme === 'light' && <Sun className="w-4 h-4 text-amber-500" />}
+                {theme === 'dark' && <Moon className="w-4 h-4 text-sky-400" />}
+                {theme === 'mono' && <Monitor className="w-4 h-4 text-slate-400" />}
+                {theme === 'red' && <Flame className="w-4 h-4 text-rose-500" />}
               </button>
-            )}
-
-            {/* Bedside Pocket Card & Order Sheet Modal Button */}
-            {onOpenOrderSheetModal && (
-              <button
-                type="button"
-                onClick={(e) => onOpenOrderSheetModal(e)}
-                aria-label="Bedside Pocket Card & Order Sheet"
-                className={`min-h-[36px] min-w-[36px] px-2 py-1.5 rounded-lg border cursor-pointer transition-colors shrink-0 flex items-center justify-center gap-1.5 ${
-                  orderCount > 0
-                    ? 'border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent-text)] font-bold'
-                    : 'border-[var(--border)] bg-[var(--panel-subtle)] text-[var(--muted)] hover:text-[var(--accent-text)]'
-                }`}
-                title="Bedside Emergency Pocket Card & EHR Order Sheet (Print A4 Card)"
-              >
-                <FileText className="w-4 h-4 shrink-0" />
-                <span className="hidden sm:inline text-xs font-bold whitespace-nowrap">Orders</span>
-                {orderCount > 0 && (
-                  <span className="font-mono-tabular text-[11px] font-extrabold">
-                    ({orderCount})
-                  </span>
-                )}
-              </button>
-            )}
-
-            {/* 4-Theme Cycle Toggle Button */}
-            <button
-              type="button"
-              onClick={onCycleTheme}
-              aria-label="สลับธีมสี (Light, Dark, Mono, Red)"
-              className="min-h-[36px] min-w-[36px] p-2 rounded-lg border border-[var(--border)] bg-[var(--panel-subtle)] text-[var(--muted)] hover:text-[var(--ink)] cursor-pointer transition-colors shrink-0 flex items-center justify-center"
-              title={
-                theme === 'light'
-                  ? 'ธีมปัจจุบัน: Light (Medical Mist) - คลิกเพื่อสลับเป็น Dark'
-                  : theme === 'dark'
-                  ? 'ธีมปัจจุบัน: Dark (Obsidian) - คลิกเพื่อสลับเป็น Mono'
-                  : theme === 'mono'
-                  ? 'ธีมปัจจุบัน: Mono (High-Contrast Grayscale) - คลิกเพื่อสลับเป็น Red'
-                  : 'ธีมปัจจุบัน: Red (Night-Vision PICU) - คลิกเพื่อสลับเป็น Light'
-              }
-            >
-              {theme === 'light' && <Sun className="w-4 h-4 text-amber-500" />}
-              {theme === 'dark' && <Moon className="w-4 h-4 text-sky-400" />}
-              {theme === 'mono' && <Monitor className="w-4 h-4 text-slate-400" />}
-              {theme === 'red' && <Flame className="w-4 h-4 text-rose-500" />}
-            </button>
+            </div>
           </div>
         </div>
 

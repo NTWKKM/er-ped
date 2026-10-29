@@ -159,6 +159,12 @@
     - **Modal-Centric Order & Emergency Reference**: Consolidated all EHR prescription orders and bedside emergency resuscitation summary cards into the on-demand `OrderSheetModal`, triggered directly via the `Orders` topbar action button (with dynamic live active count badge).
     - **Responsive Action Button Visibility**: Broadened the `Orders` button label on the topbar instrument cluster (`hidden sm:inline`) for clear discovery across tablet and desktop screens.
 
+31. **Deterministic 2-Row Mobile Portrait Header & Responsive Navigation Overhaul (v2.4.4)**:
+    - **Deterministic 2-Row Mobile Grid**: Refactored `TopbarBiometrics` from unstructured nested `flex-wrap` containers into a deterministic 3-column CSS Grid on mobile viewports (< 640px, `grid grid-cols-[auto_1fr_auto]`), moving authoritative "In-Use" active weight box (`col-start-1 row-start-1`) alongside Broselow Tape pill (`col-start-2 justify-self-start`) and bedside action tools (`col-start-3 justify-self-end`) on Row 1, with patient biometrics (`BW`, `Age`, `HT·♂`) isolated full-width on Row 2 (`col-span-3 row-start-2`). Retains single DOM copy invariant for all input elements (`id="weight"`, `id="age"`, `id="length"`, `id="useIBW"`).
+    - **Atomic Cluster Tablet Wrapping**: Configured biometrics input section as `flex-auto` and utilities/actions as `flex-none ml-auto` so tablet viewports (640px–1023px) wrap cleanly as complete functional blocks rather than breaking mid-input.
+    - **Responsive Fluids & Drips Subtab Text**: Shortened `FluidsAndDripsView` subtabs on mobile screens (`< sm`) to `Fluids`, `Drips`, `Transfusion` with full descriptive titles preserved on `sm+`, maintaining `bg-[var(--accent)] text-white shadow-xs` active states and ARIA labels.
+    - **Zero-Overflow Mobile Viewport Hardening**: Reduced lateral padding in `App.tsx` `<main>` to `px-2.5 sm:px-5 lg:px-8` and hardened 5-tab main segment with `max-[360px]:text-[11px] max-[360px]:px-0.5 whitespace-nowrap`, completely eliminating horizontal scrolling across 320px–1440px viewports (`scrollWidth <= clientWidth`).
+
 
 
 

@@ -444,7 +444,7 @@ export default function App() {
 
       {/* Responsive Clinical Workspace */}
       <main
-        className={`flex-1 max-w-7xl w-full mx-auto px-3 sm:px-5 lg:px-8 py-4 sm:py-5 space-y-4 ${
+        className={`flex-1 max-w-7xl w-full mx-auto px-2.5 sm:px-5 lg:px-8 py-4 sm:py-5 space-y-4 ${
           orderSheetOpen ? 'no-print' : ''
         }`}
       >
@@ -467,7 +467,7 @@ export default function App() {
                   if (t.id === 'fluids') setFluidsTopic('fluids');
                   if (t.id === 'drip') setFluidsTopic('drip');
                 }}
-                className={`min-h-[38px] sm:min-h-[40px] py-1.5 sm:py-2 px-1 sm:px-2 text-xs sm:text-sm font-bold rounded-lg transition-colors text-center cursor-pointer truncate ${
+                className={`min-h-[38px] sm:min-h-[40px] py-1.5 sm:py-2 px-1 sm:px-2 max-[360px]:px-0.5 text-xs max-[360px]:text-[11px] sm:text-sm font-bold rounded-lg transition-colors text-center cursor-pointer whitespace-nowrap ${
                   isAct
                     ? 'bg-[var(--accent)] text-white shadow-xs'
                     : 'text-[var(--muted)] hover:text-[var(--ink)]'
