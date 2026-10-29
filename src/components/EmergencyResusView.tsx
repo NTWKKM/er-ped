@@ -70,6 +70,13 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
   const updateInputs = (patch: Partial<EmergencyResusInputs>) => {
     onChangeInputs((prev) => ({ ...prev, ...patch }));
   };
+  const [isNcprBadInput, setIsNcprBadInput] = React.useState(false);
+
+  React.useEffect(() => {
+    if (activeSubTab !== 'ncpr') {
+      setIsNcprBadInput(false);
+    }
+  }, [activeSubTab]);
 
   const w = activeWeight || 0;
   const effAgeYr = ageYears ?? (w ? (w < 10 ? 0.5 : w < 20 ? 3 : 8) : 1);
@@ -572,11 +579,12 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
 
           {/* 6. NCPR */}
           {activeSubTab === 'ncpr' && (() => {
-            const hasNcprInput = Boolean(ncprWeight && ncprWeight.trim() !== '');
+            const hasNcprInput = Boolean((ncprWeight && ncprWeight.trim() !== '') || isNcprBadInput);
             const parsedNcpr = parseFloat(ncprWeight);
             const isNcprOutOfRange =
-              hasNcprInput &&
-              (!Number.isFinite(parsedNcpr) || parsedNcpr < 0.1 || parsedNcpr > 150);
+              isNcprBadInput ||
+              (hasNcprInput &&
+                (!Number.isFinite(parsedNcpr) || parsedNcpr < 0.1 || parsedNcpr > 150));
             const validNcpr =
               hasNcprInput && !isNcprOutOfRange ? parsedNcpr : null;
             const validActive =
@@ -600,7 +608,11 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                     inputMode="decimal"
                     placeholder={w ? String(w) : 'kg'}
                     value={ncprWeight}
-                    onChange={(e) => updateInputs({ ncprWeight: e.target.value })}
+                    onChange={(e) => {
+                      setIsNcprBadInput(e.target.validity.badInput);
+                      updateInputs({ ncprWeight: e.target.value });
+                    }}
+                    onBlur={(e) => setIsNcprBadInput(e.target.validity.badInput)}
                     className={`clinical-input w-28 font-mono-tabular font-bold ${
                       isNcprOutOfRange
                         ? 'border-[var(--danger)] text-[var(--danger-text)] bg-[var(--danger-soft)]'
