@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { DATASET } from '../data/dataset';
 import {
   calcFluidRegimen,
@@ -16,8 +16,8 @@ interface FluidsAndDripsViewProps {
   onAddOrder?: (order: OrderItem) => void;
   onInvalidateOrders?: (targetPrefix?: string) => void;
   onOpenEvidence?: (topicKey: string, e?: React.SyntheticEvent<HTMLElement>) => void;
-  inputs?: FluidsAndDripsInputs;
-  onChangeInputs?: React.Dispatch<React.SetStateAction<FluidsAndDripsInputs>>;
+  inputs: FluidsAndDripsInputs;
+  onChangeInputs: React.Dispatch<React.SetStateAction<FluidsAndDripsInputs>>;
 }
 
 export interface FluidsAndDripsInputs {
@@ -62,15 +62,8 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
     onChangeSubTab(tab);
   };
 
-  const [internalInputs, setInternalInputs] = useState<FluidsAndDripsInputs>(DEFAULT_FLUIDS_INPUTS);
-  const currentInputs = inputs ?? internalInputs;
-
   const updateInputs = (patch: Partial<FluidsAndDripsInputs>) => {
-    if (onChangeInputs) {
-      onChangeInputs((prev) => ({ ...prev, ...patch }));
-    } else {
-      setInternalInputs((prev) => ({ ...prev, ...patch }));
-    }
+    onChangeInputs((prev) => ({ ...prev, ...patch }));
   };
 
   const {
@@ -85,13 +78,16 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
     currentHb,
     targetHb,
     prbcType,
-  } = currentInputs;
+  } = inputs;
 
   const selectedDripItem =
     DATASET.infusionDrips.find((d) => d.key === dripKey) || DATASET.infusionDrips[0];
 
   const handleSelectDrip = (key: string) => {
-    onInvalidateOrders?.(`drip-${key}`);
+    onInvalidateOrders?.(`drip-${dripKey}`);
+    if (key !== dripKey) {
+      onInvalidateOrders?.(`drip-${key}`);
+    }
     const item = DATASET.infusionDrips.find((d) => d.key === key);
     let nextMg = '1';
     let nextVol = '50';
@@ -127,17 +123,22 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
   });
 
   // 2. Drip calculations
-  const doseNum = parseFloat(dripDose) || 0;
-  const mgNum = parseFloat(dripDrugMg) || 1;
-  const volNum = parseFloat(dripVolMl) || 50;
-  const hasValidDripInputs =
-    parseFloat(dripDose) > 0 && parseFloat(dripDrugMg) > 0 && parseFloat(dripVolMl) > 0;
+  const parsedDose = parseFloat(dripDose);
+  const parsedMg = parseFloat(dripDrugMg);
+  const parsedVol = parseFloat(dripVolMl);
+  const doseNum = Number.isFinite(parsedDose) && parsedDose > 0 ? parsedDose : 0;
+  const mgNum = Number.isFinite(parsedMg) && parsedMg > 0 ? parsedMg : 0;
+  const volNum = Number.isFinite(parsedVol) && parsedVol > 0 ? parsedVol : 0;
+  const hasValidDripInputs = doseNum > 0 && mgNum > 0 && volNum > 0;
   const fwd = calcDripForward(doseNum, w, mgNum, volNum);
   const revNum = parseFloat(reverseRate);
   const revDose =
-    Number.isFinite(revNum) && revNum > 0 ? calcDripReverse(revNum, w, mgNum, volNum) : null;
-  const isExceededMax =
-    selectedDripItem?.maxRateMcgKgMin && doseNum > selectedDripItem.maxRateMcgKgMin;
+    Number.isFinite(revNum) && revNum > 0 && mgNum > 0 && volNum > 0
+      ? calcDripReverse(revNum, w, mgNum, volNum)
+      : null;
+  const isExceededMax = Boolean(
+    selectedDripItem?.maxRateMcgKgMin && doseNum > selectedDripItem.maxRateMcgKgMin
+  );
 
   // 3. Transfusion calculations
   const curHbNum = parseFloat(currentHb);
@@ -552,10 +553,20 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                     Syringe Pump Rate
                   </div>
                   <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--danger-text)] mt-1">
-                    {fwd.rateMlHr.toFixed(1)} <span className="text-sm font-bold">mL/hr</span>
+                    {hasValidDripInputs ? (
+                      <>
+                        {fwd.rateMlHr.toFixed(1)} <span className="text-sm font-bold">mL/hr</span>
+                      </>
+                    ) : (
+                      <span className="text-base sm:text-lg font-bold text-[var(--muted)]">
+                        Enter dose & dilution
+                      </span>
+                    )}
                   </div>
                   <div className="text-xs text-[var(--muted)] mt-1">
-                    Mix {mgNum} mg in {volNum} mL ({fwd.concMcgPerMl} mcg/mL)
+                    {hasValidDripInputs
+                      ? `Mix ${mgNum} mg in ${volNum} mL (${fwd.concMcgPerMl} mcg/mL)`
+                      : '—'}
                   </div>
                 </div>
 

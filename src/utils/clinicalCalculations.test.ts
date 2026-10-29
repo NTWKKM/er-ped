@@ -8,6 +8,7 @@ import {
   computeWhoWaz,
   getInterpolatedLMS,
   getBroselowZone,
+  getBroselowSpectrumBand,
   resolveDrugDose,
   calcSchwartzEGFR,
   calcPatientRenalDose,
@@ -28,6 +29,7 @@ import {
   interpretDeltaRatio,
   calcParklandBurn,
   calcTransfusion,
+  parseStrength,
 } from './clinicalCalculations';
 import { DATASET } from '../data/dataset';
 
@@ -54,6 +56,20 @@ test('Broselow decimal weight boundary matching (no gaps)', () => {
   assert.ok(redZone && redZone.color.includes('Red'));
   const purpleZone = getBroselowZone(11.4);
   assert.ok(purpleZone && purpleZone.color.includes('Purple'));
+
+  // Gap handling between adjacent bands (e.g. 5.95 kg, 7.95 kg)
+  const greyBand = getBroselowSpectrumBand(5.95);
+  assert.equal(greyBand?.color, 'Grey');
+  const pinkBand = getBroselowSpectrumBand(7.95);
+  assert.equal(pinkBand?.color, 'Pink');
+  const redBand = getBroselowSpectrumBand(9.95);
+  assert.equal(redBand?.color, 'Red');
+  const purpleBand = getBroselowSpectrumBand(11.95);
+  assert.equal(purpleBand?.color, 'Purple');
+
+  // Outside 3–36 kg range
+  assert.equal(getBroselowSpectrumBand(2.5), null);
+  assert.equal(getBroselowSpectrumBand(40), null);
 });
 
 test('WHO Growth Z-Score calculation for weight and height (male and female)', () => {
@@ -86,9 +102,6 @@ test('WHO Growth Z-Score calculation for weight and height (male and female)', (
   const heavyChild = calcGrowthZScores(3, 19, 96, 'male');
   assert.ok(heavyChild);
   assert.equal(heavyChild.wazLabel, 'High Weight');
-  assert.equal(heavyChild.nutritionIndicator, null);
-  assert.equal(heavyChild.nutritionLabel, null);
-  assert.equal(heavyChild.nutritionStatus, null);
   assert.equal(heavyChild.bmi, 20.6);
 
   // Adolescent children (> 10 yr): WAZ is suppressed (null); HAZ and raw BMI are preserved
@@ -98,8 +111,6 @@ test('WHO Growth Z-Score calculation for weight and height (male and female)', (
   assert.equal(adolescent.wazLabel, null);
   assert.ok(adolescent.haz !== null);
   assert.equal(adolescent.bmi, 20);
-  assert.equal(adolescent.nutritionIndicator, null);
-  assert.equal(adolescent.nutritionLabel, null);
 
   // Adolescent children without height: returns null (hides unsupported WAZ badge)
   assert.equal(calcGrowthZScores(12, 45, null, 'male'), null);
@@ -122,8 +133,6 @@ test('WHO Growth Z-Score calculation for weight and height (male and female)', (
   const edge976 = calcGrowthZScores(3, 15, 97.6, 'male');
   assert.ok(edge975 && edge976);
   assert.ok(Math.abs((edge975.haz ?? 0) - (edge976.haz ?? 0)) <= 0.05);
-  assert.equal(edge975.nutritionLabel, null);
-  assert.equal(edge976.nutritionLabel, null);
 
   // Helper to compute exact threshold weight W = M * (1 + L * S * SD)^(1 / L)
   const getExactWeight = (l: number, m: number, s: number, sd: number) =>
@@ -710,6 +719,23 @@ test('Unified drug dose resolution with safety ceilings and age restriction', ()
   const resChild = resolveDrugDose(tramadol, 20, 6);
   assert.ok(resChild);
   assert.equal(resChild.isAgeRestricted, true);
+
+  // Test parseStrength with explicit and implicit mL denominators and tablets
+  assert.equal(parseStrength('120 mg / 5 mL').mgPerMl, 24);
+  assert.equal(parseStrength('100 mg/mL').mgPerMl, 100);
+  assert.equal(parseStrength('50 mg / mL').mgPerMl, 50);
+  assert.equal(parseStrength('500 mg / tab').mgPerTab, 500);
+
+  // Multiple distinct concentrations: must not silently default to one
+  const multi = parseStrength('1 mg / mL (1:1,000); diluted 0.1 mg / mL (1:10,000)');
+  assert.equal(multi.mgPerMl, undefined);
+  assert.equal(multi.hasMultipleConcs, true);
+  assert.deepEqual(multi.availableConcs, [1, 0.1]);
+
+  // Multiple identical concentrations: collapses to single mgPerMl
+  const same = parseStrength('10 mg / 10 mL = 1 mg/mL');
+  assert.equal(same.mgPerMl, 1);
+  assert.equal(same.hasMultipleConcs, undefined);
 });
 
 test('Bedside Schwartz eGFR and Holliday-Segar maintenance fluids', () => {

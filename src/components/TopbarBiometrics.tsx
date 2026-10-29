@@ -66,8 +66,12 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
   const validHeight = Number.isFinite(heightVal) && heightVal > 0 ? heightVal : null;
 
   const parsedWeight = parseFloat(bio.rawWeight);
+  const isWeightOutOfRange = Boolean(
+    bio.rawWeight &&
+    (Number.isNaN(parsedWeight) || parsedWeight <= 0 || parsedWeight > 150)
+  );
   const measuredWeight =
-    bio.weightSource === 'manual' && Number.isFinite(parsedWeight) && parsedWeight > 0
+    bio.weightSource === 'manual' && Number.isFinite(parsedWeight) && parsedWeight > 0 && parsedWeight <= 150
       ? parsedWeight
       : null;
 
@@ -79,11 +83,31 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
   // Authoritative clinical provenance of the active dosing weight
   const weightProvenance = useMemo(() => {
     if (!activeWeight) {
+      if (bio.useIBW) {
+        const hasHeight = Boolean(bio.rawHeight && parseFloat(bio.rawHeight) > 0);
+        return {
+          label: hasHeight ? 'IBW > 150 kg (exceeds max)' : 'enter height for IBW',
+          compactLabel: hasHeight ? 'invalid IBW' : 'enter ht for IBW',
+          isDerived: true,
+          isEmpty: true,
+          isError: hasHeight,
+        };
+      }
+      if (isWeightOutOfRange) {
+        return {
+          label: parsedWeight > 150 ? 'weight > 150 kg (exceeds max)' : 'invalid weight',
+          compactLabel: parsedWeight > 150 ? '> 150 kg' : 'invalid BW',
+          isDerived: false,
+          isEmpty: true,
+          isError: true,
+        };
+      }
       return {
         label: 'enter BW or age',
         compactLabel: 'enter BW',
         isDerived: false,
         isEmpty: true,
+        isError: false,
       };
     }
     if (bio.useIBW && ibwWeight) {
@@ -129,6 +153,8 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
     };
   }, [
     activeWeight,
+    isWeightOutOfRange,
+    parsedWeight,
     bio.useIBW,
     ibwWeight,
     bio.rawHeight,
@@ -154,7 +180,20 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
             {/* Biometrics Input Fields */}
             <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap min-w-0">
               {/* 1. Measured Weight (BW) */}
-              <div className="flex items-center gap-1 bg-[var(--panel-subtle)] border border-[var(--border)] rounded-lg px-2 py-1 min-h-[36px] shrink-0">
+              <div
+                className={`flex items-center gap-1 rounded-lg px-2 py-1 min-h-[36px] shrink-0 border ${
+                  isWeightOutOfRange
+                    ? 'border-[var(--danger)] bg-[var(--danger-soft)] text-[var(--danger-text)]'
+                    : 'bg-[var(--panel-subtle)] border-[var(--border)]'
+                }`}
+                title={
+                  isWeightOutOfRange
+                    ? parsedWeight > 150
+                      ? 'Weight exceeds supported maximum of 150 kg'
+                      : 'Please enter a valid weight (0.1–150 kg)'
+                    : undefined
+                }
+              >
                 <label htmlFor="weight" className="text-xs font-bold text-[var(--muted)] select-none">
                   BW
                 </label>
@@ -169,7 +208,9 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                   placeholder="kg"
                   value={bio.rawWeight}
                   onChange={(e) => onWeightChange(e.target.value)}
-                  className="w-12 sm:w-16 bg-transparent text-center font-mono-tabular font-bold text-base sm:text-sm text-[var(--ink)] focus:outline-none"
+                  className={`w-12 sm:w-16 bg-transparent text-center font-mono-tabular font-bold text-base sm:text-sm focus:outline-none ${
+                    isWeightOutOfRange ? 'text-[var(--danger-text)]' : 'text-[var(--ink)]'
+                  }`}
                 />
                 <span className="text-xs text-[var(--muted)] select-none">kg</span>
               </div>
@@ -255,11 +296,13 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                 />
                 <span className="text-xs text-[var(--muted)] select-none">cm</span>
 
-                {ibwWeight && (
+                {(ibwWeight || bio.useIBW) && (
                   <div className="flex items-center gap-1.5 border-l border-[var(--border)] pl-1.5">
-                    <span className="text-[11px] text-[var(--muted)] font-mono-tabular whitespace-nowrap">
-                      Wt-for-Ht: <strong className="text-[var(--ink)]">{ibwWeight.toFixed(1)}k</strong>
-                    </span>
+                    {ibwWeight && (
+                      <span className="text-[11px] text-[var(--muted)] font-mono-tabular whitespace-nowrap">
+                        Wt-for-Ht: <strong className="text-[var(--ink)]">{ibwWeight.toFixed(1)}k</strong>
+                      </span>
+                    )}
                     <label
                       htmlFor="useIBW"
                       className="flex items-center gap-1 text-[11px] font-semibold text-[var(--muted)] cursor-pointer hover:text-[var(--ink)] select-none whitespace-nowrap"
@@ -281,16 +324,12 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
               {/* 4. WHO Growth Standards Z-Score Metadata (Unboxed typographic telemetry on xl:) */}
               {zScores && (
                 <div className="hidden xl:flex items-center gap-1.5 select-none shrink-0 text-xs font-mono-tabular">
-                  {(zScores.waz !== null || zScores.haz !== null || zScores.nutritionLabel) && (
+                  {(zScores.waz !== null || zScores.haz !== null) && (
                     <div
                       className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[11px] font-semibold border transition-colors truncate ${
-                        zScores.wazStatus === 'danger' ||
-                        zScores.hazStatus === 'danger' ||
-                        zScores.nutritionStatus === 'danger'
+                        zScores.wazStatus === 'danger' || zScores.hazStatus === 'danger'
                           ? 'bg-[var(--danger-soft)] text-[var(--danger-text)] border-[var(--danger)]/30'
-                          : zScores.wazStatus === 'warning' ||
-                            zScores.hazStatus === 'warning' ||
-                            zScores.nutritionStatus === 'warning'
+                          : zScores.wazStatus === 'warning' || zScores.hazStatus === 'warning'
                           ? 'bg-[var(--warning-soft)] text-[var(--warning-text)] border-[var(--warning)]/30'
                           : 'bg-[var(--good-soft)] text-[var(--good-text)] border-[var(--good)]/30'
                       }`}
@@ -305,13 +344,6 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                         <span>
                           {zScores.waz !== null ? ' · ' : ''}
                           HAZ {zScores.haz >= 0 ? `+${zScores.haz}` : zScores.haz} ({zScores.hazLabel})
-                        </span>
-                      )}
-                      {zScores.nutritionLabel && (
-                        <span>
-                          {zScores.waz !== null || zScores.haz !== null ? ' · ' : ''}
-                          {zScores.nutritionIndicator ? `${zScores.nutritionIndicator} ` : ''}
-                          ({zScores.nutritionLabel})
                         </span>
                       )}
                     </div>
@@ -334,7 +366,9 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
             {/* Authoritative In-Use Active Weight Box (All-around hairline border per taste-skill) */}
             <div
               className={`flex flex-col justify-center px-2 sm:px-2.5 py-1 rounded-lg border transition-colors shrink-0 min-h-[36px] ${
-                weightProvenance.isEmpty
+                weightProvenance.isError
+                  ? 'border-[var(--danger)]/50 bg-[var(--danger-soft)] text-[var(--danger-text)]'
+                  : weightProvenance.isEmpty
                   ? 'border-[var(--border)] bg-[var(--panel-subtle)]'
                   : weightProvenance.isDerived
                   ? 'border-[var(--warning)]/40 bg-[var(--warning-soft)]'
@@ -354,7 +388,11 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
               </div>
               <span
                 className={`text-[9.5px] sm:text-[10px] leading-tight font-semibold tracking-tight select-none truncate max-w-[96px] sm:max-w-none ${
-                  weightProvenance.isDerived ? 'text-[var(--warning-text)]' : 'text-[var(--muted)]'
+                  weightProvenance.isError
+                    ? 'text-[var(--danger-text)] font-bold'
+                    : weightProvenance.isDerived
+                    ? 'text-[var(--warning-text)]'
+                    : 'text-[var(--muted)]'
                 }`}
               >
                 <span className="hidden sm:inline">{weightProvenance.label}</span>
@@ -491,7 +529,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
               </button>
 
               {/* Mobile Wt-for-Ht Checkbox */}
-              {ibwWeight && (
+              {(ibwWeight || bio.useIBW) && (
                 <label
                   htmlFor="mobile-useIBW"
                   className="flex items-center gap-1.5 min-h-[36px] px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--panel-subtle)] text-xs font-semibold text-[var(--ink)] cursor-pointer select-none"
@@ -504,7 +542,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                     className="w-4 h-4 accent-[var(--accent)] rounded"
                   />
                   <span className="font-mono-tabular">
-                    Use Wt-for-Ht ({ibwWeight.toFixed(1)} kg)
+                    {ibwWeight ? `Use Wt-for-Ht (${ibwWeight.toFixed(1)} kg)` : 'Use Wt-for-Ht'}
                   </span>
                 </label>
               )}

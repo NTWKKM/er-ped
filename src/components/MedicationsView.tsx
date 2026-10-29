@@ -19,10 +19,10 @@ interface MedicationsViewProps {
   onSerumCrChange: (val: string) => void;
   onAddOrder?: (order: OrderItem) => void;
   onInvalidateOrders?: (targetPrefix?: string) => void;
-  selectedKey?: string;
-  onSelectKey?: (key: string) => void;
-  concOverride?: string;
-  onConcOverrideChange?: (val: string) => void;
+  selectedKey: string;
+  onSelectKey: (key: string) => void;
+  concOverride: string;
+  onConcOverrideChange: (val: string) => void;
 }
 
 function cleanEnglishText(text?: string | null): string {
@@ -75,34 +75,44 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const [internalSelectedKey, setInternalSelectedKey] = useState<string>('paracetamol-syrup-120-mg-5-ml');
-  const [internalConcOverride, setInternalConcOverride] = useState<string>('');
   const [isRenalReviewed, setIsRenalReviewed] = useState<boolean>(false);
   const [isRenalDetailsOpen, setIsRenalDetailsOpen] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const currentSelectedKey = selectedKey ?? internalSelectedKey;
-  const currentConcOverride = concOverride ?? internalConcOverride;
-
   useEffect(() => {
     setIsRenalReviewed(false);
-  }, [currentSelectedKey, serumCr, heightCm, activeWeight]);
+  }, [selectedKey, serumCr, heightCm, activeWeight]);
 
   const allDrugs = DATASET.pediatricDose;
 
   const selectedDrug = useMemo(() => {
-    return allDrugs.find((d) => d.key === currentSelectedKey) || allDrugs[0];
-  }, [allDrugs, currentSelectedKey]);
+    return allDrugs.find((d) => d.key === selectedKey) || allDrugs[0];
+  }, [allDrugs, selectedKey]);
 
   const filteredDrugs = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     if (!q) return allDrugs;
-    return allDrugs.filter((d) => {
+
+    const scored: Array<{ drug: PediatricDrug; score: number }> = [];
+    for (const d of allDrugs) {
       const name = (d.name || '').toLowerCase();
       const drug = (d.drug || '').toLowerCase();
       const aliases = (d.aliases || []).join(' ').toLowerCase();
-      return name.includes(q) || drug.includes(q) || aliases.includes(q);
-    });
+      const category = (d.category || '').toLowerCase();
+      const note = (d.note || '').toLowerCase();
+
+      if (name.startsWith(q) || drug.startsWith(q)) {
+        scored.push({ drug: d, score: 1 });
+      } else if (name.includes(q) || drug.includes(q)) {
+        scored.push({ drug: d, score: 2 });
+      } else if (aliases.includes(q)) {
+        scored.push({ drug: d, score: 3 });
+      } else if (category.includes(q) || note.includes(q)) {
+        scored.push({ drug: d, score: 4 });
+      }
+    }
+
+    return scored.sort((a, b) => a.score - b.score).map((s) => s.drug);
   }, [allDrugs, searchQuery]);
 
   useEffect(() => {
@@ -116,29 +126,30 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
   }, []);
 
   const handleSelectDrug = (d: PediatricDrug) => {
-    onInvalidateOrders?.(`med-${d.key}`);
-    if (onSelectKey) {
-      onSelectKey(d.key);
-    } else {
-      setInternalSelectedKey(d.key);
-    }
-    setSearchQuery('');
-    if (onConcOverrideChange) {
+    if (concOverride) {
+      onInvalidateOrders?.(`med-${selectedDrug.key}`);
       onConcOverrideChange('');
-    } else {
-      setInternalConcOverride('');
     }
+    onSelectKey(d.key);
+    setSearchQuery('');
     setIsDropdownOpen(false);
   };
 
   const handleConcOverrideChange = (val: string) => {
     onInvalidateOrders?.(`med-${selectedDrug.key}`);
-    if (onConcOverrideChange) {
-      onConcOverrideChange(val);
-    } else {
-      setInternalConcOverride(val);
-    }
+    onConcOverrideChange(val);
   };
+
+  const isReferenceOnlyDrug = useMemo(() => {
+    if (!selectedDrug) return false;
+    return (
+      selectedDrug.doseMinMgPerKg == null &&
+      selectedDrug.doseMaxMgPerKg == null &&
+      selectedDrug.dose == null &&
+      !selectedDrug.fixedDose &&
+      (!Array.isArray(selectedDrug.doseBands) || selectedDrug.doseBands.length === 0)
+    );
+  }, [selectedDrug]);
 
   const resolved = useMemo(
     () => resolveDrugDose(selectedDrug, activeWeight, ageYears),
@@ -150,7 +161,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
     [selectedDrug]
   );
 
-  const customConcNum = parseFloat(currentConcOverride);
+  const customConcNum = parseFloat(concOverride);
   const effectiveMgPerMl =
     Number.isFinite(customConcNum) && customConcNum > 0
       ? customConcNum
@@ -160,11 +171,19 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
   const formatRangeTxt = (
     minVal: number | null | undefined,
     maxVal: number | null | undefined,
-    fmtFn: (n: number) => string
+    fmtFn: (n: number) => string,
+    options?: { minDiff?: number; formatDiffers?: boolean }
   ) => {
     if (minVal == null && maxVal == null) return '—';
-    if (minVal != null && maxVal != null && Math.abs(maxVal - minVal) >= 0.5) {
-      return `${fmtFn(minVal)}–${fmtFn(maxVal)}`;
+    if (minVal != null && maxVal != null) {
+      const formattedMin = fmtFn(minVal);
+      const formattedMax = fmtFn(maxVal);
+      const isDiff = options?.formatDiffers
+        ? formattedMin !== formattedMax
+        : Math.abs(maxVal - minVal) >= (options?.minDiff ?? 0.5);
+      if (isDiff) {
+        return `${formattedMin}–${formattedMax}`;
+      }
     }
     const v = maxVal != null ? maxVal : minVal!;
     return fmtFn(v);
@@ -188,7 +207,12 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
       resolved.doseMaxMg == null &&
       (resolved.doseMinMl != null || resolved.doseMaxMl != null)
     ) {
-      return formatRangeTxt(resolved.doseMinMl, resolved.doseMaxMl, (n) => `${fmtMl(n)} mL`);
+      return formatRangeTxt(
+        resolved.doseMinMl,
+        resolved.doseMaxMl,
+        (n) => `${fmtMl(n)} mL`,
+        { formatDiffers: true }
+      );
     }
     return formatRangeTxt(resolved.doseMinMg, resolved.doseMaxMg, (n) => `${fmtMg(n)} mg`);
   }, [resolved, selectedDrug]);
@@ -198,14 +222,14 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
     if (effectiveMgPerMl && (resolved.doseMinMg != null || resolved.doseMaxMg != null)) {
       const minMl = resolved.doseMinMg != null ? resolved.doseMinMg / effectiveMgPerMl : null;
       const maxMl = resolved.doseMaxMg != null ? resolved.doseMaxMg / effectiveMgPerMl : null;
-      const txt = formatRangeTxt(minMl, maxMl, (n) => fmtMl(n));
+      const txt = formatRangeTxt(minMl, maxMl, (n) => fmtMl(n), { formatDiffers: true });
       if (txt !== '—') return `${txt} mL`;
     }
     if (
       (resolved.doseMinMg != null || resolved.doseMaxMg != null) &&
       (resolved.doseMinMl != null || resolved.doseMaxMl != null)
     ) {
-      const txt = formatRangeTxt(resolved.doseMinMl, resolved.doseMaxMl, (n) => fmtMl(n));
+      const txt = formatRangeTxt(resolved.doseMinMl, resolved.doseMaxMl, (n) => fmtMl(n), { formatDiffers: true });
       if (txt !== '—') return `${txt} mL`;
     }
     if (effectiveMgPerTab && (resolved.doseMinMg != null || resolved.doseMaxMg != null)) {
@@ -264,11 +288,15 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
 
   const hasNumericDose = matchedRenalTier ? hasNumericRenalDose : hasNumericStandardDose;
 
+  const concSuffix = effectiveMgPerMl ? ` [${effectiveMgPerMl} mg/mL]` : '';
+
   const orderText = (matchedRenalTier && !hasNumericRenalDose)
     ? ''
     : matchedRenalRegimen
-    ? `${selectedDrug.name} ${matchedRenalRegimen} ${cleanEnglishText(selectedDrug.route) || 'PO'} [Renal eGFR ${egfr!.toFixed(1)} mL/min/1.73m²]`
-    : `${selectedDrug.name} ${singleDoseMgText}${singleDoseVolumeText ? ` (${singleDoseVolumeText})` : ''} ${cleanEnglishText(selectedDrug.route) || 'PO'} ${selectedDrug.freq || selectedDrug.split || 'PRN'}`;
+    ? `${selectedDrug.name} ${matchedRenalRegimen} ${cleanEnglishText(selectedDrug.route) || 'PO'}${concSuffix} [Renal eGFR ${egfr!.toFixed(1)} mL/min/1.73m²]`
+    : `${selectedDrug.name} ${singleDoseMgText}${singleDoseVolumeText ? ` (${singleDoseVolumeText})` : ''} ${cleanEnglishText(selectedDrug.route) || 'PO'}${concSuffix} ${selectedDrug.freq || selectedDrug.split || 'PRN'}`;
+
+  const hasRequiredConcentration = !strength.hasMultipleConcs || Boolean(effectiveMgPerMl);
 
   const canAddOrder = Boolean(
     onAddOrder &&
@@ -276,6 +304,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
     !resolved.isAgeRestricted &&
     !isMissingRequiredAge &&
     !isRenalReviewRequired &&
+    hasRequiredConcentration &&
     hasNumericDose &&
     orderText
   );
@@ -285,7 +314,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
       {/* Simple Single-Input Drug Selector */}
       <div ref={wrapperRef} className="relative">
         <label htmlFor="doseSearch" className="text-xs font-bold text-[var(--muted)] block mb-1.5">
-          Select or Search Medication (Medications &amp; Antibiotics)
+          Select or Search Medication ({allDrugs.length} Pediatric Formulary Items)
         </label>
         <div className="relative">
           <Search className="w-4 h-4 text-[var(--muted)] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -304,7 +333,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
               setSearchQuery(e.target.value);
               setIsDropdownOpen(true);
             }}
-            placeholder="Search medication e.g. Paracetamol, Amoxicillin, Ceftriaxone..."
+            placeholder="Search generic, brand, or indication (e.g. Paracetamol, Meropenem, Caffeine, Ritalin)..."
             aria-label="Search medication"
             className="clinical-input w-full pl-10 pr-10 py-2.5 text-sm font-bold min-h-[42px]"
           />
@@ -343,10 +372,10 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                 <div
                   key={d.key}
                   role="option"
-                  aria-selected={d.key === currentSelectedKey}
+                  aria-selected={d.key === selectedKey}
                   onClick={() => handleSelectDrug(d)}
                   className={`px-3.5 py-2.5 min-h-[40px] cursor-pointer flex items-center justify-between gap-2 text-xs ${
-                    d.key === currentSelectedKey
+                    d.key === selectedKey
                       ? 'bg-[var(--accent-soft)] font-bold text-[var(--accent-text)]'
                       : 'hover:bg-[var(--panel-subtle)] text-[var(--ink)]'
                   }`}
@@ -363,11 +392,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
       </div>
 
       {/* Main Output Area */}
-      {!activeWeight ? (
-        <div className="clinical-panel-subtle p-5 sm:p-6 text-center text-sm text-[var(--muted)]">
-          Enter patient Weight (BW) or Age above to calculate doses
-        </div>
-      ) : resolved?.isAgeRestricted ? (
+      {resolved?.isAgeRestricted ? (
         <div className="p-4 rounded-lg border border-[var(--danger)] bg-[var(--danger-soft)] text-[var(--danger-text)] text-xs space-y-1">
           <div className="font-bold text-sm flex items-center gap-1.5">
             <AlertTriangle className="w-4 h-4 shrink-0" />
@@ -380,6 +405,64 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
               {selectedDrug.maxAgeYr != null ? ` ≤ ${selectedDrug.maxAgeYr} yr` : ''}
             </strong>
           </div>
+        </div>
+      ) : isReferenceOnlyDrug ? (
+        <div className="space-y-3.5">
+          {isMissingRequiredAge && (
+            <div className="p-3 rounded-lg border border-[var(--warning)] bg-[var(--warning-soft)] text-[var(--warning-text)] text-xs flex items-start sm:items-center gap-2">
+              <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 sm:mt-0" />
+              <span>
+                Age-limited medication ({selectedDrug.minAgeYr != null ? `≥ ${selectedDrug.minAgeYr} yr` : ''}{selectedDrug.maxAgeYr != null ? ` ≤ ${selectedDrug.maxAgeYr} yr` : ''}). Enter patient Age above to verify eligibility before adding to Order Sheet.
+              </span>
+            </div>
+          )}
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="text-xs font-bold text-[var(--muted)]">Reference Dosing Regimen</span>
+            <span className="px-2.5 py-0.5 text-[11px] font-bold rounded-md bg-[var(--panel-subtle)] border border-[var(--border)] text-[var(--muted)]">
+              Reference Regimen
+            </span>
+          </div>
+          <div className="clinical-panel-subtle p-4 space-y-2.5">
+            <div className="text-xs font-semibold text-[var(--muted)]">
+              Standard Pediatric / Neonatal Reference Dose
+            </div>
+            <div className="text-sm sm:text-base font-bold text-[var(--ink)] leading-relaxed">
+              {cleanEnglishText(selectedDrug.note) || 'Refer to institutional protocol'}
+            </div>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[var(--muted)] pt-2 border-t border-[var(--border)]">
+              <span>
+                Regimen:{' '}
+                <strong className="text-[var(--ink)]">
+                  {selectedDrug.freq || selectedDrug.split || 'Per protocol'}
+                </strong>
+              </span>
+              <span>
+                Route:{' '}
+                <strong className="text-[var(--ink)]">
+                  {cleanEnglishText(selectedDrug.route) || 'PO'}
+                </strong>
+              </span>
+              <span>
+                Preparation:{' '}
+                <strong className="text-[var(--ink)]">
+                  {selectedDrug.preparation || 'Standard'}
+                </strong>
+              </span>
+            </div>
+          </div>
+        </div>
+      ) : !activeWeight ? (
+        <div className="space-y-3">
+          <div className="clinical-panel-subtle p-4 sm:p-5 text-center text-sm text-[var(--muted)]">
+            Enter patient Weight (BW) or Age above to calculate patient-specific doses
+          </div>
+          {selectedDrug.note && (
+            <div className="clinical-panel-subtle p-3.5 text-xs text-[var(--muted)] leading-relaxed">
+              <strong className="text-[var(--ink)]">Reference Regimen:</strong>{' '}
+              {cleanEnglishText(selectedDrug.note)}
+              {selectedDrug.preparation ? ` · Prep: ${selectedDrug.preparation}` : ''}
+            </div>
+          )}
         </div>
       ) : (
         <div className="space-y-4">
@@ -420,6 +503,13 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
               >
                 ▲ Review-Only Guidance
               </span>
+            ) : strength.hasMultipleConcs && !effectiveMgPerMl ? (
+              <span
+                className="min-h-[32px] px-3 py-1 text-xs font-semibold rounded-md border border-[var(--warning)] text-[var(--warning-text)] bg-[var(--warning-soft)] flex items-center whitespace-nowrap shrink-0"
+                title="Select a preparation concentration below before adding to Order Sheet"
+              >
+                ▲ Select Concentration
+              </span>
             ) : null}
           </div>
 
@@ -441,6 +531,15 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
             </div>
           )}
 
+          {strength.hasMultipleConcs && !effectiveMgPerMl && (
+            <div className="p-3 rounded-lg border border-[var(--warning)] bg-[var(--warning-soft)] text-[var(--warning-text)] text-xs flex items-start sm:items-center gap-2">
+              <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 sm:mt-0" />
+              <span>
+                Medication has multiple available concentrations ({strength.availableConcs?.map((c) => `${c} mg/mL`).join(', ')}). Select a concentration below before adding to Order Sheet.
+              </span>
+            </div>
+          )}
+
           {/* 2 Clean Hero Readouts */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div className="clinical-panel-subtle p-4">
@@ -449,11 +548,15 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
               </div>
               <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1 flex flex-wrap items-baseline gap-2">
                 <span>{singleDoseMgText}</span>
-                {singleDoseVolumeText && (
+                {singleDoseVolumeText ? (
                   <span className="text-sm sm:text-base font-bold text-[var(--accent-text)] whitespace-nowrap">
                     ({singleDoseVolumeText})
                   </span>
-                )}
+                ) : strength.hasMultipleConcs && (resolved?.doseMinMg != null || resolved?.doseMaxMg != null) ? (
+                  <span className="text-xs font-semibold text-[var(--warning-text)] whitespace-nowrap">
+                    (Select conc below to calculate volume)
+                  </span>
+                ) : null}
               </div>
               <div className="text-xs text-[var(--muted)] mt-1.5">
                 Regimen:{' '}
@@ -500,10 +603,32 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                 </span>
               )}
             </div>
-            <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0">
+            <div className="flex flex-wrap items-center justify-between sm:justify-end gap-2 shrink-0">
               <label htmlFor="doseConc" className="whitespace-nowrap font-semibold">
-                Custom Conc (mg/mL):
+                {strength.hasMultipleConcs ? (
+                  <span className="text-[var(--warning-text)]">Select Conc (mg/mL):</span>
+                ) : (
+                  'Custom Conc (mg/mL):'
+                )}
               </label>
+              {strength.availableConcs && strength.availableConcs.length > 1 && (
+                <div className="flex items-center gap-1">
+                  {strength.availableConcs.map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => handleConcOverrideChange(String(c))}
+                      className={`px-2 py-0.5 text-xs font-bold rounded border cursor-pointer transition-colors ${
+                        effectiveMgPerMl === c
+                          ? 'border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent-text)]'
+                          : 'border-[var(--border)] bg-[var(--panel-subtle)] text-[var(--muted)] hover:text-[var(--ink)]'
+                      }`}
+                    >
+                      {c} mg/mL
+                    </button>
+                  ))}
+                </div>
+              )}
               <input
                 id="doseConc"
                 type="number"
@@ -511,9 +636,11 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                 step="0.1"
                 inputMode="decimal"
                 placeholder={strength.mgPerMl ? strength.mgPerMl.toFixed(1) : 'mg/mL'}
-                value={currentConcOverride}
+                value={concOverride}
                 onChange={(e) => handleConcOverrideChange(e.target.value)}
-                className="clinical-input w-24 text-center font-mono-tabular text-xs font-bold py-1.5"
+                className={`clinical-input w-24 text-center font-mono-tabular text-xs font-bold py-1.5 ${
+                  strength.hasMultipleConcs && !effectiveMgPerMl ? 'border-[var(--warning)]' : ''
+                }`}
               />
             </div>
           </div>

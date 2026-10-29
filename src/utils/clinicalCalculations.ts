@@ -64,9 +64,6 @@ export interface GrowthZScoreResult {
   hazLabel: string | null;
   hazStatus: 'good' | 'warning' | 'danger' | null;
   bmi: number | null;
-  nutritionIndicator: 'WFH' | 'BMI' | null;
-  nutritionLabel: string | null;
-  nutritionStatus: 'good' | 'warning' | 'danger' | null;
   refAgeMo: number;
   medianWeight: number;
   medianHeight: number;
@@ -397,22 +394,19 @@ export function calcGrowthZScores(
     }
   }
 
-  let wMed: number, wSD: number, hMed: number, hSD: number;
+  let wMed: number, hMed: number, hSD: number;
   if (rowA[0] === rowB[0] || ageMo <= table[0][0]) {
     wMed = table[0][1];
-    wSD = table[0][2];
     hMed = table[0][3];
     hSD = table[0][4];
   } else if (ageMo >= table[table.length - 1][0]) {
     const last = table[table.length - 1];
     wMed = last[1];
-    wSD = last[2];
     hMed = last[3];
     hSD = last[4];
   } else {
     const t = (ageMo - rowA[0]) / (rowB[0] - rowA[0]);
     wMed = rowA[1] + t * (rowB[1] - rowA[1]);
-    wSD = rowA[2] + t * (rowB[2] - rowA[2]);
     hMed = rowA[3] + t * (rowB[3] - rowA[3]);
     hSD = rowA[4] + t * (rowB[4] - rowA[4]);
   }
@@ -487,17 +481,12 @@ export function calcGrowthZScores(
     haz = roundedHaz === 0 ? 0 : roundedHaz;
   }
 
-  // Raw BMI calculation when height is provided; suppress unvalidated ratio-based WFH/BMI-for-age
-  // classifications because WHO sex-specific LMS reference tables for WFH/BMI-for-age are not included in dataset
+  // Raw BMI calculation when height is provided
   let bmi: number | null = null;
   if (Number.isFinite(h) && h > 0) {
     const heightM = h / 100;
     bmi = +(w / (heightM * heightM)).toFixed(1);
   }
-
-  const nutritionIndicator: 'WFH' | 'BMI' | null = null;
-  const nutritionLabel: string | null = null;
-  const nutritionStatus: 'good' | 'warning' | 'danger' | null = null;
 
   // If age > 10y and no height was entered, no supported growth indicator can be computed
   if (waz === null && haz === null) {
@@ -512,9 +501,6 @@ export function calcGrowthZScores(
     hazLabel,
     hazStatus,
     bmi,
-    nutritionIndicator,
-    nutritionLabel,
-    nutritionStatus,
     refAgeMo: Math.round(ageMo * 10) / 10,
     medianWeight: Math.round(wMed * 10) / 10,
     medianHeight: Math.round(hMed * 10) / 10,
@@ -528,16 +514,23 @@ export function calcGrowthZScores(
 export function getBroselowZone(w: number | null | undefined): BroselowZone | null {
   const num = Number(w);
   if (!Number.isFinite(num) || num <= 0 || !DATASET.broselow) return null;
-  for (const b of DATASET.broselow) {
-    if (num >= b.min && num <= b.max) return b;
-  }
-  return null;
+  return (
+    DATASET.broselow.find((b, idx) => {
+      const next = DATASET.broselow[idx + 1];
+      return next ? num >= b.min && num < next.min : num >= b.min && num <= b.max;
+    }) || null
+  );
 }
 
 export function getBroselowSpectrumBand(w: number | null | undefined) {
   const num = Number(w);
   if (!Number.isFinite(num) || num <= 0) return null;
-  return BROSELOW_SPECTRUM.find((b) => num >= b.min && num <= b.max) || null;
+  return (
+    BROSELOW_SPECTRUM.find((b, idx) => {
+      const next = BROSELOW_SPECTRUM[idx + 1];
+      return next ? num >= b.min && num < next.min : num >= b.min && num <= b.max;
+    }) || null
+  );
 }
 
 export function weightToETTCuffed(kg: number): string {
@@ -620,27 +613,46 @@ export function fmtMl(n: number | null | undefined): string {
   return n >= 10 ? n.toFixed(1) : n.toFixed(2);
 }
 
-export function parseStrength(prepText?: string | null): { mgPerMl?: number; mgPerTab?: number } {
+export interface ParsedStrength {
+  mgPerMl?: number;
+  mgPerTab?: number;
+  availableConcs?: number[];
+  hasMultipleConcs?: boolean;
+}
+
+export function parseStrength(prepText?: string | null): ParsedStrength {
   if (!prepText) return {};
   const s = String(prepText).replace(/\s+/g, ' ').trim();
 
-  let m = s.match(/(\d+(?:\.\d+)?)\s*mg\s*\/\s*(\d+(?:\.\d+)?)\s*mL/i);
-  if (m) {
+  const concMatches = Array.from(s.matchAll(/(\d+(?:\.\d+)?)\s*mg\s*\/\s*(?:(\d+(?:\.\d+)?)\s*)?mL/gi));
+  const concs: number[] = [];
+  for (const m of concMatches) {
     const mg = parseFloat(m[1]);
-    const ml = parseFloat(m[2]);
-    if (mg > 0 && ml > 0) return { mgPerMl: mg / ml };
+    const ml = m[2] ? parseFloat(m[2]) : 1;
+    if (mg > 0 && ml > 0) {
+      const val = mg / ml;
+      if (!concs.some((c) => Math.abs(c - val) < 1e-4)) {
+        concs.push(val);
+      }
+    }
   }
-  m = s.match(/(\d+(?:\.\d+)?)\s*mg\s*\/\s*5\s*mL/i);
-  if (m) {
-    const mg = parseFloat(m[1]);
-    if (mg > 0) return { mgPerMl: mg / 5 };
+
+  const tabMatch = s.match(/(\d+(?:\.\d+)?)\s*mg\s*\/\s*(?:tab|tablet|cap)/i);
+  const mgPerTab = tabMatch && parseFloat(tabMatch[1]) > 0 ? parseFloat(tabMatch[1]) : undefined;
+
+  if (concs.length === 1) {
+    return { mgPerMl: concs[0], mgPerTab };
   }
-  m = s.match(/(\d+(?:\.\d+)?)\s*mg\s*\/\s*(?:tab|tablet|cap)/i);
-  if (m) {
-    const mg = parseFloat(m[1]);
-    if (mg > 0) return { mgPerTab: mg };
+  if (concs.length > 1) {
+    return {
+      mgPerTab,
+      availableConcs: concs,
+      hasMultipleConcs: true,
+      // Require explicit concentration selection; do not silently default to one
+    };
   }
-  return {};
+
+  return mgPerTab ? { mgPerTab } : {};
 }
 
 export function dosesPerDayFromFreq(freq?: string | null): number | null {
@@ -938,14 +950,6 @@ export function calcMaintenanceMlPerHr(weightKg: number | null | undefined): num
   else if (w <= 20) mlDay = 1000 + (w - 10) * 50;
   else mlDay = 1500 + (w - 20) * 20;
   return +(mlDay / 24).toFixed(1);
-}
-
-export function calcMaintenanceMlPerDay(weightKg: number | null | undefined): number {
-  const w = Number(weightKg);
-  if (!Number.isFinite(w) || w <= 0) return 0;
-  if (w <= 10) return +(w * 100).toFixed(0);
-  if (w <= 20) return +(1000 + (w - 10) * 50).toFixed(0);
-  return +(1500 + (w - 20) * 20).toFixed(0);
 }
 
 /** Maintenance ceiling (≈ adult requirement; NICE NG29 range 2000–2500 mL/day). */

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { DATASET } from '../data/dataset';
 import {
   weightToETTCuffed,
@@ -7,6 +7,7 @@ import {
   suggestBlade,
   fmtMg,
   calcParklandBurn,
+  BOLUS_20_CAP_ML,
 } from '../utils/clinicalCalculations';
 import { Play, Pause, RotateCcw } from 'lucide-react';
 import { OrderItem, createOrderId } from './ModalsAndDrawers';
@@ -20,6 +21,24 @@ export type ResusTopic =
   | 'ncpr'
   | 'trauma';
 
+export interface EmergencyResusInputs {
+  ncprWeight: string;
+  burnTBSA: string;
+  sepsisResp: number;
+  sepsisCardio: number;
+  sepsisCoag: number;
+  sepsisNeuro: number;
+}
+
+export const DEFAULT_RESUS_INPUTS: EmergencyResusInputs = {
+  ncprWeight: '',
+  burnTBSA: '15',
+  sepsisResp: 0,
+  sepsisCardio: 0,
+  sepsisCoag: 0,
+  sepsisNeuro: 0,
+};
+
 interface EmergencyResusViewProps {
   activeSubTab: ResusTopic;
   activeWeight: number | null;
@@ -30,6 +49,8 @@ interface EmergencyResusViewProps {
   onResetSeizureTimer: () => void;
   onChangeTopic: (topic: ResusTopic) => void;
   onAddOrder?: (order: OrderItem) => void;
+  inputs: EmergencyResusInputs;
+  onChangeInputs: React.Dispatch<React.SetStateAction<EmergencyResusInputs>>;
 }
 
 export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
@@ -42,13 +63,20 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
   onResetSeizureTimer,
   onChangeTopic,
   onAddOrder,
+  inputs,
+  onChangeInputs,
 }) => {
-  const [ncprWeight, setNcprWeight] = useState<string>('');
-  const [burnTBSA, setBurnTBSA] = useState<string>('15');
-  const [sepsisResp, setSepsisResp] = useState<number>(0);
-  const [sepsisCardio, setSepsisCardio] = useState<number>(0);
-  const [sepsisCoag, setSepsisCoag] = useState<number>(0);
-  const [sepsisNeuro, setSepsisNeuro] = useState<number>(0);
+  const { ncprWeight, burnTBSA, sepsisResp, sepsisCardio, sepsisCoag, sepsisNeuro } = inputs;
+  const updateInputs = (patch: Partial<EmergencyResusInputs>) => {
+    onChangeInputs((prev) => ({ ...prev, ...patch }));
+  };
+  const [isNcprBadInput, setIsNcprBadInput] = React.useState(false);
+
+  React.useEffect(() => {
+    if (activeSubTab !== 'ncpr') {
+      setIsNcprBadInput(false);
+    }
+  }, [activeSubTab]);
 
   const w = activeWeight || 0;
   const effAgeYr = ageYears ?? (w ? (w < 10 ? 0.5 : w < 20 ? 3 : 8) : 1);
@@ -56,7 +84,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
   const palsEpiMg = Math.min(1, 0.01 * w).toFixed(2);
   const palsEpiMl = (Math.min(1, 0.01 * w) / 0.1).toFixed(1);
   const anaEpiDose = Math.min(w < 30 ? 0.3 : 0.5, w * 0.01).toFixed(2);
-  const sepsisBolusMl = Math.round(w * 20);
+  const sepsisBolusMl = Math.min(BOLUS_20_CAP_ML, Math.round(w * 20));
   const sepsisCefMg = Math.min(2000, Math.round(w * 80));
 
   const renderOrderButton = (ariaLabel: string, idPrefix: string, module: string, text: string) =>
@@ -355,7 +383,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                   Methylpred {Math.min(60, w * 1.5).toFixed(0)} mg IV
                 </div>
                 <div className="text-xs text-[var(--muted)] mt-1">
-                  NSS Bolus: {Math.round(w * 20)} mL (20 mL/kg)
+                  NSS Bolus: {Math.min(BOLUS_20_CAP_ML, Math.round(w * 20))} mL (20 mL/kg)
                 </div>
               </div>
             </div>
@@ -449,7 +477,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                   <label className="font-bold text-[var(--muted)] block mb-1.5">1. Respiratory</label>
                   <select
                     value={sepsisResp}
-                    onChange={(e) => setSepsisResp(parseInt(e.target.value, 10))}
+                    onChange={(e) => updateInputs({ sepsisResp: parseInt(e.target.value, 10) })}
                     className="clinical-input w-full text-xs font-bold"
                   >
                     <option value={0}>0: Normal</option>
@@ -462,7 +490,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                   <label className="font-bold text-[var(--muted)] block mb-1.5">2. Cardiovascular</label>
                   <select
                     value={sepsisCardio}
-                    onChange={(e) => setSepsisCardio(parseInt(e.target.value, 10))}
+                    onChange={(e) => updateInputs({ sepsisCardio: parseInt(e.target.value, 10) })}
                     className="clinical-input w-full text-xs font-bold"
                   >
                     <option value={0}>0: Normal</option>
@@ -475,7 +503,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                   <label className="font-bold text-[var(--muted)] block mb-1.5">3. Coagulation</label>
                   <select
                     value={sepsisCoag}
-                    onChange={(e) => setSepsisCoag(parseInt(e.target.value, 10))}
+                    onChange={(e) => updateInputs({ sepsisCoag: parseInt(e.target.value, 10) })}
                     className="clinical-input w-full text-xs font-bold"
                   >
                     <option value={0}>0: Normal</option>
@@ -487,7 +515,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                   <label className="font-bold text-[var(--muted)] block mb-1.5">4. Neurological</label>
                   <select
                     value={sepsisNeuro}
-                    onChange={(e) => setSepsisNeuro(parseInt(e.target.value, 10))}
+                    onChange={(e) => updateInputs({ sepsisNeuro: parseInt(e.target.value, 10) })}
                     className="clinical-input w-full text-xs font-bold"
                   >
                     <option value={0}>0: GCS 15</option>
@@ -550,62 +578,108 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
           )}
 
           {/* 6. NCPR */}
-          {activeSubTab === 'ncpr' && (
-            <div className="space-y-4">
-              <div className="flex flex-wrap items-center gap-3">
-                <label className="text-xs font-bold text-[var(--muted)]">
-                  Birth Weight (kg):
-                </label>
-                <input
-                  type="number"
-                  step="0.1"
-                  inputMode="decimal"
-                  placeholder={w ? String(w) : '3.0'}
-                  value={ncprWeight}
-                  onChange={(e) => setNcprWeight(e.target.value)}
-                  className="clinical-input w-28 font-mono-tabular font-bold"
-                />
-              </div>
-              {(() => {
-                const bw = parseFloat(ncprWeight) || w || 3.0;
-                return (
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-                    <div className="clinical-panel-subtle p-4">
-                      <div className="text-xs font-semibold text-[var(--muted)]">
-                        Epinephrine IV/UVC (1:10,000)
+          {activeSubTab === 'ncpr' && (() => {
+            const hasNcprInput = Boolean((ncprWeight && ncprWeight.trim() !== '') || isNcprBadInput);
+            const parsedNcpr = parseFloat(ncprWeight);
+            const isNcprOutOfRange =
+              isNcprBadInput ||
+              (hasNcprInput &&
+                (!Number.isFinite(parsedNcpr) || parsedNcpr < 0.1 || parsedNcpr > 150));
+            const validNcpr =
+              hasNcprInput && !isNcprOutOfRange ? parsedNcpr : null;
+            const validActive =
+              Number.isFinite(w) && w! >= 0.1 && w! <= 150 ? w! : null;
+
+            // When user entered a birth weight, never fall back to active weight
+            const bw = hasNcprInput ? validNcpr : validActive;
+            const isUsingActiveWeight = !hasNcprInput && Boolean(validActive);
+
+            return (
+              <div className="space-y-4">
+                <div className="flex flex-wrap items-center gap-3">
+                  <label className="text-xs font-bold text-[var(--muted)]">
+                    Birth Weight (kg):
+                  </label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    min="0.1"
+                    max="150"
+                    inputMode="decimal"
+                    placeholder={w ? String(w) : 'kg'}
+                    value={ncprWeight}
+                    onChange={(e) => {
+                      setIsNcprBadInput(e.target.validity.badInput);
+                      updateInputs({ ncprWeight: e.target.value });
+                    }}
+                    onBlur={(e) => setIsNcprBadInput(e.target.validity.badInput)}
+                    className={`clinical-input w-28 font-mono-tabular font-bold ${
+                      isNcprOutOfRange
+                        ? 'border-[var(--danger)] text-[var(--danger-text)] bg-[var(--danger-soft)]'
+                        : ''
+                    }`}
+                  />
+                </div>
+
+                {isNcprOutOfRange ? (
+                  <div className="clinical-panel-subtle p-6 text-center text-xs text-[var(--danger-text)] font-semibold">
+                    กรุณากรอกน้ำหนักแรกเกิดที่ถูกต้อง (0.1–150 kg)
+                  </div>
+                ) : !bw ? (
+                  <div className="clinical-panel-subtle p-6 text-center text-xs text-[var(--muted)]">
+                    กรุณาระบุน้ำหนักแรกเกิด (Birth Weight) หรือระบุน้ำหนักผู้ป่วยด้านบนเพื่อคำนวณขนาดยา NCPR
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {isUsingActiveWeight && (
+                      <div className="text-xs text-[var(--muted)] font-semibold flex items-center gap-1.5">
+                        <span>น้ำหนักที่ใช้คำนวณ:</span>
+                        <strong className="text-[var(--ink)] font-mono-tabular">
+                          {bw.toFixed(1)} kg
+                        </strong>
+                        <span className="text-[11px] text-[var(--muted)]">
+                          (คำนวณจากน้ำหนักผู้ป่วยด้านบน)
+                        </span>
                       </div>
-                      <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--danger-text)] mt-1">
-                        {(0.02 * bw).toFixed(3)} mg ({((0.02 * bw) / 0.1).toFixed(2)} mL)
+                    )}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                      <div className="clinical-panel-subtle p-4">
+                        <div className="text-xs font-semibold text-[var(--muted)]">
+                          Epinephrine IV/UVC (1:10,000)
+                        </div>
+                        <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--danger-text)] mt-1">
+                          {(0.02 * bw).toFixed(3)} mg ({((0.02 * bw) / 0.1).toFixed(2)} mL)
+                        </div>
+                        <div className="text-xs text-[var(--muted)] mt-1">
+                          0.02 mg/kg + 3 mL NSS flush
+                        </div>
                       </div>
-                      <div className="text-xs text-[var(--muted)] mt-1">
-                        0.02 mg/kg + 3 mL NSS flush
+                      <div className="clinical-panel-subtle p-4">
+                        <div className="text-xs font-semibold text-[var(--muted)]">
+                          Volume Expander (10 mL/kg)
+                        </div>
+                        <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                          {(10 * bw).toFixed(0)} mL
+                        </div>
+                        <div className="text-xs text-[var(--muted)] mt-1">0.9% NS over 5–10 min</div>
                       </div>
-                    </div>
-                    <div className="clinical-panel-subtle p-4">
-                      <div className="text-xs font-semibold text-[var(--muted)]">
-                        Volume Expander (10 mL/kg)
-                      </div>
-                      <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
-                        {(10 * bw).toFixed(0)} mL
-                      </div>
-                      <div className="text-xs text-[var(--muted)] mt-1">0.9% NS over 5–10 min</div>
-                    </div>
-                    <div className="clinical-panel-subtle p-4">
-                      <div className="text-xs font-semibold text-[var(--muted)]">
-                        D10W Bolus (Hypoglycemia)
-                      </div>
-                      <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--accent-text)] mt-1">
-                        {(2 * bw).toFixed(1)} mL IV
-                      </div>
-                      <div className="text-xs text-[var(--muted)] mt-1">
-                        Follow with {(3.5 * bw).toFixed(1)} mL/hr
+                      <div className="clinical-panel-subtle p-4">
+                        <div className="text-xs font-semibold text-[var(--muted)]">
+                          D10W Bolus (Hypoglycemia)
+                        </div>
+                        <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--accent-text)] mt-1">
+                          {(2 * bw).toFixed(1)} mL IV
+                        </div>
+                        <div className="text-xs text-[var(--muted)] mt-1">
+                          Follow with {(3.5 * bw).toFixed(1)} mL/hr
+                        </div>
                       </div>
                     </div>
                   </div>
-                );
-              })()}
-            </div>
-          )}
+                )}
+              </div>
+            );
+          })()}
 
           {/* 7. TRAUMA & BURNS */}
           {activeSubTab === 'trauma' && (
@@ -620,7 +694,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                   max="100"
                   inputMode="decimal"
                   value={burnTBSA}
-                  onChange={(e) => setBurnTBSA(e.target.value)}
+                  onChange={(e) => updateInputs({ burnTBSA: e.target.value })}
                   className="clinical-input w-24 font-mono-tabular font-bold"
                 />
               </div>

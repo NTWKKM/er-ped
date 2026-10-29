@@ -9,8 +9,18 @@ import {
   FluidsAndDripsInputs,
   DEFAULT_FLUIDS_INPUTS,
 } from './components/FluidsAndDripsView';
-import { EmergencyResusView, ResusTopic } from './components/EmergencyResusView';
-import { ProtocolsAndCDSView, ProtocolTopic } from './components/ProtocolsAndCDSView';
+import {
+  EmergencyResusView,
+  ResusTopic,
+  EmergencyResusInputs,
+  DEFAULT_RESUS_INPUTS,
+} from './components/EmergencyResusView';
+import {
+  ProtocolsAndCDSView,
+  ProtocolTopic,
+  ProtocolsInputs,
+  DEFAULT_PROTOCOLS_INPUTS,
+} from './components/ProtocolsAndCDSView';
 import {
   BroselowModal,
   EvidenceModal,
@@ -92,10 +102,10 @@ export default function App() {
   const [fluidsInputs, setFluidsInputs] = useState<FluidsAndDripsInputs>(DEFAULT_FLUIDS_INPUTS);
   const [medSelectedKey, setMedSelectedKey] = useState<string>('paracetamol-syrup-120-mg-5-ml');
   const [medConcOverride, setMedConcOverride] = useState<string>('');
-  const [dkaSeverity, setDkaSeverity] = useState<number>(7);
-  const [dkaPriorBolus, setDkaPriorBolus] = useState<string>('0');
   const [resusTopic, setResusTopic] = useState<ResusTopic>('pals');
+  const [resusInputs, setResusInputs] = useState<EmergencyResusInputs>(DEFAULT_RESUS_INPUTS);
   const [protocolTopic, setProtocolTopic] = useState<ProtocolTopic>('asthma');
+  const [protocolsInputs, setProtocolsInputs] = useState<ProtocolsInputs>(DEFAULT_PROTOCOLS_INPUTS);
   const [theme, setTheme] = useState<'light' | 'dark' | 'mono' | 'red'>('light');
 
   const [broselowOpen, setBroselowOpen] = useState<boolean>(false);
@@ -254,9 +264,11 @@ export default function App() {
   }, [bio.rawAge, bio.ageUnit]);
 
   const activeWeight = useMemo(() => {
-    if (bio.useIBW && ibwWeight && ibwWeight > 0) return ibwWeight;
+    if (bio.useIBW) {
+      return ibwWeight && ibwWeight > 0 && ibwWeight <= 150 ? ibwWeight : null;
+    }
     const w = parseFloat(bio.rawWeight);
-    if (Number.isFinite(w) && w > 0) return w;
+    if (Number.isFinite(w) && w > 0 && w <= 150) return w;
     return null;
   }, [bio.useIBW, bio.rawWeight, ibwWeight]);
 
@@ -265,31 +277,64 @@ export default function App() {
     source: 'manual' | 'broselow' = 'manual'
   ) => {
     invalidateCalculatedOrders();
-    setBio((prev) => ({
-      ...prev,
-      rawWeight: val,
-      useIBW: false,
-      weightSource: val && parseFloat(val) > 0 ? source : null,
-    }));
+    setBio((prev) => {
+      // Preserve age-estimated weight fallback ONLY when no weight was entered
+      if (!val || val.trim() === '') {
+        const ageNum = parseFloat(prev.rawAge);
+        const estW =
+          Number.isFinite(ageNum) && ageNum > 0
+            ? estimateWeightFromAge(ageNum, prev.ageUnit)
+            : null;
+        return {
+          ...prev,
+          rawWeight: estW ? String(estW) : '',
+          useIBW: false,
+          weightSource: estW ? 'estimated' : null,
+        };
+      }
+
+      const numW = parseFloat(val);
+      if (Number.isFinite(numW) && numW > 0 && numW <= 150) {
+        return {
+          ...prev,
+          rawWeight: val,
+          useIBW: false,
+          weightSource: source,
+        };
+      }
+
+      // Entered weight above 150 kg or <= 0 is rejected as invalid
+      // Retain the entered string so the input reflects validation error, but do NOT fall through to age-estimated fallback
+      return {
+        ...prev,
+        rawWeight: val,
+        useIBW: false,
+        weightSource: null,
+      };
+    });
   };
 
   const handleAgeChange = (val: string) => {
     invalidateCalculatedOrders();
-    let num = parseFloat(val);
-    const maxLimit = bio.ageUnit === 'mo' ? 180 : 15;
-    if (Number.isFinite(num) && num > maxLimit) {
-      num = maxLimit;
-      val = String(maxLimit);
-    }
     setBio((prev) => {
-      if ((prev.weightSource === 'manual' || prev.weightSource === 'broselow') && parseFloat(prev.rawWeight) > 0) {
-        return { ...prev, rawAge: val, useIBW: false };
+      let nextVal = val;
+      let num = parseFloat(nextVal);
+      const maxLimit = prev.ageUnit === 'mo' ? 180 : 15;
+      if (Number.isFinite(num) && num > maxLimit) {
+        num = maxLimit;
+        nextVal = String(maxLimit);
       }
+      // Preserve a user-entered weight (manual, broselow, or invalid/out-of-range with weightSource: null)
+      // Only recalculate or clear estimated weights (or when no weight has been entered)
+      if (prev.weightSource !== 'estimated' && prev.rawWeight && prev.rawWeight.trim() !== '') {
+        return { ...prev, rawAge: nextVal, useIBW: false };
+      }
+      // Apply, recalculate, or clear estimated weight from the updated age
       const estW =
         Number.isFinite(num) && num > 0 ? estimateWeightFromAge(num, prev.ageUnit) : null;
       return {
         ...prev,
-        rawAge: val,
+        rawAge: nextVal,
         rawWeight: estW ? String(estW) : '',
         weightSource: estW ? 'estimated' : null,
         useIBW: false,
@@ -303,10 +348,29 @@ export default function App() {
       const nextUnit = prev.ageUnit === 'yr' ? 'mo' : 'yr';
       const raw = parseFloat(prev.rawAge);
       let convertedStr = prev.rawAge;
+      let convertedNum = NaN;
       if (Number.isFinite(raw) && raw > 0) {
-        const converted =
-          prev.ageUnit === 'yr' ? Math.round(raw * 12) : Math.round((raw / 12) * 10) / 10;
-        convertedStr = String(converted);
+        const maxLimit = nextUnit === 'mo' ? 180 : 15;
+        const rawConverted =
+          prev.ageUnit === 'yr'
+            ? parseFloat((raw * 12).toFixed(2))
+            : parseFloat((raw / 12).toFixed(4));
+        convertedNum = Math.min(maxLimit, rawConverted);
+        convertedStr = String(convertedNum);
+      }
+      // Only apply estimated weight when the current weight was estimated or when no weight was entered
+      if (prev.weightSource === 'estimated' || (!prev.weightSource && (!prev.rawWeight || prev.rawWeight.trim() === ''))) {
+        const estW =
+          Number.isFinite(convertedNum) && convertedNum > 0
+            ? estimateWeightFromAge(convertedNum, nextUnit)
+            : null;
+        return {
+          ...prev,
+          ageUnit: nextUnit,
+          rawAge: convertedStr,
+          rawWeight: estW ? String(estW) : prev.rawWeight,
+          weightSource: estW ? 'estimated' : prev.weightSource,
+        };
       }
       return { ...prev, ageUnit: nextUnit, rawAge: convertedStr };
     });
@@ -463,6 +527,8 @@ export default function App() {
             }}
             onChangeTopic={setResusTopic}
             onAddOrder={handleAddOrder}
+            inputs={resusInputs}
+            onChangeInputs={setResusInputs}
           />
         )}
 
@@ -474,10 +540,8 @@ export default function App() {
             onChangeTopic={setProtocolTopic}
             onAddOrder={handleAddOrder}
             onInvalidateOrders={invalidateCalculatedOrders}
-            dkaSeverity={dkaSeverity}
-            onChangeDkaSeverity={setDkaSeverity}
-            dkaPriorBolus={dkaPriorBolus}
-            onChangeDkaPriorBolus={setDkaPriorBolus}
+            inputs={protocolsInputs}
+            onChangeInputs={setProtocolsInputs}
           />
         )}
       </main>
@@ -486,6 +550,8 @@ export default function App() {
       <BroselowModal
         isOpen={broselowOpen}
         activeWeight={activeWeight}
+        weightSource={bio.weightSource}
+        useIBW={bio.useIBW}
         previewColor={broselowPreviewColor}
         onClose={handleCloseBroselowModal}
         onSelectZoneWeight={(kg, color) => {

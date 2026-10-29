@@ -13,6 +13,7 @@ import {
   calcMaintenanceMlPerHr,
   MAINTENANCE_CAP_ML_DAY,
   BOLUS_20_CAP_ML,
+  getBroselowSpectrumBand,
 } from '../utils/clinicalCalculations';
 import {
   X,
@@ -83,9 +84,16 @@ const BACKDROP_BASE_CLASS =
 const DIALOG_MOTION_BASE_CLASS =
   'transition-[opacity,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none will-change-[opacity,transform]';
 
+const formatWeightVal = (w: number): string => {
+  const str = String(parseFloat(w.toFixed(3)));
+  return str.includes('.') ? str : `${str}.0`;
+};
+
 interface BroselowModalProps {
   isOpen: boolean;
   activeWeight: number | null;
+  weightSource?: 'manual' | 'estimated' | 'broselow' | null;
+  useIBW?: boolean;
   previewColor: string | null;
   onClose: () => void;
   onSelectZoneWeight: (kg: number, color: string) => void;
@@ -94,6 +102,8 @@ interface BroselowModalProps {
 export const BroselowModal: React.FC<BroselowModalProps> = ({
   isOpen,
   activeWeight,
+  weightSource,
+  useIBW,
   previewColor,
   onClose,
   onSelectZoneWeight,
@@ -101,22 +111,44 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
   const { mounted, active } = useModalTransition(isOpen);
   if (!mounted) return null;
 
+  const matchedWeightBand =
+    activeWeight != null
+      ? getBroselowSpectrumBand(activeWeight) ?? undefined
+      : undefined;
+
+  const hasSelectedOrMatchedBand = Boolean(previewColor || matchedWeightBand);
+
   const currentBand =
     (previewColor &&
       BROSELOW_SPECTRUM.find(
         (b) => b.color.toLowerCase() === previewColor.toLowerCase()
       )) ||
-    (activeWeight &&
-      BROSELOW_SPECTRUM.find(
-        (b) => activeWeight >= b.min && activeWeight <= b.max
-      )) ||
-    BROSELOW_SPECTRUM[3]; // default Purple ~10.5 kg
+    matchedWeightBand ||
+    BROSELOW_SPECTRUM[3]; // fallback Purple ~10.5 kg for unselected equipment preview
 
-  const refW = activeWeight && !previewColor ? activeWeight : currentBand.approxKg;
-  const epiMg = (0.01 * refW).toFixed(2);
-  const epiMl = ((0.01 * refW) / 0.1).toFixed(1);
-  const defib1 = Math.round(2 * refW);
-  const defib2 = Math.round(4 * refW);
+  const isAutoMatchedColor = Boolean(
+    matchedWeightBand &&
+    previewColor &&
+    previewColor.toLowerCase() === matchedWeightBand.color.toLowerCase()
+  );
+
+  const provenanceLabel = useIBW
+    ? 'IBW'
+    : weightSource === 'estimated'
+    ? 'estimated'
+    : weightSource === 'broselow'
+    ? 'Broselow'
+    : 'measured';
+
+  const refW =
+    (!previewColor || isAutoMatchedColor) && activeWeight != null && activeWeight > 0
+      ? activeWeight
+      : currentBand.approxKg;
+  const epiMgVal = Math.min(1, 0.01 * refW);
+  const epiMg = epiMgVal.toFixed(3);
+  const epiMl = (epiMgVal / 0.1).toFixed(2);
+  const defib1 = Math.min(200, Math.round(2 * refW));
+  const defib2 = Math.min(200, Math.round(4 * refW));
   const bolusMl = Math.min(BOLUS_20_CAP_ML, Math.round(20 * refW));
 
   return (
@@ -161,7 +193,11 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
           {/* Interactive 9-Band Spectrum */}
           <div className="grid grid-cols-3 sm:grid-cols-9 gap-1.5">
             {BROSELOW_SPECTRUM.map((b) => {
-              const isAct = b.color === currentBand.color;
+              const isAct = previewColor
+                ? b.color.toLowerCase() === previewColor.toLowerCase()
+                : matchedWeightBand
+                ? b.color === matchedWeightBand.color
+                : false;
               return (
                 <button
                   key={b.color}
@@ -181,19 +217,44 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
             })}
           </div>
 
-          <div
-            className="p-3.5 rounded-lg border border-black/15 flex flex-wrap items-center justify-between gap-2"
-            style={{ backgroundColor: currentBand.bg, color: currentBand.fg }}
-          >
-            <div>
-              <div className="text-sm sm:text-base font-extrabold">
-                Broselow Zone: {currentBand.label} — {currentBand.range}
-              </div>
-              <div className="text-xs font-semibold">
-                Reference Weight: {refW.toFixed(1)} kg ({currentBand.ageApprox})
+          {hasSelectedOrMatchedBand ? (
+            <div
+              className="p-3.5 rounded-lg border border-black/15 flex flex-wrap items-center justify-between gap-2"
+              style={{ backgroundColor: currentBand.bg, color: currentBand.fg }}
+            >
+              <div>
+                <div className="text-sm sm:text-base font-extrabold">
+                  Broselow Zone: {currentBand.label} — {currentBand.range}
+                </div>
+                <div className="text-xs font-semibold">
+                  {activeWeight != null && activeWeight > 0
+                    ? `Patient Weight: ${formatWeightVal(refW)} kg (${provenanceLabel}) · Band Ref: ${currentBand.approxKg} kg (${currentBand.ageApprox})`
+                    : `Reference Weight: ${formatWeightVal(refW)} kg (${currentBand.ageApprox})`}
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="p-3.5 rounded-lg border border-[var(--border)] bg-[var(--panel-subtle)] flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <div className="text-sm sm:text-base font-extrabold text-[var(--ink)]">
+                  {activeWeight != null && activeWeight > 0 ? (
+                    activeWeight < 3 || activeWeight > 36
+                      ? `Patient Weight: ${formatWeightVal(activeWeight)} kg (${provenanceLabel}) (Outside Broselow 3–36 kg Range)`
+                      : `Patient Weight: ${formatWeightVal(activeWeight)} kg (${provenanceLabel}) (Unmatched Band)`
+                  ) : (
+                    `No Active Weight or Broselow Zone Selected (Previewing ${formatWeightVal(refW)} kg)`
+                  )}
+                </div>
+                <div className="text-xs text-[var(--muted)]">
+                  {activeWeight != null && activeWeight > 0 ? (
+                    `Resuscitation doses calculated from patient weight (${formatWeightVal(activeWeight)} kg, ${provenanceLabel}). Selecting a color band above replaces active patient weight and invalidates affected queued orders; recalculate and re-add those orders.`
+                  ) : (
+                    `Emergency values below preview reference weight ${formatWeightVal(refW)} kg. Selecting a color band above adopts its reference weight and invalidates affected queued orders; recalculate and re-add those orders.`
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="clinical-panel-subtle p-3.5">
@@ -232,7 +293,7 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
               <thead>
                 <tr>
                   <th>Equipment / Airway Parameter</th>
-                  <th>Recommended Size for {refW.toFixed(1)} kg</th>
+                  <th>Recommended Size for {formatWeightVal(refW)} kg</th>
                 </tr>
               </thead>
               <tbody>
@@ -430,14 +491,13 @@ export const EvidenceModal: React.FC<EvidenceModalProps> = ({
 interface OrderSheetContentProps {
   orders: OrderItem[];
   activeWeight: number | null;
-  ageYears: number | null;
   copyMessage?: { type: 'success' | 'warning'; text: string } | null;
   onRemoveOrder: (id: string) => void;
   onClearOrders: () => void;
   onCopyAll: () => void;
 }
 
-export const OrderSheetAndPocketContent: React.FC<OrderSheetContentProps> = ({
+const OrderSheetAndPocketContent: React.FC<OrderSheetContentProps> = ({
   orders,
   activeWeight,
   copyMessage,
@@ -668,7 +728,6 @@ export const OrderSheetModal: React.FC<OrderSheetModalProps> = ({
           <OrderSheetAndPocketContent
             orders={orders}
             activeWeight={activeWeight}
-            ageYears={ageYears}
             copyMessage={copyMessage}
             onRemoveOrder={onRemoveOrder}
             onClearOrders={onClearOrders}
