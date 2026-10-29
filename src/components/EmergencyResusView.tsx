@@ -571,66 +571,53 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
           )}
 
           {/* 6. NCPR */}
-          {activeSubTab === 'ncpr' && (
-            <div className="space-y-4">
-              <div className="flex flex-wrap items-center gap-3">
-                <label className="text-xs font-bold text-[var(--muted)]">
-                  Birth Weight (kg):
-                </label>
-                <input
-                  type="number"
-                  step="0.1"
-                  min="0.1"
-                  max="150"
-                  inputMode="decimal"
-                  placeholder={w ? String(w) : 'kg'}
-                  value={ncprWeight}
-                  onChange={(e) => updateInputs({ ncprWeight: e.target.value })}
-                  className={`clinical-input w-28 font-mono-tabular font-bold ${
-                    Boolean(
-                      ncprWeight &&
-                        ncprWeight.trim() !== '' &&
-                        (!Number.isFinite(parseFloat(ncprWeight)) ||
-                          parseFloat(ncprWeight) <= 0 ||
-                          parseFloat(ncprWeight) > 150)
-                    )
-                      ? 'border-[var(--danger)] text-[var(--danger-text)] bg-[var(--danger-soft)]'
-                      : ''
-                  }`}
-                />
-              </div>
-              {(() => {
-                const hasNcprInput = Boolean(ncprWeight && ncprWeight.trim() !== '');
-                const parsedNcpr = parseFloat(ncprWeight);
-                const isNcprOutOfRange =
-                  hasNcprInput &&
-                  (!Number.isFinite(parsedNcpr) || parsedNcpr <= 0 || parsedNcpr > 150);
-                const validNcpr =
-                  hasNcprInput && !isNcprOutOfRange ? parsedNcpr : null;
-                const validActive =
-                  Number.isFinite(w) && w! > 0 && w! <= 150 ? w! : null;
+          {activeSubTab === 'ncpr' && (() => {
+            const hasNcprInput = Boolean(ncprWeight && ncprWeight.trim() !== '');
+            const parsedNcpr = parseFloat(ncprWeight);
+            const isNcprOutOfRange =
+              hasNcprInput &&
+              (!Number.isFinite(parsedNcpr) || parsedNcpr < 0.1 || parsedNcpr > 150);
+            const validNcpr =
+              hasNcprInput && !isNcprOutOfRange ? parsedNcpr : null;
+            const validActive =
+              Number.isFinite(w) && w! >= 0.1 && w! <= 150 ? w! : null;
 
-                // When user entered a birth weight, never fall back to active weight
-                const bw = hasNcprInput ? validNcpr : validActive;
-                const isUsingActiveWeight = !hasNcprInput && Boolean(validActive);
+            // When user entered a birth weight, never fall back to active weight
+            const bw = hasNcprInput ? validNcpr : validActive;
+            const isUsingActiveWeight = !hasNcprInput && Boolean(validActive);
 
-                if (isNcprOutOfRange) {
-                  return (
-                    <div className="clinical-panel-subtle p-6 text-center text-xs text-[var(--danger-text)] font-semibold">
-                      กรุณากรอกน้ำหนักแรกเกิดที่ถูกต้อง (0.1–150 kg)
-                    </div>
-                  );
-                }
+            return (
+              <div className="space-y-4">
+                <div className="flex flex-wrap items-center gap-3">
+                  <label className="text-xs font-bold text-[var(--muted)]">
+                    Birth Weight (kg):
+                  </label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    min="0.1"
+                    max="150"
+                    inputMode="decimal"
+                    placeholder={w ? String(w) : 'kg'}
+                    value={ncprWeight}
+                    onChange={(e) => updateInputs({ ncprWeight: e.target.value })}
+                    className={`clinical-input w-28 font-mono-tabular font-bold ${
+                      isNcprOutOfRange
+                        ? 'border-[var(--danger)] text-[var(--danger-text)] bg-[var(--danger-soft)]'
+                        : ''
+                    }`}
+                  />
+                </div>
 
-                if (!bw) {
-                  return (
-                    <div className="clinical-panel-subtle p-6 text-center text-xs text-[var(--muted)]">
-                      กรุณาระบุน้ำหนักแรกเกิด (Birth Weight) หรือระบุน้ำหนักผู้ป่วยด้านบนเพื่อคำนวณขนาดยา NCPR
-                    </div>
-                  );
-                }
-
-                return (
+                {isNcprOutOfRange ? (
+                  <div className="clinical-panel-subtle p-6 text-center text-xs text-[var(--danger-text)] font-semibold">
+                    กรุณากรอกน้ำหนักแรกเกิดที่ถูกต้อง (0.1–150 kg)
+                  </div>
+                ) : !bw ? (
+                  <div className="clinical-panel-subtle p-6 text-center text-xs text-[var(--muted)]">
+                    กรุณาระบุน้ำหนักแรกเกิด (Birth Weight) หรือระบุน้ำหนักผู้ป่วยด้านบนเพื่อคำนวณขนาดยา NCPR
+                  </div>
+                ) : (
                   <div className="space-y-3">
                     {isUsingActiveWeight && (
                       <div className="text-xs text-[var(--muted)] font-semibold flex items-center gap-1.5">
@@ -644,43 +631,43 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                       </div>
                     )}
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-                    <div className="clinical-panel-subtle p-4">
-                      <div className="text-xs font-semibold text-[var(--muted)]">
-                        Epinephrine IV/UVC (1:10,000)
+                      <div className="clinical-panel-subtle p-4">
+                        <div className="text-xs font-semibold text-[var(--muted)]">
+                          Epinephrine IV/UVC (1:10,000)
+                        </div>
+                        <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--danger-text)] mt-1">
+                          {(0.02 * bw).toFixed(3)} mg ({((0.02 * bw) / 0.1).toFixed(2)} mL)
+                        </div>
+                        <div className="text-xs text-[var(--muted)] mt-1">
+                          0.02 mg/kg + 3 mL NSS flush
+                        </div>
                       </div>
-                      <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--danger-text)] mt-1">
-                        {(0.02 * bw).toFixed(3)} mg ({((0.02 * bw) / 0.1).toFixed(2)} mL)
+                      <div className="clinical-panel-subtle p-4">
+                        <div className="text-xs font-semibold text-[var(--muted)]">
+                          Volume Expander (10 mL/kg)
+                        </div>
+                        <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                          {(10 * bw).toFixed(0)} mL
+                        </div>
+                        <div className="text-xs text-[var(--muted)] mt-1">0.9% NS over 5–10 min</div>
                       </div>
-                      <div className="text-xs text-[var(--muted)] mt-1">
-                        0.02 mg/kg + 3 mL NSS flush
-                      </div>
-                    </div>
-                    <div className="clinical-panel-subtle p-4">
-                      <div className="text-xs font-semibold text-[var(--muted)]">
-                        Volume Expander (10 mL/kg)
-                      </div>
-                      <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
-                        {(10 * bw).toFixed(0)} mL
-                      </div>
-                      <div className="text-xs text-[var(--muted)] mt-1">0.9% NS over 5–10 min</div>
-                    </div>
-                    <div className="clinical-panel-subtle p-4">
-                      <div className="text-xs font-semibold text-[var(--muted)]">
-                        D10W Bolus (Hypoglycemia)
-                      </div>
-                      <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--accent-text)] mt-1">
-                        {(2 * bw).toFixed(1)} mL IV
-                      </div>
-                      <div className="text-xs text-[var(--muted)] mt-1">
-                        Follow with {(3.5 * bw).toFixed(1)} mL/hr
+                      <div className="clinical-panel-subtle p-4">
+                        <div className="text-xs font-semibold text-[var(--muted)]">
+                          D10W Bolus (Hypoglycemia)
+                        </div>
+                        <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--accent-text)] mt-1">
+                          {(2 * bw).toFixed(1)} mL IV
+                        </div>
+                        <div className="text-xs text-[var(--muted)] mt-1">
+                          Follow with {(3.5 * bw).toFixed(1)} mL/hr
+                        </div>
                       </div>
                     </div>
                   </div>
-                  </div>
-                );
-              })()}
-            </div>
-          )}
+                )}
+              </div>
+            );
+          })()}
 
           {/* 7. TRAUMA & BURNS */}
           {activeSubTab === 'trauma' && (
