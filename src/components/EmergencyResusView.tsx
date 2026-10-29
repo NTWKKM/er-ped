@@ -586,18 +586,42 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                   placeholder={w ? String(w) : 'kg'}
                   value={ncprWeight}
                   onChange={(e) => updateInputs({ ncprWeight: e.target.value })}
-                  className="clinical-input w-28 font-mono-tabular font-bold"
+                  className={`clinical-input w-28 font-mono-tabular font-bold ${
+                    Boolean(
+                      ncprWeight &&
+                        ncprWeight.trim() !== '' &&
+                        (!Number.isFinite(parseFloat(ncprWeight)) ||
+                          parseFloat(ncprWeight) <= 0 ||
+                          parseFloat(ncprWeight) > 150)
+                    )
+                      ? 'border-[var(--danger)] text-[var(--danger-text)] bg-[var(--danger-soft)]'
+                      : ''
+                  }`}
                 />
               </div>
               {(() => {
+                const hasNcprInput = Boolean(ncprWeight && ncprWeight.trim() !== '');
                 const parsedNcpr = parseFloat(ncprWeight);
+                const isNcprOutOfRange =
+                  hasNcprInput &&
+                  (!Number.isFinite(parsedNcpr) || parsedNcpr <= 0 || parsedNcpr > 150);
                 const validNcpr =
-                  Number.isFinite(parsedNcpr) && parsedNcpr > 0 && parsedNcpr <= 150
-                    ? parsedNcpr
-                    : null;
+                  hasNcprInput && !isNcprOutOfRange ? parsedNcpr : null;
                 const validActive =
                   Number.isFinite(w) && w! > 0 && w! <= 150 ? w! : null;
-                const bw = validNcpr ?? validActive;
+
+                // When user entered a birth weight, never fall back to active weight
+                const bw = hasNcprInput ? validNcpr : validActive;
+                const isUsingActiveWeight = !hasNcprInput && Boolean(validActive);
+
+                if (isNcprOutOfRange) {
+                  return (
+                    <div className="clinical-panel-subtle p-6 text-center text-xs text-[var(--danger-text)] font-semibold">
+                      กรุณากรอกน้ำหนักแรกเกิดที่ถูกต้อง (0.1–150 kg)
+                    </div>
+                  );
+                }
+
                 if (!bw) {
                   return (
                     <div className="clinical-panel-subtle p-6 text-center text-xs text-[var(--muted)]">
@@ -605,8 +629,21 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                     </div>
                   );
                 }
+
                 return (
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                  <div className="space-y-3">
+                    {isUsingActiveWeight && (
+                      <div className="text-xs text-[var(--muted)] font-semibold flex items-center gap-1.5">
+                        <span>น้ำหนักที่ใช้คำนวณ:</span>
+                        <strong className="text-[var(--ink)] font-mono-tabular">
+                          {bw.toFixed(1)} kg
+                        </strong>
+                        <span className="text-[11px] text-[var(--muted)]">
+                          (คำนวณจากน้ำหนักผู้ป่วยด้านบน)
+                        </span>
+                      </div>
+                    )}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                     <div className="clinical-panel-subtle p-4">
                       <div className="text-xs font-semibold text-[var(--muted)]">
                         Epinephrine IV/UVC (1:10,000)
@@ -638,6 +675,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                         Follow with {(3.5 * bw).toFixed(1)} mL/hr
                       </div>
                     </div>
+                  </div>
                   </div>
                 );
               })()}
