@@ -338,16 +338,19 @@ input[type="number"]::-webkit-outer-spin-button {
   margin: 0;
 }
 
-/* Opt-in exception: topbar biometrics stepped with a mouse (BW, Age) keep the native spinner */
-input[type="number"].num-spin {
-  appearance: auto;
-}
+/* Opt-in exception: topbar biometrics stepped with a mouse (BW, Age) keep the native spinner.
+   From sm (640px) only: below it the 36-44px fields have no room for the spinner beside the value. */
+@media (min-width: 640px) {
+  input[type="number"].num-spin {
+    appearance: auto;
+  }
 
-/* `auto` survives the CSS minifier; the legacy `inner-spin-button` keyword is dropped */
-input[type="number"].num-spin::-webkit-inner-spin-button {
-  -webkit-appearance: auto;
-  appearance: auto;
-  opacity: 1;
+  /* `auto` survives the CSS minifier; the legacy `inner-spin-button` keyword is dropped */
+  input[type="number"].num-spin::-webkit-inner-spin-button {
+    -webkit-appearance: auto;
+    appearance: auto;
+    opacity: 1;
+  }
 }
 
 /* Pressed and disabled states */
