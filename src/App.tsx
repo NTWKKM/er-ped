@@ -560,7 +560,7 @@ export default function App() {
                 tabIndex={isAct ? 0 : -1}
                 onKeyDown={(e) => handleTabKeyDown(e, idx)}
                 onClick={() => selectMainTab(t.id)}
-                className={`min-h-[38px] sm:min-h-[40px] py-1.5 sm:py-2 px-1 sm:px-2 max-[360px]:px-0.5 text-xs max-[360px]:text-[11px] sm:text-sm font-bold rounded-lg transition-colors text-center cursor-pointer whitespace-nowrap ${
+                className={`min-h-[44px] sm:min-h-[40px] py-1.5 sm:py-2 px-1 sm:px-2 max-[360px]:px-0.5 text-xs max-[360px]:text-[11px] sm:text-sm font-bold rounded-lg transition-colors text-center cursor-pointer whitespace-nowrap ${
                   isAct
                     ? 'bg-[var(--accent)] text-[var(--accent-ink)] shadow-xs'
                     : 'text-[var(--muted)] hover:text-[var(--ink)]'
@@ -578,7 +578,7 @@ export default function App() {
           role="tabpanel"
           aria-labelledby={`tab-${mainTab}`}
           tabIndex={-1}
-          className="space-y-4 focus:outline-none"
+          className="space-y-4"
         >
         {mainTab === 'dose' && (
           <MedicationsView

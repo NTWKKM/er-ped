@@ -365,14 +365,14 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
             }}
             placeholder="Search generic, brand, or indication (e.g. Paracetamol, Meropenem, Caffeine, Ritalin)..."
             aria-label="Search medication"
-            className="clinical-input w-full pl-10 pr-10 py-2.5 text-sm font-bold min-h-[42px]"
+            className="clinical-input w-full pl-10 pr-12 py-2.5 text-sm font-bold min-h-[48px]"
           />
           {isDropdownOpen && searchQuery ? (
             <button
               type="button"
               onClick={() => setSearchQuery('')}
               aria-label="Clear search"
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 min-h-[36px] min-w-[36px] flex items-center justify-center text-[var(--muted)] hover:text-[var(--ink)] cursor-pointer"
+              className="absolute right-0.5 top-1/2 -translate-y-1/2 min-h-[44px] min-w-[44px] flex items-center justify-center text-[var(--muted)] hover:text-[var(--ink)] cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -381,7 +381,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
               type="button"
               onClick={() => setIsDropdownOpen((o) => !o)}
               aria-label="Toggle medication list"
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 min-h-[36px] min-w-[36px] flex items-center justify-center text-[var(--muted)] hover:text-[var(--ink)] cursor-pointer"
+              className="absolute right-0.5 top-1/2 -translate-y-1/2 min-h-[44px] min-w-[44px] flex items-center justify-center text-[var(--muted)] hover:text-[var(--ink)] cursor-pointer"
             >
               <ChevronDown className="w-4 h-4" />
             </button>

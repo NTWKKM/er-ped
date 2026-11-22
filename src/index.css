@@ -319,14 +319,23 @@ button[aria-pressed="true"].is-accent-fill {
   outline-offset: 1px;
 }
 
-/* Capsule inputs: the capsule carries the ring, the bare input does not */
-.bio-field:focus-within {
+/* Capsule inputs fill the capsule height, so the ring sits on the focused field itself */
+.bio-field input:focus-visible {
   outline: 3px solid var(--focus-ring);
-  outline-offset: 1px;
+  outline-offset: 0;
+  border-radius: var(--r-xs);
 }
 
-.bio-field input:focus-visible {
-  outline: none;
+/* Number fields: no native spinners (they crowd 40-60px dose fields and invite accidental 0.1 steps) */
+input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /* Pressed and disabled states */
