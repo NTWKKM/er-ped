@@ -121,7 +121,9 @@ export default function App() {
   });
 
   const [mainTab, setMainTab] = useState<MainTab>(readTabFromHash);
-  const [fluidsTopic, setFluidsTopic] = useState<'fluids' | 'drip' | 'transfusion'>('fluids');
+  const [fluidsTopic, setFluidsTopic] = useState<'fluids' | 'drip' | 'transfusion'>(() =>
+    readTabFromHash() === 'drip' ? 'drip' : 'fluids'
+  );
   const [fluidsInputs, setFluidsInputs] = useState<FluidsAndDripsInputs>(DEFAULT_FLUIDS_INPUTS);
   const [medSelectedKey, setMedSelectedKey] = useState<string>('paracetamol-syrup-120-mg-5-ml');
   const [medConcOverride, setMedConcOverride] = useState<string>('');
@@ -271,17 +273,35 @@ export default function App() {
     }
   }, [theme]);
 
+  // First sync normalises the initial hash in place; later user selections add a history entry.
+  // A Back/Forward traversal sets mainTab from the hash, so the hash already matches and nothing is pushed.
+  const hashSyncedRef = useRef(false);
   useEffect(() => {
     const next = `#${mainTab}`;
     if (window.location.hash !== next) {
-      window.history.replaceState(null, '', next);
+      if (hashSyncedRef.current) {
+        window.history.pushState(null, '', next);
+      } else {
+        window.history.replaceState(null, '', next);
+      }
     }
+    hashSyncedRef.current = true;
   }, [mainTab]);
 
   useEffect(() => {
-    const onHashChange = () => setMainTab(readTabFromHash());
-    window.addEventListener('hashchange', onHashChange);
-    return () => window.removeEventListener('hashchange', onHashChange);
+    const onHistoryNav = () => {
+      const tab = readTabFromHash();
+      setMainTab(tab);
+      // Same mapping as selectMainTab; Transfusion stays under Fluids
+      if (tab === 'drip') setFluidsTopic('drip');
+      if (tab === 'fluids') setFluidsTopic((t) => (t === 'drip' ? 'fluids' : t));
+    };
+    window.addEventListener('hashchange', onHistoryNav);
+    window.addEventListener('popstate', onHistoryNav);
+    return () => {
+      window.removeEventListener('hashchange', onHistoryNav);
+      window.removeEventListener('popstate', onHistoryNav);
+    };
   }, []);
 
   useEffect(() => {
