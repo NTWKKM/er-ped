@@ -1,4 +1,5 @@
 import React from 'react';
+import { ChevronRight } from 'lucide-react';
 import { DATASET } from '../data/dataset';
 import {
   calcMaintenanceMlPerHr,
@@ -104,13 +105,13 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
           onChange={(e) => onChangeTopic(e.target.value as ProtocolTopic)}
           className="clinical-input w-full sm:w-80 md:w-96 font-bold"
         >
-          <option value="asthma">Asthma — Acute Exacerbation &amp; HFNC</option>
-          <option value="dka">DKA — Diabetic Ketoacidosis</option>
-          <option value="electrolytes">Electrolytes — Imbalance Correctors</option>
-          <option value="croup">Croup — Stridor &amp; Airway Edema</option>
-          <option value="psa">Sedation (PSA) — Procedural Sedation</option>
-          <option value="tox">Toxicology — Antidotes &amp; Overdose</option>
-          <option value="vitals">Vital Signs — Normal Ranges by Age</option>
+          <option value="asthma">Asthma: Acute Exacerbation &amp; HFNC</option>
+          <option value="dka">DKA: Diabetic Ketoacidosis</option>
+          <option value="electrolytes">Electrolytes: Imbalance Correctors</option>
+          <option value="croup">Croup: Stridor &amp; Airway Edema</option>
+          <option value="psa">Sedation (PSA): Procedural Sedation</option>
+          <option value="tox">Toxicology: Antidotes &amp; Overdose</option>
+          <option value="vitals">Vital Signs: Normal Ranges by Age</option>
         </select>
       </div>
 
@@ -141,7 +142,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                           timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
                         });
                       }}
-                      className="min-h-[28px] px-2.5 py-1 text-[11px] font-bold rounded-md border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
+                      className="order-btn"
                       title="Add to Active Patient Order Sheet"
                     >
                       + Order Sheet
@@ -174,7 +175,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                           timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
                         });
                       }}
-                      className="min-h-[28px] px-2.5 py-1 text-[11px] font-bold rounded-md border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
+                      className="order-btn"
                       title="Add to Active Patient Order Sheet"
                     >
                       + Order Sheet
@@ -276,7 +277,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                               timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
                             });
                           }}
-                          className="min-h-[28px] px-2.5 py-1 text-[11px] font-bold rounded-md border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
+                          className="order-btn"
                           title="Add to Active Patient Order Sheet"
                         >
                           + Order Sheet
@@ -314,7 +315,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                               timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
                             });
                           }}
-                          className="min-h-[28px] px-2.5 py-1 text-[11px] font-bold rounded-md border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
+                          className="order-btn"
                           title="Add to Active Patient Order Sheet"
                         >
                           + Order Sheet
@@ -447,14 +448,14 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                           timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
                         });
                       }}
-                      className="min-h-[28px] px-2.5 py-1 text-[11px] font-bold rounded-md border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
+                      className="order-btn"
                       title="Add to Active Patient Order Sheet"
                     >
                       + Order Sheet
                     </button>
                   )}
                 </div>
-                <div className="text-lg font-extrabold font-mono-tabular text-[var(--danger-text)] mt-0.5">
+                <div className="text-lg font-extrabold font-mono-tabular text-[var(--ink)] mt-0.5">
                   {Math.min(w * 3, 100).toFixed(0)}–{Math.min(w * 5, 150).toFixed(0)} mL IV over 20 min
                 </div>
               </div>
@@ -637,7 +638,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
                     className={isCur ? 'bg-[var(--accent-soft)] font-bold' : ''}
                   >
                     <td className="whitespace-nowrap">
-                      {isCur ? '▶ ' : ''}
+                      {isCur ? <ChevronRight className="inline w-3.5 h-3.5 mr-0.5 -mt-0.5" aria-label="Current age bracket" /> : null}
                       {v.ageBracket}
                     </td>
                     <td className="font-mono-tabular whitespace-nowrap">{v.hrNormal}</td>

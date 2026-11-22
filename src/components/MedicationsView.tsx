@@ -60,6 +60,29 @@ function cleanEnglishText(text?: string | null): string {
     .trim();
 }
 
+/** Renders a dataset note, swapping the warning emoji for an inline Lucide icon. */
+function ClinicalNote({ text }: { text?: string | null }) {
+  const clean = cleanEnglishText(text);
+  if (!clean) return null;
+  const parts = clean.split(/\s*⚠️?\s*/u);
+  return (
+    <>
+      {parts.map((part, i) => (
+        <React.Fragment key={i}>
+          {i > 0 && (
+            <AlertTriangle
+              className="inline w-3.5 h-3.5 mx-1 -mt-0.5 text-[var(--warning-text)]"
+              aria-label="Caution"
+              role="img"
+            />
+          )}
+          {part}
+        </React.Fragment>
+      ))}
+    </>
+  );
+}
+
 export const MedicationsView: React.FC<MedicationsViewProps> = ({
   activeWeight,
   ageYears,
@@ -182,6 +205,11 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
         ? formattedMin !== formattedMax
         : Math.abs(maxVal - minVal) >= (options?.minDiff ?? 0.5);
       if (isDiff) {
+        const unitMatch = formattedMax.match(/\s(\S+)$/);
+        const unit = unitMatch ? unitMatch[0] : '';
+        if (unit && formattedMin.endsWith(unit)) {
+          return `${formattedMin.slice(0, -unit.length)}–${formattedMax}`;
+        }
         return `${formattedMin}–${formattedMax}`;
       }
     }
@@ -310,7 +338,9 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
   );
 
   return (
-    <div className="clinical-card p-4 sm:p-5 space-y-4 sm:space-y-5">
+    <div className="clinical-card p-4 sm:p-5 grid gap-4 sm:gap-5 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-start">
+      <section aria-labelledby="medSelectorHeading" className="min-w-0 space-y-3">
+      <h2 id="medSelectorHeading" className="sr-only-heading">Medication selector</h2>
       {/* Simple Single-Input Drug Selector */}
       <div ref={wrapperRef} className="relative">
         <label htmlFor="doseSearch" className="text-xs font-bold text-[var(--muted)] block mb-1.5">
@@ -391,6 +421,27 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
         )}
       </div>
 
+      {/* Preparation stays visible in full even when the drug name truncates in the field */}
+      {selectedDrug && (
+        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-xs">
+          <span className="font-semibold text-[var(--muted)]">Preparation</span>
+          <strong className="font-mono-tabular text-sm text-[var(--ink)] break-words min-w-0">
+            {selectedDrug.preparation || 'Standard'}
+          </strong>
+          <span className="text-[var(--muted)]">{cleanEnglishText(selectedDrug.route) || 'PO'}</span>
+        </div>
+      )}
+
+      {selectedDrug?.note && !isReferenceOnlyDrug && (
+        <div className="clinical-panel-subtle p-3.5 text-xs text-[var(--ink-secondary)] leading-relaxed">
+          <strong className="text-[var(--ink)]">Reference regimen:</strong>{' '}
+          <ClinicalNote text={selectedDrug.note} />
+        </div>
+      )}
+      </section>
+
+      <section aria-labelledby="medOutputHeading" className="min-w-0">
+      <h2 id="medOutputHeading" className="sr-only-heading">Calculated dose</h2>
       {/* Main Output Area */}
       {resolved?.isAgeRestricted ? (
         <div className="p-4 rounded-lg border border-[var(--danger)] bg-[var(--danger-soft)] text-[var(--danger-text)] text-xs space-y-1">
@@ -427,7 +478,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
               Standard Pediatric / Neonatal Reference Dose
             </div>
             <div className="text-sm sm:text-base font-bold text-[var(--ink)] leading-relaxed">
-              {cleanEnglishText(selectedDrug.note) || 'Refer to institutional protocol'}
+              {selectedDrug.note ? <ClinicalNote text={selectedDrug.note} /> : 'Refer to institutional protocol'}
             </div>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[var(--muted)] pt-2 border-t border-[var(--border)]">
               <span>
@@ -456,13 +507,6 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
           <div className="clinical-panel-subtle p-4 sm:p-5 text-center text-sm text-[var(--muted)]">
             Enter patient Weight (BW) or Age above to calculate patient-specific doses
           </div>
-          {selectedDrug.note && (
-            <div className="clinical-panel-subtle p-3.5 text-xs text-[var(--muted)] leading-relaxed">
-              <strong className="text-[var(--ink)]">Reference Regimen:</strong>{' '}
-              {cleanEnglishText(selectedDrug.note)}
-              {selectedDrug.preparation ? ` · Prep: ${selectedDrug.preparation}` : ''}
-            </div>
-          )}
         </div>
       ) : (
         <div className="space-y-4">
@@ -479,7 +523,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                     timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
                   });
                 }}
-                className="min-h-[32px] px-3 py-1 text-xs font-bold rounded-md border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
+                className="order-btn"
                 title="Add to Active Patient Order Sheet"
               >
                 + Order Sheet
@@ -491,21 +535,21 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                   setIsRenalDetailsOpen(true);
                   setIsRenalReviewed(true);
                 }}
-                className="min-h-[32px] px-3 py-1 text-xs font-bold rounded-md border border-[var(--warning)] text-[var(--warning-text)] bg-[var(--warning-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
+                className="order-btn order-btn--warning"
                 title="Review matched renal dosing tier before adding to Order Sheet"
               >
                 ▲ Review Renal Regimen ({egfr?.toFixed(0)} mL/min/1.73m²)
               </button>
             ) : matchedRenalTier && !hasNumericRenalDose ? (
               <span
-                className="min-h-[32px] px-3 py-1 text-xs font-semibold rounded-md border border-[var(--warning)] text-[var(--warning-text)] bg-[var(--warning-soft)] flex items-center whitespace-nowrap shrink-0"
+                className="status-chip"
                 title="Matched renal tier provides qualitative guidance only; order entry must be completed outside this calculator"
               >
                 ▲ Review-Only Guidance
               </span>
             ) : strength.hasMultipleConcs && !effectiveMgPerMl ? (
               <span
-                className="min-h-[32px] px-3 py-1 text-xs font-semibold rounded-md border border-[var(--warning)] text-[var(--warning-text)] bg-[var(--warning-soft)] flex items-center whitespace-nowrap shrink-0"
+                className="status-chip"
                 title="Select a preparation concentration below before adding to Order Sheet"
               >
                 ▲ Select Concentration
@@ -562,8 +606,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                 Regimen:{' '}
                 <strong className="text-[var(--ink)]">
                   {selectedDrug.freq || selectedDrug.split || 'PRN'}
-                </strong>{' '}
-                ·{' '}
+                </strong>{', '}
                 <strong className="text-[var(--ink)]">
                   {cleanEnglishText(selectedDrug.route) || 'PO/IV'}
                 </strong>
@@ -595,15 +638,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
 
           {/* Concise Note & Optional Strength Override */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2.5 border-t border-[var(--border)] text-xs text-[var(--muted)]">
-            <div className="flex-1 leading-relaxed">
-              {selectedDrug.note && (
-                <span>
-                  <strong className="text-[var(--ink)]">Note:</strong>{' '}
-                  {cleanEnglishText(selectedDrug.note)}
-                </span>
-              )}
-            </div>
-            <div className="flex flex-wrap items-center justify-between sm:justify-end gap-2 shrink-0">
+            <div className="flex flex-wrap items-center justify-between sm:justify-end gap-2 shrink-0 sm:ml-auto">
               <label htmlFor="doseConc" className="whitespace-nowrap font-semibold">
                 {strength.hasMultipleConcs ? (
                   <span className="text-[var(--warning-text)]">Select Conc (mg/mL):</span>
@@ -699,7 +734,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                       <button
                         type="button"
                         onClick={() => setIsRenalReviewed(true)}
-                        className="min-h-[32px] px-3 py-1 text-[11px] font-bold rounded-md bg-[var(--accent)] text-white hover:opacity-90 transition-opacity cursor-pointer whitespace-nowrap self-start sm:self-auto shrink-0"
+                        className="min-h-[32px] px-3 py-1 text-[11px] font-bold rounded-md bg-[var(--accent)] text-[var(--accent-ink)] hover:opacity-90 transition-opacity cursor-pointer whitespace-nowrap self-start sm:self-auto shrink-0"
                       >
                         ✓ Confirm Review
                       </button>
@@ -747,6 +782,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
           )}
         </div>
       )}
+      </section>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import {
   getBroselowSpectrumBand,
   calcGrowthZScores,
 } from '../utils/clinicalCalculations';
-import { Sun, Moon, Monitor, Flame, BookOpen, FileText, SlidersHorizontal, Ruler } from 'lucide-react';
+import { Sun, Moon, Monitor, Flame, BookOpen, FileText, SlidersHorizontal, Ruler, Mars, Venus } from 'lucide-react';
 
 export interface BiometricState {
   rawWeight: string;
@@ -188,7 +188,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                 className={`flex items-center gap-1 rounded-lg px-1.5 sm:px-2 py-1 min-h-[36px] shrink-0 border ${
                   isWeightOutOfRange
                     ? 'border-[var(--danger)] bg-[var(--danger-soft)] text-[var(--danger-text)]'
-                    : 'bg-[var(--panel-subtle)] border-[var(--border)]'
+                    : 'bio-field'
                 }`}
                 title={
                   isWeightOutOfRange
@@ -220,7 +220,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
               </div>
 
               {/* 2. Age Input + Unit Toggle (yr/mo) + Sex Toggle (♂/♀) */}
-              <div className="flex items-center gap-1 bg-[var(--panel-subtle)] border border-[var(--border)] rounded-lg px-1.5 sm:px-2 py-1 min-h-[36px] shrink-0">
+              <div className="flex items-center gap-1 bio-field rounded-lg px-1.5 sm:px-2 py-1 min-h-[36px] shrink-0">
                 <label htmlFor="age" className="text-xs font-bold text-[var(--muted)] select-none">
                   Age
                 </label>
@@ -250,14 +250,11 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                 <button
                   type="button"
                   onClick={onToggleSex}
-                  className={`hidden sm:inline-flex items-center justify-center min-h-[26px] min-w-[26px] text-xs font-extrabold px-1.5 py-0.5 rounded cursor-pointer select-none transition-colors whitespace-nowrap shrink-0 ${
-                    bio.sex === 'male'
-                      ? 'bg-[var(--accent-soft)] text-[var(--accent-text)]'
-                      : 'bg-[var(--danger-soft)] text-[var(--danger-text)]'
-                  }`}
-                  title={`สลับเพศ (${bio.sex === 'male' ? 'เด็กชาย ♂' : 'เด็กหญิง ♀'}) สำหรับ WHO Growth Standards`}
+                  aria-label={`Sex: ${bio.sex === 'male' ? 'male' : 'female'}. Toggle for WHO Growth Standards`}
+                  className="hidden sm:inline-flex items-center justify-center min-h-[26px] min-w-[28px] px-1.5 py-0.5 rounded bg-[var(--panel)] text-[var(--ink)] hover:text-[var(--accent-text)] cursor-pointer select-none whitespace-nowrap shrink-0"
+                  title={`สลับเพศ (${bio.sex === 'male' ? 'เด็กชาย' : 'เด็กหญิง'}) สำหรับ WHO Growth Standards`}
                 >
-                  {bio.sex === 'male' ? '♂' : '♀'}
+                  {bio.sex === 'male' ? <Mars className="w-3.5 h-3.5" aria-hidden="true" /> : <Venus className="w-3.5 h-3.5" aria-hidden="true" />}
                 </button>
               </div>
 
@@ -272,16 +269,15 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                     ? 'border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent-text)]'
                     : 'border-[var(--border)] bg-[var(--panel-subtle)] text-[var(--muted)]'
                 }`}
-                title="ระบุส่วนสูง (HT cm) และเพศ (♂/♀) สำหรับคำนวณ eGFR และ Wt-for-Ht"
+                title="ระบุส่วนสูง (HT cm) และเพศ สำหรับคำนวณ eGFR และ Wt-for-Ht"
               >
                 <Ruler className="w-3.5 h-3.5 shrink-0 max-[360px]:hidden" />
                 <span className="truncate min-w-0">{bio.rawHeight ? `${bio.rawHeight}cm` : 'HT'}</span>
-                <span className="shrink-0">·</span>
-                <span className="shrink-0">{bio.sex === 'male' ? '♂' : '♀'}</span>
+                {bio.sex === 'male' ? <Mars className="w-3.5 h-3.5 shrink-0" aria-hidden="true" /> : <Venus className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />}
               </button>
 
               {/* 3. Height (HT) & Wt-for-Ht (Tablet/Desktop >= 640px inline) */}
-              <div className="hidden sm:flex items-center gap-1.5 bg-[var(--panel-subtle)] border border-[var(--border)] rounded-lg px-2 py-1 min-h-[36px] shrink-0">
+              <div className="hidden sm:flex items-center gap-1.5 bio-field rounded-lg px-2 py-1 min-h-[36px] shrink-0">
                 <label htmlFor="length" className="text-xs font-bold text-[var(--muted)] select-none">
                   HT
                 </label>
@@ -369,18 +365,18 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
           <div className="contents sm:flex sm:flex-none sm:items-center sm:gap-2 sm:ml-auto">
             {/* Authoritative In-Use Active Weight Box (All-around hairline border per taste-skill) */}
             <div
-              className={`col-start-1 row-start-1 min-w-[84px] max-w-[132px] sm:max-w-none sm:min-w-[96px] flex flex-col justify-center px-2 sm:px-2.5 py-1 rounded-lg border min-h-[36px] shrink-0 transition-colors ${
+              className={`col-start-1 row-start-1 min-w-[84px] max-w-[132px] sm:max-w-none sm:min-w-[96px] flex flex-col justify-center gap-0.5 px-2 sm:px-2.5 py-1.5 sm:py-2 rounded-lg border min-h-[40px] shrink-0 transition-colors ${
                 weightProvenance.isError
                   ? 'border-[var(--danger)]/50 bg-[var(--danger-soft)] text-[var(--danger-text)]'
                   : weightProvenance.isEmpty
                   ? 'border-[var(--border)] bg-[var(--panel-subtle)]'
                   : weightProvenance.isDerived
-                  ? 'border-[var(--warning)]/40 bg-[var(--warning-soft)]'
+                  ? 'border-[var(--warning)] border-l-4 bg-[var(--warning-soft)]'
                   : 'border-[var(--accent)]/40 bg-[var(--accent-soft)]/50'
               }`}
             >
               <div className="flex items-baseline gap-1 sm:gap-1.5">
-                <span className="text-[10px] font-bold text-[var(--muted)] select-none whitespace-nowrap">
+                <span className="text-[11px] font-bold text-[var(--muted)] select-none whitespace-nowrap">
                   In use
                 </span>
                 <strong
@@ -391,7 +387,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                 </strong>
               </div>
               <span
-                className={`text-[9.5px] sm:text-[10px] leading-tight font-semibold tracking-tight select-none truncate ${
+                className={`text-xs leading-tight font-bold select-none truncate ${
                   weightProvenance.isError
                     ? 'text-[var(--danger-text)] font-bold'
                     : weightProvenance.isDerived
@@ -413,9 +409,9 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                   ? { backgroundColor: activeBand.bg, color: activeBand.fg }
                   : undefined
               }
-              className={`col-start-2 row-start-1 justify-self-start min-h-[36px] min-w-[44px] px-2 sm:px-2.5 py-1 rounded-lg text-[11px] font-bold font-mono-tabular border cursor-pointer select-none whitespace-nowrap shrink-0 flex items-center justify-center gap-1 transition-opacity ${
+              className={`col-start-2 row-start-1 justify-self-start min-h-[36px] min-w-[44px] px-2 sm:px-2.5 py-1 rounded-lg text-xs font-bold border cursor-pointer select-none whitespace-nowrap shrink-0 flex items-center justify-center gap-1 transition-opacity ${
                 activeBand
-                  ? 'border-black/15 hover:opacity-90'
+                  ? 'border-[var(--band-edge)] hover:opacity-90'
                   : 'border-[var(--border)] bg-[var(--panel-subtle)] text-[var(--muted)] hover:text-[var(--ink)]'
               }`}
               title="คลิกเพื่อเปิดตารางอุปกรณ์และยา Broselow Resuscitation Tape (9-Color Spectrum)"
@@ -502,7 +498,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
           <div className="sm:hidden pt-2 border-t border-[var(--border)] flex flex-wrap items-center justify-between gap-2 text-xs">
             <div className="flex items-center gap-2 flex-wrap">
               {/* Mobile Height Input */}
-              <div className="flex items-center gap-1.5 bg-[var(--panel-subtle)] border border-[var(--border)] rounded-lg px-2.5 py-1 min-h-[36px]">
+              <div className="flex items-center gap-1.5 bio-field rounded-lg px-2.5 py-1 min-h-[36px]">
                 <label htmlFor="mobile-length" className="text-xs font-bold text-[var(--muted)]">
                   HT
                 </label>
@@ -526,13 +522,10 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
               <button
                 type="button"
                 onClick={onToggleSex}
-                className={`min-h-[36px] px-2.5 py-1 rounded-lg border text-xs font-bold cursor-pointer transition-colors whitespace-nowrap ${
-                  bio.sex === 'male'
-                    ? 'border-[var(--accent)]/40 bg-[var(--accent-soft)] text-[var(--accent-text)]'
-                    : 'border-[var(--danger)]/40 bg-[var(--danger-soft)] text-[var(--danger-text)]'
-                }`}
+                className="inline-flex items-center gap-1.5 min-h-[36px] px-2.5 py-1 rounded-lg border border-[var(--field-edge)] bg-[var(--card)] text-[var(--ink)] text-xs font-bold cursor-pointer whitespace-nowrap"
               >
-                Sex: {bio.sex === 'male' ? '♂ Male' : '♀ Female'}
+                {bio.sex === 'male' ? <Mars className="w-3.5 h-3.5" aria-hidden="true" /> : <Venus className="w-3.5 h-3.5" aria-hidden="true" />}
+                Sex: {bio.sex === 'male' ? 'Male' : 'Female'}
               </button>
 
               {/* Mobile Wt-for-Ht Checkbox */}
@@ -548,7 +541,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                     onChange={(e) => onToggleUseIBW(e.target.checked)}
                     className="w-4 h-4 accent-[var(--accent)] rounded"
                   />
-                  <span className="font-mono-tabular">
+                  <span>
                     {ibwWeight ? `Use Wt-for-Ht (${ibwWeight.toFixed(1)} kg)` : 'Use Wt-for-Ht'}
                   </span>
                 </label>
