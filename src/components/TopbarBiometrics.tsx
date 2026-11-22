@@ -212,7 +212,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                   placeholder="kg"
                   value={bio.rawWeight}
                   onChange={(e) => onWeightChange(e.target.value)}
-                  className={`w-11 sm:w-16 bg-transparent text-center font-mono-tabular font-bold text-base sm:text-sm ${
+                  className={`num-spin w-11 sm:w-20 bg-transparent text-center font-mono-tabular font-bold text-base sm:text-sm ${
                     isWeightOutOfRange ? 'text-[var(--danger-text)]' : 'text-[var(--ink)]'
                   }`}
                 />

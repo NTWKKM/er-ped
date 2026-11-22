@@ -338,7 +338,7 @@ input[type="number"]::-webkit-outer-spin-button {
   margin: 0;
 }
 
-/* Opt-in exception: fields stepped by whole units with a mouse (Age) keep the native spinner */
+/* Opt-in exception: topbar biometrics stepped with a mouse (BW, Age) keep the native spinner */
 input[type="number"].num-spin {
   appearance: auto;
 }
