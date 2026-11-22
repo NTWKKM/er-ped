@@ -235,7 +235,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                   placeholder="0"
                   value={bio.rawAge}
                   onChange={(e) => onAgeChange(e.target.value)}
-                  className="w-9 sm:w-12 bg-transparent text-center font-mono-tabular font-bold text-base sm:text-sm text-[var(--ink)]"
+                  className="num-spin w-9 sm:w-16 bg-transparent text-center font-mono-tabular font-bold text-base sm:text-sm text-[var(--ink)]"
                 />
                 <button
                   type="button"
