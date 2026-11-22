@@ -179,7 +179,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
             onClick={() => handleSubTabChange('fluids')}
             className={`min-h-[34px] px-2 sm:px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer whitespace-nowrap truncate text-center ${
               activeSubTab === 'fluids'
-                ? 'bg-[var(--accent)] text-white shadow-xs'
+                ? 'bg-[var(--accent)] text-[var(--accent-ink)] shadow-xs'
                 : 'text-[var(--muted)] hover:text-[var(--ink)]'
             }`}
           >
@@ -193,7 +193,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
             onClick={() => handleSubTabChange('drip')}
             className={`min-h-[34px] px-2 sm:px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer whitespace-nowrap truncate text-center ${
               activeSubTab === 'drip'
-                ? 'bg-[var(--accent)] text-white shadow-xs'
+                ? 'bg-[var(--accent)] text-[var(--accent-ink)] shadow-xs'
                 : 'text-[var(--muted)] hover:text-[var(--ink)]'
             }`}
           >
@@ -207,7 +207,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
             onClick={() => handleSubTabChange('transfusion')}
             className={`min-h-[34px] px-2 sm:px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer whitespace-nowrap truncate text-center ${
               activeSubTab === 'transfusion'
-                ? 'bg-[var(--accent)] text-white shadow-xs'
+                ? 'bg-[var(--accent)] text-[var(--accent-ink)] shadow-xs'
                 : 'text-[var(--muted)] hover:text-[var(--ink)]'
             }`}
           >
@@ -251,14 +251,14 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                 }}
                 className="clinical-input w-full font-semibold"
               >
-                <option value={3}>3% — Mild (dry mucous membranes)</option>
-                <option value={4}>4% — Mild (decreased urine output)</option>
-                <option value={5}>5% — Mild (dry skin)</option>
-                <option value={6}>6% — Moderate (sunken eyes)</option>
-                <option value={7}>7% — Moderate (tachycardia)</option>
-                <option value={8}>8% — Moderate (lethargy, reduced turgor)</option>
-                <option value={9}>9% — Moderate (CRT &gt; 2 s)</option>
-                <option value={10}>10% — Severe (assess for shock)</option>
+                <option value={3}>3%: Mild (dry mucous membranes)</option>
+                <option value={4}>4%: Mild (decreased urine output)</option>
+                <option value={5}>5%: Mild (dry skin)</option>
+                <option value={6}>6%: Moderate (sunken eyes)</option>
+                <option value={7}>7%: Moderate (tachycardia)</option>
+                <option value={8}>8%: Moderate (lethargy, reduced turgor)</option>
+                <option value={9}>9%: Moderate (CRT &gt; 2 s)</option>
+                <option value={10}>10%: Severe (assess for shock)</option>
               </select>
             </div>
 
@@ -320,7 +320,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                         timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
                       });
                     }}
-                    className="min-h-[32px] px-3 py-1 text-xs font-bold rounded-md border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
+                    className="order-btn"
                     title="Add to Active Patient Order Sheet"
                   >
                     + Order Sheet
@@ -407,8 +407,8 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                     </>
                   ) : (
                     <>
-                      <div className="text-lg sm:text-xl font-extrabold font-mono-tabular text-[var(--danger-text)] mt-1">
-                        {regimen.bolus10Ml.toFixed(0)} – {regimen.bolus20Ml.toFixed(0)} mL
+                      <div className="text-lg sm:text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                        {regimen.bolus10Ml.toFixed(0)}–{regimen.bolus20Ml.toFixed(0)} mL
                       </div>
                       <div className="text-xs text-[var(--muted)] mt-1">
                         10–20 mL/kg NS/RL (max 500 / 1000 mL per bolus){regimen.isBolusCapped && ' · capped'}; IV bolus +
@@ -546,7 +546,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                         timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
                       });
                     }}
-                    className="min-h-[32px] px-3 py-1 text-xs font-bold rounded-md border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
+                    className="order-btn"
                     title="Add to Active Patient Order Sheet"
                   >
                     + Order Sheet
@@ -558,7 +558,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                   <div className="text-xs font-semibold text-[var(--muted)]">
                     Syringe Pump Rate
                   </div>
-                  <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--danger-text)] mt-1">
+                  <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
                     {hasValidDripInputs ? (
                       <>
                         {fwd.rateMlHr.toFixed(1)} <span className="text-sm font-bold">mL/hr</span>
@@ -692,7 +692,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                         timestamp: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
                       });
                     }}
-                    className="min-h-[32px] px-3 py-1 text-xs font-bold rounded-md border border-[var(--accent)] text-[var(--accent-text)] bg-[var(--accent-soft)] hover:opacity-90 transition-opacity flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
+                    className="order-btn"
                     title="Add to Active Patient Order Sheet"
                   >
                     + Order Sheet
@@ -715,7 +715,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                   <div className="text-xs font-semibold text-[var(--muted)]">PRBC Volume Required</div>
                   {tx ? (
                     <>
-                      <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--danger-text)] mt-1">
+                      <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
                         {tx.prbcVol} <span className="text-sm font-bold">mL</span>
                       </div>
                       <div className="text-xs text-[var(--muted)] mt-1">

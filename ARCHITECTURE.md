@@ -285,7 +285,10 @@ flowchart TD
     - **Unified Order Modal Access**: Users access the consolidated Queued EHR Prescription Orders and Bedside Emergency Summary on demand via the dedicated `Orders` button in `TopbarBiometrics`, opening `OrderSheetModal` with 1-tap A4 Bedside Emergency Pocket Card printing and clipboard export.
     - **Responsive Topbar Action**: Broadened `Orders` label visibility on the header cluster (`hidden sm:inline`) with live active-count badge.
 
-
-
-
+70. **Hallmark UI/UX Audit Polish (v2.4.5 - November 2026)**:
+    - **Styles** (`src/index.css`): per-theme `--field-edge`, `--accent-ink`, `--focus-ring`, `--scrim`, `--band-edge`, print tokens, radius/shadow/motion tokens; global `:focus-visible`, `:active`, `:disabled` states; shared `.order-btn`, `.status-chip`, `.bio-field`, `.pals-fab`; `overflow-x: clip`. First lines carry the Hallmark check stamp.
+    - **Fonts**: `@fontsource/sarabun` and `@fontsource/jetbrains-mono` imported in `src/main.tsx`; Google Fonts links removed from `index.html`.
+    - **App shell** (`App.tsx`): `selectMainTab()` / `openPals()`, URL-hash tab state, guarded `localStorage` theme, WAI-ARIA tablist + single `#panel-main` tabpanel, global Alt+1..5 / Alt+P listener (inert while a dialog is open), PALS quick-access button.
+    - **MedicationsView**: two-column `lg` grid, always-visible Preparation line, single reference-regimen panel, `ClinicalNote` icon renderer, unit-collapsed dose ranges (`150–225 mg`), which also flows into the order text.
+    - **Verification**: `pnpm test` 17/17 pass; `pnpm run lint` and `pnpm run build` pass.
 

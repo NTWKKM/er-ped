@@ -1,5 +1,28 @@
 # Design System & UI Specifications — MNRH ER-PED Calculator (Clinical Precision Cockpit)
 
+## Current Implementation (v2.4.5, React build) — authoritative
+
+This section is the contract for the shipped React app (`src/`). The numbered "UI States & Components" history below records earlier builds; where an entry disagrees with this section, this section wins. Source of truth for values: `src/index.css`.
+
+- **Type**: one family, **Sarabun**, for Thai and Latin text (self-hosted via `@fontsource/sarabun`, weights 400 to 800, no Google Fonts request, works offline on the hospital network). **JetBrains Mono** (`@fontsource/jetbrains-mono`, 400/700/800) is reserved for numbers and measurements: doses, volumes, weights, timers, table dose cells. Labels, buttons and chips use Sarabun. Minimum sizes: 12px for any safety-relevant label (weight provenance, preparation), 11px for functional text, 16px for inputs below 768px.
+- **Colour semantics**: `--danger` / `--danger-text` mark alarm states only (out-of-range input, contraindication, hypotension threshold, CICO rescue name). Routine calculated doses, including epinephrine, render in `--ink`. `--warning` marks derived or estimated values (estimated weight gets a 4px left warning edge) and review-required states. Sex is shown with Lucide `Mars`/`Venus` on a neutral surface, never in danger red.
+- **Accent fill ink**: every accent-filled control (selected tab, pressed subtab, primary button) uses `--accent-ink` for its text, defined per theme, so selected tabs stay legible in Dark (8.8:1), Mono (15.8:1) and Red (5.6:1). Never `text-white` on `--accent`.
+- **Field edges**: biometric capsules (`.bio-field`) and `.clinical-input` draw their border in `--field-edge`, at least 3:1 against card and panel in every theme.
+- **Focus**: one global `:focus-visible` rule, `3px solid var(--focus-ring)`, offset 2px, instant (no transition). Biometric capsule inputs stretch to the capsule's full height and carry the ring themselves. No component removes an outline (no Tailwind `focus:outline-none` anywhere).
+- **Touch targets (gloved use)**: below `sm` (640px) every topbar control is at least 44px tall: biometric capsules `min-h-[44px]`, tool buttons 44x44, main tabs 44px, combobox clear/toggle 44x44 inside a 48px field. In-capsule toggles (`yr`/`mo`) are 40px and sit 8px from the field. From `sm` up the compact 36px header returns. In-capsule toggles share the header tool-button recipe (`--panel-subtle` fill, `--border` hairline).
+- **Number fields**: native spinners are hidden on every `input[type="number"]`; they crowded the 40-60px dose fields and invited accidental 0.1 steps.
+- **States**: buttons compress with `transform: scale(0.97)` on `:active` (disabled under `prefers-reduced-motion`); `:disabled` controls take opacity 0.5 plus `cursor: not-allowed` plus the native attribute. Transitions list properties (`color, background-color, border-color, opacity, transform`) at `--dur-micro` (120ms); never `transition: all`.
+- **Order action**: every "+ Order Sheet" button uses the shared `.order-btn` class (36px visual, 44px hit target through `::after`), `.order-btn--warning` for review-gated actions. Non-interactive status chips use `.status-chip` (dashed edge) so they never read as buttons. In dose cards the order button sits below the dose and regimen, never between the label and the number.
+- **Dose ranges**: one unit per range, `150–225 mg` and `6.25–9.38 mL` (en dash, unit once). Numeric ranges keep the en dash as clinical convention; prose never uses em or en dashes (colons in select options, parentheses in headings).
+- **Separators**: no middle-dot chains. Lists of facts (airway adjunct sizes, seizure time windows) render as stacked lines or an ordered list. A single dot in a provenance or band label is allowed.
+- **Icons**: Lucide only. Dataset notes keep their source text; the warning emoji in a note is rendered as an inline Lucide `AlertTriangle` (`ClinicalNote` in `MedicationsView`). Shape-coded text prefixes (`▲` review, `✓` reviewed) remain as typographic status marks.
+- **Formulary layout**: at `lg` (1024px and up) the Medications card is two columns, `minmax(0,5fr) / minmax(0,7fr)`: selector, the full **Preparation** line (never truncated, mono) and the reference regimen on the left; the calculated dose on the right. Below `lg` it stacks in the same order.
+- **Structure and keyboard**: a visually hidden `h1`; section `h2`s in the formulary; the five main tabs are a WAI-ARIA tablist (`id="tab-<id>"`, `aria-controls="panel-main"`, roving `tabIndex`, ArrowLeft/ArrowRight/Home/End) controlling one `role="tabpanel"`. Shortcuts: `Alt+1` to `Alt+5` select Meds, Fluids, Drip, Resus, Protocols; `Alt+P` opens Resus at PALS and focuses the panel. Shortcuts are inert while a dialog is open.
+- **PALS quick access**: `.pals-fab`, fixed bottom-right on every viewport (48px tall, `--danger` fill, `--accent-ink` text, Lucide `HeartPulse`, label "PALS"), `no-print`. `<main>` reserves `pb-24` so it never covers the last row.
+- **Persistence**: the theme is stored per device in `localStorage` (`er-ped:theme`, every access guarded). The active main tab lives in the URL hash (`#dose`, `#fluids`, `#drip`, `#resus`, `#protocols`) so reload and back/forward keep the view. Patient biometrics and the order queue are never persisted (shared ED workstations).
+- **Page guards**: `overflow-x: clip` on `html` and `body`; themed `::selection`, `caret-color` and `scrollbar-color`; print colours come from `--print-paper` / `--print-ink`.
+- **Retired from earlier builds** (described in history entries 2, 11, 14, 16, 17, 18, 21, 22 and 24, not present in the React app): the category jump bar and 2-tier cockpit nav, per-module `Alt+<letter>` shortcuts, View Transitions tab switching, the quick-weight HUD popover and triage strip, and the mobile bottom quick-dock (its role is covered by the PALS button and the tab bar). The `--dark-btn` and `--topbar-h` tokens are retired.
+
 ## Design Tokens
 
 ### Light Theme Palette (`data-theme="light"`, default)
@@ -13,12 +36,14 @@
 - `--muted`: `#475569` (Slate-600: Crisp secondary labels, WCAG AA compliant > 5.5:1)
 - `--border`: `#D8E0EA` (Subtle 1px precision hairline border preventing card washout under bright ER lights)
 - `--border-strong`: `#CBD5E1` (Slate-300: High-visibility border for focused/active states)
+- `--field-edge`: `#718198` (Input and biometric capsule edge: 3.97:1 on card, 3.52:1 on panel-subtle)
 - `--accent`: `#0277B6` (Surgical azure: 4.86:1 contrast for white button text and primary actions)
 - `--accent-hover`: `#026597` (Deep surgical azure hover: 6.5:1 contrast)
+- `--accent-ink`: `#FFFFFF` (Text on accent fill: 4.86:1)
+- `--focus-ring`: `#0277B6` (3px focus outline: 4.86:1 on card)
 - `--accent-soft`: `#E0F2FE` (Sky-100: Soft tint for active weight & highlight containers)
 - `--accent-subtle`: `#F0F7FF` (Sky-50: Ultra-soft tinted container background for table hover)
 - `--accent-text`: `#026AA2` (High-contrast text token on soft tints, WCAG AA compliant with 5.86:1 on white and 5.10:1 on `--accent-soft`, satisfying the $\ge 4.5:1$ requirement)
-- `--dark-btn`: `#0F172A` (Slate-900: High-contrast tactile action button)
 - `--good`: `#16A34A` (Clinical safe green)
 - `--good-soft`: `#ECFDF5` (Soft mint tint)
 - `--good-text`: `#166534` (Deep clinical green text token, WCAG AAA > 7.1:1 on white, 6.77:1 on soft tint)
@@ -28,6 +53,9 @@
 - `--danger`: `#DC2626` (Emergency PALS critical red)
 - `--danger-soft`: `#FEF2F2` (Soft rose tint)
 - `--danger-text`: `#991B1B` (Deep clinical red text token, WCAG AAA > 8.3:1 on white, 7.60:1 on soft tint)
+- `--scrim`: `rgba(15, 23, 42, 0.5)` (Modal backdrop)
+- `--band-edge`: `rgba(15, 23, 42, 0.15)` (Edge on Broselow colour-band swatches)
+- `--print-paper` / `--print-ink`: `#FFFFFF` / `#0F172A` (Print view colours)
 
 ### Dark Theme Palette (`data-theme="dark"`)
 
@@ -43,7 +71,10 @@
 - `--accent-hover`: `#7DD3FC` (Sky-300: Lightened sky blue for hover)
 - `--accent-soft`: `#0C2B47` (Dark sky container tint)
 - `--accent-subtle`: `#081E33` (Soft container dark tint)
-- `--dark-btn`: `#1E293B` (Tactile dark action button)
+- `--ink-secondary`: `#CBD5E1`
+- `--field-edge`: `#64748B` (3.73:1 on card)
+- `--accent-ink`: `#06121C` (Text on accent fill: 8.82:1; white on `#38BDF8` was 2.14:1)
+- `--focus-ring`: `#7DD3FC`
 - `--good`: `#4ADE80` (Safe green)
 - `--good-soft`: `#052E16` (Subtle dark green tint)
 - `--warning`: `#FBBF24` (Amber caution)
@@ -65,7 +96,9 @@
 - `--accent-soft`: `#2E2E2B` (Subtle grayscale container highlight tint)
 - `--accent-subtle`: `#262624` (Soft grayscale container background)
 - `--accent-text`: `#ECECE8` (High-contrast light mono text token, WCAG AAA > 13:1 on dark card surface)
-- **Active Controls & Combobox Highlight**: Employs **Tonal Inversion** (`#ECECE8` background with `#121210` dark graphite text and `#FFFFFF` 2px outline for active tabs, pills, and dropdown selections), guaranteeing > 14:1 contrast ratio without color dependencies (Key Decision #36).
+- `--field-edge`: `#7E7E78` (4.0:1 on card)
+- `--accent-ink`: `#121210` / `--focus-ring`: `#FFFFFF` / `--mono-invert-outline`: `#F4F4F2`
+- **Active Controls & Combobox Highlight**: Employs **Tonal Inversion** (`var(--accent)` background with `var(--accent-ink)` text and a 1.5px `var(--mono-invert-outline)` outline for active tabs and pressed toggles), guaranteeing > 14:1 contrast ratio without color dependencies (Key Decision #36).
 
 ### Night-Vision Red Theme Palette (`data-theme="red"`, v1.12.0)
 
@@ -81,7 +114,8 @@
 - `--accent-hover`: `#FF5252` (Lightened emergency red)
 - `--accent-soft`: `#380808` (Subtle dark red container highlight tint)
 - `--accent-subtle`: `#240505` (Soft crimson container background)
-- `--dark-btn`: `#2A0505` (Tactile dark crimson action button)
+- `--field-edge`: `#B03A3A` (3.32:1 on card)
+- `--accent-ink`: `#0A0000` (Text on accent fill: 5.56:1) / `--focus-ring`: `#FF6B6B`
 - `--good`: `#FF8585` (Safe readable red tint)
 - `--warning`: `#FFAA80` (Warm amber-red tint)
 - `--danger`: `#FF0000` (Critical emergency red)
@@ -97,12 +131,13 @@
 - `--r-lg`: `12px`
 - `--r-xl`: `16px`
 - `--r-full`: `9999px`
+- `--dur-micro`: `120ms` / `--dur-short`: `180ms` / `--ease-out`: `cubic-bezier(0.16, 1, 0.3, 1)` (state feedback only, nothing orchestrated)
+- Radius per nesting level: card `--r-lg` (12px), inner panel `--r-md` (8px), control `--r-sm` (6px)
 
 ### Typography
 
-- **Primary Body Font**: `'Sarabun'`, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif (Google Fonts Sarabun for optimal legibility and Thai language support).
-- **Display Sans Font**: `'Sarabun'`, system-ui, sans-serif (`--font-display`) — crisp, authoritative modern sans display on module titles (no serif distractions per taste-skill).
-- **Monospace / Tabular Nums**: `'JetBrains Mono'`, monospace (`--font-mono`) for digital readouts, active weight displays, dosages, and calculation matrices.
+- **Primary Font** (`--font-sans`): `'Sarabun', system-ui, -apple-system, 'Segoe UI', sans-serif`, self-hosted through `@fontsource/sarabun` and imported in `src/main.tsx`. One family carries Thai and Latin, so a sentence never mixes two faces. Plus Jakarta Sans and the Google Fonts links were removed in v2.4.5.
+- **Monospace / Tabular Nums** (`--font-mono`): `'JetBrains Mono', ui-monospace, monospace`, self-hosted through `@fontsource/jetbrains-mono` (latin 400/700/800), only for numbers and measurements (doses, volumes, weights, timers). Never on labels, buttons or band names.
 - **Mobile Non-Zoom Font Sizing**: All interactive form inputs set to `16px` on mobile viewports (< 768px) to prevent iOS Safari viewport auto-zooming.
 - **Weights**: Standardized steps 400 (regular), 500 (medium), 600 (semi-bold), 700 (bold), and 800 (bold tabular nums for hero metrics).
 
@@ -166,6 +201,15 @@
     - **Zero-Overflow Mobile Viewport Hardening**: Reduced lateral padding in `App.tsx` `<main>` to `px-2.5 sm:px-5 lg:px-8` and hardened 5-tab main segment with `max-[360px]:text-[11px] max-[360px]:px-0.5 whitespace-nowrap`, completely eliminating horizontal scrolling across 320px–1440px viewports (`scrollWidth <= clientWidth`).
     - **Evidence Modal & Mobile Height Overflow Safeguards**: Activated Evidence Registry modal button below `sm` (`flex` replacing `hidden sm:flex`) with icon-only rendering preserved below `xl`. Hardened mobile secondary biometrics trigger with `truncate min-w-0` on the height text span and `min-w-0` flex shrinking, preventing long fractional height values from causing horizontal scroll.
 
+32. **Hallmark UI/UX Audit Polish (v2.4.5)**:
+    - **Contrast & Focus**: Added `--field-edge`, `--accent-ink` and `--focus-ring` per theme; global instant 3px `:focus-visible` ring; capsule `:focus-within` ring; fixed 2.14:1 (Dark) and 1.18:1 (Mono) white-on-accent selected tabs.
+    - **Clinical Legibility**: Weight provenance label raised from 9.5 and 10px to 12px bold with a 4px warning edge for estimated weight; full Preparation line beside the formulary selector so concentration is never hidden by truncation; dose ranges share one unit; routine dose readouts moved from `--danger-text` to `--ink`; order button moved below the dose in Epinephrine cards.
+    - **Shared Components**: `.order-btn` / `.order-btn--warning` / `.status-chip` replace thirteen copied class strings; `ClinicalNote` renders the dataset warning emoji as a Lucide icon.
+    - **Shell**: `h1`, tablist/tabpanel semantics with roving focus, `Alt+1` to `Alt+5` and `Alt+P`, PALS quick-access button, theme persistence, tab in URL hash, `overflow-x: clip`, self-hosted Sarabun and JetBrains Mono.
+    - **Verification**: `pnpm test` 17/17, `pnpm run build` passes, Hallmark sloplint (app scope) from 17 FAIL / 7 REFLEX to 3 FAIL / 0 REFLEX; the 3 remaining are en dashes inside numeric ranges, held as clinical convention.
 
-
+33. **Gloved Touch Targets & Focus Cleanup (v2.4.6, design-taste-frontend re-audit)**:
+    - Re-audit with design-taste-frontend `consistency.mjs` (5 widths) and `perf.mjs`: cleared every app-relevant FAIL (tap-size, focus-ring, focus-visible, button-styles). Remaining FAILs (cta, text-only, section-tile, copy-headline) are marketing-page rules that do not apply to a bedside calculator.
+    - Phone controls raised to 44px, `yr` toggle 40px with 8px spacing, focus ring moved onto the stretched capsule input, every `focus:outline-none` removed, number spinners hidden.
+    - Production perf: 286 KiB transfer, LCP 68 ms (CPU-relative), layout shift 0.000; one 680 KiB JS chunk remains a WARN (dataset code-split is a follow-up).
 

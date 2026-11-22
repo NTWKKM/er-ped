@@ -79,7 +79,7 @@ function useModalTransition(isOpen: boolean, durationMs = MODAL_TRANSITION_MS) {
 }
 
 const BACKDROP_BASE_CLASS =
-  'fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 transition-opacity duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none';
+  'fixed inset-0 z-50 bg-[var(--scrim)] backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 transition-opacity duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none';
 
 const DIALOG_MOTION_BASE_CLASS =
   'transition-[opacity,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none will-change-[opacity,transform]';
@@ -207,7 +207,7 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
                   className={`min-h-[48px] p-2 rounded-lg border text-center cursor-pointer transition-transform ${
                     isAct
                       ? 'border-black ring-2 ring-[var(--accent)] font-extrabold'
-                      : 'border-black/15 opacity-90 hover:opacity-100'
+                      : 'border-[var(--band-edge)] opacity-90 hover:opacity-100'
                   }`}
                 >
                   <div className="text-xs font-extrabold truncate">{b.label.split('·')[0].trim()}</div>
@@ -219,12 +219,12 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
 
           {hasSelectedOrMatchedBand ? (
             <div
-              className="p-3.5 rounded-lg border border-black/15 flex flex-wrap items-center justify-between gap-2"
+              className="p-3.5 rounded-lg border border-[var(--band-edge)] flex flex-wrap items-center justify-between gap-2"
               style={{ backgroundColor: currentBand.bg, color: currentBand.fg }}
             >
               <div>
                 <div className="text-sm sm:text-base font-extrabold">
-                  Broselow Zone: {currentBand.label} — {currentBand.range}
+                  Broselow Zone: {currentBand.label} ({currentBand.range})
                 </div>
                 <div className="text-xs font-semibold">
                   {activeWeight != null && activeWeight > 0
@@ -322,8 +322,9 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
                     <strong>Airway Adjuncts (OPA / NPA / Suction)</strong>
                   </td>
                   <td className="font-mono-tabular">
-                    OPA: {suggestOPA(refW)} mm · NPA: {suggestNPA(refW)} Fr · Suction:{' '}
-                    {suggestSuction(refW)} Fr
+                    <span className="block">OPA: {suggestOPA(refW)} mm</span>
+                    <span className="block">NPA: {suggestNPA(refW)} Fr</span>
+                    <span className="block">Suction: {suggestSuction(refW)} Fr</span>
                   </td>
                 </tr>
                 <tr>
@@ -520,7 +521,7 @@ const OrderSheetAndPocketContent: React.FC<OrderSheetContentProps> = ({
               <button
                 type="button"
                 onClick={onCopyAll}
-                className="min-h-[32px] px-2.5 py-1 text-xs font-bold rounded-md bg-[var(--accent)] text-white flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+                className="min-h-[32px] px-2.5 py-1 text-xs font-bold rounded-md bg-[var(--accent)] text-[var(--accent-ink)] flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
               >
                 <Copy className="w-3.5 h-3.5" />
                 <span>Copy All</span>
@@ -616,7 +617,7 @@ const OrderSheetAndPocketContent: React.FC<OrderSheetContentProps> = ({
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-2.5 text-xs">
             <div className="clinical-panel-subtle p-2.5">
               <div className="text-[var(--muted)] font-semibold text-[11px]">Epi Arrest (1:10,000)</div>
-              <div className="font-mono-tabular font-extrabold text-sm text-[var(--danger-text)] mt-0.5">
+              <div className="font-mono-tabular font-extrabold text-sm text-[var(--ink)] mt-0.5">
                 {Math.min(1, 0.01 * w).toFixed(2)} mg ({(Math.min(1, 0.01 * w) / 0.1).toFixed(1)} mL IV)
               </div>
             </div>
@@ -634,7 +635,7 @@ const OrderSheetAndPocketContent: React.FC<OrderSheetContentProps> = ({
             </div>
             <div className="clinical-panel-subtle p-2.5">
               <div className="text-[var(--muted)] font-semibold text-[11px]">Anaphylaxis Epi IM</div>
-              <div className="font-mono-tabular font-extrabold text-sm text-[var(--danger-text)] mt-0.5">
+              <div className="font-mono-tabular font-extrabold text-sm text-[var(--ink)] mt-0.5">
                 {Math.min(w < 30 ? 0.3 : 0.5, 0.01 * w).toFixed(2)} mg IM
               </div>
             </div>

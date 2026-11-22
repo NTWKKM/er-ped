@@ -31,8 +31,31 @@ import {
   estimateWeightFromAge,
   estimateWeightFromLength,
 } from './utils/clinicalCalculations';
+import { HeartPulse } from 'lucide-react';
 
 type MainTab = 'dose' | 'fluids' | 'drip' | 'resus' | 'protocols';
+type Theme = 'light' | 'dark' | 'mono' | 'red';
+
+const MAIN_TABS: MainTab[] = ['dose', 'fluids', 'drip', 'resus', 'protocols'];
+const THEMES: Theme[] = ['light', 'dark', 'mono', 'red'];
+const THEME_STORAGE_KEY = 'er-ped:theme';
+
+/** The active tab lives in the URL hash so reload and back/forward keep the view. Patient data never does. */
+function readTabFromHash(): MainTab {
+  if (typeof window === 'undefined') return 'dose';
+  const hash = window.location.hash.replace('#', '') as MainTab;
+  return MAIN_TABS.includes(hash) ? hash : 'dose';
+}
+
+/** Theme is a per-device display preference; storage may be unavailable (private mode), so every access is guarded. */
+function readStoredTheme(): Theme {
+  try {
+    const stored = window.localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
+    return stored && THEMES.includes(stored) ? stored : 'light';
+  } catch {
+    return 'light';
+  }
+}
 
 const FOCUSABLE_SELECTOR =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -97,8 +120,10 @@ export default function App() {
     serumCr: '',
   });
 
-  const [mainTab, setMainTab] = useState<MainTab>('dose');
-  const [fluidsTopic, setFluidsTopic] = useState<'fluids' | 'drip' | 'transfusion'>('fluids');
+  const [mainTab, setMainTab] = useState<MainTab>(readTabFromHash);
+  const [fluidsTopic, setFluidsTopic] = useState<'fluids' | 'drip' | 'transfusion'>(() =>
+    readTabFromHash() === 'drip' ? 'drip' : 'fluids'
+  );
   const [fluidsInputs, setFluidsInputs] = useState<FluidsAndDripsInputs>(DEFAULT_FLUIDS_INPUTS);
   const [medSelectedKey, setMedSelectedKey] = useState<string>('paracetamol-syrup-120-mg-5-ml');
   const [medConcOverride, setMedConcOverride] = useState<string>('');
@@ -106,7 +131,7 @@ export default function App() {
   const [resusInputs, setResusInputs] = useState<EmergencyResusInputs>(DEFAULT_RESUS_INPUTS);
   const [protocolTopic, setProtocolTopic] = useState<ProtocolTopic>('asthma');
   const [protocolsInputs, setProtocolsInputs] = useState<ProtocolsInputs>(DEFAULT_PROTOCOLS_INPUTS);
-  const [theme, setTheme] = useState<'light' | 'dark' | 'mono' | 'red'>('light');
+  const [theme, setTheme] = useState<Theme>(readStoredTheme);
 
   const [broselowOpen, setBroselowOpen] = useState<boolean>(false);
   const [broselowPreviewColor, setBroselowPreviewColor] = useState<string | null>(null);
@@ -241,7 +266,43 @@ export default function App() {
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      // storage unavailable: theme still applies for this session
+    }
   }, [theme]);
+
+  // First sync normalises the initial hash in place; later user selections add a history entry.
+  // A Back/Forward traversal sets mainTab from the hash, so the hash already matches and nothing is pushed.
+  const hashSyncedRef = useRef(false);
+  useEffect(() => {
+    const next = `#${mainTab}`;
+    if (window.location.hash !== next) {
+      if (hashSyncedRef.current) {
+        window.history.pushState(null, '', next);
+      } else {
+        window.history.replaceState(null, '', next);
+      }
+    }
+    hashSyncedRef.current = true;
+  }, [mainTab]);
+
+  useEffect(() => {
+    const onHistoryNav = () => {
+      const tab = readTabFromHash();
+      setMainTab(tab);
+      // Same mapping as selectMainTab; Transfusion stays under Fluids
+      if (tab === 'drip') setFluidsTopic('drip');
+      if (tab === 'fluids') setFluidsTopic((t) => (t === 'drip' ? 'fluids' : t));
+    };
+    window.addEventListener('hashchange', onHistoryNav);
+    window.addEventListener('popstate', onHistoryNav);
+    return () => {
+      window.removeEventListener('hashchange', onHistoryNav);
+      window.removeEventListener('popstate', onHistoryNav);
+    };
+  }, []);
 
   useEffect(() => {
     if (!seizureRunning) return;
@@ -408,6 +469,56 @@ export default function App() {
     });
   };
 
+  const selectMainTab = (id: MainTab, focusTab = false) => {
+    setMainTab(id);
+    if (id === 'fluids') setFluidsTopic('fluids');
+    if (id === 'drip') setFluidsTopic('drip');
+    if (focusTab) {
+      requestAnimationFrame(() => document.getElementById(`tab-${id}`)?.focus());
+    }
+  };
+
+  const openPals = () => {
+    setResusTopic('pals');
+    setMainTab('resus');
+    requestAnimationFrame(() => {
+      const panel = document.getElementById('panel-main');
+      panel?.focus({ preventScroll: true });
+      panel?.scrollIntoView({ block: 'start' });
+    });
+  };
+
+  // Alt+P opens PALS; Alt+1..5 jump to the five main tabs. Ignored while a dialog is open.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!e.altKey || e.ctrlKey || e.metaKey) return;
+      if (broselowOpen || evidenceOpen || orderSheetOpen) return;
+      if (e.code === 'KeyP') {
+        e.preventDefault();
+        openPals();
+        return;
+      }
+      const idx = ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5'].indexOf(e.code);
+      if (idx !== -1) {
+        e.preventDefault();
+        selectMainTab(MAIN_TABS[idx], true);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  });
+
+  const handleTabKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>, idx: number) => {
+    let nextIdx: number | null = null;
+    if (e.key === 'ArrowRight') nextIdx = (idx + 1) % MAIN_TABS.length;
+    if (e.key === 'ArrowLeft') nextIdx = (idx - 1 + MAIN_TABS.length) % MAIN_TABS.length;
+    if (e.key === 'Home') nextIdx = 0;
+    if (e.key === 'End') nextIdx = MAIN_TABS.length - 1;
+    if (nextIdx === null) return;
+    e.preventDefault();
+    selectMainTab(MAIN_TABS[nextIdx], true);
+  };
+
   const activeOrderCount = useMemo(
     () => orders.filter((o) => !o.invalidated).length,
     [orders]
@@ -444,32 +555,34 @@ export default function App() {
 
       {/* Responsive Clinical Workspace */}
       <main
-        className={`flex-1 max-w-7xl w-full mx-auto px-2.5 sm:px-5 lg:px-8 py-4 sm:py-5 space-y-4 ${
+        className={`flex-1 max-w-7xl w-full mx-auto px-2.5 sm:px-5 lg:px-8 pt-4 sm:pt-5 pb-24 space-y-4 ${
           orderSheetOpen ? 'no-print' : ''
         }`}
       >
+        <h1 className="sr-only-heading">ER-PED pediatric emergency calculator</h1>
         {/* Simple 5-Tab Segmented Bar */}
         <nav
           role="tablist"
           aria-label="Main calculator tabs"
           className="grid grid-cols-5 gap-1 p-1 rounded-xl bg-[var(--panel)] border border-[var(--border)]"
         >
-          {TABS.map((t) => {
+          {TABS.map((t, idx) => {
             const isAct = mainTab === t.id;
             return (
               <button
                 key={t.id}
+                id={`tab-${t.id}`}
                 type="button"
                 role="tab"
                 aria-selected={isAct}
-                onClick={() => {
-                  setMainTab(t.id);
-                  if (t.id === 'fluids') setFluidsTopic('fluids');
-                  if (t.id === 'drip') setFluidsTopic('drip');
-                }}
-                className={`min-h-[38px] sm:min-h-[40px] py-1.5 sm:py-2 px-1 sm:px-2 max-[360px]:px-0.5 text-xs max-[360px]:text-[11px] sm:text-sm font-bold rounded-lg transition-colors text-center cursor-pointer whitespace-nowrap ${
+                aria-controls="panel-main"
+                aria-keyshortcuts={`Alt+${idx + 1}`}
+                tabIndex={isAct ? 0 : -1}
+                onKeyDown={(e) => handleTabKeyDown(e, idx)}
+                onClick={() => selectMainTab(t.id)}
+                className={`min-h-[44px] sm:min-h-[40px] py-1.5 sm:py-2 px-1 sm:px-2 max-[360px]:px-0.5 text-xs max-[360px]:text-[11px] sm:text-sm font-bold rounded-lg transition-colors text-center cursor-pointer whitespace-nowrap ${
                   isAct
-                    ? 'bg-[var(--accent)] text-white shadow-xs'
+                    ? 'bg-[var(--accent)] text-[var(--accent-ink)] shadow-xs'
                     : 'text-[var(--muted)] hover:text-[var(--ink)]'
                 }`}
               >
@@ -480,6 +593,13 @@ export default function App() {
         </nav>
 
         {/* Active View */}
+        <div
+          id="panel-main"
+          role="tabpanel"
+          aria-labelledby={`tab-${mainTab}`}
+          tabIndex={-1}
+          className="space-y-4"
+        >
         {mainTab === 'dose' && (
           <MedicationsView
             activeWeight={activeWeight}
@@ -544,7 +664,21 @@ export default function App() {
             onChangeInputs={setProtocolsInputs}
           />
         )}
+        </div>
       </main>
+
+      {/* PALS quick access: always one tap (or Alt+P) from any module */}
+      <button
+        type="button"
+        onClick={openPals}
+        className="pals-fab no-print"
+        aria-label="Open PALS cardiac arrest dosing"
+        aria-keyshortcuts="Alt+P"
+        title="PALS (Alt+P)"
+      >
+        <HeartPulse className="w-5 h-5" aria-hidden="true" />
+        <span>PALS</span>
+      </button>
 
       {/* Broselow 9-Color Spectrum Equipment & Drug Modal */}
       <BroselowModal

@@ -1,18 +1,31 @@
+/* Hallmark · checked: 2026-11-22 · genre: modern-minimal (inferred) · shape: app screen
+ * floor: fixed 26a, 15, 34, 40, 41, 48, 7a, 30a, 63, 19 · reflex: fixed 24b, 26b, 64, 75 · structural: desktop 2-column formulary, PALS shortcut
+ * built: the project · redesign: polish · design.md: locked (DESIGN.md) · v2.0.0 */
+/* Hallmark · held 19 · en dash kept only inside numeric dose ranges (250–500 mL), the clinical convention for ranges; prose dashes removed */
+/* Hallmark · dismissed 74 · slate neutrals are the locked palette named in DESIGN.md, not a framework default */
+/* Hallmark · dismissed 49 · subtab and renal-review labels already carry whitespace-nowrap (order-btn class); the linter reads the joined responsive spans */
+/* Hallmark · dropped onClick={() => { setMainTab(t.id); if (t.id === 'fluids') setFluidsTopic('fluids'); if (t.id === 'drip') setFluidsTopic('drip'); }} · moved into selectMainTab() with the same tab and subtopic effect plus roving keyboard focus */
 @import "tailwindcss";
 
 :root {
+  color-scheme: light;
   --bg: #F1F4F8;
   --card: #FFFFFF;
   --panel: #E5EAF0;
   --panel-subtle: #EDF2F7;
   --ink: #0F172A;
+  --ink-secondary: #334155;
   --muted: #475569;
   --border: #D8E0EA;
   --border-strong: #CBD5E1;
+  --field-edge: #718198;
   --accent: #0277B6;
+  --accent-hover: #026597;
+  --accent-ink: #FFFFFF;
   --accent-soft: #E0F2FE;
   --accent-subtle: #F0F7FF;
   --accent-text: #026AA2;
+  --focus-ring: #0277B6;
   --good: #16A34A;
   --good-soft: #ECFDF5;
   --good-text: #166534;
@@ -22,23 +35,49 @@
   --danger: #DC2626;
   --danger-soft: #FEF2F2;
   --danger-text: #991B1B;
-  --font-sans: 'Plus Jakarta Sans', 'Sarabun', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Sarabun', ui-monospace, SFMono-Regular, monospace;
+  --scrim: rgba(15, 23, 42, 0.5);
+  --band-edge: rgba(15, 23, 42, 0.15);
+  --print-paper: #FFFFFF;
+  --print-ink: #0F172A;
+
+  --font-sans: 'Sarabun', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+  --r-full: 9999px;
+
+  --shadow-1: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+  --shadow-2: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-3: 0 16px 24px -4px rgba(15, 23, 42, 0.10), 0 6px 10px -4px rgba(15, 23, 42, 0.05);
+
+  --dur-micro: 120ms;
+  --dur-short: 180ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 :root[data-theme="dark"] {
+  color-scheme: dark;
   --bg: #0B0F17;
   --card: #111827;
   --panel: #1E293B;
   --panel-subtle: #0F172A;
   --ink: #F8FAFC;
+  --ink-secondary: #CBD5E1;
   --muted: #94A3B8;
   --border: #1E293B;
   --border-strong: #334155;
+  --field-edge: #64748B;
   --accent: #38BDF8;
+  --accent-hover: #7DD3FC;
+  --accent-ink: #06121C;
   --accent-soft: #0C2B47;
   --accent-subtle: #081E33;
   --accent-text: #38BDF8;
+  --focus-ring: #7DD3FC;
   --good: #4ADE80;
   --good-soft: #052E16;
   --good-text: #4ADE80;
@@ -48,21 +87,29 @@
   --danger: #F87171;
   --danger-soft: #450A0A;
   --danger-text: #F87171;
+  --scrim: rgba(2, 6, 12, 0.7);
+  --band-edge: rgba(248, 250, 252, 0.18);
 }
 
 :root[data-theme="mono"] {
+  color-scheme: dark;
   --bg: #181816;
   --card: #20201E;
   --panel: #141412;
   --panel-subtle: #1C1C1A;
   --ink: #F4F4F2;
+  --ink-secondary: #D6D6D2;
   --muted: #A6A6A0;
   --border: #42423E;
   --border-strong: #74746E;
+  --field-edge: #7E7E78;
   --accent: #ECECE8;
+  --accent-hover: #FFFFFF;
+  --accent-ink: #121210;
   --accent-soft: #2E2E2B;
   --accent-subtle: #262624;
   --accent-text: #ECECE8;
+  --focus-ring: #FFFFFF;
   --good: #BDBDB8;
   --good-soft: #20201E;
   --good-text: #FFFFFF;
@@ -72,21 +119,30 @@
   --danger: #FFFFFF;
   --danger-soft: #20201E;
   --danger-text: #FFFFFF;
+  --scrim: rgba(8, 8, 7, 0.75);
+  --band-edge: rgba(244, 244, 242, 0.2);
+  --mono-invert-outline: #F4F4F2;
 }
 
 :root[data-theme="red"] {
+  color-scheme: dark;
   --bg: #0A0000;
   --card: #180404;
   --panel: #220808;
   --panel-subtle: #140303;
   --ink: #FF6B6B;
+  --ink-secondary: #E05A5A;
   --muted: #B84A4A;
   --border: #401010;
   --border-strong: #601818;
+  --field-edge: #B03A3A;
   --accent: #FF2B2B;
+  --accent-hover: #FF5252;
+  --accent-ink: #0A0000;
   --accent-soft: #380808;
   --accent-subtle: #240505;
   --accent-text: #FF6B6B;
+  --focus-ring: #FF6B6B;
   --good: #FF8585;
   --good-soft: #280808;
   --good-text: #FF8585;
@@ -96,19 +152,34 @@
   --danger: #FF0000;
   --danger-soft: #380000;
   --danger-text: #FF0000;
+  --scrim: rgba(10, 0, 0, 0.75);
+  --band-edge: rgba(255, 107, 107, 0.25);
 }
 
 * {
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
+  overflow-x: clip;
   font-family: var(--font-sans);
   background-color: var(--bg);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
+  scrollbar-color: var(--border-strong) var(--bg);
+}
+
+::selection {
+  background-color: var(--accent-soft);
+  color: var(--ink);
+}
+
+input,
+textarea {
+  caret-color: var(--accent);
 }
 
 .font-mono-tabular {
@@ -116,46 +187,201 @@ html, body {
   font-variant-numeric: tabular-nums;
 }
 
-/* Custom utility classes mapped to CSS variables */
+.sr-only-heading {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Surfaces: one radius per nesting level (card 12, panel 8, control 6) */
 .clinical-card {
   background-color: var(--card);
+  color: var(--ink);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--r-lg);
 }
 
 .clinical-panel-subtle {
   background-color: var(--panel-subtle);
+  color: var(--ink);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--r-md);
+}
+
+/* Biometric capsule: the field edge must read at 3:1 under bright ED lighting */
+.bio-field {
+  border: 1px solid var(--field-edge);
+  background-color: var(--card);
 }
 
 @layer components {
   .clinical-input {
     background-color: var(--card);
     color: var(--ink);
-    border: 1px solid var(--border-strong);
-    border-radius: 8px;
-    padding: 7px 11px;
+    border: 1px solid var(--field-edge);
+    border-radius: var(--r-md);
+    padding: 8px 12px;
     font-size: 14px;
     line-height: 1.35;
     min-height: 38px;
-    transition: border-color 140ms cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow 140ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color var(--dur-micro) var(--ease-out);
   }
 
   .clinical-input:focus {
-    outline: none;
     border-color: var(--accent);
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
+  }
+
+  /* Shared "+ Order Sheet" action: 36px visual, 44px hit target via ::after */
+  .order-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    min-height: 36px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--accent);
+    color: var(--accent-text);
+    background-color: var(--accent-soft);
+    cursor: pointer;
+    transition: background-color var(--dur-micro) var(--ease-out), transform var(--dur-micro) var(--ease-out);
+  }
+
+  .order-btn::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+  }
+
+  .order-btn:hover {
+    background-color: color-mix(in srgb, var(--accent) 16%, var(--accent-soft));
+  }
+
+  .order-btn--warning {
+    border-color: var(--warning);
+    color: var(--warning-text);
+    background-color: var(--warning-soft);
+  }
+
+  .order-btn--warning:hover {
+    background-color: color-mix(in srgb, var(--warning) 16%, var(--warning-soft));
+  }
+
+  /* Non-interactive status chip (never styled like a button) */
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    min-height: 32px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    border-radius: var(--r-sm);
+    border: 1px dashed var(--warning);
+    color: var(--warning-text);
+    background-color: var(--warning-soft);
   }
 }
 
-/* Monochrome theme active tab tonal inversion for >14:1 contrast */
+/* Selected tab / pressed toggle: accent fill carries its paired ink in every theme */
+[role="tab"][aria-selected="true"],
+button[aria-pressed="true"].is-accent-fill {
+  color: var(--accent-ink);
+}
+
 :root[data-theme="mono"] [role="tab"][aria-selected="true"],
 :root[data-theme="mono"] button[aria-pressed="true"] {
-  background-color: #ECECE8 !important;
-  color: #121210 !important;
-  outline: 1.5px solid #FFFFFF;
+  background-color: var(--accent) !important;
+  color: var(--accent-ink) !important;
+  outline: 1.5px solid var(--mono-invert-outline);
+}
+
+/* Focus: instant, 3px, drawn with outline so it never shifts layout */
+:where(a, button, input, select, textarea, summary, [role="option"], [role="tab"], [tabindex]):focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.clinical-input:focus-visible {
+  outline-offset: 1px;
+}
+
+/* Capsule inputs fill the capsule height, so the ring sits on the focused field itself */
+.bio-field input:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 0;
+  border-radius: var(--r-xs);
+}
+
+/* Number fields: no native spinners (they crowd 40-60px dose fields and invite accidental 0.1 steps) */
+input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Pressed and disabled states */
+button:not(:disabled):active,
+[role="option"]:active {
+  transform: scale(0.97);
+}
+
+button,
+[role="option"] {
+  transition-property: color, background-color, border-color, opacity, transform;
+  transition-duration: var(--dur-micro);
+  transition-timing-function: var(--ease-out);
+}
+
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* PALS quick-access button (bottom-right, Alt+P) */
+.pals-fab {
+  position: fixed;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 45;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 8px 16px;
+  border-radius: var(--r-full);
+  border: 1px solid var(--danger);
+  background-color: var(--danger);
+  color: var(--accent-ink);
+  font-size: 14px;
+  font-weight: 800;
+  box-shadow: var(--shadow-3);
+  cursor: pointer;
+}
+
+.pals-fab:hover {
+  background-color: color-mix(in srgb, var(--danger) 88%, var(--ink));
 }
 
 /* iOS Safari auto-zoom prevention: inputs must be >= 16px on mobile viewports */
@@ -178,13 +404,18 @@ html, body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+
+  button:not(:disabled):active,
+  [role="option"]:active {
+    transform: none;
+  }
 }
 
 .clinical-table-container {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--r-md);
   background-color: var(--card);
 }
 
@@ -199,14 +430,14 @@ html, body {
   background-color: var(--panel);
   color: var(--ink);
   font-weight: 700;
-  padding: 9px 12px;
+  padding: 8px 12px;
   border-bottom: 1px solid var(--border-strong);
-  font-size: 11.5px;
+  font-size: 12px;
   white-space: nowrap;
 }
 
 .clinical-table td {
-  padding: 9px 12px;
+  padding: 8px 12px;
   border-bottom: 1px solid var(--border);
   color: var(--ink);
   vertical-align: top;
@@ -227,8 +458,8 @@ html, body {
 @media (max-width: 639px) {
   .clinical-table th,
   .clinical-table td {
-    padding: 8px 10px;
-    font-size: 12.5px;
+    padding: 8px 8px;
+    font-size: 12px;
   }
 }
 
@@ -237,11 +468,11 @@ html, body {
     display: none !important;
   }
   body {
-    background: #FFFFFF !important;
-    color: #000000 !important;
+    background: var(--print-paper) !important;
+    color: var(--print-ink) !important;
   }
   .clinical-card {
-    border: 1px solid #000 !important;
+    border: 1px solid var(--print-ink) !important;
     box-shadow: none !important;
   }
 
@@ -287,4 +518,3 @@ html, body {
     page-break-inside: avoid !important;
   }
 }
-
