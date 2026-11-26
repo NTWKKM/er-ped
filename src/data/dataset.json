@@ -12241,7 +12241,7 @@
       "sysBpNormal": "70–90 mmHg",
       "diaBpNormal": "45–65 mmHg",
       "sysBpMin": 70,
-      "hypotensionSysBp": "< 70 mmHg",
+      "hypotensionSysBp": "< 60 mmHg (term neonate < 28 days); < 70 mmHg (1–12 months)",
       "spo2Normal": "95–100%"
     },
     {

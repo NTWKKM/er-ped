@@ -266,7 +266,14 @@ export const ElectrolytesProtocol: React.FC<ElectrolytesProtocolProps> = ({
             <span className="font-mono-tabular font-bold">{((fwd * 1000) / 48).toFixed(1)} mL/hr</span> on top of maintenance).
           </div>
         )}
-        <Checklist items={[ep.hypernatremia.duration, ep.hypernatremia.correctionCap, ep.hypernatremia.note]} />
+        {/* Severe cases get no routine 48-h duration; monitoring and ceiling guidance stay. */}
+        <Checklist
+          items={
+            isSevereHyperNa
+              ? [ep.hypernatremia.correctionCap, ep.hypernatremia.note]
+              : [ep.hypernatremia.duration, ep.hypernatremia.correctionCap, ep.hypernatremia.note]
+          }
+        />
       </ProtocolSection>
 
       <ProtocolSection step={4} title="Hypokalemia">
@@ -278,10 +285,11 @@ export const ElectrolytesProtocol: React.FC<ElectrolytesProtocolProps> = ({
                 KCl {ivK.doseMeq} mEq ({ivK.kcl2MeqPerMl} mL of 2 mEq/mL)
               </div>
               <div className="text-xs text-[var(--ink-secondary)] mt-0.5">
-                Peripheral: in ≥ {ivK.minVolPeripheralMl} mL NSS over 2 h ({ivK.peripheralRateMlPerHr} mL/hr)
+                Peripheral: add to NSS to a final volume of {ivK.minVolPeripheralMl} mL (KCl included), run over 2 h at{' '}
+                {ivK.peripheralRateMlPerHr} mL/hr
               </div>
               <div className="text-xs text-[var(--ink-secondary)]">
-                Central: in ≥ {ivK.minVolCentralMl} mL over 1 h ({ivK.centralRateMlPerHr} mL/hr)
+                Central: final volume {ivK.minVolCentralMl} mL (KCl included), run over 1 h at {ivK.centralRateMlPerHr} mL/hr
               </div>
             </div>
             <div className="bg-[var(--card)] border border-[var(--border)] rounded-[var(--r-md)] p-3">
