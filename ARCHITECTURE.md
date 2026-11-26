@@ -290,6 +290,7 @@ flowchart TD
     - **Fonts**: `@fontsource/sarabun` and `@fontsource/jetbrains-mono` imported in `src/main.tsx`; Google Fonts links removed from `index.html`.
     - **App shell** (`App.tsx`): `selectMainTab()` / `openPals()`, URL-hash tab state, guarded `localStorage` theme, WAI-ARIA tablist + single `#panel-main` tabpanel, global Alt+1..5 / Alt+P listener (inert while a dialog is open), PALS quick-access button.
     - **MedicationsView**: two-column `lg` grid, always-visible Preparation line, single reference-regimen panel, `ClinicalNote` icon renderer, unit-collapsed dose ranges (`150–225 mg`), which also flows into the order text.
+    - **Marketed strength selector (v2.5.1)**: `resolveDrugStrength(drug)` returns `options` (label as sold + mg/mL) from curated `PediatricDrug.formulations`, else from `parseStrength(preparation)`; MedicationsView renders them as a native radio `fieldset` ("Strength in hand"; picking a radio clears the custom field, typing keeps it) above the custom-concentration field, and the order text carries `[label = N mg/mL]` whenever the concentration matches a listed strength, single or multiple. Curated for 22 entries (e.g. Amoxicillin and Cefaclor dry syrup 125/250 mg/5 mL, Amox/Clav 228/457/ES, Cephalexin, Clarithromycin, Metoclopramide inj/syrup, Dexamethasone 4/5 mg/mL).
     - **Verification**: `pnpm test` 17/17 pass; `pnpm run lint` and `pnpm run build` pass.
 
 71. **Guideline-Level Protocol Pathways (v2.5.0 - November 2026)**:

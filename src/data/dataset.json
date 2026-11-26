@@ -304,6 +304,16 @@
       "drug": "Amikacin",
       "name": "Amikacin IV",
       "preparation": "Vials 100 mg / 2 mL ; 500 mg / 2 mL",
+      "formulations": [
+        {
+          "label": "Inj 100 mg/2 mL",
+          "mgPerMl": 50
+        },
+        {
+          "label": "Inj 500 mg/2 mL",
+          "mgPerMl": 250
+        }
+      ],
       "note": "15–20 mg/kg/day IV OD (once daily extended interval) infused over 30–60 min ⚠️ Max 1500 mg/day ; Monitor serum peak & trough. CrCl adjustment required.",
       "unit": "mg/kg",
       "unitType": "perDay",
@@ -491,6 +501,20 @@
       "drug": "Amoxicillin/Clavulanate",
       "name": "Amox/Clav PO/IV",
       "preparation": "Syr 228 (200/28) mg/5 mL ; 457 (400/57) mg/5 mL ; ES 642.9 (600/42.9) mg/5 mL ; Tab 625 (500/125), 1000 (875/125) ; SR (1000/62.5) ; IV 1.2 g (1000/200)",
+      "formulations": [
+        {
+          "label": "Syr 228 mg/5 mL (Amox 200 mg/5 mL)",
+          "mgPerMl": 40
+        },
+        {
+          "label": "Syr 457 mg/5 mL (Amox 400 mg/5 mL)",
+          "mgPerMl": 80
+        },
+        {
+          "label": "ES 642.9 mg/5 mL (Amox 600 mg/5 mL)",
+          "mgPerMl": 120
+        }
+      ],
       "note": "30–90 mg/kg/day of Amoxicillin q8–12h ⚠️ Max 4 g/day of Amox) ** For antistaph need ratio 1:7",
       "unit": "mg/kg",
       "unitType": "perDay",
@@ -514,6 +538,16 @@
       "drug": "Amoxicillin",
       "name": "Amoxicillin PO",
       "preparation": "Syr 125/250 mg per 5 mL ; Cap 250/500 mg",
+      "formulations": [
+        {
+          "label": "Dry syrup 125 mg/5 mL",
+          "mgPerMl": 25
+        },
+        {
+          "label": "Dry syrup 250 mg/5 mL",
+          "mgPerMl": 50
+        }
+      ],
       "note": "40–90 mg/kg/day q8–12h ; GAS pharyngitis 50 mg/kg/day tid ×10d ⚠️ Max 4 g/day ; IE prophylaxis 50 mg/kg 30–60 min pre-procedure",
       "unit": "mg/kg",
       "unitType": "perDay",
@@ -1225,6 +1259,12 @@
       "drug": "Caffeine Citrate",
       "name": "Caffeine Citrate IV/PO (Peyona 20 mg/mL = 10 mg/mL caffeine base)",
       "preparation": "20 mg / mL caffeine citrate (equiv. 10 mg/mL caffeine base)",
+      "formulations": [
+        {
+          "label": "Caffeine citrate 20 mg/mL",
+          "mgPerMl": 20
+        }
+      ],
       "note": "Apnea of Prematurity (Dosed as Caffeine Citrate): Loading: 20 mg/kg IV (over 30 min) or PO × 1 dose; Maintenance (start 24h after load): 5–10 mg/kg IV/PO OD (q24h). Hold if HR >180 bpm.",
       "unit": "mg/kg",
       "unitType": "perDose",
@@ -1409,6 +1449,16 @@
       "drug": "Carbocysteine",
       "name": "Carbocysteine syrup (250 mg / 5 mL)",
       "preparation": "250 mg / 5 mL ; Flemex kids = 100 mg/5 mL",
+      "formulations": [
+        {
+          "label": "Syrup 250 mg/5 mL",
+          "mgPerMl": 50
+        },
+        {
+          "label": "Kids syrup 100 mg/5 mL",
+          "mgPerMl": 20
+        }
+      ],
       "note": "<5 yr: 125 mg tid ; 5–12 yr: 250 mg tid ; >12 yr: 500 mg tid ; 10 kg ≈ 1/2 tsp tid pc",
       "unit": "mg",
       "unitType": "perDose",
@@ -1481,6 +1531,16 @@
       "drug": "Cefaclor",
       "name": "Cefaclor",
       "preparation": "Syr 125/250 mg per 5 mL ; Tab 375 mg",
+      "formulations": [
+        {
+          "label": "Dry syrup 125 mg/5 mL",
+          "mgPerMl": 25
+        },
+        {
+          "label": "Dry syrup 250 mg/5 mL",
+          "mgPerMl": 50
+        }
+      ],
       "note": "20–40 mg/kg/day q8–12h ⚠️ Max 1 g/day",
       "unit": "mg/kg",
       "unitType": "perDay",
@@ -1915,7 +1975,17 @@
       "key": "cephalexin-po",
       "drug": "Cephalexin",
       "name": "Cephalexin",
-      "preparation": "Syr 125 mg/5 mL; Caps 250/500 mg",
+      "preparation": "Syr 125/250 mg per 5 mL; Caps 250/500 mg",
+      "formulations": [
+        {
+          "label": "Dry syrup 125 mg/5 mL",
+          "mgPerMl": 25
+        },
+        {
+          "label": "Dry syrup 250 mg/5 mL",
+          "mgPerMl": 50
+        }
+      ],
       "note": "25–100 mg/kg/day q6–8h (mild/mod) ; 75–100 mg/kg/day q6–8h (severe) ⚠️ Max 4 g/day",
       "unit": "mg/kg",
       "unitType": "perDay",
@@ -2167,7 +2237,17 @@
       "key": "clarithromycin-po",
       "drug": "Clarithromycin",
       "name": "Clarithromycin",
-      "preparation": "Syr 125 mg/5 mL ; Tab 250/500 mg",
+      "preparation": "Syr 125/250 mg per 5 mL ; Tab 250/500 mg",
+      "formulations": [
+        {
+          "label": "Syr 125 mg/5 mL",
+          "mgPerMl": 25
+        },
+        {
+          "label": "Syr 250 mg/5 mL",
+          "mgPerMl": 50
+        }
+      ],
       "note": "15 mg/kg/day q12h ⚠️ Max 1 g/day",
       "unit": "mg/kg",
       "unitType": "perDay",
@@ -2330,6 +2410,12 @@
       "drug": "Co-trimoxazole (TMP/SMX)",
       "name": "Co-trimoxazole (TMP/SMX)",
       "preparation": "Syr 40/200 per 5 mL ; Tab 80/400",
+      "formulations": [
+        {
+          "label": "Syr 40/200 mg/5 mL (TMP 8 mg/mL)",
+          "mgPerMl": 8
+        }
+      ],
       "note": "8–12 mg/kg/day of TMP q12h ⚠️ Max 160 mg TMP/day",
       "unit": "mg/kg",
       "unitType": "perDay",
@@ -2704,7 +2790,17 @@
       "key": "dexamethasone-iv-4-5mg-vial",
       "drug": "Dexamethasone",
       "name": "Dexamethasone IV/IM",
-      "preparation": "4–5 mg/vial",
+      "preparation": "4 mg/mL or 5 mg/mL vial",
+      "formulations": [
+        {
+          "label": "Inj 4 mg/mL",
+          "mgPerMl": 4
+        },
+        {
+          "label": "Inj 5 mg/mL",
+          "mgPerMl": 5
+        }
+      ],
       "note": "Croup: 0.15–0.6 mg/kg IM single dose ; Airway edema: 0.5–2 mg/kg/day IV q6h ⚠️ Max 8–10 mg/dose – check indication-specific dosing",
       "unit": "mg/kg",
       "unitType": "perDose",
@@ -3143,6 +3239,16 @@
       "drug": "Epinephrine (Adrenaline) IV/IM",
       "name": "Epinephrine IV/IO (1:10,000) & IM (1:1,000)",
       "preparation": "1 mg / mL (1:1,000); diluted 0.1 mg / mL (1:10,000)",
+      "formulations": [
+        {
+          "label": "1:1,000 (1 mg/mL)",
+          "mgPerMl": 1
+        },
+        {
+          "label": "1:10,000 (0.1 mg/mL)",
+          "mgPerMl": 0.1
+        }
+      ],
       "note": "Cardiac Arrest / Symptomatic Bradycardia (IV/IO 1:10,000 = 0.1 mg/mL): 0.01 mg/kg (0.1 mL/kg) q3–5 min (max 1 mg = 10 mL). Anaphylaxis (IM 1:1,000 = 1 mg/mL in anterolateral thigh): 0.01 mg/kg (0.01 mL/kg) q5–15 min (max 0.3 mg prepubertal; 0.5 mg adolescent).",
       "unit": "mg/kg",
       "unitType": "perDose",
@@ -3527,6 +3633,16 @@
       "drug": "Fluconazole",
       "name": "Fluconazole IV/PO (2 mg/mL IV / 50 mg/5 mL PO)",
       "preparation": "IV 200 mg / 100 mL (2 mg/mL) ; Oral susp 50 mg / 5 mL ; Tab 50, 200 mg",
+      "formulations": [
+        {
+          "label": "IV 200 mg/100 mL",
+          "mgPerMl": 2
+        },
+        {
+          "label": "Oral susp 50 mg/5 mL",
+          "mgPerMl": 10
+        }
+      ],
       "note": "Mucosal candidiasis: 3–6 mg/kg/day q24h. Systemic / Invasive candidiasis: 6–12 mg/kg/day q24h (max 600 mg/day). Oral absorption > 90%. Reduce dose by 50% if CrCl < 50 mL/min.",
       "unit": "mg/kg",
       "unitType": "perDay",
@@ -3940,6 +4056,16 @@
       "drug": "Gentamicin",
       "name": "Gentamicin IV",
       "preparation": "Vials 20 mg / 2 mL ; 80 mg / 2 mL (40 mg/mL)",
+      "formulations": [
+        {
+          "label": "Inj 20 mg/2 mL",
+          "mgPerMl": 10
+        },
+        {
+          "label": "Inj 80 mg/2 mL",
+          "mgPerMl": 40
+        }
+      ],
       "note": "5–7.5 mg/kg/day IV OD (extended interval once daily) or 2–2.5 mg/kg q8h ⚠️ Max 300 mg/day ; Therapeutic drug monitoring required. Adjust for renal impairment.",
       "unit": "mg/kg",
       "unitType": "perDay",
@@ -4626,6 +4752,16 @@
       "drug": "Iron supplement",
       "name": "Iron supplement",
       "preparation": "Drops 15 mg/0.6 mL; Syrup 10 mg/mL; Tabs ~60 mg elemental/tab",
+      "formulations": [
+        {
+          "label": "Drops 15 mg/0.6 mL",
+          "mgPerMl": 25
+        },
+        {
+          "label": "Syrup 10 mg/mL",
+          "mgPerMl": 10
+        }
+      ],
       "note": "Treatment 4–6 mg/kg/day then 2–3 mg/kg/day maintenance ; various salts (fumarate, gluconate, sulfate)",
       "unit": "mg/kg",
       "unitType": "perDay",
@@ -5065,6 +5201,16 @@
       "drug": "Levofloxacin",
       "name": "Levofloxacin PO/IV (Tab 500 mg / IV 500 mg)",
       "preparation": "IV 500 mg / 100 mL ; Tab 500 mg ; Oral solution 25 mg / mL",
+      "formulations": [
+        {
+          "label": "IV 500 mg/100 mL",
+          "mgPerMl": 5
+        },
+        {
+          "label": "Oral soln 25 mg/mL",
+          "mgPerMl": 25
+        }
+      ],
       "note": "6 months to 5 years: 8–10 mg/kg/dose PO/IV q12h (max 250 mg/dose). >= 5 years: 10 mg/kg PO/IV once daily (max 500 mg/day). Reserved for multi-drug resistant infections, complicated pneumonia, or severe typhoid fever.",
       "unit": "mg/kg",
       "unitType": "perDose",
@@ -5119,6 +5265,16 @@
       "drug": "Lidocaine (Lignocaine)",
       "name": "Lidocaine 1% (10 mg/mL) & 2% (20 mg/mL) IV / Local Infiltration",
       "preparation": "1% (10 mg/mL); 2% (20 mg/mL)",
+      "formulations": [
+        {
+          "label": "1% (10 mg/mL)",
+          "mgPerMl": 10
+        },
+        {
+          "label": "2% (20 mg/mL)",
+          "mgPerMl": 20
+        }
+      ],
       "note": "VF/pVT Antiarrhythmic (PALS): Load 1 mg/kg IV/IO (max 100 mg), then infusion 20–50 mcg/kg/min. IO Pain (awake): 0.5 mg/kg 2% preservative-free slow IO (max 40 mg). Local Infiltration Max Safe Dose: Plain Lidocaine: max 4.5 mg/kg (max 300 mg); Lidocaine with Epinephrine: max 7 mg/kg (max 500 mg).",
       "unit": "mg/kg",
       "unitType": "perDose",
@@ -5141,6 +5297,16 @@
       "drug": "Linezolid",
       "name": "Linezolid IV/PO (2 mg/mL IV / Tab 600 mg)",
       "preparation": "IV 600 mg / 300 mL (2 mg/mL) ; Oral susp 100 mg / 5 mL ; Tab 600 mg",
+      "formulations": [
+        {
+          "label": "IV 600 mg/300 mL",
+          "mgPerMl": 2
+        },
+        {
+          "label": "Oral susp 100 mg/5 mL",
+          "mgPerMl": 20
+        }
+      ],
       "note": "< 12 years: 10 mg/kg/dose IV/PO q8h (max 600 mg/dose). >= 12 years: 600 mg q12h. For MRSA, VRE, resistant GPC. Monitor CBC weekly (risk of thrombocytopenia/myelosuppression > 2 weeks).",
       "unit": "mg/kg",
       "unitType": "perDose",
@@ -5732,6 +5898,16 @@
       "drug": "Metoclopramide",
       "name": "Metoclopramide (Plasil) IV/PO",
       "preparation": "IV 10 mg/amp ; Syrup 5 mg/5 mL ; Tablet 10 mg",
+      "formulations": [
+        {
+          "label": "Inj 10 mg/2 mL",
+          "mgPerMl": 5
+        },
+        {
+          "label": "Syrup 5 mg/5 mL",
+          "mgPerMl": 1
+        }
+      ],
       "note": "0.1 mg/kg/dose IV/PO q6–8h (ac) ⚠️ EPS risk ; often use single IV dose",
       "unit": "mg/kg",
       "unitType": "perDose",
@@ -6503,7 +6679,13 @@
       "key": "ondansetron-iv-4-mg",
       "drug": "Ondansetron",
       "name": "Ondansetron IV (4 mg / amp)",
-      "preparation": "4 mg / amp ; 8 mg / tab",
+      "preparation": "4 mg/2 mL; 8 mg/4 mL amp ; 8 mg / tab",
+      "formulations": [
+        {
+          "label": "Inj 4 mg/2 mL; 8 mg/4 mL (2 mg/mL)",
+          "mgPerMl": 2
+        }
+      ],
       "note": "0.15–0.3 mg/kg/dose IV/PO q8h ; often single IV dose ; >6 months",
       "unit": "mg/kg",
       "unitType": "perDose",
@@ -7689,6 +7871,16 @@
       "drug": "Salbutamol",
       "name": "Salbutamol neb solution (2.5 mg / 2.5 mL; 5 mg / mL)",
       "preparation": "Neb 2.5 mg/2.5 mL; solution 5 mg/mL",
+      "formulations": [
+        {
+          "label": "Nebule 2.5 mg/2.5 mL",
+          "mgPerMl": 1
+        },
+        {
+          "label": "Respirator soln 5 mg/mL",
+          "mgPerMl": 5
+        }
+      ],
       "note": "0.05–0.15 mg/kg/dose ; in acute: q20 min ×2–3 ; Solution: 0.03 mL/kg + NSS to 4 mL ; NB: <20 kg 1/2NB, >20kg 1NB",
       "unit": "mg/kg",
       "unitType": "perDose",
@@ -8410,6 +8602,16 @@
       "drug": "Tramadol",
       "name": "Tramadol PO/IV (50 mg / mL)",
       "preparation": "Drops 100 mg / mL ; Tab 50 mg ; Ampoule 100 mg / 2 mL",
+      "formulations": [
+        {
+          "label": "Drops 100 mg/mL",
+          "mgPerMl": 100
+        },
+        {
+          "label": "Inj 100 mg/2 mL",
+          "mgPerMl": 50
+        }
+      ],
       "note": "1–2 mg/kg/dose PO/IV q6–8h PRN moderate-severe pain (max 50 mg/dose, max 400 mg/day). ⚠️ Black box warning: Contraindicated in children < 12 years of age (CYP2D6 ultra-rapid metabolizer risk).",
       "unit": "mg/kg",
       "unitType": "perDose",
@@ -8590,6 +8792,16 @@
       "drug": "Sodium valproate",
       "name": "Valproate solution/tab/IV",
       "preparation": "Sol 200 mg/mL; Tab 200 mg; IV 100 mg/mL",
+      "formulations": [
+        {
+          "label": "Oral soln 200 mg/mL",
+          "mgPerMl": 200
+        },
+        {
+          "label": "IV 100 mg/mL",
+          "mgPerMl": 100
+        }
+      ],
       "note": "Load 20–40 mg/kg/dose (+10 mg/kg PRN) ; Maintenance 15–60 mg/kg/day q8–12h ⚠️ Max 60 mkDay [lv 50-120 mg/dl] avoid <2 yr hepatotoxicity ; S/E – Dyspepsia, N/V, Tremor, Hair loss, Weight gain, Thrombocytopenia, Pancreatitis, Hyperammonia",
       "unit": "mg/kg",
       "unitType": "perDose",
@@ -9324,6 +9536,16 @@
       "drug": "Amoxicillin",
       "name": "Amoxicillin PO",
       "preparation": "Syr 125/250 mg per 5 mL ; Cap 250/500 mg",
+      "formulations": [
+        {
+          "label": "Dry syrup 125 mg/5 mL",
+          "mgPerMl": 25
+        },
+        {
+          "label": "Dry syrup 250 mg/5 mL",
+          "mgPerMl": 50
+        }
+      ],
       "note": "40–90 mg/kg/day q8–12h ; GAS pharyngitis 50 mg/kg/day tid ×10d ⚠️ Max 4 g/day ; IE prophylaxis 50 mg/kg 30–60 min pre-procedure",
       "unit": "mg/kg",
       "unitType": "perDay",
@@ -9343,6 +9565,20 @@
       "drug": "Amoxicillin/Clavulanate",
       "name": "Amox/Clav PO/IV",
       "preparation": "Syr 228 (200/28) mg/5 mL ; 457 (400/57) mg/5 mL ; ES 642.9 (600/42.9) mg/5 mL ; Tab 625 (500/125), 1000 (875/125) ; SR (1000/62.5) ; IV 1.2 g (1000/200)",
+      "formulations": [
+        {
+          "label": "Syr 228 mg/5 mL (Amox 200 mg/5 mL)",
+          "mgPerMl": 40
+        },
+        {
+          "label": "Syr 457 mg/5 mL (Amox 400 mg/5 mL)",
+          "mgPerMl": 80
+        },
+        {
+          "label": "ES 642.9 mg/5 mL (Amox 600 mg/5 mL)",
+          "mgPerMl": 120
+        }
+      ],
       "note": "30–90 mg/kg/day of Amoxicillin q8–12h ⚠️ Max 4 g/day of Amox) ** For antistaph need ratio 1:7",
       "unit": "mg/kg",
       "unitType": "perDay",
@@ -9405,7 +9641,17 @@
       "key": "cephalexin-po",
       "drug": "Cephalexin",
       "name": "Cephalexin",
-      "preparation": "Syr 125 mg/5 mL; Caps 250/500 mg",
+      "preparation": "Syr 125/250 mg per 5 mL; Caps 250/500 mg",
+      "formulations": [
+        {
+          "label": "Dry syrup 125 mg/5 mL",
+          "mgPerMl": 25
+        },
+        {
+          "label": "Dry syrup 250 mg/5 mL",
+          "mgPerMl": 50
+        }
+      ],
       "note": "25–100 mg/kg/day q6–8h (mild/mod) ; 75–100 mg/kg/day q6–8h (severe) ⚠️ Max 4 g/day",
       "unit": "mg/kg",
       "unitType": "perDay",
@@ -9425,6 +9671,16 @@
       "drug": "Cefaclor",
       "name": "Cefaclor",
       "preparation": "Syr 125/250 mg per 5 mL ; Tab 375 mg",
+      "formulations": [
+        {
+          "label": "Dry syrup 125 mg/5 mL",
+          "mgPerMl": 25
+        },
+        {
+          "label": "Dry syrup 250 mg/5 mL",
+          "mgPerMl": 50
+        }
+      ],
       "note": "20–40 mg/kg/day q8–12h ⚠️ Max 1 g/day",
       "unit": "mg/kg",
       "unitType": "perDay",
@@ -9655,7 +9911,17 @@
       "key": "clarithromycin-po",
       "drug": "Clarithromycin",
       "name": "Clarithromycin",
-      "preparation": "Syr 125 mg/5 mL ; Tab 250/500 mg",
+      "preparation": "Syr 125/250 mg per 5 mL ; Tab 250/500 mg",
+      "formulations": [
+        {
+          "label": "Syr 125 mg/5 mL",
+          "mgPerMl": 25
+        },
+        {
+          "label": "Syr 250 mg/5 mL",
+          "mgPerMl": 50
+        }
+      ],
       "note": "15 mg/kg/day q12h ⚠️ Max 1 g/day",
       "unit": "mg/kg",
       "unitType": "perDay",
@@ -9697,6 +9963,12 @@
       "drug": "Co-trimoxazole (TMP/SMX)",
       "name": "Co-trimoxazole (TMP/SMX)",
       "preparation": "Syr 40/200 per 5 mL ; Tab 80/400",
+      "formulations": [
+        {
+          "label": "Syr 40/200 mg/5 mL (TMP 8 mg/mL)",
+          "mgPerMl": 8
+        }
+      ],
       "note": "8–12 mg/kg/day of TMP q12h ⚠️ Max 160 mg TMP/day",
       "unit": "mg/kg",
       "unitType": "perDay",
@@ -9906,6 +10178,16 @@
       "drug": "Amikacin",
       "name": "Amikacin IV",
       "preparation": "Vials 100 mg / 2 mL ; 500 mg / 2 mL",
+      "formulations": [
+        {
+          "label": "Inj 100 mg/2 mL",
+          "mgPerMl": 50
+        },
+        {
+          "label": "Inj 500 mg/2 mL",
+          "mgPerMl": 250
+        }
+      ],
       "note": "15–20 mg/kg/day IV OD (once daily extended interval) infused over 30–60 min ⚠️ Max 1500 mg/day ; Monitor serum peak & trough. CrCl adjustment required.",
       "unit": "mg/kg",
       "unitType": "perDay",
@@ -9964,6 +10246,16 @@
       "drug": "Gentamicin",
       "name": "Gentamicin IV",
       "preparation": "Vials 20 mg / 2 mL ; 80 mg / 2 mL (40 mg/mL)",
+      "formulations": [
+        {
+          "label": "Inj 20 mg/2 mL",
+          "mgPerMl": 10
+        },
+        {
+          "label": "Inj 80 mg/2 mL",
+          "mgPerMl": 40
+        }
+      ],
       "note": "5–7.5 mg/kg/day IV OD (extended interval once daily) or 2–2.5 mg/kg q8h ⚠️ Max 300 mg/day ; Therapeutic drug monitoring required. Adjust for renal impairment.",
       "unit": "mg/kg",
       "unitType": "perDay",
@@ -10537,6 +10829,16 @@
       "drug": "Fluconazole",
       "name": "Fluconazole IV/PO (2 mg/mL IV / 50 mg/5 mL PO)",
       "preparation": "IV 200 mg / 100 mL (2 mg/mL) ; Oral susp 50 mg / 5 mL ; Tab 50, 200 mg",
+      "formulations": [
+        {
+          "label": "IV 200 mg/100 mL",
+          "mgPerMl": 2
+        },
+        {
+          "label": "Oral susp 50 mg/5 mL",
+          "mgPerMl": 10
+        }
+      ],
       "note": "Mucosal candidiasis: 3–6 mg/kg/day q24h. Systemic / Invasive candidiasis: 6–12 mg/kg/day q24h (max 600 mg/day). Oral absorption > 90%. Reduce dose by 50% if CrCl < 50 mL/min.",
       "unit": "mg/kg",
       "unitType": "perDay",
@@ -10590,6 +10892,16 @@
       "drug": "Linezolid",
       "name": "Linezolid IV/PO (2 mg/mL IV / Tab 600 mg)",
       "preparation": "IV 600 mg / 300 mL (2 mg/mL) ; Oral susp 100 mg / 5 mL ; Tab 600 mg",
+      "formulations": [
+        {
+          "label": "IV 600 mg/300 mL",
+          "mgPerMl": 2
+        },
+        {
+          "label": "Oral susp 100 mg/5 mL",
+          "mgPerMl": 20
+        }
+      ],
       "note": "< 12 years: 10 mg/kg/dose IV/PO q8h (max 600 mg/dose). >= 12 years: 600 mg q12h. For MRSA, VRE, resistant GPC. Monitor CBC weekly (risk of thrombocytopenia/myelosuppression > 2 weeks).",
       "unit": "mg/kg",
       "unitType": "perDose",
@@ -10705,6 +11017,16 @@
       "drug": "Levofloxacin",
       "name": "Levofloxacin PO/IV (Tab 500 mg / IV 500 mg)",
       "preparation": "IV 500 mg / 100 mL ; Tab 500 mg ; Oral solution 25 mg / mL",
+      "formulations": [
+        {
+          "label": "IV 500 mg/100 mL",
+          "mgPerMl": 5
+        },
+        {
+          "label": "Oral soln 25 mg/mL",
+          "mgPerMl": 25
+        }
+      ],
       "note": "6 months to 5 years: 8–10 mg/kg/dose PO/IV q12h (max 250 mg/dose). >= 5 years: 10 mg/kg PO/IV once daily (max 500 mg/day). Reserved for multi-drug resistant infections, complicated pneumonia, or severe typhoid fever.",
       "unit": "mg/kg",
       "unitType": "perDose",

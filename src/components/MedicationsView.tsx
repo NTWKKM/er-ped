@@ -2,7 +2,7 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { DATASET, PediatricDrug } from '../data/dataset';
 import {
   resolveDrugDose,
-  parseStrength,
+  resolveDrugStrength,
   fmtMg,
   fmtMl,
   calcSchwartzEGFR,
@@ -100,11 +100,17 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isRenalReviewed, setIsRenalReviewed] = useState<boolean>(false);
   const [isRenalDetailsOpen, setIsRenalDetailsOpen] = useState<boolean>(false);
+  // True when the concentration came from the marketed-strength radios, not typed in the field
+  const [isStrengthPicked, setIsStrengthPicked] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setIsRenalReviewed(false);
   }, [selectedKey, serumCr, heightCm, activeWeight]);
+
+  useEffect(() => {
+    setIsStrengthPicked(false);
+  }, [selectedKey]);
 
   const allDrugs = DATASET.pediatricDose;
 
@@ -180,7 +186,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
   );
 
   const strength = useMemo(
-    () => parseStrength(selectedDrug?.preparation || selectedDrug?.name || ''),
+    () => resolveDrugStrength(selectedDrug),
     [selectedDrug]
   );
 
@@ -190,6 +196,10 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
       ? customConcNum
       : strength.mgPerMl || null;
   const effectiveMgPerTab = strength.mgPerTab || null;
+  const selectedStrengthOption = effectiveMgPerMl
+    ? strength.options?.find((o) => Math.abs(o.mgPerMl - effectiveMgPerMl) < 1e-4) ?? null
+    : null;
+  const fmtConc = (n: number) => String(Number(n.toFixed(4)));
 
   const formatRangeTxt = (
     minVal: number | null | undefined,
@@ -316,7 +326,11 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
 
   const hasNumericDose = matchedRenalTier ? hasNumericRenalDose : hasNumericStandardDose;
 
-  const concSuffix = effectiveMgPerMl ? ` [${effectiveMgPerMl} mg/mL]` : '';
+  const concSuffix = effectiveMgPerMl
+    ? selectedStrengthOption
+      ? ` [${selectedStrengthOption.label} = ${fmtConc(effectiveMgPerMl)} mg/mL]`
+      : ` [${fmtConc(effectiveMgPerMl)} mg/mL]`
+    : '';
 
   const orderText = (matchedRenalTier && !hasNumericRenalDose)
     ? ''
@@ -579,7 +593,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
             <div className="p-3 rounded-lg border border-[var(--warning)] bg-[var(--warning-soft)] text-[var(--warning-text)] text-xs flex items-start sm:items-center gap-2">
               <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 sm:mt-0" />
               <span>
-                Medication has multiple available concentrations ({strength.availableConcs?.map((c) => `${c} mg/mL`).join(', ')}). Select a concentration below before adding to Order Sheet.
+                Medication is sold in {strength.options?.length} strengths ({strength.options?.map((o) => o.label).join(' · ')}). Select the product in hand below before adding to Order Sheet.
               </span>
             </div>
           )}
@@ -636,43 +650,62 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
             </div>
           </div>
 
-          {/* Concise Note & Optional Strength Override */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2.5 border-t border-[var(--border)] text-xs text-[var(--muted)]">
-            <div className="flex flex-wrap items-center justify-between sm:justify-end gap-2 shrink-0 sm:ml-auto">
-              <label htmlFor="doseConc" className="whitespace-nowrap font-semibold">
-                {strength.hasMultipleConcs ? (
-                  <span className="text-[var(--warning-text)]">Select Conc (mg/mL):</span>
-                ) : (
-                  'Custom Conc (mg/mL):'
-                )}
-              </label>
-              {strength.availableConcs && strength.availableConcs.length > 1 && (
-                <div className="flex items-center gap-1">
-                  {strength.availableConcs.map((c) => (
-                    <button
-                      key={c}
-                      type="button"
-                      onClick={() => handleConcOverrideChange(String(c))}
-                      className={`px-2 py-0.5 text-xs font-bold rounded border cursor-pointer transition-colors ${
-                        effectiveMgPerMl === c
-                          ? 'border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent-text)]'
-                          : 'border-[var(--border)] bg-[var(--panel-subtle)] text-[var(--muted)] hover:text-[var(--ink)]'
-                      }`}
-                    >
-                      {c} mg/mL
-                    </button>
-                  ))}
+          {/* Marketed strength selector & optional custom concentration */}
+          <div className="flex flex-col gap-2.5 pt-2.5 border-t border-[var(--border)] text-xs text-[var(--muted)]">
+            {strength.options && strength.options.length > 1 && (
+              <fieldset className="flex flex-col gap-1.5 min-w-0">
+                <legend className={`font-semibold mb-1.5 ${!effectiveMgPerMl ? 'text-[var(--warning-text)]' : ''}`}>
+                  Strength in hand:
+                </legend>
+                <div className="flex flex-wrap gap-1.5">
+                  {strength.options.map((o) => {
+                    const isActive = selectedStrengthOption?.mgPerMl === o.mgPerMl;
+                    return (
+                      <label
+                        key={o.mgPerMl}
+                        className={`strength-option min-h-[44px] sm:min-h-[36px] px-3 py-1 rounded-lg border text-left cursor-pointer transition-colors ${
+                          isActive
+                            ? 'border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent-text)]'
+                            : 'border-[var(--border)] bg-[var(--panel-subtle)] text-[var(--ink-secondary)] hover:text-[var(--ink)]'
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name={`strength-${selectedDrug.key}`}
+                          value={o.mgPerMl}
+                          checked={isActive}
+                          onChange={() => {
+                            setIsStrengthPicked(true);
+                            handleConcOverrideChange(String(o.mgPerMl));
+                          }}
+                          className="sr-only"
+                        />
+                        <span className="block text-xs font-bold">{o.label}</span>
+                        <span className="block text-[11px] font-mono-tabular opacity-80">
+                          {fmtConc(o.mgPerMl)} mg/mL
+                        </span>
+                      </label>
+                    );
+                  })}
                 </div>
-              )}
+              </fieldset>
+            )}
+            <div className="flex flex-wrap items-center justify-between sm:justify-end gap-2">
+              <label htmlFor="doseConc" className="whitespace-nowrap font-semibold">
+                {strength.hasMultipleConcs ? 'Or other conc (mg/mL):' : 'Custom Conc (mg/mL):'}
+              </label>
               <input
                 id="doseConc"
                 type="number"
                 min="0"
                 step="0.1"
                 inputMode="decimal"
-                placeholder={strength.mgPerMl ? strength.mgPerMl.toFixed(1) : 'mg/mL'}
-                value={concOverride}
-                onChange={(e) => handleConcOverrideChange(e.target.value)}
+                placeholder={strength.mgPerMl ? fmtConc(strength.mgPerMl) : 'mg/mL'}
+                value={isStrengthPicked ? '' : concOverride}
+                onChange={(e) => {
+                  setIsStrengthPicked(false);
+                  handleConcOverrideChange(e.target.value);
+                }}
                 className={`clinical-input w-24 text-center font-mono-tabular text-xs font-bold py-1.5 ${
                   strength.hasMultipleConcs && !effectiveMgPerMl ? 'border-[var(--warning)]' : ''
                 }`}
