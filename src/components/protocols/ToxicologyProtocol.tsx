@@ -121,10 +121,10 @@ export const ToxicologyProtocol: React.FC<ProtocolPanelProps> = ({ weightKg: w, 
                       </td>
                       <td className="font-mono-tabular font-bold whitespace-nowrap">
                         {fmtMg(b.doseMg)} mg
-                        <div className="text-xs font-semibold text-[var(--ink-secondary)]">= {fmtMg(b.nacMl)} mL of 200 mg/mL</div>
+                        <div className="text-xs font-semibold text-[var(--ink-secondary)]">= {b.nacMl} mL of 200 mg/mL</div>
                       </td>
                       <td className="font-mono-tabular whitespace-nowrap">{b.diluentMl} mL</td>
-                      <td className="font-mono-tabular whitespace-nowrap">{fmtMg(b.totalMl)} mL</td>
+                      <td className="font-mono-tabular whitespace-nowrap">{b.totalMl} mL</td>
                       <td className="font-mono-tabular whitespace-nowrap">{b.durationHr} h</td>
                       <td className="font-mono-tabular font-bold whitespace-nowrap">{b.rateMlPerHr} mL/hr</td>
                     </tr>
@@ -134,9 +134,11 @@ export const ToxicologyProtocol: React.FC<ProtocolPanelProps> = ({ weightKg: w, 
             </div>
             <div className="flex flex-wrap items-center justify-between gap-2">
               <p className="text-xs text-[var(--ink-secondary)]">
-                {w < 20
-                  ? 'Weight < 20 kg: D5W scaled to 3 / 7 / 14 mL/kg to prevent hyponatremia.'
-                  : 'Standard D5W volumes 200 / 500 / 1000 mL.'}{' '}
+                {w <= 20
+                  ? 'Weight ≤ 20 kg: D5W scaled to 3 / 7 / 14 mL/kg to prevent hyponatremia.'
+                  : w <= 40
+                    ? 'Weight 21–40 kg: D5W 100 / 250 / 500 mL to limit free water.'
+                    : 'Weight > 40 kg: D5W 200 / 500 / 1000 mL.'}{' '}
                 Pump rate runs the total bag volume (D5W + NAC) over the stated time. Dosing weight capped at 100 kg. Check LFT, INR and paracetamol level before stopping.
               </p>
               {onAddOrder && (
@@ -152,7 +154,7 @@ export const ToxicologyProtocol: React.FC<ProtocolPanelProps> = ({ weightKg: w, 
                         `IV NAC 21-h: ${nac
                           .map(
                             (b) =>
-                              `Bag ${b.bag} ${fmtMg(b.doseMg)} mg in D5W ${b.diluentMl} mL (total ${fmtMg(b.totalMl)} mL) @ ${b.rateMlPerHr} mL/hr over ${b.durationHr} h`
+                              `Bag ${b.bag} ${fmtMg(b.doseMg)} mg in D5W ${b.diluentMl} mL (total ${b.totalMl} mL) @ ${b.rateMlPerHr} mL/hr over ${b.durationHr} h`
                           )
                           .join('; ')}`
                       )

@@ -231,10 +231,18 @@
 
 ### 8.2 Antidote Formulary
 - **Acetaminophen (APAP) Overdose — N-acetylcysteine (NAC) 21-Hour IV Regimen**:
-  - **Bag 1 (Loading)**: $150\text{ mg/kg}$ in D5W $200\text{ mL}$ over 60 min ($3\text{ mL/kg}$ D5W if $< 20\text{ kg}$).
-  - **Bag 2**: $50\text{ mg/kg}$ in D5W $500\text{ mL}$ over 4 hr ($7\text{ mL/kg}$ D5W if $< 20\text{ kg}$).
-  - **Bag 3**: $100\text{ mg/kg}$ in D5W $1000\text{ mL}$ over 16 hr ($14\text{ mL/kg}$ D5W if $< 20\text{ kg}$).
-  - *Total Dose*: $300\text{ mg/kg}$ over 21 hours. Fluid volume scaling in $< 20\text{ kg}$ is critical to prevent iatrogenic hyponatremia.
+  - **Bag 1 (Loading)**: $150\text{ mg/kg}$ over 60 min.
+  - **Bag 2**: $50\text{ mg/kg}$ over 4 hr.
+  - **Bag 3**: $100\text{ mg/kg}$ over 16 hr.
+  - **D5W diluent by weight** (Acetadote prescribing information, pediatric table):
+
+    | Weight | Bag 1 | Bag 2 | Bag 3 |
+    | :--- | :--- | :--- | :--- |
+    | $\le 20\text{ kg}$ | $3\text{ mL/kg}$ | $7\text{ mL/kg}$ | $14\text{ mL/kg}$ |
+    | 21–40 kg | $100\text{ mL}$ | $250\text{ mL}$ | $500\text{ mL}$ |
+    | $> 40\text{ kg}$ | $200\text{ mL}$ | $500\text{ mL}$ | $1000\text{ mL}$ |
+  - Pump rate runs the total bag volume (diluent + 200 mg/mL concentrate) over the stated time.
+  - *Total Dose*: $300\text{ mg/kg}$ over 21 hours (dosing weight capped at 100 kg). Weight-tiered diluent volumes are critical to prevent iatrogenic hyponatremia.
 - **Opioid Toxicity — Naloxone**:
   - Dose: $0.1\text{ mg/kg}$ IV/IO/IM/SC/IN (max $2\text{ mg/dose}$). May repeat q2–3min.
 - **Benzodiazepine Toxicity — Flumazenil**:

@@ -904,7 +904,7 @@ test('calcWeightDoseRange: per-kg range, ceiling and floor', () => {
   assert.equal(calcWeightDoseRange(null, 1), null);
 });
 
-test('calcNacRegimen: 3-bag 21-h regimen with < 20 kg D5W volume scaling', () => {
+test('calcNacRegimen: 3-bag 21-h regimen with weight-tiered D5W volumes', () => {
   const small = calcNacRegimen(10)!;
   // Rate runs the total prepared volume (D5W + 200 mg/mL concentrate) over the duration
   assert.deepEqual(
@@ -917,9 +917,18 @@ test('calcNacRegimen: 3-bag 21-h regimen with < 20 kg D5W volume scaling', () =>
   );
   // The full bag delivers the full dose: rate x duration covers the prepared volume
   for (const b of small) assert.ok(b.rateMlPerHr * b.durationHr >= b.totalMl - 0.1);
+  // 20 kg is still weight-scaled (<= 20 kg): 60 / 140 / 280 mL
+  assert.deepEqual(calcNacRegimen(20)!.map((b) => b.diluentMl), [60, 140, 280]);
+  // 21–40 kg tier: 100 / 250 / 500 mL (25 kg bag 1: 100 + 18.75 mL NAC)
+  const mid = calcNacRegimen(25)!;
+  assert.deepEqual(mid.map((b) => b.diluentMl), [100, 250, 500]);
+  assert.equal(mid[0].totalMl, 118.75);
+  assert.equal(mid[0].rateMlPerHr, 118.8);
   const big = calcNacRegimen(40)!;
-  assert.deepEqual(big.map((b) => b.diluentMl), [200, 500, 1000]);
+  assert.deepEqual(big.map((b) => b.diluentMl), [100, 250, 500]);
   assert.deepEqual(big.map((b) => b.doseMg), [6000, 2000, 4000]);
+  // > 40 kg tier: 200 / 500 / 1000 mL
+  assert.deepEqual(calcNacRegimen(41)!.map((b) => b.diluentMl), [200, 500, 1000]);
   // Dosing weight capped at 100 kg
   assert.equal(calcNacRegimen(120)![0].doseMg, 15000);
   assert.equal(calcNacRegimen(0), null);
