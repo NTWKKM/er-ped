@@ -63,6 +63,17 @@ export const ElectrolytesProtocol: React.FC<ElectrolytesProtocolProps> = ({
   const k = parseFloat(labs.lyteK);
   const ph = parseFloat(labs.lytePH);
   const ageMonths = ageYears != null ? ageYears * 12 : null;
+  const totalCa = parseFloat(labs.lyteTotalCa);
+  const albumin = parseFloat(labs.lyteAlbumin);
+  // A corrected value is shown only when both of its inputs are valid numbers;
+  // otherwise the helper would echo the measured value under a "corrected" label.
+  const ok = (...xs: number[]) => xs.every((x) => Number.isFinite(x) && x > 0);
+  const corrNaKatz = ok(na, glucose) ? calcCorrectedNa(na, glucose, 'katz') : null;
+  const corrNaIspad = ok(na, glucose) ? calcCorrectedNa(na, glucose, 'ispad') : null;
+  const corrCa = ok(totalCa, albumin) ? calcCorrectedCa(totalCa, albumin) : null;
+  const kAt740 = ok(k, ph) ? calcKShift(k, ph) : null;
+  const hyperNa = ep.hypernatremia;
+  const isSevereHyperNa = Number.isFinite(na) && na >= hyperNa.severeThresholdMeqL;
 
   const hk = ep.hyperkalemia;
   const hkRows: DoseRow[] = w
@@ -72,11 +83,11 @@ export const ElectrolytesProtocol: React.FC<ElectrolytesProtocolProps> = ({
           name: `Step 1: ${hk[0].name}`,
           dose: fmtRange(calcWeightDoseRange(w, hk[0].doseMlPerKg!, hk[0].doseMlPerKg!, hk[0].maxMl), 'mL'),
           route: `${hk[0].route}. ${hk[0].prep}`,
-          note: hk[0].note,
+          note: `${hk[0].indication}. ${hk[0].note}`,
           order: {
             prefix: 'proto-lyte-hk-ca',
             module: MODULE,
-            text: `10% Calcium Gluconate ${fmtMg(Math.min(w * hk[0].doseMlPerKg!, hk[0].maxMl!))} mL IV slow over 5–10 min with ECG monitoring`,
+            text: `10% Calcium Gluconate ${fmtMg(Math.min(w * hk[0].doseMlPerKg!, hk[0].maxMl!))} mL IV slow over 5–10 min with ECG monitoring (indication: hyperkalemia with ECG changes or arrhythmia)`,
           },
         },
         {
@@ -165,15 +176,13 @@ export const ElectrolytesProtocol: React.FC<ElectrolytesProtocolProps> = ({
           {[
             {
               label: 'Corrected Na (Katz / ISPAD)',
-              value: `${calcCorrectedNa(na, glucose, 'katz')?.toFixed(1) || '—'} / ${
-                calcCorrectedNa(na, glucose, 'ispad')?.toFixed(1) || '—'
-              } mEq/L`,
+              value: `${corrNaKatz?.toFixed(1) ?? '—'} / ${corrNaIspad?.toFixed(1) ?? '—'} mEq/L`,
             },
             {
               label: 'Corrected Calcium (Payne)',
-              value: `${calcCorrectedCa(parseFloat(labs.lyteTotalCa), parseFloat(labs.lyteAlbumin))?.toFixed(1) || '—'} mg/dL`,
+              value: `${corrCa?.toFixed(1) ?? '—'} mg/dL`,
             },
-            { label: 'Estimated K⁺ at pH 7.40', value: `${calcKShift(k, ph)?.toFixed(1) || '—'} mEq/L` },
+            { label: 'Estimated K⁺ at pH 7.40', value: `${kAt740?.toFixed(1) ?? '—'} mEq/L` },
           ].map((m) => (
             <div key={m.label} className="bg-[var(--card)] border border-[var(--border)] rounded-[var(--r-md)] p-3">
               <div className="text-xs text-[var(--muted)]">{m.label}</div>
@@ -238,7 +247,19 @@ export const ElectrolytesProtocol: React.FC<ElectrolytesProtocolProps> = ({
 
       <ProtocolSection step={3} title="Hypernatremic Dehydration">
         <p className="text-[13px] font-mono-tabular text-[var(--ink)]">{ep.hypernatremia.formula}</p>
-        {fwd != null && fwd > 0 && (
+        {isSevereHyperNa && (
+          <Callout tone="danger" title={`Severe hypernatremia (Na ≥ ${hyperNa.severeThresholdMeqL})`}>
+            {hyperNa.severeNote}
+          </Callout>
+        )}
+        {isSevereHyperNa && fwd != null && fwd > 0 && (
+          <div className="text-[13px] text-[var(--ink)]">
+            Estimated free water deficit to Na 140:{' '}
+            <span className="font-mono-tabular font-extrabold">{(fwd * 1000).toFixed(0)} mL</span> (reference figure only, not an
+            infusion rate).
+          </div>
+        )}
+        {!isSevereHyperNa && fwd != null && fwd > 0 && (
           <div className="text-[13px] text-[var(--ink)]">
             Free water deficit at Na {na}:{' '}
             <span className="font-mono-tabular font-extrabold">{(fwd * 1000).toFixed(0)} mL</span>, replace over 48 h (
@@ -312,7 +333,7 @@ export const ElectrolytesProtocol: React.FC<ElectrolytesProtocolProps> = ({
 
       <ProtocolSection title="Age-Specific Reference Ranges">
         <div className="clinical-table-container" tabIndex={0} role="region" aria-label="Electrolyte reference ranges by age">
-          <table className="clinical-table">
+          <table className="clinical-table" aria-label="Electrolyte reference ranges by age">
             <thead>
               <tr>
                 <th>Age</th>

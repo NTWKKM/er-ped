@@ -12289,7 +12289,7 @@
       "sysBpNormal": "95–115 mmHg",
       "diaBpNormal": "60–80 mmHg",
       "sysBpMin": 95,
-      "hypotensionSysBp": "< 70 + (2 × Age) mmHg",
+      "hypotensionSysBp": "< 70 + (2 × Age) mmHg to age 10; < 90 mmHg after age 10",
       "spo2Normal": "95–100%"
     },
     {
@@ -12332,7 +12332,7 @@
     },
     "dextroseSwitch": {
       "bgThresholdMgDl": 250,
-      "switchFluid": "D5 0.45% NS + 20 mEq/L KCl (or D5 0.9% NS)",
+      "switchFluid": "D5 0.45% NS or D5 0.9% NS, with KCl per the potassium rules",
       "note": "When BG drops to < 250 mg/dL, add 5% Dextrose to IV fluids to maintain BG 150–250 mg/dL while continuing insulin drip."
     },
     "potassiumRules": [
@@ -12395,10 +12395,8 @@
       }
     ],
     "resolution": [
-      "Venous pH ≥ 7.30",
-      "Serum HCO₃ ≥ 18 mEq/L",
-      "β-hydroxybutyrate < 1 mmol/L",
-      "Tolerating oral intake: give SC insulin, stop IV insulin 15–30 min (rapid-acting) or 1–2 h (regular) after the first SC dose"
+      "Ketoacidosis resolved: venous pH ≥ 7.30 and serum HCO₃ ≥ 18 mEq/L, with β-hydroxybutyrate < 1 mmol/L",
+      "If HCO₃ stays low from hyperchloremic acidosis after ketones have cleared (β-hydroxybutyrate < 1 mmol/L, anion gap normalized), do not delay transition"
     ],
     "cerebralEdema": {
       "warningSigns": [
@@ -12417,11 +12415,16 @@
       "actions": [
         "Treat immediately, do not wait for imaging",
         "Elevate head of bed 30°, keep head midline",
-        "Reduce IV fluid rate by one third",
+        "Adjust IV fluid rate to maintain normal blood pressure; avoid both hypotension (cerebral perfusion) and excess fluid",
         "Call PICU; intubate only for impending respiratory failure",
         "CT brain after the child is stabilized"
       ]
-    }
+    },
+    "severityPrecedence": "If pH and HCO₃ fall in different bands, classify by the more severe band.",
+    "transition": [
+      "Tolerating oral intake",
+      "Give SC insulin first; stop IV insulin 15–30 min (rapid-acting) or 1–2 h (regular) after the first SC dose"
+    ]
   },
   "asthmaProtocol": {
     "severityAssessment": [
@@ -12470,7 +12473,8 @@
       "targetSpO2Percent": 92,
       "temperatureC": 37,
       "nebFlowMaxLPerKgPerMin": 0.25,
-      "nebFlowMaxLPerMin": 10
+      "nebFlowMaxLPerMin": 10,
+      "nebFlowNote": "Reduce flow to ≤ 0.25 L/kg/min (max 10 L/min) during in-line nebulization"
     },
     "steps": [
       {
@@ -12761,7 +12765,8 @@
         "maxMg": 1000,
         "route": "IV slow over 5–10 min",
         "prep": "10% solution (100 mg/mL = 0.465 mEq Ca/mL)",
-        "note": "Cardioprotection (30–60 min duration). Does not lower K+. Monitor ECG during infusion."
+        "note": "Cardioprotection (30–60 min duration). Does not lower K+. Monitor ECG during infusion.",
+        "indication": "Give for ECG changes or arrhythmia (not for an isolated K⁺ value with a normal ECG)"
       },
       {
         "step": 2,
@@ -12868,7 +12873,9 @@
       "formula": "Free water deficit (L) = TBW × BW × (Serum Na / 140 − 1)",
       "duration": "Replace over 48 hours",
       "correctionCap": "Serum Na fall ≤ 0.5 mEq/L/hr (≤ 10–12 mEq/L/day) to avoid cerebral edema.",
-      "note": "Restore circulation first with isotonic bolus if in shock. Recheck Na q2–4h."
+      "note": "Restore circulation first with isotonic bolus if in shock. Recheck Na q2–4h.",
+      "severeThresholdMeqL": 170,
+      "severeNote": "Na ≥ 170 mEq/L is an emergency: involve PICU / nephrology for an individualized, slower correction plan. Do not use a routine 48-h rate."
     },
     "hyperkalemiaEcg": [
       "Peaked T waves",
@@ -14217,17 +14224,20 @@
         "action": "BVM ventilation, Naloxone; neuromuscular blockade if refractory"
       }
     ],
-    "ketamineContraindications": [
-      "Age < 3 months (relative)",
-      "Known or suspected psychosis",
-      "Active airway infection or procedures stimulating the posterior pharynx (relative)",
-      "Uncontrolled hypertension or raised intracranial / intraocular pressure concerns (relative)"
-    ],
     "discharge": [
       "Return to baseline mental status and age-appropriate ambulation",
       "Stable vital signs and SpO₂ on room air",
       "Tolerating oral fluids, pain and nausea controlled",
       "Responsible adult escort with written instructions"
+    ],
+    "ketamineAbsoluteContraindications": [
+      "Age < 3 months (airway complications)",
+      "Known or suspected schizophrenia or psychosis"
+    ],
+    "ketamineRelativeContraindications": [
+      "Active pulmonary infection or airway disease, or procedures stimulating the posterior pharynx",
+      "Cardiovascular disease, CNS mass or hydrocephalus, glaucoma or acute globe injury",
+      "Porphyria, thyroid disorder or thyroid medication"
     ]
   },
   "toxicologyApproach": {

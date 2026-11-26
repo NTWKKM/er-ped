@@ -94,7 +94,7 @@ export const CroupProtocol: React.FC<CroupProtocolProps> = ({ weightKg: w, onAdd
           </Callout>
         </div>
         <div className="clinical-table-container" tabIndex={0} role="region" aria-label="Croup severity bands">
-          <table className="clinical-table">
+          <table className="clinical-table" aria-label="Croup severity bands">
             <thead>
               <tr>
                 <th>Score</th>

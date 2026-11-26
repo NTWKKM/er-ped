@@ -55,6 +55,9 @@ export const DkaProtocol: React.FC<DkaProtocolProps> = ({
   const rawPrior = parseFloat(priorBolus);
   const isValidPrior = priorBolus.trim() !== '' && Number.isFinite(rawPrior) && rawPrior >= 0;
   const plan = isValidPrior ? calcDkaPlan(w, severityPct, rawPrior, insulinRate) : null;
+  // Bolus range and insulin rate do not depend on the prior bolus, so the
+  // pathway stays visible while the prior-bolus field is blank or invalid.
+  const base = calcDkaPlan(w, severityPct, 0, insulinRate);
 
   const mannitolG = calcWeightDoseRange(w, ce.mannitolGPerKgMin, ce.mannitolGPerKgMax);
   const hypertonicMl = calcWeightDoseRange(w, ce.hypertonicMlPerKgMin, ce.hypertonicMlPerKgMax);
@@ -73,7 +76,7 @@ export const DkaProtocol: React.FC<DkaProtocolProps> = ({
             <Checklist items={p.diagnosticCriteria} marker="check" />
           </div>
           <div className="clinical-table-container" tabIndex={0} role="region" aria-label="DKA severity bands">
-            <table className="clinical-table">
+            <table className="clinical-table" aria-label="DKA severity bands">
               <thead>
                 <tr>
                   <th>Severity</th>
@@ -112,6 +115,7 @@ export const DkaProtocol: React.FC<DkaProtocolProps> = ({
               </option>
             ))}
           </select>
+          <p className="text-[11px] text-[var(--muted)] mt-1">{p.severityPrecedence}</p>
         </div>
         <div>
           <label htmlFor="dkaPriorBolus" className="text-xs font-bold text-[var(--muted)] block mb-1.5">
@@ -147,17 +151,15 @@ export const DkaProtocol: React.FC<DkaProtocolProps> = ({
         </div>
       </div>
 
-      {!w ? (
+      {!w || !base ? (
         <NeedWeight what="DKA fluid and insulin rates" />
-      ) : !isValidPrior || !plan ? (
-        <Callout tone="danger">Enter a valid non-negative prior fluid bolus (≥ 0 mL) to calculate the fluid plan.</Callout>
       ) : (
         <>
           <ProtocolSection step={1} title="Initial Fluid Resuscitation" timing="0–1 h">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Metric
                 label={`${p.initialResus.fluid}, 10–20 mL/kg`}
-                value={`${plan.resusBolusMinMl}–${plan.resusBolusMaxMl} mL`}
+                value={`${base.resusBolusMinMl}–${base.resusBolusMaxMl} mL`}
                 sub="Over 30–60 min, only if volume depleted"
               />
               <div className="space-y-2">
@@ -168,6 +170,11 @@ export const DkaProtocol: React.FC<DkaProtocolProps> = ({
           </ProtocolSection>
 
           <ProtocolSection step={2} title="Deficit Replacement over 48 h" timing="From hour 1">
+            {!plan ? (
+              <Callout tone="danger">
+                Enter a valid non-negative prior fluid bolus (≥ 0 mL) to calculate the deficit and combined fluid rate.
+              </Callout>
+            ) : (
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <Metric
                 label={`Deficit ${severityPct}% × BW × 10`}
@@ -182,7 +189,7 @@ export const DkaProtocol: React.FC<DkaProtocolProps> = ({
               <Metric
                 label="Combined IV fluid rate"
                 value={`${plan.totalMlPerHr} mL/hr`}
-                sub="0.9% NS or balanced crystalloid + KCl"
+                sub="0.9% NS or balanced crystalloid; KCl per Step 4 potassium rules"
                 action={
                   onAddOrder && (
                     <button
@@ -194,7 +201,7 @@ export const DkaProtocol: React.FC<DkaProtocolProps> = ({
                           makeOrder(
                             'proto-dka-fluid',
                             MODULE,
-                            `DKA IV Rehydration Fluid @ ${plan.totalMlPerHr} mL/hr over 48h (Mnt ${plan.maintenanceMlPerHr} + Deficit ${plan.deficitMlPerHr} mL/hr, add D5W when BG < ${p.dextroseSwitch.bgThresholdMgDl})`
+                            `DKA IV Rehydration Fluid @ ${plan.totalMlPerHr} mL/hr over 48h (Mnt ${plan.maintenanceMlPerHr} + Deficit ${plan.deficitMlPerHr} mL/hr, switch to D5 0.45% NS or D5 0.9% NS when BG < ${p.dextroseSwitch.bgThresholdMgDl} mg/dL; KCl per serum K⁺ rules)`
                           )
                         )
                       }
@@ -205,6 +212,7 @@ export const DkaProtocol: React.FC<DkaProtocolProps> = ({
                 }
               />
             </div>
+            )}
             <p className="text-xs text-[var(--ink-secondary)]">
               Urine output is not added back. Reassess hydration hourly; oral fluids only once substantially improved.
             </p>
@@ -214,7 +222,7 @@ export const DkaProtocol: React.FC<DkaProtocolProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Metric
                 label={`Regular Insulin ${insulinRate} U/kg/hr`}
-                value={`${plan.insulinUPerHr} U/hr (${plan.insulinUPerHr} mL/hr)`}
+                value={`${base.insulinUPerHr} U/hr (${base.insulinUPerHr} mL/hr)`}
                 sub={p.insulinDrip.prep}
                 action={
                   onAddOrder && (
@@ -227,7 +235,7 @@ export const DkaProtocol: React.FC<DkaProtocolProps> = ({
                           makeOrder(
                             'proto-dka-ri',
                             MODULE,
-                            `Regular Insulin Drip @ ${plan.insulinUPerHr} U/hr (${plan.insulinUPerHr} mL/hr) IV via Syringe Pump (${insulinRate} U/kg/hr; 50 U RI in 50 mL 0.9% NSS). No bolus.`
+                            `Regular Insulin Drip @ ${base.insulinUPerHr} U/hr (${base.insulinUPerHr} mL/hr) IV via Syringe Pump (${insulinRate} U/kg/hr; 50 U RI in 50 mL 0.9% NSS). No bolus.`
                           )
                         )
                       }
@@ -252,7 +260,7 @@ export const DkaProtocol: React.FC<DkaProtocolProps> = ({
 
       <ProtocolSection step={4} title="Potassium Replacement">
         <div className="clinical-table-container" tabIndex={0} role="region" aria-label="DKA potassium replacement rules">
-          <table className="clinical-table">
+          <table className="clinical-table" aria-label="DKA potassium replacement rules">
             <thead>
               <tr>
                 <th>Serum K⁺</th>
@@ -286,7 +294,7 @@ export const DkaProtocol: React.FC<DkaProtocolProps> = ({
 
       <ProtocolSection step={6} title="Monitoring">
         <div className="clinical-table-container" tabIndex={0} role="region" aria-label="DKA monitoring schedule">
-          <table className="clinical-table">
+          <table className="clinical-table" aria-label="DKA monitoring schedule">
             <thead>
               <tr>
                 <th>Interval</th>
@@ -334,7 +342,16 @@ export const DkaProtocol: React.FC<DkaProtocolProps> = ({
       </ProtocolSection>
 
       <ProtocolSection title="Resolution and Transition to SC Insulin">
-        <Checklist items={p.resolution} marker="check" />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          <div>
+            <div className="text-xs font-bold text-[var(--muted)] mb-1.5">Resolution of ketoacidosis</div>
+            <Checklist items={p.resolution} marker="check" />
+          </div>
+          <div>
+            <div className="text-xs font-bold text-[var(--muted)] mb-1.5">Transition requirements</div>
+            <Checklist items={p.transition} marker="check" />
+          </div>
+        </div>
       </ProtocolSection>
 
       <EvidenceFooter refKey={p.refKey} />

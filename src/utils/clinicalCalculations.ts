@@ -1098,17 +1098,20 @@ export function calcKShift(measuredK: number, ph: number): number | null {
 export function calcIVKClReplacement(weightKg: number, doseMeqPerKg = 0.5) {
   if (!weightKg || Number.isNaN(weightKg) || weightKg <= 0) return null;
   const rawDoseMeq = weightKg * doseMeqPerKg;
-  const doseMeq = Math.min(rawDoseMeq, 20);
-  const kcl2MeqPerMl = doseMeq / 2;
-  const minVolPeripheralMl = Math.round((doseMeq / 40) * 1000);
-  const minVolCentralMl = Math.round((doseMeq / 80) * 1000);
+  // Concentrate volume (2 mEq/mL) rounded down to a 0.05 mL syringe graduation;
+  // the delivered dose and dilution are derived from that drawn volume.
+  const kcl2MeqPerMl = Math.floor((Math.min(rawDoseMeq, 20) / 2) * 20 + 1e-9) / 20;
+  const doseMeq = kcl2MeqPerMl * 2;
+  // Final volumes round UP so concentration never exceeds 40 / 80 mEq/L.
+  const minVolPeripheralMl = Math.ceil((doseMeq / 40) * 1000 - 1e-9);
+  const minVolCentralMl = Math.ceil((doseMeq / 80) * 1000 - 1e-9);
   const peripheralRateMlPerHr = +(minVolPeripheralMl / 2).toFixed(1);
   const centralRateMlPerHr = +(minVolCentralMl / 1).toFixed(1);
   const deliveryRateMeqPerKgPerHr = +(doseMeq / weightKg / 2).toFixed(2);
   return {
-    doseMeq: +doseMeq.toFixed(1),
+    doseMeq: +doseMeq.toFixed(2),
     rawDoseMeq: +rawDoseMeq.toFixed(1),
-    kcl2MeqPerMl: +kcl2MeqPerMl.toFixed(1),
+    kcl2MeqPerMl: +kcl2MeqPerMl.toFixed(2),
     minVolPeripheralMl,
     minVolCentralMl,
     peripheralRateMlPerHr,

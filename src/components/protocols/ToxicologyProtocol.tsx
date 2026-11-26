@@ -69,7 +69,7 @@ export const ToxicologyProtocol: React.FC<ProtocolPanelProps> = ({ weightKg: w, 
 
       <ProtocolSection step={2} title="Recognize the Toxidrome">
         <div className="clinical-table-container" tabIndex={0} role="region" aria-label="Toxidromes">
-          <table className="clinical-table">
+          <table className="clinical-table" aria-label="Toxidromes">
             <thead>
               <tr>
                 <th>Toxidrome</th>
@@ -102,7 +102,7 @@ export const ToxicologyProtocol: React.FC<ProtocolPanelProps> = ({ weightKg: w, 
         {w && nac ? (
           <>
             <div className="clinical-table-container" tabIndex={0} role="region" aria-label="NAC 3-bag regimen">
-              <table className="clinical-table">
+              <table className="clinical-table" aria-label="NAC 3-bag regimen">
                 <thead>
                   <tr>
                     <th>Bag</th>

@@ -99,11 +99,17 @@ function buildRow(d: AsthmaDrug, w: number): DoseRow {
     ...base,
     dose: fmtRange(r, 'mg'),
     volume: perMl ? fmtRangeVolume(r, perMl) : undefined,
-    order: { prefix, module: MODULE, text: `${d.name} ${fmtRange(r, 'mg')} ${d.route}` },
+    order: {
+      prefix,
+      module: MODULE,
+      text: `${d.name} ${fmtRange(r, 'mg')} ${d.route}`,
+      // Prednisolone and dexamethasone are alternatives: only one stays active.
+      exclusive: prefix === 'proto-asthma-steroid',
+    },
   };
 }
 
-export const AsthmaProtocol: React.FC<ProtocolPanelProps> = ({ weightKg: w, onAddOrder }) => {
+export const AsthmaProtocol: React.FC<ProtocolPanelProps> = ({ weightKg: w, onAddOrder, onInvalidateOrders }) => {
   const p = DATASET.asthmaProtocol;
   const steps = p.steps as unknown as AsthmaStep[];
   const hf = p.hfncSettings;
@@ -123,7 +129,7 @@ export const AsthmaProtocol: React.FC<ProtocolPanelProps> = ({ weightKg: w, onAd
 
       <ProtocolSection title="Severity Assessment">
         <div className="clinical-table-container" tabIndex={0} role="region" aria-label="Asthma severity assessment">
-          <table className="clinical-table">
+          <table className="clinical-table" aria-label="Asthma severity assessment">
             <thead>
               <tr>
                 <th>Feature</th>
@@ -168,7 +174,7 @@ export const AsthmaProtocol: React.FC<ProtocolPanelProps> = ({ weightKg: w, onAd
                   { label: 'Flow (1–2 L/kg/min)', value: `${fmtMg(hfMin)}–${fmtMg(hfMax)} L/min`, sub: `Max ${hf.flowRateMaxLPerMin} L/min` },
                   { label: 'Starting FiO₂', value: `${hf.startFiO2Percent}%`, sub: `Titrate to SpO₂ ≥ ${hf.targetSpO2Percent}%` },
                   { label: 'Temperature', value: `${hf.temperatureC} °C`, sub: 'Humidified' },
-                  { label: 'During in-line neb', value: `−${fmtMg(nebReduce)} L/min`, sub: '0.25 L/kg/min, max 10 L/min' },
+                  { label: 'During in-line neb', value: `Reduce to ≤ ${fmtMg(nebReduce)} L/min`, sub: '0.25 L/kg/min, max 10 L/min' },
                 ].map((m) => (
                   <div key={m.label} className="bg-[var(--card)] border border-[var(--border)] rounded-[var(--r-md)] p-2.5">
                     <div className="text-[11px] font-semibold text-[var(--muted)]">{m.label}</div>
@@ -185,6 +191,7 @@ export const AsthmaProtocol: React.FC<ProtocolPanelProps> = ({ weightKg: w, onAd
                 weightKg={w}
                 rows={s.drugs.map((d) => buildRow(d, w))}
                 onAddOrder={onAddOrder}
+                onInvalidateOrders={onInvalidateOrders}
               />
             )}
 

@@ -9,6 +9,7 @@ export interface ProtocolPanelProps {
   weightKg: number;
   ageYears: number | null;
   onAddOrder?: (order: OrderItem) => void;
+  onInvalidateOrders?: (targetPrefix?: string) => void;
 }
 
 export const orderTimestamp = () =>
@@ -137,7 +138,8 @@ export interface DoseRow {
   note?: string;
   /** Contraindication or alarm note, rendered in danger colour. */
   alarm?: string;
-  order?: { prefix: string; module: string; text: string };
+  /** `exclusive`: adding this order replaces any active order with the same prefix (alternative drugs). */
+  order?: { prefix: string; module: string; text: string; exclusive?: boolean };
 }
 
 export const DoseTable: React.FC<{
@@ -145,11 +147,12 @@ export const DoseTable: React.FC<{
   weightKg: number;
   rows: DoseRow[];
   onAddOrder?: (order: OrderItem) => void;
-}> = ({ label, weightKg, rows, onAddOrder }) => {
+  onInvalidateOrders?: (targetPrefix?: string) => void;
+}> = ({ label, weightKg, rows, onAddOrder, onInvalidateOrders }) => {
   const showOrder = Boolean(onAddOrder) && rows.some((r) => r.order);
   return (
     <div className="clinical-table-container" tabIndex={0} role="region" aria-label={label}>
-      <table className="clinical-table">
+      <table className="clinical-table" aria-label={label}>
         <thead>
           <tr>
             <th>Medication</th>
@@ -185,7 +188,11 @@ export const DoseTable: React.FC<{
                       type="button"
                       className="order-btn"
                       title="Add to Active Patient Order Sheet"
-                      onClick={() => onAddOrder(makeOrder(r.order!.prefix, r.order!.module, r.order!.text))}
+                      onClick={() => {
+                        // Invalidate the active alternative first; handleAddOrder then reuses its slot.
+                        if (r.order!.exclusive) onInvalidateOrders?.(r.order!.prefix);
+                        onAddOrder(makeOrder(r.order!.prefix, r.order!.module, r.order!.text));
+                      }}
                     >
                       + Order Sheet
                     </button>

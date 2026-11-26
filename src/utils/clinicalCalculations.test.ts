@@ -963,3 +963,21 @@ test('calcDkaPlan: 48-h deficit minus prior bolus plus capped maintenance', () =
   // Bolus capped at 1000 mL
   assert.equal(calcDkaPlan(70, 10, 0, 0.1)!.resusBolusMaxMl, 1000);
 });
+
+test('calcIVKClReplacement: drawn concentrate volume drives dose and rounded-up dilution', () => {
+  // 3 kg x 0.5 mEq/kg = 1.5 mEq = 0.75 mL of 2 mEq/mL (not rounded to 0.8 mL = 1.6 mEq)
+  const k = calcIVKClReplacement(3, 0.5)!;
+  assert.equal(k.kcl2MeqPerMl, 0.75);
+  assert.equal(k.doseMeq, 1.5);
+  // Volumes round up: 1.5 mEq at <= 80 mEq/L -> 18.75 -> 19 mL; at <= 40 mEq/L -> 37.5 -> 38 mL
+  assert.equal(k.minVolCentralMl, 19);
+  assert.equal(k.minVolPeripheralMl, 38);
+  assert.ok((k.doseMeq / k.minVolCentralMl) * 1000 <= 80);
+  assert.ok((k.doseMeq / k.minVolPeripheralMl) * 1000 <= 40);
+  // Odd weight: 3.3 kg -> 1.65 mEq raw -> 0.8 mL drawn (floor to 0.05 mL) -> 1.6 mEq delivered
+  const odd = calcIVKClReplacement(3.3, 0.5)!;
+  assert.equal(odd.kcl2MeqPerMl, 0.8);
+  assert.equal(odd.doseMeq, 1.6);
+  // Cap at 20 mEq = 10 mL
+  assert.equal(calcIVKClReplacement(60, 0.5)!.kcl2MeqPerMl, 10);
+});

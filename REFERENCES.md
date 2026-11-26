@@ -102,8 +102,9 @@
 - **Monitoring (ISPAD 2022)**: Hourly vital signs, neurological observations (GCS), capillary BG and fluid balance; electrolytes, venous gas and BUN/Cr every 2–4 hours; continuous cardiac monitoring.
 - **Cerebral Edema / Cerebral Injury (ISPAD 2022)**:
   - Warning signs: headache or vomiting after therapy starts, inappropriate bradycardia, rising BP, declining GCS, falling corrected sodium, focal neurological signs.
-  - Treat without waiting for imaging: **Mannitol $0.5\text{–}1\text{ g/kg}$ IV over 10–15 min** or **3% NaCl $2.5\text{–}5\text{ mL/kg}$ IV over 10–15 min**; elevate head of bed 30°; reduce IV fluid rate by one third; PICU.
-- **Resolution Criteria**: Venous $\text{pH} \ge 7.30$, $\text{HCO}_3 \ge 18\text{ mEq/L}$, $\beta$-hydroxybutyrate $< 1\text{ mmol/L}$; transition to SC insulin when tolerating oral intake.
+  - Treat without waiting for imaging: **Mannitol $0.5\text{–}1\text{ g/kg}$ IV over 10–15 min** or **3% NaCl $2.5\text{–}5\text{ mL/kg}$ IV over 10–15 min**; elevate head of bed 30°; adjust IV fluid rate to maintain normal blood pressure while avoiding excess fluid (hypotension compromises cerebral perfusion); PICU.
+- **Resolution Criteria**: Venous $\text{pH} \ge 7.30$, $\text{HCO}_3 \ge 18\text{ mEq/L}$, $\beta$-hydroxybutyrate $< 1\text{ mmol/L}$. Persistently low $\text{HCO}_3$ from hyperchloremic acidosis after ketones have cleared and the anion gap has closed should not delay transition.
+- **Transition Requirements** (separate from resolution): tolerating oral intake; give SC insulin before stopping IV insulin (15–30 min for rapid-acting, 1–2 h for regular insulin).
 - **ISPAD Corrected Sodium Formula**:
   $$\text{Corrected Na} = \text{Measured Na} + 0.02 \times (\text{Blood Glucose} - 100)$$
   *Clinical Note*: Corrected sodium should progressively rise as blood glucose declines; a falling corrected sodium is an early warning sign of free water excess and impending cerebral edema.
@@ -130,7 +131,7 @@
 3. **High-Flow Nasal Cannula (HFNC)**:
    - Flow Rate: $1\text{–}2\text{ L/kg/min}$ (max $60\text{ L/min}$).
    - $\text{FiO}_2$: Start at $40\%$ and titrate to maintain $\text{SpO}_2 \ge 92\%$. Temperature: $37^\circ\text{C}$.
-   - Nebulization during HFNC: Reduce base HFNC flow by $\le 0.25\text{ L/kg/min}$ (max reduction $10\text{ L/min}$) during in-line mesh nebulization to prevent pulmonary overdistension.
+   - Nebulization during HFNC: Reduce HFNC flow **to** $\le 0.25\text{ L/kg/min}$ (max $10\text{ L/min}$) during in-line mesh nebulization; higher flows reduce aerosol deposition.
 4. **Second-Line IV Bronchodilators (IV Magnesium Sulfate)**:
    - **IV Magnesium Sulfate**: $40\text{–}50\text{ mg/kg}$ (max $2000\text{ mg} = 2\text{ g}$) infused intravenously over 20–30 minutes.
    - *Evidence Note (GINA 2026)*: **Nebulized Magnesium Sulfate is explicitly NOT recommended** due to lack of demonstrated clinical efficacy in multi-center RCTs; IV route is the validated standard.
@@ -199,6 +200,7 @@
   - **Safe Correction Cap**: Total sodium increase must not exceed **$\le 8\text{–}10\text{ mEq/L/day}$** ($\le 0.5\text{ mEq/L/hr}$) to avoid Osmotic Demyelination Syndrome (ODS).
 - **Hypernatremic Dehydration (Free Water Deficit)**:
   $$\text{Free Water Deficit (L)} = \text{TBW} \times \text{Weight (kg)} \times \left( \frac{\text{Serum Na}}{140} - 1 \right)$$
+  - **Severe hypernatremia ($\text{Na} \ge 170\text{ mEq/L}$)**: emergency; involve PICU / nephrology for an individualized, slower correction plan rather than a routine 48-hour rate.
   - Rehydrate slowly over **48 hours**. Serum sodium reduction must not exceed **$\le 0.5\text{ mEq/L/hr}$** ($\le 10\text{–}12\text{ mEq/L/day}$) to prevent fatal cerebral edema and seizures.
 - **Hyperkalemia Resuscitation (3-Step Cocktail)**:
   1. **Membrane Stabilization**: 10% Calcium Gluconate $0.5\text{–}1.0\text{ mL/kg}$ ($50\text{–}100\text{ mg/kg}$, max $10\text{ mL} / 1000\text{ mg}$) IV slow over 5–10 min under ECG monitoring.

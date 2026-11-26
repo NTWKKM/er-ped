@@ -92,8 +92,11 @@ export const SedationProtocol: React.FC<ProtocolPanelProps> = ({ weightKg: w, on
         ) : (
           <NeedWeight what="sedation doses" />
         )}
+        <Callout tone="danger" title="Ketamine absolute contraindications: do not use">
+          <Checklist items={s.ketamineAbsoluteContraindications} />
+        </Callout>
         <Callout tone="warning" title="Ketamine relative contraindications">
-          <Checklist items={s.ketamineContraindications} />
+          <Checklist items={s.ketamineRelativeContraindications} />
         </Callout>
         <p className="text-xs text-[var(--ink-secondary)]">
           Titrate to effect and wait for peak onset before redosing. Combining an opioid with a benzodiazepine sharply increases the
@@ -107,7 +110,7 @@ export const SedationProtocol: React.FC<ProtocolPanelProps> = ({ weightKg: w, on
 
       <ProtocolSection step={5} title="Adverse Events and Rescue" tone="danger">
         <div className="clinical-table-container" tabIndex={0} role="region" aria-label="PSA adverse event management">
-          <table className="clinical-table">
+          <table className="clinical-table" aria-label="PSA adverse event management">
             <thead>
               <tr>
                 <th>Event</th>

@@ -21,7 +21,7 @@ export const VitalsReference: React.FC<{ ageYears: number | null }> = ({ ageYear
 
       <ProtocolSection title="Normal Ranges by Age">
         <div className="clinical-table-container" tabIndex={0} role="region" aria-label="Pediatric vital signs reference table">
-          <table className="clinical-table">
+          <table className="clinical-table" aria-label="Pediatric vital signs reference table">
             <thead>
               <tr>
                 <th>Age Group</th>
@@ -58,7 +58,7 @@ export const VitalsReference: React.FC<{ ageYears: number | null }> = ({ ageYear
 
       <ProtocolSection title="PALS Definition of Hypotension">
         <div className="clinical-table-container" tabIndex={0} role="region" aria-label="PALS hypotension thresholds">
-          <table className="clinical-table">
+          <table className="clinical-table" aria-label="PALS hypotension thresholds">
             <thead>
               <tr>
                 <th>Age</th>

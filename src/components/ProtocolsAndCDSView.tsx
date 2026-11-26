@@ -79,7 +79,7 @@ export const ProtocolsAndCDSView: React.FC<ProtocolsAndCDSViewProps> = ({
   };
 
   const w = activeWeight || 0;
-  const common = { weightKg: w, ageYears, onAddOrder };
+  const common = { weightKg: w, ageYears, onAddOrder, onInvalidateOrders };
 
   return (
     <div className="clinical-card p-4 sm:p-5 space-y-4 sm:space-y-5">
