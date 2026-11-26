@@ -1378,10 +1378,17 @@ export function calcWeightDoseRange(
 export interface NacBag {
   bag: 1 | 2 | 3;
   doseMg: number;
+  /** NAC 20% (200 mg/mL) concentrate drawn up for this bag. */
+  nacMl: number;
   diluentMl: number;
+  /** Diluent + concentrate: the volume the pump actually delivers. */
+  totalMl: number;
   durationHr: number;
   rateMlPerHr: number;
 }
+
+/** IV acetylcysteine concentrate strength (20% = 200 mg/mL). */
+export const NAC_CONC_MG_PER_ML = 200;
 
 /** NAC dosing weight ceiling (standard 21-h IV regimen caps at 100 kg). */
 export const NAC_MAX_DOSING_WEIGHT_KG = 100;
@@ -1390,7 +1397,8 @@ export const NAC_MAX_DOSING_WEIGHT_KG = 100;
  * 21-hour IV N-acetylcysteine (3-bag) regimen per REFERENCES.md 8.2:
  * 150 mg/kg in D5W over 1 h, 50 mg/kg over 4 h, 100 mg/kg over 16 h.
  * D5W volume scales to 3 / 7 / 14 mL/kg below 20 kg to prevent hyponatremia,
- * otherwise 200 / 500 / 1000 mL.
+ * otherwise 200 / 500 / 1000 mL. The pump rate is based on the total prepared
+ * volume (diluent + concentrate) so the full dose runs over the stated duration.
  */
 export function calcNacRegimen(weightKg: number | null | undefined): NacBag[] | null {
   if (!weightKg || !Number.isFinite(weightKg) || weightKg <= 0) return null;
@@ -1403,12 +1411,17 @@ export function calcNacRegimen(weightKg: number | null | undefined): NacBag[] | 
   ];
   return spec.map(([bag, mgPerKg, mlPerKg, fixedMl, durationHr]) => {
     const diluentMl = small ? Math.round(weightKg * mlPerKg) : fixedMl;
+    const doseMg = Math.round(dosingWt * mgPerKg);
+    const nacMl = +(doseMg / NAC_CONC_MG_PER_ML).toFixed(2);
+    const totalMl = +(diluentMl + nacMl).toFixed(2);
     return {
       bag,
-      doseMg: Math.round(dosingWt * mgPerKg),
+      doseMg,
+      nacMl,
       diluentMl,
+      totalMl,
       durationHr,
-      rateMlPerHr: +(diluentMl / durationHr).toFixed(1),
+      rateMlPerHr: +(totalMl / durationHr).toFixed(1),
     };
   });
 }

@@ -906,14 +906,17 @@ test('calcWeightDoseRange: per-kg range, ceiling and floor', () => {
 
 test('calcNacRegimen: 3-bag 21-h regimen with < 20 kg D5W volume scaling', () => {
   const small = calcNacRegimen(10)!;
+  // Rate runs the total prepared volume (D5W + 200 mg/mL concentrate) over the duration
   assert.deepEqual(
-    small.map((b) => [b.doseMg, b.diluentMl, b.durationHr, b.rateMlPerHr]),
+    small.map((b) => [b.doseMg, b.nacMl, b.diluentMl, b.totalMl, b.durationHr, b.rateMlPerHr]),
     [
-      [1500, 30, 1, 30],
-      [500, 70, 4, 17.5],
-      [1000, 140, 16, 8.8],
+      [1500, 7.5, 30, 37.5, 1, 37.5],
+      [500, 2.5, 70, 72.5, 4, 18.1],
+      [1000, 5, 140, 145, 16, 9.1],
     ]
   );
+  // The full bag delivers the full dose: rate x duration covers the prepared volume
+  for (const b of small) assert.ok(b.rateMlPerHr * b.durationHr >= b.totalMl - 0.1);
   const big = calcNacRegimen(40)!;
   assert.deepEqual(big.map((b) => b.diluentMl), [200, 500, 1000]);
   assert.deepEqual(big.map((b) => b.doseMg), [6000, 2000, 4000]);

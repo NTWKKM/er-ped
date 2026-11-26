@@ -48,7 +48,10 @@ interface CroupProtocolProps extends ProtocolPanelProps {
 export const CroupProtocol: React.FC<CroupProtocolProps> = ({ weightKg: w, onAddOrder, westley, onChangeWestley }) => {
   const c = DATASET.croup;
   const score = Object.values(westley).reduce((a, b) => a + b, 0);
-  const severity = classifyWestleyScore(score) ?? 'mild';
+  // Cyanosis or altered consciousness override the summed score (e.g. cyanosis at rest
+  // + stridor at rest = 7 would otherwise land in the moderate band).
+  const hasDangerSign = westley.cyanosis > 0 || westley.consciousness > 0;
+  const severity = hasDangerSign ? 'failure' : (classifyWestleyScore(score) ?? 'mild');
   const band = c.severityBands.find((b) => b.key === severity)!;
   const bandTone =
     severity === 'failure' || severity === 'severe' ? 'danger' : severity === 'moderate' ? 'warning' : 'info';
@@ -88,7 +91,12 @@ export const CroupProtocol: React.FC<CroupProtocolProps> = ({ weightKg: w, onAdd
             </div>
           ))}
         </div>
-        <div aria-live="polite">
+        <div aria-live="polite" className="space-y-2">
+          {hasDangerSign && (
+            <Callout tone="danger" title={c.dangerSignOverride.title}>
+              {c.dangerSignOverride.text}
+            </Callout>
+          )}
           <Callout tone={bandTone} title={`Score ${score} / 17: ${band.label}`}>
             {band.description}
           </Callout>

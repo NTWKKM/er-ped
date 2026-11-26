@@ -13820,7 +13820,11 @@
       "Normal SpO₂ and air entry, normal color and level of consciousness",
       "≥ 2–4 h since last nebulized epinephrine",
       "Dexamethasone given; caregiver understands return precautions"
-    ]
+    ],
+    "dangerSignOverride": {
+      "title": "Danger signs override the score",
+      "text": "Cyanosis or decreased level of consciousness means impending respiratory failure regardless of the total score: follow the impending-failure plan (senior airway assessment, nebulized epinephrine and O₂, PICU)."
+    }
   },
   "transfusion": {
     "prbc": {
@@ -14205,7 +14209,7 @@
     "adverseEvents": [
       {
         "event": "Hypoventilation / apnea",
-        "action": "Stimulate, jaw thrust, O₂, BVM; give reversal if opioid or benzodiazepine involved"
+        "action": "Always: stimulate, jaw thrust, O₂, BVM ventilation. Reversal is agent-specific: Naloxone if an opioid was given; Flumazenil only if a benzodiazepine was given AND no exclusion (chronic benzodiazepine use, seizure disorder, TCA or proconvulsant co-ingestion)."
       },
       {
         "event": "Laryngospasm (ketamine)",
@@ -14285,7 +14289,7 @@
       "Corrosives, hydrocarbons, alcohols, metals (iron, lithium)",
       "Bowel obstruction or perforation risk"
     ],
-    "nacTreatmentLine": "Treat if 4 h level ≥ 150 mcg/mL (Rumack-Matthew treatment line), unknown time with detectable level, or ingestion ≥ 150–200 mg/kg when level not available within 8 h."
+    "nacTreatmentLine": "Known-time acute ingestion: draw the level ≥ 4 h after ingestion and plot it at its sample time on the Rumack-Matthew nomogram (treatment line 150 mcg/mL at 4 h, falling with time); treat if on or above the line. Start NAC without waiting if the ingestion time is unknown and paracetamol is detectable, or if ≥ 150–200 mg/kg was ingested and the level will not be available within 8 h."
   },
   "vitalSignsHypotension": [
     {
