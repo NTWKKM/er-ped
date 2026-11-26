@@ -12325,8 +12325,8 @@
       "rateMinUnitsPerKgHr": 0.05,
       "rateMaxUnitsPerKgHr": 0.1,
       "prep": "50 Units Regular Insulin in 50 mL 0.9% NS (1 Unit/mL)",
-      "kThresholdMin": 3.3,
-      "note": "⚠️ Start Insulin 1–2 hours AFTER starting fluid replacement. DO NOT start Insulin if K+ < 3.3 mEq/L! Target BG drop: 50–75 mg/dL/hr.",
+      "kThresholdMin": 3.5,
+      "note": "⚠️ Start Insulin 1–2 hours AFTER starting fluid replacement. DO NOT start Insulin if K+ < 3.5 mEq/L! Target BG drop: 50–75 mg/dL/hr.",
       "noBolus": "NEVER give an IV insulin bolus (cerebral edema and hypokalemia risk).",
       "titration": "Keep the insulin rate; if BG falls too fast add or increase dextrose (D5 → D10/D12.5) rather than stopping insulin. Lower to 0.05 U/kg/hr only if BG stays low despite D10."
     },
@@ -12337,11 +12337,11 @@
     },
     "potassiumRules": [
       {
-        "range": "< 3.3 mEq/L",
-        "action": "HOLD Insulin. Add 40 mEq/L KCl to IV fluid. Give 0.5 mEq/kg/hr until K+ > 3.3 mEq/L."
+        "range": "< 3.5 mEq/L",
+        "action": "HOLD Insulin. Add 40 mEq/L KCl to IV fluid. Give up to 0.5 mEq/kg/hr until K+ ≥ 3.5 mEq/L."
       },
       {
-        "range": "3.3–5.5 mEq/L",
+        "range": "3.5–5.5 mEq/L",
         "action": "Add 20–40 mEq/L KCl to IV fluid once urine output is established."
       },
       {
