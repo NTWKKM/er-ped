@@ -328,6 +328,12 @@ button[aria-pressed="true"].is-accent-fill {
   outline-offset: 2px;
 }
 
+/* Marketed-strength radios are visually hidden; the ring goes on their label */
+.strength-option:has(input:focus-visible) {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
 .clinical-input:focus-visible {
   outline-offset: 1px;
 }

@@ -100,11 +100,17 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isRenalReviewed, setIsRenalReviewed] = useState<boolean>(false);
   const [isRenalDetailsOpen, setIsRenalDetailsOpen] = useState<boolean>(false);
+  // True when the concentration came from the marketed-strength radios, not typed in the field
+  const [isStrengthPicked, setIsStrengthPicked] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setIsRenalReviewed(false);
   }, [selectedKey, serumCr, heightCm, activeWeight]);
+
+  useEffect(() => {
+    setIsStrengthPicked(false);
+  }, [selectedKey]);
 
   const allDrugs = DATASET.pediatricDose;
 
@@ -321,7 +327,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
   const hasNumericDose = matchedRenalTier ? hasNumericRenalDose : hasNumericStandardDose;
 
   const concSuffix = effectiveMgPerMl
-    ? selectedStrengthOption && strength.hasMultipleConcs
+    ? selectedStrengthOption
       ? ` [${selectedStrengthOption.label} = ${fmtConc(effectiveMgPerMl)} mg/mL]`
       : ` [${fmtConc(effectiveMgPerMl)} mg/mL]`
     : '';
@@ -647,35 +653,42 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
           {/* Marketed strength selector & optional custom concentration */}
           <div className="flex flex-col gap-2.5 pt-2.5 border-t border-[var(--border)] text-xs text-[var(--muted)]">
             {strength.options && strength.options.length > 1 && (
-              <div role="radiogroup" aria-label="Strength in hand" className="flex flex-col gap-1.5">
-                <span className={`font-semibold ${!effectiveMgPerMl ? 'text-[var(--warning-text)]' : ''}`}>
+              <fieldset className="flex flex-col gap-1.5 min-w-0">
+                <legend className={`font-semibold mb-1.5 ${!effectiveMgPerMl ? 'text-[var(--warning-text)]' : ''}`}>
                   Strength in hand:
-                </span>
+                </legend>
                 <div className="flex flex-wrap gap-1.5">
                   {strength.options.map((o) => {
                     const isActive = selectedStrengthOption?.mgPerMl === o.mgPerMl;
                     return (
-                      <button
+                      <label
                         key={o.mgPerMl}
-                        type="button"
-                        role="radio"
-                        aria-checked={isActive}
-                        onClick={() => handleConcOverrideChange(String(o.mgPerMl))}
-                        className={`min-h-[44px] sm:min-h-[36px] px-3 py-1 rounded-lg border text-left cursor-pointer transition-colors ${
+                        className={`strength-option min-h-[44px] sm:min-h-[36px] px-3 py-1 rounded-lg border text-left cursor-pointer transition-colors ${
                           isActive
                             ? 'border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent-text)]'
                             : 'border-[var(--border)] bg-[var(--panel-subtle)] text-[var(--ink-secondary)] hover:text-[var(--ink)]'
                         }`}
                       >
+                        <input
+                          type="radio"
+                          name={`strength-${selectedDrug.key}`}
+                          value={o.mgPerMl}
+                          checked={isActive}
+                          onChange={() => {
+                            setIsStrengthPicked(true);
+                            handleConcOverrideChange(String(o.mgPerMl));
+                          }}
+                          className="sr-only"
+                        />
                         <span className="block text-xs font-bold">{o.label}</span>
                         <span className="block text-[11px] font-mono-tabular opacity-80">
                           {fmtConc(o.mgPerMl)} mg/mL
                         </span>
-                      </button>
+                      </label>
                     );
                   })}
                 </div>
-              </div>
+              </fieldset>
             )}
             <div className="flex flex-wrap items-center justify-between sm:justify-end gap-2">
               <label htmlFor="doseConc" className="whitespace-nowrap font-semibold">
@@ -688,8 +701,11 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
                 step="0.1"
                 inputMode="decimal"
                 placeholder={strength.mgPerMl ? fmtConc(strength.mgPerMl) : 'mg/mL'}
-                value={selectedStrengthOption && strength.hasMultipleConcs ? '' : concOverride}
-                onChange={(e) => handleConcOverrideChange(e.target.value)}
+                value={isStrengthPicked ? '' : concOverride}
+                onChange={(e) => {
+                  setIsStrengthPicked(false);
+                  handleConcOverrideChange(e.target.value);
+                }}
                 className={`clinical-input w-24 text-center font-mono-tabular text-xs font-bold py-1.5 ${
                   strength.hasMultipleConcs && !effectiveMgPerMl ? 'border-[var(--warning)]' : ''
                 }`}
