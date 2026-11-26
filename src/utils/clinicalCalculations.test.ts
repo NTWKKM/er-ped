@@ -30,6 +30,7 @@ import {
   calcParklandBurn,
   calcTransfusion,
   parseStrength,
+  resolveDrugStrength,
   calcWeightDoseRange,
   calcNacRegimen,
   classifyWestleyScore,
@@ -741,6 +742,52 @@ test('Unified drug dose resolution with safety ceilings and age restriction', ()
   const same = parseStrength('10 mg / 10 mL = 1 mg/mL');
   assert.equal(same.mgPerMl, 1);
   assert.equal(same.hasMultipleConcs, undefined);
+  // Parsed options keep the label as printed
+  assert.deepEqual(parseStrength('Vials 20 mg / 2 mL ; 80 mg / 2 mL').options?.map((o) => o.label), [
+    '20 mg/2 mL',
+    '80 mg/2 mL',
+  ]);
+});
+
+test('Curated marketed formulations override free-text strength parsing', () => {
+  const all = [...DATASET.pediatricDose, ...DATASET.pediatricATB];
+
+  // Shorthand "125/250 mg per 5 mL" is unparseable; curated list exposes both dry syrups
+  const amox = DATASET.pediatricDose.find((d) => d.key === 'amoxicillin-po')!;
+  assert.equal(parseStrength(amox.preparation).mgPerMl, undefined);
+  const amoxS = resolveDrugStrength(amox);
+  assert.equal(amoxS.hasMultipleConcs, true);
+  assert.equal(amoxS.mgPerMl, undefined);
+  assert.deepEqual(amoxS.availableConcs, [25, 50]);
+
+  // Amox/Clav is dosed on the Amoxicillin component: 200, 400, 600 mg Amox per 5 mL
+  const augmentin = resolveDrugStrength(all.find((d) => d.key === 'amoxicillin-clav-po-iv'));
+  assert.deepEqual(augmentin.availableConcs, [40, 80, 120]);
+
+  // Co-trimoxazole is dosed on TMP: 40 mg TMP / 5 mL, a single strength (auto-selected)
+  assert.equal(resolveDrugStrength(all.find((d) => d.key === 'cotrimoxazole-po')).mgPerMl, 8);
+
+  // Caffeine is dosed as citrate: the 10 mg/mL base equivalent must not be offered
+  const caffeine = resolveDrugStrength(all.find((d) => d.key === 'caffeine-citrate-nicu'));
+  assert.equal(caffeine.mgPerMl, 20);
+  assert.equal(caffeine.hasMultipleConcs, undefined);
+
+  // Drugs without curated formulations still fall back to parsing
+  const pcm = DATASET.pediatricDose.find((d) => d.key === 'paracetamol-syrup-120-mg-5-ml')!;
+  assert.equal(resolveDrugStrength(pcm).mgPerMl, 24);
+
+  // Every curated formulation is a positive, distinct concentration with a label,
+  // and duplicated entries (pediatricDose / pediatricATB) carry identical lists
+  const byKey = new Map<string, string>();
+  for (const d of all) {
+    if (!d.formulations) continue;
+    const concs = d.formulations.map((f) => f.mgPerMl);
+    assert.ok(d.formulations.every((f) => f.label.trim() && f.mgPerMl > 0), d.key);
+    assert.equal(new Set(concs).size, concs.length, `${d.key} has duplicate strengths`);
+    const sig = JSON.stringify(d.formulations);
+    if (byKey.has(d.key)) assert.equal(byKey.get(d.key), sig, `${d.key} differs between tables`);
+    byKey.set(d.key, sig);
+  }
 });
 
 test('Bedside Schwartz eGFR and Holliday-Segar maintenance fluids', () => {

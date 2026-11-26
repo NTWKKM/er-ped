@@ -613,11 +613,43 @@ export function fmtMl(n: number | null | undefined): string {
   return n >= 10 ? n.toFixed(1) : n.toFixed(2);
 }
 
+/** One marketed liquid strength the clinician can pick (label as printed on the product). */
+export interface StrengthOption {
+  label: string;
+  mgPerMl: number;
+}
+
 export interface ParsedStrength {
   mgPerMl?: number;
   mgPerTab?: number;
   availableConcs?: number[];
+  /** Same order as `availableConcs`; each carries the label as sold. */
+  options?: StrengthOption[];
   hasMultipleConcs?: boolean;
+}
+
+const sameConc = (a: number, b: number) => Math.abs(a - b) < 1e-4;
+
+/** Collapse options to unique concentrations and derive the single/multiple strength state. */
+function strengthFromOptions(options: StrengthOption[], mgPerTab?: number): ParsedStrength {
+  const unique: StrengthOption[] = [];
+  for (const o of options) {
+    if (!(o.mgPerMl > 0) || !Number.isFinite(o.mgPerMl)) continue;
+    if (!unique.some((u) => sameConc(u.mgPerMl, o.mgPerMl))) unique.push(o);
+  }
+  if (unique.length === 1) {
+    return { mgPerMl: unique[0].mgPerMl, mgPerTab, options: unique };
+  }
+  if (unique.length > 1) {
+    // Require explicit concentration selection; do not silently default to one
+    return {
+      mgPerTab,
+      availableConcs: unique.map((o) => o.mgPerMl),
+      options: unique,
+      hasMultipleConcs: true,
+    };
+  }
+  return mgPerTab ? { mgPerTab } : {};
 }
 
 export function parseStrength(prepText?: string | null): ParsedStrength {
@@ -625,34 +657,35 @@ export function parseStrength(prepText?: string | null): ParsedStrength {
   const s = String(prepText).replace(/\s+/g, ' ').trim();
 
   const concMatches = Array.from(s.matchAll(/(\d+(?:\.\d+)?)\s*mg\s*\/\s*(?:(\d+(?:\.\d+)?)\s*)?mL/gi));
-  const concs: number[] = [];
+  const options: StrengthOption[] = [];
   for (const m of concMatches) {
     const mg = parseFloat(m[1]);
     const ml = m[2] ? parseFloat(m[2]) : 1;
     if (mg > 0 && ml > 0) {
-      const val = mg / ml;
-      if (!concs.some((c) => Math.abs(c - val) < 1e-4)) {
-        concs.push(val);
-      }
+      options.push({ label: m[0].replace(/\s*\/\s*/, '/'), mgPerMl: mg / ml });
     }
   }
 
   const tabMatch = s.match(/(\d+(?:\.\d+)?)\s*mg\s*\/\s*(?:tab|tablet|cap)/i);
   const mgPerTab = tabMatch && parseFloat(tabMatch[1]) > 0 ? parseFloat(tabMatch[1]) : undefined;
 
-  if (concs.length === 1) {
-    return { mgPerMl: concs[0], mgPerTab };
-  }
-  if (concs.length > 1) {
-    return {
-      mgPerTab,
-      availableConcs: concs,
-      hasMultipleConcs: true,
-      // Require explicit concentration selection; do not silently default to one
-    };
-  }
+  return strengthFromOptions(options, mgPerTab);
+}
 
-  return mgPerTab ? { mgPerTab } : {};
+/**
+ * Strength for a formulary entry. Curated `formulations` (marketed strengths, mg of the
+ * dosed component per mL) take precedence over free-text parsing of `preparation`,
+ * which cannot read shorthand such as "125/250 mg per 5 mL" or combination products.
+ */
+export function resolveDrugStrength(
+  drug?: { preparation?: string; name?: string; formulations?: StrengthOption[] } | null
+): ParsedStrength {
+  if (!drug) return {};
+  const parsed = parseStrength(drug.preparation || drug.name || '');
+  if (Array.isArray(drug.formulations) && drug.formulations.length > 0) {
+    return strengthFromOptions(drug.formulations, parsed.mgPerTab);
+  }
+  return parsed;
 }
 
 export function dosesPerDayFromFreq(freq?: string | null): number | null {

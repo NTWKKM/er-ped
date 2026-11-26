@@ -30,11 +30,19 @@ export interface DoseBand {
   note?: string;
 }
 
+/** A marketed liquid strength; `mgPerMl` is mg of the dosed component (e.g. Amoxicillin, TMP). */
+export interface Formulation {
+  label: string;
+  mgPerMl: number;
+}
+
 export interface PediatricDrug {
   key: string;
   drug: string;
   name: string;
   preparation?: string;
+  /** Curated marketed strengths; overrides free-text parsing of `preparation`. */
+  formulations?: Formulation[];
   note?: string;
   unit?: string;
   unitType?: string;
