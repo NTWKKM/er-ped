@@ -128,7 +128,29 @@ export const AsthmaProtocol: React.FC<ProtocolPanelProps> = ({ weightKg: w, onAd
       />
 
       <ProtocolSection title="Severity Assessment">
-        <div className="clinical-table-container" tabIndex={0} role="region" aria-label="Asthma severity assessment">
+        {/* Phones: one block per severity so the Life-threatening column is never scrolled off screen. */}
+        <div className="sm:hidden space-y-3">
+          {(
+            [
+              { key: 'mildModerate', label: 'Mild to Moderate', ink: 'text-[var(--ink)]' },
+              { key: 'severe', label: 'Severe', ink: 'text-[var(--ink)]' },
+              { key: 'lifeThreatening', label: 'Life-threatening', ink: 'text-[var(--danger-text)]' },
+            ] as const
+          ).map((band) => (
+            <div key={band.key} className="clinical-panel-subtle p-3">
+              <h4 className={`text-sm font-bold mb-1.5 ${band.ink}`}>{band.label}</h4>
+              <dl className="grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-x-3 gap-y-1 text-[13px] leading-snug">
+                {p.severityAssessment.map((r) => (
+                  <React.Fragment key={r.feature}>
+                    <dt className="text-[var(--muted)]">{r.feature}</dt>
+                    <dd className="text-[var(--ink)]">{r[band.key]}</dd>
+                  </React.Fragment>
+                ))}
+              </dl>
+            </div>
+          ))}
+        </div>
+        <div className="hidden sm:block clinical-table-container" tabIndex={0} role="region" aria-label="Asthma severity assessment">
           <table className="clinical-table" aria-label="Asthma severity assessment">
             <thead>
               <tr>
@@ -163,7 +185,7 @@ export const AsthmaProtocol: React.FC<ProtocolPanelProps> = ({ weightKg: w, onAd
             key={s.stage}
             step={i + 1}
             title={s.name}
-            timing={s.stage}
+            timing={s.stage === 'Life-threatening' ? undefined : s.stage}
             tone={s.stage === 'Life-threatening' ? 'danger' : 'default'}
           >
             <p className="text-[13px] text-[var(--ink)] leading-snug">{s.actions}</p>
@@ -176,9 +198,9 @@ export const AsthmaProtocol: React.FC<ProtocolPanelProps> = ({ weightKg: w, onAd
                   { label: 'Temperature', value: `${hf.temperatureC} °C`, sub: 'Humidified' },
                   { label: 'During in-line neb', value: `Reduce to ≤ ${fmtMg(nebReduce)} L/min`, sub: '0.25 L/kg/min, max 10 L/min' },
                 ].map((m) => (
-                  <div key={m.label} className="bg-[var(--card)] border border-[var(--border)] rounded-[var(--r-md)] p-2.5">
+                  <div key={m.label} className="clinical-panel-subtle p-2.5">
                     <div className="text-[11px] font-semibold text-[var(--muted)]">{m.label}</div>
-                    <div className="text-base sm:text-lg font-extrabold font-mono-tabular text-[var(--ink)]">{m.value}</div>
+                    <div className="text-base sm:text-lg font-bold font-mono-tabular text-[var(--ink)]">{m.value}</div>
                     <div className="text-[11px] text-[var(--muted)]">{m.sub}</div>
                   </div>
                 ))}

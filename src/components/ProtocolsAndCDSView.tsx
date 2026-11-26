@@ -34,12 +34,13 @@ export const DEFAULT_PROTOCOLS_INPUTS: ProtocolsInputs = {
   dkaSeverity: 7,
   dkaPriorBolus: '0',
   dkaInsulinRate: 0.1,
-  lyteNa: '130',
-  lyteGlucose: '350',
-  lyteTotalCa: '7.4',
-  lyteAlbumin: '2.5',
-  lyteK: '3.2',
-  lytePH: '7.15',
+  // Labs start empty: a pre-filled sample would render as this patient's corrected values.
+  lyteNa: '',
+  lyteGlucose: '',
+  lyteTotalCa: '',
+  lyteAlbumin: '',
+  lyteK: '',
+  lytePH: '',
   westley: DEFAULT_WESTLEY,
 };
 

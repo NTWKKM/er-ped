@@ -31,9 +31,9 @@ const Metric: React.FC<{ label: string; value: string; sub?: string; action?: Re
   sub,
   action,
 }) => (
-  <div className="bg-[var(--card)] border border-[var(--border)] rounded-[var(--r-md)] p-3">
+  <div className="clinical-panel-subtle p-3">
     <div className="text-xs font-semibold text-[var(--muted)]">{label}</div>
-    <div className="text-lg sm:text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-0.5">{value}</div>
+    <div className="text-lg sm:text-xl font-bold font-mono-tabular text-[var(--ink)] mt-0.5">{value}</div>
     {sub && <div className="text-xs text-[var(--ink-secondary)] mt-0.5">{sub}</div>}
     {action && <div className="mt-2">{action}</div>}
   </div>

@@ -175,7 +175,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
           <div className="contents sm:flex sm:flex-auto sm:min-w-0 sm:items-center sm:gap-2.5">
             {/* Brand Wordmark (hidden on mobile) */}
             <div className="hidden sm:flex items-center gap-2.5 shrink-0">
-              <span className="text-base font-extrabold tracking-tight text-[var(--ink)] select-none whitespace-nowrap">
+              <span className="text-base font-bold tracking-tight text-[var(--ink)] select-none whitespace-nowrap">
                 ER-PED
               </span>
               <div className="h-4 w-[1px] bg-[var(--border-strong)] shrink-0" />
@@ -381,7 +381,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                 </span>
                 <strong
                   id="activeWeightVal"
-                  className="font-mono-tabular font-extrabold text-xs sm:text-base text-[var(--ink)] leading-none whitespace-nowrap"
+                  className="font-mono-tabular font-bold text-xs sm:text-base text-[var(--ink)] leading-none whitespace-nowrap"
                 >
                   {activeWeight ? `${activeWeight.toFixed(1)} kg` : '— kg'}
                 </strong>
@@ -461,7 +461,7 @@ export const TopbarBiometrics: React.FC<TopbarBiometricsProps> = ({
                   <FileText className="w-4 h-4 shrink-0" />
                   <span className="hidden sm:inline text-xs font-bold whitespace-nowrap">Orders</span>
                   {orderCount > 0 && (
-                    <span className="font-mono-tabular text-[11px] font-extrabold">
+                    <span className="font-mono-tabular text-[11px] font-bold">
                       ({orderCount})
                     </span>
                   )}
