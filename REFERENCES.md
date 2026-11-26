@@ -101,13 +101,13 @@
   - Sodium bicarbonate is **strictly NOT recommended** in pediatric DKA due to risks of paradoxical CNS acidosis, intracellular hypokalemia, and cerebral edema, except in profound life-threatening acidosis ($\text{pH} < 6.90$) with hemodynamic collapse.
 - **Monitoring (ISPAD 2022)**: Hourly vital signs, neurological observations (GCS), capillary BG and fluid balance; electrolytes, venous gas and BUN/Cr every 2–4 hours; continuous cardiac monitoring.
 - **Cerebral Edema / Cerebral Injury (ISPAD 2022)**:
-  - Warning signs: headache or vomiting after therapy starts, inappropriate bradycardia, rising BP, declining GCS, falling corrected sodium, focal neurological signs.
+  - Warning signs: headache or vomiting after therapy starts, inappropriate bradycardia, rising BP with bradycardia or neurological change (Cushing response; hypertension alone is not a warning sign), declining GCS, focal neurological signs.
   - Treat without waiting for imaging: **Mannitol $0.5\text{–}1\text{ g/kg}$ IV over 10–15 min** or **3% NaCl $2.5\text{–}5\text{ mL/kg}$ IV over 10–15 min**; elevate head of bed 30°; adjust IV fluid rate to maintain normal blood pressure while avoiding excess fluid (hypotension compromises cerebral perfusion); PICU.
 - **Resolution Criteria**: Venous $\text{pH} \ge 7.30$, $\text{HCO}_3 \ge 18\text{ mEq/L}$, $\beta$-hydroxybutyrate $< 1\text{ mmol/L}$. Persistently low $\text{HCO}_3$ from hyperchloremic acidosis after ketones have cleared and the anion gap has closed should not delay transition.
-- **Transition Requirements** (separate from resolution): tolerating oral intake; give SC insulin before stopping IV insulin (15–30 min for rapid-acting, 1–2 h for regular insulin).
+- **Transition Requirements** (separate from resolution): tolerating oral intake; background (basal) insulin coverage confirmed (start the basal plan if none is active, e.g. new diagnosis; if basal insulin is already active, confirm coverage instead of a duplicate dose); give SC insulin before stopping IV insulin (15–30 min for rapid-acting, 1–2 h for regular insulin).
 - **ISPAD Corrected Sodium Formula**:
   $$\text{Corrected Na} = \text{Measured Na} + 0.02 \times (\text{Blood Glucose} - 100)$$
-  *Clinical Note*: Corrected sodium should progressively rise as blood glucose declines; a falling corrected sodium is an early warning sign of free water excess and impending cerebral edema.
+  *Clinical Note*: Measured sodium usually rises as blood glucose declines. A slow fall in corrected sodium during otherwise normal recovery is acceptable (ISPAD 2022) and is not by itself a cerebral-injury warning sign; keep hourly neurological observations and treat suspected cerebral injury immediately.
 
 ---
 
@@ -239,7 +239,7 @@
     | Weight | Bag 1 | Bag 2 | Bag 3 |
     | :--- | :--- | :--- | :--- |
     | $\le 20\text{ kg}$ | $3\text{ mL/kg}$ | $7\text{ mL/kg}$ | $14\text{ mL/kg}$ |
-    | 21–40 kg | $100\text{ mL}$ | $250\text{ mL}$ | $500\text{ mL}$ |
+    | > 20–40 kg | $100\text{ mL}$ | $250\text{ mL}$ | $500\text{ mL}$ |
     | $> 40\text{ kg}$ | $200\text{ mL}$ | $500\text{ mL}$ | $1000\text{ mL}$ |
   - Pump rate runs the total bag volume (diluent + 200 mg/mL concentrate) over the stated time.
   - *Total Dose*: $300\text{ mg/kg}$ over 21 hours (dosing weight capped at 100 kg). Weight-tiered diluent volumes are critical to prevent iatrogenic hyponatremia.

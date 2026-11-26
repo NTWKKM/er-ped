@@ -137,7 +137,7 @@ export const ToxicologyProtocol: React.FC<ProtocolPanelProps> = ({ weightKg: w, 
                 {w <= 20
                   ? 'Weight ≤ 20 kg: D5W scaled to 3 / 7 / 14 mL/kg to prevent hyponatremia.'
                   : w <= 40
-                    ? 'Weight 21–40 kg: D5W 100 / 250 / 500 mL to limit free water.'
+                    ? 'Weight > 20–40 kg: D5W 100 / 250 / 500 mL to limit free water.'
                     : 'Weight > 40 kg: D5W 200 / 500 / 1000 mL.'}{' '}
                 Pump rate runs the total bag volume (D5W + NAC) over the stated time. Dosing weight capped at 100 kg. Check LFT, INR and paracetamol level before stopping.
               </p>

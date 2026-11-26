@@ -12401,9 +12401,8 @@
     "cerebralEdema": {
       "warningSigns": [
         "Headache or vomiting after treatment started",
-        "Inappropriate slowing of heart rate or rising BP (Cushing response)",
+        "Inappropriate slowing of heart rate, or rising BP together with bradycardia or neurologic change (Cushing response); hypertension alone is not a warning sign",
         "Decreasing GCS, irritability, incontinence",
-        "Falling corrected Na during therapy",
         "Specific neurologic signs (cranial nerve palsy, abnormal pupils, posturing)"
       ],
       "mannitolGPerKgMin": 0.5,
@@ -12423,6 +12422,7 @@
     "severityPrecedence": "If pH and HCO₃ fall in different bands, classify by the more severe band.",
     "transition": [
       "Tolerating oral intake",
+      "Confirm background (basal) insulin coverage: start the basal-insulin plan if none is active (e.g. new diagnosis); if basal insulin is already active, confirm coverage rather than give a duplicate dose",
       "Give SC insulin first; stop IV insulin 15–30 min (rapid-acting) or 1–2 h (regular) after the first SC dose"
     ]
   },

@@ -1397,7 +1397,7 @@ export const NAC_MAX_DOSING_WEIGHT_KG = 100;
  * 21-hour IV N-acetylcysteine (3-bag) regimen per REFERENCES.md 8.2:
  * 150 mg/kg in D5W over 1 h, 50 mg/kg over 4 h, 100 mg/kg over 16 h.
  * D5W volume by weight tier (IV acetylcysteine label pediatric table) to prevent
- * hyponatremia: ≤ 20 kg 3 / 7 / 14 mL/kg; 21–40 kg 100 / 250 / 500 mL;
+ * hyponatremia: ≤ 20 kg 3 / 7 / 14 mL/kg; > 20–40 kg 100 / 250 / 500 mL;
  * > 40 kg 200 / 500 / 1000 mL. The pump rate is based on the total prepared
  * volume (diluent + concentrate) so the full dose runs over the stated duration.
  */
@@ -1405,7 +1405,7 @@ export function calcNacRegimen(weightKg: number | null | undefined): NacBag[] | 
   if (!weightKg || !Number.isFinite(weightKg) || weightKg <= 0) return null;
   const dosingWt = Math.min(weightKg, NAC_MAX_DOSING_WEIGHT_KG);
   const tier: 'scaled' | 'mid' | 'adult' = weightKg <= 20 ? 'scaled' : weightKg <= 40 ? 'mid' : 'adult';
-  // [bag, mg/kg, scaled mL/kg, 21–40 kg mL, > 40 kg mL, hours]
+  // [bag, mg/kg, scaled mL/kg, > 20–40 kg mL, > 40 kg mL, hours]
   const spec: Array<[1 | 2 | 3, number, number, number, number, number]> = [
     [1, 150, 3, 100, 200, 1],
     [2, 50, 7, 250, 500, 4],

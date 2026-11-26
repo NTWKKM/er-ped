@@ -919,7 +919,7 @@ test('calcNacRegimen: 3-bag 21-h regimen with weight-tiered D5W volumes', () => 
   for (const b of small) assert.ok(b.rateMlPerHr * b.durationHr >= b.totalMl - 0.1);
   // 20 kg is still weight-scaled (<= 20 kg): 60 / 140 / 280 mL
   assert.deepEqual(calcNacRegimen(20)!.map((b) => b.diluentMl), [60, 140, 280]);
-  // 21–40 kg tier: 100 / 250 / 500 mL (25 kg bag 1: 100 + 18.75 mL NAC)
+  // > 20–40 kg tier: 100 / 250 / 500 mL (25 kg bag 1: 100 + 18.75 mL NAC)
   const mid = calcNacRegimen(25)!;
   assert.deepEqual(mid.map((b) => b.diluentMl), [100, 250, 500]);
   assert.equal(mid[0].totalMl, 118.75);
