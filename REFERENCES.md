@@ -99,6 +99,11 @@
   - If $\text{K}^+ < 3.5\text{ mEq/L}$, defer insulin start and administer IV potassium replacement immediately.
 - **Sodium Bicarbonate Contraindication**:
   - Sodium bicarbonate is **strictly NOT recommended** in pediatric DKA due to risks of paradoxical CNS acidosis, intracellular hypokalemia, and cerebral edema, except in profound life-threatening acidosis ($\text{pH} < 6.90$) with hemodynamic collapse.
+- **Monitoring (ISPAD 2022)**: Hourly vital signs, neurological observations (GCS), capillary BG and fluid balance; electrolytes, venous gas and BUN/Cr every 2–4 hours; continuous cardiac monitoring.
+- **Cerebral Edema / Cerebral Injury (ISPAD 2022)**:
+  - Warning signs: headache or vomiting after therapy starts, inappropriate bradycardia, rising BP, declining GCS, falling corrected sodium, focal neurological signs.
+  - Treat without waiting for imaging: **Mannitol $0.5\text{–}1\text{ g/kg}$ IV over 10–15 min** or **3% NaCl $2.5\text{–}5\text{ mL/kg}$ IV over 10–15 min**; elevate head of bed 30°; reduce IV fluid rate by one third; PICU.
+- **Resolution Criteria**: Venous $\text{pH} \ge 7.30$, $\text{HCO}_3 \ge 18\text{ mEq/L}$, $\beta$-hydroxybutyrate $< 1\text{ mmol/L}$; transition to SC insulin when tolerating oral intake.
 - **ISPAD Corrected Sodium Formula**:
   $$\text{Corrected Na} = \text{Measured Na} + 0.02 \times (\text{Blood Glucose} - 100)$$
   *Clinical Note*: Corrected sodium should progressively rise as blood glucose declines; a falling corrected sodium is an early warning sign of free water excess and impending cerebral edema.
@@ -257,6 +262,8 @@
   - IV: $0.05\text{–}0.1\text{ mg/kg}$ (max $5\text{ mg}$).
   - IN: $0.2\text{–}0.3\text{ mg/kg}$ (max $10\text{ mg}$).
   - PO: $0.5\text{–}0.75\text{ mg/kg}$ (max $15\text{–}20\text{ mg}$).
+- **Adverse Event Rescue**: Hypoventilation (stimulate, jaw thrust, BVM, reversal agents); ketamine laryngospasm (jaw thrust + CPAP with 100% O₂, then Succinylcholine $0.1\text{–}0.5\text{ mg/kg}$ IV or full RSI dose if refractory); emergence reaction (Midazolam $0.05\text{–}0.1\text{ mg/kg}$ IV); vomiting (Ondansetron $0.15\text{ mg/kg}$, max $4\text{ mg}$).
+- **Discharge Criteria**: Baseline mental status, stable vital signs and room-air SpO₂, tolerating oral fluids, responsible adult escort.
 - **Mandatory Safety Equipment**: Suction, bag-valve-mask with appropriately sized masks, oxygen source, continuous pulse oximetry, capnography, and immediate access to Naloxone and Flumazenil.
 
 ---
@@ -380,6 +387,18 @@
   - **Plus Maintenance**: D5 0.25% NS or D5 0.45% NS added for children (not included in Parkland calculation).
 - **Urine Output Target**: $1.0\text{ mL/kg/hr}$ in pediatric patients (ATLS 11th Ed 2025).
 - **Fluid Creep Prevention**: Minimize crystalloid use; favor early blood products when indicated (ATLS 2025).
+
+
+## 15. Croup (Acute Laryngotracheobronchitis)
+
+### 15.1 Guidelines & Evidence
+- **American Academy of Pediatrics (AAP) / Cochrane Database of Systematic Reviews**: Glucocorticoids for croup (Gates A, et al. Cochrane 2018;CD001955) and nebulized epinephrine for croup (Bjornson C, et al. Cochrane 2013;CD006619).
+
+### 15.2 Westley Severity & Management
+- **Westley Croup Score (0–17)**: Mild $\le 2$, Moderate 3–7, Severe 8–11, Impending respiratory failure $\ge 12$.
+- **Dexamethasone**: $0.6\text{ mg/kg}$ PO/IM/IV single dose (max $16\text{ mg}$); $0.15\text{ mg/kg}$ equally effective in mild croup.
+- **Nebulized Epinephrine**: L-Epinephrine 1:1,000 $0.5\text{ mL/kg}$ (max $5\text{ mL}$) or Racemic 2.25% $0.05\text{ mL/kg}$ (max $0.5\text{ mL}$); observe 2–4 hours after the last dose for rebound stridor.
+- **Discharge**: No stridor at rest, normal SpO₂ and air entry, at least 2–4 hours since last epinephrine.
 
 ---
 

@@ -1334,3 +1334,146 @@ export function calcTransfusion(
     txaInfusionRate,
   };
 }
+
+// ==========================================
+// 8. PROTOCOL ENGINES (DKA, Asthma, Croup, Tox, PSA, Vitals)
+// ==========================================
+
+export interface DoseRange {
+  min: number;
+  max: number;
+  isCapped: boolean;
+}
+
+/**
+ * Weight-based dose range with a per-dose ceiling and an optional floor
+ * (e.g. Atropine minimum 0.1 mg). Returns null for a missing/invalid weight.
+ */
+export function calcWeightDoseRange(
+  weightKg: number | null | undefined,
+  minPerKg: number,
+  maxPerKg: number = minPerKg,
+  maxDose?: number | null,
+  minDose?: number | null
+): DoseRange | null {
+  if (!weightKg || !Number.isFinite(weightKg) || weightKg <= 0) return null;
+  let min = weightKg * minPerKg;
+  let max = weightKg * maxPerKg;
+  let isCapped = false;
+  if (maxDose != null && maxDose > 0) {
+    if (max > maxDose) isCapped = true;
+    min = Math.min(min, maxDose);
+    max = Math.min(max, maxDose);
+  }
+  if (minDose != null && minDose > 0) {
+    min = Math.max(min, minDose);
+    max = Math.max(max, minDose);
+  }
+  return { min, max, isCapped };
+}
+
+export interface NacBag {
+  bag: 1 | 2 | 3;
+  doseMg: number;
+  diluentMl: number;
+  durationHr: number;
+  rateMlPerHr: number;
+}
+
+/** NAC dosing weight ceiling (standard 21-h IV regimen caps at 100 kg). */
+export const NAC_MAX_DOSING_WEIGHT_KG = 100;
+
+/**
+ * 21-hour IV N-acetylcysteine (3-bag) regimen per REFERENCES.md 8.2:
+ * 150 mg/kg in D5W over 1 h, 50 mg/kg over 4 h, 100 mg/kg over 16 h.
+ * D5W volume scales to 3 / 7 / 14 mL/kg below 20 kg to prevent hyponatremia,
+ * otherwise 200 / 500 / 1000 mL.
+ */
+export function calcNacRegimen(weightKg: number | null | undefined): NacBag[] | null {
+  if (!weightKg || !Number.isFinite(weightKg) || weightKg <= 0) return null;
+  const dosingWt = Math.min(weightKg, NAC_MAX_DOSING_WEIGHT_KG);
+  const small = weightKg < 20;
+  const spec: Array<[1 | 2 | 3, number, number, number, number]> = [
+    [1, 150, 3, 200, 1],
+    [2, 50, 7, 500, 4],
+    [3, 100, 14, 1000, 16],
+  ];
+  return spec.map(([bag, mgPerKg, mlPerKg, fixedMl, durationHr]) => {
+    const diluentMl = small ? Math.round(weightKg * mlPerKg) : fixedMl;
+    return {
+      bag,
+      doseMg: Math.round(dosingWt * mgPerKg),
+      diluentMl,
+      durationHr,
+      rateMlPerHr: +(diluentMl / durationHr).toFixed(1),
+    };
+  });
+}
+
+export type WestleySeverity = 'mild' | 'moderate' | 'severe' | 'failure';
+
+/** Westley Croup Score (0–17) severity bands: ≤2 mild, 3–7 moderate, 8–11 severe, ≥12 failure. */
+export function classifyWestleyScore(score: number | null | undefined): WestleySeverity | null {
+  if (score === null || score === undefined || !Number.isFinite(score) || score < 0) return null;
+  if (score <= 2) return 'mild';
+  if (score <= 7) return 'moderate';
+  if (score <= 11) return 'severe';
+  return 'failure';
+}
+
+/**
+ * PALS hypotension threshold (systolic BP, mmHg) by age:
+ * term neonate < 60, infant < 70, 1–10 yr < 70 + 2 × age, > 10 yr < 90.
+ */
+export function calcHypotensionSbp(ageYears: number | null | undefined): number | null {
+  if (ageYears === null || ageYears === undefined || !Number.isFinite(ageYears) || ageYears < 0) {
+    return null;
+  }
+  if (ageYears < 28 / 365) return 60;
+  if (ageYears < 1) return 70;
+  if (ageYears <= 10) return Math.round(70 + 2 * Math.floor(ageYears));
+  return 90;
+}
+
+export interface DkaFluidPlan {
+  resusBolusMinMl: number;
+  resusBolusMaxMl: number;
+  deficitMl: number;
+  netDeficitMl: number;
+  maintenanceMlPerHr: number;
+  deficitMlPerHr: number;
+  totalMlPerHr: number;
+  insulinUPerHr: number;
+}
+
+/**
+ * ISPAD DKA fluid and insulin plan: deficit (% × BW × 10) minus boluses already given,
+ * replaced evenly over 48 h on top of Holliday–Segar maintenance (capped 2400 mL/day),
+ * initial bolus 10–20 mL/kg (cap 1000 mL), insulin 0.05–0.1 U/kg/hr (no bolus).
+ */
+export function calcDkaPlan(
+  weightKg: number | null | undefined,
+  deficitPct: number,
+  priorBolusMl: number,
+  insulinUPerKgHr: number
+): DkaFluidPlan | null {
+  if (!weightKg || !Number.isFinite(weightKg) || weightKg <= 0) return null;
+  if (!Number.isFinite(priorBolusMl) || priorBolusMl < 0) return null;
+  const deficitMl = weightKg * deficitPct * 10;
+  const netDeficitMl = Math.max(0, deficitMl - priorBolusMl);
+  const maintenanceMlPerHr = Math.min(
+    calcMaintenanceMlPerHr(weightKg),
+    +(MAINTENANCE_CAP_ML_DAY / 24).toFixed(1)
+  );
+  const deficitMlPerHr = +(netDeficitMl / 48).toFixed(1);
+  return {
+    resusBolusMinMl: Math.min(Math.round(weightKg * 10), BOLUS_20_CAP_ML),
+    resusBolusMaxMl: Math.min(Math.round(weightKg * 20), BOLUS_20_CAP_ML),
+    deficitMl: Math.round(deficitMl),
+    netDeficitMl: Math.round(netDeficitMl),
+    maintenanceMlPerHr,
+    deficitMlPerHr,
+    totalMlPerHr: +(maintenanceMlPerHr + netDeficitMl / 48).toFixed(1),
+    insulinUPerHr: +(weightKg * insulinUPerKgHr).toFixed(2),
+  };
+}

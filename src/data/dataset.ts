@@ -109,6 +109,9 @@ export const DATASET = rawDataset as {
   seizureProtocol: typeof rawDataset.seizureProtocol;
   toxicologyAntidotes: typeof rawDataset.toxicologyAntidotes;
   proceduralSedation: typeof rawDataset.proceduralSedation;
+  psaSafety: typeof rawDataset.psaSafety;
+  toxicologyApproach: typeof rawDataset.toxicologyApproach;
+  vitalSignsHypotension: typeof rawDataset.vitalSignsHypotension;
   vitalSignsRef: typeof rawDataset.vitalSignsRef;
   dkaProtocol: typeof rawDataset.dkaProtocol;
   asthmaProtocol: typeof rawDataset.asthmaProtocol;
