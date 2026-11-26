@@ -1,7 +1,9 @@
-/* Hallmark · checked: 2026-11-22 · genre: modern-minimal (inferred) · shape: app screen
- * floor: fixed 26a, 15, 34, 40, 41, 48, 7a, 30a, 63, 19 · reflex: fixed 24b, 26b, 64, 75 · structural: desktop 2-column formulary, PALS shortcut
+/* Hallmark · checked: 2026-11-26 · genre: modern-minimal (inferred) · shape: app screen
+ * floor: fixed 4 (protocol stages unboxed), 46a (pre-filled labs), 63, 48, F25 (asthma severity on phones) · reflex: fixed 3, 23, 64, 38iii, 39b, F19, F26
  * built: the project · redesign: polish · design.md: locked (DESIGN.md) · v2.0.0 */
-/* Hallmark · held 19 · en dash kept only inside numeric dose ranges (250–500 mL), the clinical convention for ranges; prose dashes removed */
+/* Hallmark · held 19 · en dash kept only inside numeric ranges (250–500 mL, q 3–5 min, 10–20 min), the clinical convention DESIGN.md names; prose dashes removed */
+/* Hallmark · dismissed 30a · ToxicologyProtocol NOTE_ALARM_MARK is a split token for dataset notes, never rendered; the alarm shows as a Lucide AlertTriangle */
+/* Hallmark · dismissed F1 · ElectrolytesProtocol:195 is a JSX attribute quote, not prose */
 /* Hallmark · dismissed 74 · slate neutrals are the locked palette named in DESIGN.md, not a framework default */
 /* Hallmark · dismissed 49 · subtab and renal-review labels already carry whitespace-nowrap (order-btn class); the linter reads the joined responsive spans */
 /* Hallmark · dropped onClick={() => { setMainTab(t.id); if (t.id === 'fluids') setFluidsTopic('fluids'); if (t.id === 'drip') setFluidsTopic('drip'); }} · moved into selectMainTab() with the same tab and subtopic effect plus roving keyboard focus */
@@ -264,6 +266,17 @@ textarea {
     inset: -4px;
   }
 
+  /* Compact 32px control with a 44px hit target (app density, gloved use) */
+  .hit-44 {
+    position: relative;
+  }
+
+  .hit-44::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+  }
+
   .order-btn:hover {
     background-color: color-mix(in srgb, var(--accent) 16%, var(--accent-soft));
   }
@@ -390,7 +403,7 @@ textarea:disabled {
   background-color: var(--danger);
   color: var(--accent-ink);
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 700;
   box-shadow: var(--shadow-3);
   cursor: pointer;
 }

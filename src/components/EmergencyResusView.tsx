@@ -153,7 +153,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                   <div className="text-xs font-semibold text-[var(--muted)]">
                     Epinephrine Arrest (1:10,000)
                   </div>
-                  <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1 flex flex-wrap items-baseline gap-1.5">
+                  <div className="text-xl sm:text-2xl font-bold font-mono-tabular text-[var(--ink)] mt-1 flex flex-wrap items-baseline gap-1.5">
                     <span>{palsEpiMg} mg</span>
                     <span className="text-sm font-bold whitespace-nowrap">
                       ({palsEpiMl} mL IV)
@@ -174,7 +174,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                   <div className="text-xs font-semibold text-[var(--muted)]">
                     Defibrillation (VF / pVT)
                   </div>
-                  <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                  <div className="text-xl sm:text-2xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                     {Math.min(200, Math.round(2 * w))} J → {Math.min(200, Math.round(4 * w))} J
                   </div>
                   <div className="text-xs text-[var(--muted)] mt-1">
@@ -186,7 +186,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                   <div className="text-xs font-semibold text-[var(--muted)]">
                     Endotracheal Tube (Cuffed ETT)
                   </div>
-                  <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--accent-text)] mt-1">
+                  <div className="text-xl sm:text-2xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                     {weightToETTCuffed(w)} mm
                   </div>
                   <div className="text-xs text-[var(--muted)] mt-1">
@@ -212,21 +212,21 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                   <tbody>
                     <tr>
                       <td className="font-bold whitespace-nowrap">Amiodarone (VF/pVT)</td>
-                      <td className="font-mono-tabular font-bold text-[var(--accent-text)] whitespace-nowrap">
+                      <td className="font-mono-tabular font-bold whitespace-nowrap">
                         {Math.min(300, 5 * w).toFixed(0)} mg ({(Math.min(300, 5 * w) / 50).toFixed(1)} mL)
                       </td>
                       <td className="text-xs text-[var(--muted)]">5 mg/kg IV/IO bolus (Max 300 mg)</td>
                     </tr>
                     <tr>
                       <td className="font-bold whitespace-nowrap">Lidocaine (VF/pVT)</td>
-                      <td className="font-mono-tabular font-bold text-[var(--accent-text)] whitespace-nowrap">
+                      <td className="font-mono-tabular font-bold whitespace-nowrap">
                         {Math.min(100, 1 * w).toFixed(0)} mg
                       </td>
                       <td className="text-xs text-[var(--muted)]">1 mg/kg IV/IO bolus</td>
                     </tr>
                     <tr>
                       <td className="font-bold whitespace-nowrap">Adenosine (SVT)</td>
-                      <td className="font-mono-tabular font-bold text-[var(--accent-text)] whitespace-nowrap">
+                      <td className="font-mono-tabular font-bold whitespace-nowrap">
                         1st: {Math.min(6, 0.1 * w).toFixed(2)} mg → 2nd:{' '}
                         {Math.min(12, 0.2 * w).toFixed(2)} mg
                       </td>
@@ -236,7 +236,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                     </tr>
                     <tr>
                       <td className="font-bold whitespace-nowrap">Atropine (Bradycardia)</td>
-                      <td className="font-mono-tabular font-bold text-[var(--accent-text)] whitespace-nowrap">
+                      <td className="font-mono-tabular font-bold whitespace-nowrap">
                         {Math.min(0.5, Math.max(0.1, 0.02 * w)).toFixed(2)} mg
                       </td>
                       <td className="text-xs text-[var(--muted)]">
@@ -255,7 +255,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div className="clinical-panel-subtle p-3.5">
                   <div className="text-xs text-[var(--muted)]">Cuffed ETT</div>
-                  <div className="text-lg sm:text-xl font-extrabold font-mono-tabular text-[var(--accent-text)] mt-0.5">
+                  <div className="text-lg sm:text-xl font-bold font-mono-tabular text-[var(--ink)] mt-0.5">
                     {weightToETTCuffed(w)} mm
                   </div>
                   <div className="text-[11px] text-[var(--muted)]">
@@ -264,20 +264,20 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                 </div>
                 <div className="clinical-panel-subtle p-3.5">
                   <div className="text-xs text-[var(--muted)]">Oral Depth at Lip</div>
-                  <div className="text-lg sm:text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-0.5">
+                  <div className="text-lg sm:text-xl font-bold font-mono-tabular text-[var(--ink)] mt-0.5">
                     {weightToDepth(w)} cm
                   </div>
                 </div>
                 <div className="clinical-panel-subtle p-3.5">
                   <div className="text-xs text-[var(--muted)]">Ketamine (Induction)</div>
-                  <div className="text-lg sm:text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-0.5">
+                  <div className="text-lg sm:text-xl font-bold font-mono-tabular text-[var(--ink)] mt-0.5">
                     {Math.min(100, w * 1.5).toFixed(0)} mg IV
                   </div>
                   <div className="text-[11px] text-[var(--muted)]">1.5 mg/kg (50 mg/mL)</div>
                 </div>
                 <div className="clinical-panel-subtle p-3.5">
                   <div className="text-xs text-[var(--muted)]">Rocuronium (Paralytic)</div>
-                  <div className="text-lg sm:text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-0.5">
+                  <div className="text-lg sm:text-xl font-bold font-mono-tabular text-[var(--ink)] mt-0.5">
                     {Math.min(100, w * 1.0).toFixed(1)} mg IV
                   </div>
                   <div className="text-[11px] text-[var(--muted)]">1.0 mg/kg (10 mg/mL)</div>
@@ -301,21 +301,21 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                   <tbody>
                     <tr>
                       <td className="font-bold whitespace-nowrap">Midazolam</td>
-                      <td className="font-mono-tabular font-bold text-[var(--accent-text)] whitespace-nowrap">
+                      <td className="font-mono-tabular font-bold whitespace-nowrap">
                         {Math.min(10, w * 0.2).toFixed(1)} mg IV
                       </td>
                       <td className="text-xs text-[var(--muted)]">0.2 mg/kg (5 mg/mL)</td>
                     </tr>
                     <tr>
                       <td className="font-bold whitespace-nowrap">Etomidate</td>
-                      <td className="font-mono-tabular font-bold text-[var(--accent-text)] whitespace-nowrap">
+                      <td className="font-mono-tabular font-bold whitespace-nowrap">
                         {Math.min(20, w * 0.3).toFixed(1)} mg IV
                       </td>
                       <td className="text-xs text-[var(--muted)]">0.3 mg/kg (2 mg/mL)</td>
                     </tr>
                     <tr>
                       <td className="font-bold whitespace-nowrap">Succinylcholine</td>
-                      <td className="font-mono-tabular font-bold text-[var(--accent-text)] whitespace-nowrap">
+                      <td className="font-mono-tabular font-bold whitespace-nowrap">
                         {Math.min(150, w * (effAgeYr < 1 ? 2.0 : 1.5)).toFixed(1)} mg IV
                       </td>
                       <td className="text-xs text-[var(--muted)]">1.5–2.0 mg/kg (50 mg/mL)</td>
@@ -344,7 +344,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                 <div className="text-xs font-semibold text-[var(--muted)]">
                   1st-Line: Epinephrine 1:1,000 IM
                 </div>
-                <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                <div className="text-xl sm:text-2xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                   {anaEpiDose} mg{' '}
                   <span className="text-sm font-bold whitespace-nowrap">
                     ({anaEpiDose} mL)
@@ -367,7 +367,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                 <div className="text-xs font-semibold text-[var(--muted)]">
                   Antihistamine (H1 / H2)
                 </div>
-                <div className="text-lg font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                <div className="text-lg font-bold font-mono-tabular text-[var(--ink)] mt-1">
                   CPM {(w * 0.25).toFixed(1)} mg IV
                 </div>
                 <div className="text-xs text-[var(--muted)] mt-1">
@@ -379,7 +379,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                 <div className="text-xs font-semibold text-[var(--muted)]">
                   Steroid &amp; Fluid Bolus
                 </div>
-                <div className="text-lg font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                <div className="text-lg font-bold font-mono-tabular text-[var(--ink)] mt-1">
                   Methylpred {Math.min(60, w * 1.5).toFixed(0)} mg IV
                 </div>
                 <div className="text-xs text-[var(--muted)] mt-1">
@@ -404,7 +404,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                   </ol>
                 </div>
                 <div className="flex items-center justify-between sm:justify-end gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-[var(--border)]">
-                  <span className="text-xl font-extrabold font-mono-tabular text-[var(--accent-text)] px-2">
+                  <span className="text-xl font-bold font-mono-tabular text-[var(--accent-text)] px-2">
                     {formatTimer(seizureSeconds)}
                   </span>
                   <div className="flex items-center gap-1.5">
@@ -450,7 +450,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                         return (
                           <tr key={d.key}>
                             <td>
-                              <span className="text-[11px] font-bold text-[var(--accent-text)] block">
+                              <span className="text-xs text-[var(--muted)] block">
                                 {st.stage}
                               </span>
                               <strong>{d.name}</strong>
@@ -532,7 +532,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                   <div className="text-xs font-semibold text-[var(--muted)]">
                     Phoenix Sepsis Score
                   </div>
-                  <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                  <div className="text-xl sm:text-2xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                     {sepsisResp + sepsisCardio + sepsisCoag + sepsisNeuro} pts
                   </div>
                   <div className="text-xs text-[var(--muted)] mt-1">
@@ -553,7 +553,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                       `0.9% NSS ${sepsisBolusMl} mL IV bolus over 15 min (Phoenix Sepsis 1h bundle)`
                     )}
                   </div>
-                  <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--accent-text)] mt-1">
+                  <div className="text-xl sm:text-2xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                     {sepsisBolusMl} mL
                   </div>
                   <div className="text-xs text-[var(--muted)] mt-1">0.9% NS over 15 min</div>
@@ -570,7 +570,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                       `Ceftriaxone ${sepsisCefMg} mg IV stat (Give within 1st hour for sepsis)`
                     )}
                   </div>
-                  <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                  <div className="text-xl sm:text-2xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                     {sepsisCefMg} mg
                   </div>
                   <div className="text-xs text-[var(--muted)] mt-1">Give within 1st hour</div>
@@ -649,7 +649,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                         <div className="text-xs font-semibold text-[var(--muted)]">
                           Epinephrine IV/UVC (1:10,000)
                         </div>
-                        <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                        <div className="text-xl sm:text-2xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                           {(0.02 * bw).toFixed(3)} mg ({((0.02 * bw) / 0.1).toFixed(2)} mL)
                         </div>
                         <div className="text-xs text-[var(--muted)] mt-1">
@@ -660,7 +660,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                         <div className="text-xs font-semibold text-[var(--muted)]">
                           Volume Expander (10 mL/kg)
                         </div>
-                        <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                        <div className="text-xl sm:text-2xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                           {(10 * bw).toFixed(0)} mL
                         </div>
                         <div className="text-xs text-[var(--muted)] mt-1">0.9% NS over 5–10 min</div>
@@ -669,7 +669,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                         <div className="text-xs font-semibold text-[var(--muted)]">
                           D10W Bolus (Hypoglycemia)
                         </div>
-                        <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--accent-text)] mt-1">
+                        <div className="text-xl sm:text-2xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                           {(2 * bw).toFixed(1)} mL IV
                         </div>
                         <div className="text-xs text-[var(--muted)] mt-1">
@@ -708,7 +708,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                       <div className="text-xs font-semibold text-[var(--muted)]">
                         First 8 Hours (LRS Rate)
                       </div>
-                      <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--accent-text)] mt-1">
+                      <div className="text-xl sm:text-2xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                         {burn.rateFirst8h} mL/hr
                       </div>
                       <div className="text-xs text-[var(--muted)] mt-1">
@@ -719,7 +719,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                       <div className="text-xs font-semibold text-[var(--muted)]">
                         Next 16 Hours (LRS Rate)
                       </div>
-                      <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                      <div className="text-xl sm:text-2xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                         {burn.rateNext16h} mL/hr
                       </div>
                       <div className="text-xs text-[var(--muted)] mt-1">
@@ -730,7 +730,7 @@ export const EmergencyResusView: React.FC<EmergencyResusViewProps> = ({
                       <div className="text-xs font-semibold text-[var(--muted)]">
                         Estimated Blood Volume
                       </div>
-                      <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                      <div className="text-xl sm:text-2xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                         {Math.round(w * 75)} mL
                       </div>
                       <div className="text-xs text-[var(--muted)] mt-1">

@@ -221,7 +221,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
       {activeSubTab === 'fluids' && (
         <div className="space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="text-sm font-bold text-[var(--ink)]">
+            <h2 className="text-sm font-bold text-[var(--ink)] text-balance">
               IV Maintenance &amp; Deficit Fluids{' '}
               <span className="font-semibold text-[var(--muted)]">(สารน้ำทางหลอดเลือดดำ)</span>
             </h2>
@@ -229,7 +229,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
               <button
                 type="button"
                 onClick={(e) => onOpenEvidence('fluids', e)}
-                className="min-h-[28px] px-2 py-0.5 text-[11px] font-bold rounded-md border border-[var(--border)] text-[var(--accent-text)] hover:bg-[var(--accent-soft)] transition-colors flex items-center gap-1 cursor-pointer"
+                className="hit-44 min-h-[32px] px-2.5 py-1 text-xs font-bold rounded-md border border-[var(--border)] text-[var(--accent-text)] hover:bg-[var(--accent-soft)] transition-colors flex items-center gap-1 cursor-pointer"
                 title="Open evidence & level of evidence"
               >
                 <BookOpen className="w-3 h-3" aria-hidden="true" /> AAP Isotonic CPG
@@ -347,7 +347,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                   <div className="text-xs font-semibold text-[var(--muted)]">
                     Combined Rate (Maintenance + Deficit)
                   </div>
-                  <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--good-text)] mt-1">
+                  <div className="text-xl sm:text-2xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                     {regimen.combinedMlHr.toFixed(1)} <span className="text-sm font-bold">mL/hr</span>
                   </div>
                   <div className="text-xs text-[var(--muted)] mt-1">
@@ -357,7 +357,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
 
                 <div className="clinical-panel-subtle p-4">
                   <div className="text-xs font-semibold text-[var(--muted)]">Maintenance (Holliday–Segar)</div>
-                  <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                  <div className="text-xl sm:text-2xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                     {regimen.mntMlHr.toFixed(1)} <span className="text-sm font-bold">mL/hr</span>
                   </div>
                   <div className="text-xs text-[var(--muted)] mt-1">
@@ -368,7 +368,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
 
                 <div className="clinical-panel-subtle p-4">
                   <div className="text-xs font-semibold text-[var(--muted)]">Deficit ({deficitPct}%)</div>
-                  <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--warning-text)] mt-1">
+                  <div className="text-xl sm:text-2xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                     {regimen.netDeficitMl.toFixed(0)} <span className="text-sm font-bold">mL</span>
                   </div>
                   <div className="text-xs text-[var(--muted)] mt-1">
@@ -380,7 +380,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
 
                 <div className="clinical-panel-subtle p-4">
                   <div className="text-xs font-semibold text-[var(--muted)]">First 24 h Total</div>
-                  <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--accent-text)] mt-1">
+                  <div className="text-xl sm:text-2xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                     {regimen.day1TotalMl.toFixed(0)} <span className="text-sm font-bold">mL</span>
                   </div>
                   <div className="text-xs text-[var(--muted)] mt-1">
@@ -396,7 +396,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                   </div>
                   {regimen.orsPlan ? (
                     <>
-                      <div className="text-lg sm:text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                      <div className="text-lg sm:text-xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                         ORS {regimen.orsPlan.volumeMl.toFixed(0)} mL over {regimen.orsPlan.overHr} h
                       </div>
                       <div className="text-xs text-[var(--muted)] mt-1">
@@ -407,7 +407,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                     </>
                   ) : (
                     <>
-                      <div className="text-lg sm:text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                      <div className="text-lg sm:text-xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                         {regimen.bolus10Ml.toFixed(0)}–{regimen.bolus20Ml.toFixed(0)} mL
                       </div>
                       <div className="text-xs text-[var(--muted)] mt-1">
@@ -420,7 +420,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
 
                 <div className="clinical-panel-subtle p-4">
                   <div className="text-xs font-semibold text-[var(--muted)]">Urine Output Target</div>
-                  <div className="text-lg sm:text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                  <div className="text-lg sm:text-xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                     ≥ {regimen.uoTargetMlHr.toFixed(0)} <span className="text-sm font-bold">mL/hr</span>
                   </div>
                   <div className="text-xs text-[var(--muted)] mt-1">
@@ -558,7 +558,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                   <div className="text-xs font-semibold text-[var(--muted)]">
                     Syringe Pump Rate
                   </div>
-                  <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                  <div className="text-xl sm:text-2xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                     {hasValidDripInputs ? (
                       <>
                         {fwd.rateMlHr.toFixed(1)} <span className="text-sm font-bold">mL/hr</span>
@@ -591,7 +591,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                       onChange={(e) => updateInputs({ reverseRate: e.target.value })}
                       className="clinical-input w-28 font-mono-tabular font-bold text-xs"
                     />
-                    <span className="text-sm font-extrabold font-mono-tabular text-[var(--accent-text)] whitespace-nowrap">
+                    <span className="text-sm font-bold font-mono-tabular text-[var(--ink)] whitespace-nowrap">
                       = {revDose !== null ? `${revDose} ${selectedDripItem.unit}` : '—'}
                     </span>
                   </div>
@@ -715,7 +715,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
                   <div className="text-xs font-semibold text-[var(--muted)]">PRBC Volume Required</div>
                   {tx ? (
                     <>
-                      <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                      <div className="text-xl sm:text-2xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                         {tx.prbcVol} <span className="text-sm font-bold">mL</span>
                       </div>
                       <div className="text-xs text-[var(--muted)] mt-1">
@@ -731,7 +731,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
 
                 <div className="clinical-panel-subtle p-4">
                   <div className="text-xs font-semibold text-[var(--muted)]">Platelets &amp; FFP</div>
-                  <div className="text-lg sm:text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+                  <div className="text-lg sm:text-xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                     Plt {baseTx.pltVol} mL · FFP {baseTx.ffpVol} mL
                   </div>
                   <div className="text-xs text-[var(--muted)] mt-1">Cryo: {baseTx.cryoVol} mL</div>
@@ -739,7 +739,7 @@ export const FluidsAndDripsView: React.FC<FluidsAndDripsViewProps> = ({
 
                 <div className="clinical-panel-subtle p-4">
                   <div className="text-xs font-semibold text-[var(--muted)]">Tranexamic Acid (TXA)</div>
-                  <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--accent-text)] mt-1">
+                  <div className="text-xl sm:text-2xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                     {baseTx.txaLoadingMg} <span className="text-sm font-bold">mg IV</span>
                   </div>
                   <div className="text-xs text-[var(--muted)] mt-1">

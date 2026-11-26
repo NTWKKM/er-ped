@@ -31,6 +31,8 @@ interface Antidote {
 }
 
 const MODULE = 'Protocol (Toxicology)';
+/** U+26A0 U+FE0F, the alarm marker inside dataset notes. */
+const NOTE_ALARM_MARK = '⚠️';
 
 export const ToxicologyProtocol: React.FC<ProtocolPanelProps> = ({ weightKg: w, onAddOrder }) => {
   const a = DATASET.toxicologyApproach;
@@ -43,8 +45,11 @@ export const ToxicologyProtocol: React.FC<ProtocolPanelProps> = ({ weightKg: w, 
       ? calcWeightDoseRange(w, x.doseMgPerKg, x.doseMgPerKg, x.maxDoseMg / 1000)
       : calcWeightDoseRange(w, x.doseMinMgPerKg ?? x.doseMgPerKg, x.doseMgPerKg, x.maxDoseMg, x.minDoseMg);
     const unit = isGram ? 'g' : 'mg';
-    const contraindication = x.note.startsWith('⚠️') || x.note.includes('⚠️');
-    const [plain, alarm] = contraindication ? x.note.split('⚠️').map((t) => t.trim()) : [x.note, undefined];
+    // The dataset marks the contraindication clause with a warning sign; it is a split token, never rendered.
+    const contraindication = x.note.includes(NOTE_ALARM_MARK);
+    const [plain, alarm] = contraindication
+      ? x.note.split(NOTE_ALARM_MARK).map((t) => t.trim())
+      : [x.note, undefined];
     return {
       key: x.key,
       name: x.name,

@@ -590,7 +590,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
               <div className="text-xs font-semibold text-[var(--muted)]">
                 Dose Per Single Administration
               </div>
-              <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1 flex flex-wrap items-baseline gap-2">
+              <div className="text-xl sm:text-2xl font-bold font-mono-tabular text-[var(--ink)] mt-1 flex flex-wrap items-baseline gap-2">
                 <span>{singleDoseMgText}</span>
                 {singleDoseVolumeText ? (
                   <span className="text-sm sm:text-base font-bold text-[var(--accent-text)] whitespace-nowrap">
@@ -622,7 +622,7 @@ export const MedicationsView: React.FC<MedicationsViewProps> = ({
               <div className="text-xs font-semibold text-[var(--muted)]">
                 Total Daily Dose (24h)
               </div>
-              <div className="text-xl sm:text-2xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+              <div className="text-xl sm:text-2xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                 {dailyDoseText}
               </div>
               <div className="text-xs text-[var(--muted)] mt-1.5">

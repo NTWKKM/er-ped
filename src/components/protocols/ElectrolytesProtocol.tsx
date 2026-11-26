@@ -184,9 +184,9 @@ export const ElectrolytesProtocol: React.FC<ElectrolytesProtocolProps> = ({
             },
             { label: 'Estimated K⁺ at pH 7.40', value: `${kAt740?.toFixed(1) ?? '—'} mEq/L` },
           ].map((m) => (
-            <div key={m.label} className="bg-[var(--card)] border border-[var(--border)] rounded-[var(--r-md)] p-3">
+            <div key={m.label} className="clinical-panel-subtle p-3">
               <div className="text-xs text-[var(--muted)]">{m.label}</div>
-              <div className="text-lg font-extrabold font-mono-tabular text-[var(--ink)] mt-0.5">{m.value}</div>
+              <div className="text-lg font-bold font-mono-tabular text-[var(--ink)] mt-0.5">{m.value}</div>
             </div>
           ))}
         </div>
@@ -210,10 +210,10 @@ export const ElectrolytesProtocol: React.FC<ElectrolytesProtocolProps> = ({
 
       <ProtocolSection step={2} title="Symptomatic Hyponatremia" timing="Seizure or encephalopathy">
         {w ? (
-          <div className="flex flex-wrap items-end justify-between gap-3 bg-[var(--card)] border border-[var(--border)] rounded-[var(--r-md)] p-3">
+          <div className="flex flex-wrap items-end justify-between gap-3 clinical-panel-subtle p-3">
             <div>
               <div className="text-xs font-semibold text-[var(--muted)]">{hypoNa.name}</div>
-              <div className="text-lg font-extrabold font-mono-tabular text-[var(--ink)] mt-0.5">
+              <div className="text-lg font-bold font-mono-tabular text-[var(--ink)] mt-0.5">
                 {fmtRange(naBolus, 'mL')} IV over 10–20 min
               </div>
               <div className="text-xs text-[var(--ink-secondary)] mt-0.5">{hypoNa.prep}. {hypoNa.note}</div>
@@ -255,14 +255,14 @@ export const ElectrolytesProtocol: React.FC<ElectrolytesProtocolProps> = ({
         {isSevereHyperNa && fwd != null && fwd > 0 && (
           <div className="text-[13px] text-[var(--ink)]">
             Estimated free water deficit to Na 140:{' '}
-            <span className="font-mono-tabular font-extrabold">{(fwd * 1000).toFixed(0)} mL</span> (reference figure only, not an
+            <span className="font-mono-tabular font-bold">{(fwd * 1000).toFixed(0)} mL</span> (reference figure only, not an
             infusion rate).
           </div>
         )}
         {!isSevereHyperNa && fwd != null && fwd > 0 && (
           <div className="text-[13px] text-[var(--ink)]">
             Free water deficit at Na {na}:{' '}
-            <span className="font-mono-tabular font-extrabold">{(fwd * 1000).toFixed(0)} mL</span>, replace over 48 h (
+            <span className="font-mono-tabular font-bold">{(fwd * 1000).toFixed(0)} mL</span>, replace over 48 h (
             <span className="font-mono-tabular font-bold">{((fwd * 1000) / 48).toFixed(1)} mL/hr</span> on top of maintenance).
           </div>
         )}
@@ -279,9 +279,9 @@ export const ElectrolytesProtocol: React.FC<ElectrolytesProtocolProps> = ({
       <ProtocolSection step={4} title="Hypokalemia">
         {w && ivK && poK ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="bg-[var(--card)] border border-[var(--border)] rounded-[var(--r-md)] p-3">
+            <div className="clinical-panel-subtle p-3">
               <div className="text-xs font-semibold text-[var(--muted)]">IV KCl slow piggyback (0.5 mEq/kg, max 20 mEq)</div>
-              <div className="text-lg font-extrabold font-mono-tabular text-[var(--ink)] mt-0.5">
+              <div className="text-lg font-bold font-mono-tabular text-[var(--ink)] mt-0.5">
                 KCl {ivK.doseMeq} mEq ({ivK.kcl2MeqPerMl} mL of 2 mEq/mL)
               </div>
               <div className="text-xs text-[var(--ink-secondary)] mt-0.5">
@@ -292,9 +292,9 @@ export const ElectrolytesProtocol: React.FC<ElectrolytesProtocolProps> = ({
                 Central: final volume {ivK.minVolCentralMl} mL (KCl included), run over 1 h at {ivK.centralRateMlPerHr} mL/hr
               </div>
             </div>
-            <div className="bg-[var(--card)] border border-[var(--border)] rounded-[var(--r-md)] p-3">
+            <div className="clinical-panel-subtle p-3">
               <div className="text-xs font-semibold text-[var(--muted)]">Oral KCl (1–2 mEq/kg/day, mild and asymptomatic)</div>
-              <div className="text-lg font-extrabold font-mono-tabular text-[var(--ink)] mt-0.5">
+              <div className="text-lg font-bold font-mono-tabular text-[var(--ink)] mt-0.5">
                 {poK.tidDoseMeq} mEq PO TID
               </div>
               <div className="text-xs text-[var(--ink-secondary)] mt-0.5">

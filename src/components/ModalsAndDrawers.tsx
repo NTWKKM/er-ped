@@ -171,7 +171,7 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
       >
         <div className="p-3.5 sm:p-4 border-b border-[var(--border)] flex items-start sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-sm sm:text-base font-extrabold text-[var(--ink)]">
+            <h2 className="text-sm sm:text-base font-bold text-[var(--ink)]">
               Broselow Pediatric Resuscitation Tape Reference (9-Color Spectrum)
             </h2>
             <p className="text-xs text-[var(--muted)] mt-0.5">
@@ -206,11 +206,11 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
                   style={{ backgroundColor: b.bg, color: b.fg }}
                   className={`min-h-[48px] p-2 rounded-lg border text-center cursor-pointer transition-transform ${
                     isAct
-                      ? 'border-black ring-2 ring-[var(--accent)] font-extrabold'
+                      ? 'border-[var(--ink)] ring-2 ring-[var(--accent)] font-bold'
                       : 'border-[var(--band-edge)] opacity-90 hover:opacity-100'
                   }`}
                 >
-                  <div className="text-xs font-extrabold truncate">{b.label.split('·')[0].trim()}</div>
+                  <div className="text-xs font-bold truncate">{b.label.split('·')[0].trim()}</div>
                   <div className="text-[10px] font-mono-tabular whitespace-nowrap">{b.range}</div>
                 </button>
               );
@@ -223,7 +223,7 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
               style={{ backgroundColor: currentBand.bg, color: currentBand.fg }}
             >
               <div>
-                <div className="text-sm sm:text-base font-extrabold">
+                <div className="text-sm sm:text-base font-bold">
                   Broselow Zone: {currentBand.label} ({currentBand.range})
                 </div>
                 <div className="text-xs font-semibold">
@@ -236,7 +236,7 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
           ) : (
             <div className="p-3.5 rounded-lg border border-[var(--border)] bg-[var(--panel-subtle)] flex flex-wrap items-center justify-between gap-2">
               <div>
-                <div className="text-sm sm:text-base font-extrabold text-[var(--ink)]">
+                <div className="text-sm sm:text-base font-bold text-[var(--ink)]">
                   {activeWeight != null && activeWeight > 0 ? (
                     activeWeight < 3 || activeWeight > 36
                       ? `Patient Weight: ${formatWeightVal(activeWeight)} kg (${provenanceLabel}) (Outside Broselow 3–36 kg Range)`
@@ -258,26 +258,26 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="clinical-panel-subtle p-3.5">
-              <div className="text-xs font-bold text-[var(--danger-text)]">
+              <div className="text-xs font-bold text-[var(--muted)]">
                 Epinephrine Arrest (1:10,000)
               </div>
-              <div className="text-lg sm:text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+              <div className="text-lg sm:text-xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                 {epiMg} mg ({epiMl} mL)
               </div>
             </div>
             <div className="clinical-panel-subtle p-3.5">
-              <div className="text-xs font-bold text-[var(--accent-text)]">
+              <div className="text-xs font-bold text-[var(--muted)]">
                 Defibrillation Shock
               </div>
-              <div className="text-lg sm:text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+              <div className="text-lg sm:text-xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                 1st {defib1} J → 2nd {defib2} J
               </div>
             </div>
             <div className="clinical-panel-subtle p-3.5">
-              <div className="text-xs font-bold text-[var(--good-text)]">
+              <div className="text-xs font-bold text-[var(--muted)]">
                 Isotonic Fluid Bolus (20 mL/kg)
               </div>
-              <div className="text-lg sm:text-xl font-extrabold font-mono-tabular text-[var(--ink)] mt-1">
+              <div className="text-lg sm:text-xl font-bold font-mono-tabular text-[var(--ink)] mt-1">
                 {bolusMl} mL
               </div>
             </div>
@@ -301,7 +301,7 @@ export const BroselowModal: React.FC<BroselowModalProps> = ({
                   <td className="whitespace-nowrap">
                     <strong>Endotracheal Tube (ETT)</strong>
                   </td>
-                  <td className="font-mono-tabular font-bold text-[var(--accent-text)]">
+                  <td className="font-mono-tabular font-bold">
                     Cuffed: {weightToETTCuffed(refW)} mm · Uncuffed: {weightToETTUncuffed(refW)} mm
                   </td>
                 </tr>
@@ -408,7 +408,7 @@ export const EvidenceModal: React.FC<EvidenceModalProps> = ({
       >
         <div className="p-3.5 sm:p-4 border-b border-[var(--border)] flex items-start sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-sm sm:text-base font-extrabold text-[var(--ink)]">
+            <h2 className="text-sm sm:text-base font-bold text-[var(--ink)]">
               Clinical Evidence &amp; Guideline Reference Registry (2024–2026)
             </h2>
             <p className="text-xs text-[var(--muted)] mt-0.5">
@@ -457,25 +457,24 @@ export const EvidenceModal: React.FC<EvidenceModalProps> = ({
           {entries.map(([key, ref]) => (
             <div key={key} className="clinical-panel-subtle p-3.5 space-y-1.5">
               <div className="flex flex-wrap items-start justify-between gap-2">
-                <div className="text-sm font-extrabold text-[var(--ink)]">{ref.title}</div>
-                <span className="text-xs font-mono-tabular font-bold text-[var(--accent-text)]">
+                <div className="text-sm font-bold text-[var(--ink)]">{ref.title}</div>
+                <span className="text-xs font-bold text-[var(--ink-secondary)]">
                   {ref.loe}
                 </span>
               </div>
               <div className="text-xs text-[var(--muted)]">
-                <strong>{ref.organization}</strong> · {ref.journal} ({ref.year})
+                <div>
+                  <strong>{ref.organization}</strong>, {ref.journal} ({ref.year})
+                </div>
                 {ref.doi && (
-                  <>
-                    {' · '}
-                    <a
-                      href={`https://doi.org/${ref.doi}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[var(--accent-text)] underline inline-flex items-center gap-0.5"
-                    >
-                      DOI: {ref.doi} <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </>
+                  <a
+                    href={`https://doi.org/${ref.doi}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[var(--accent-text)] underline inline-flex items-center gap-0.5 mt-0.5"
+                  >
+                    DOI: {ref.doi} <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                  </a>
                 )}
               </div>
               <div className="text-xs text-[var(--ink)] leading-relaxed pt-1.5 border-t border-[var(--border)]">
@@ -513,7 +512,7 @@ const OrderSheetAndPocketContent: React.FC<OrderSheetContentProps> = ({
       {/* Queued EHR Orders */}
       <div className="space-y-2.5">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="text-xs font-extrabold tracking-tight text-[var(--ink)]">
+          <div className="text-xs font-bold tracking-tight text-[var(--ink)]">
             Queued EHR Prescription Orders ({orders.length})
           </div>
           {orders.length > 0 && (
@@ -566,7 +565,7 @@ const OrderSheetAndPocketContent: React.FC<OrderSheetContentProps> = ({
                 }`}
               >
                 <div className="font-mono-tabular text-[var(--ink)] flex-1 min-w-0">
-                  <span className="font-bold text-[var(--accent-text)] mr-1.5">
+                  <span className="font-bold text-[var(--ink-secondary)] mr-1.5">
                     #{idx + 1} [{o.module}]
                   </span>
                   <span className={o.invalidated ? 'line-through text-[var(--muted)] break-words' : 'break-words'}>
@@ -581,7 +580,7 @@ const OrderSheetAndPocketContent: React.FC<OrderSheetContentProps> = ({
                 <button
                   type="button"
                   onClick={() => onRemoveOrder(o.id)}
-                  className="no-print min-h-[28px] min-w-[28px] flex items-center justify-center text-[var(--muted)] hover:text-[var(--danger-text)] rounded cursor-pointer shrink-0"
+                  className="no-print hit-44 min-h-[32px] min-w-[32px] flex items-center justify-center text-[var(--muted)] hover:text-[var(--danger-text)] rounded cursor-pointer shrink-0"
                   title="Remove order"
                 >
                   <X className="w-4 h-4" />
@@ -595,7 +594,7 @@ const OrderSheetAndPocketContent: React.FC<OrderSheetContentProps> = ({
       {/* Instant Bedside Pocket Card Summary for Active Weight */}
       <div className="space-y-2.5 pt-3 border-t border-[var(--border)]">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="text-xs font-extrabold tracking-tight text-[var(--ink)]">
+          <div className="text-xs font-bold tracking-tight text-[var(--ink)]">
             Bedside Emergency Summary {w > 0 ? `(${w.toFixed(1)} kg)` : ''}
           </div>
           {w > 0 && (
@@ -617,37 +616,37 @@ const OrderSheetAndPocketContent: React.FC<OrderSheetContentProps> = ({
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-2.5 text-xs">
             <div className="clinical-panel-subtle p-2.5">
               <div className="text-[var(--muted)] font-semibold text-[11px]">Epi Arrest (1:10,000)</div>
-              <div className="font-mono-tabular font-extrabold text-sm text-[var(--ink)] mt-0.5">
+              <div className="font-mono-tabular font-bold text-sm text-[var(--ink)] mt-0.5">
                 {Math.min(1, 0.01 * w).toFixed(2)} mg ({(Math.min(1, 0.01 * w) / 0.1).toFixed(1)} mL IV)
               </div>
             </div>
             <div className="clinical-panel-subtle p-2.5">
               <div className="text-[var(--muted)] font-semibold text-[11px]">Defibrillation</div>
-              <div className="font-mono-tabular font-extrabold text-sm text-[var(--ink)] mt-0.5">
+              <div className="font-mono-tabular font-bold text-sm text-[var(--ink)] mt-0.5">
                 {Math.min(200, Math.round(2 * w))} J → {Math.min(200, Math.round(4 * w))} J
               </div>
             </div>
             <div className="clinical-panel-subtle p-2.5">
               <div className="text-[var(--muted)] font-semibold text-[11px]">Cuffed ETT &amp; Depth</div>
-              <div className="font-mono-tabular font-extrabold text-sm text-[var(--accent-text)] mt-0.5">
+              <div className="font-mono-tabular font-bold text-sm text-[var(--ink)] mt-0.5">
                 {weightToETTCuffed(w)} mm @ {weightToDepth(w)} cm
               </div>
             </div>
             <div className="clinical-panel-subtle p-2.5">
               <div className="text-[var(--muted)] font-semibold text-[11px]">Anaphylaxis Epi IM</div>
-              <div className="font-mono-tabular font-extrabold text-sm text-[var(--ink)] mt-0.5">
+              <div className="font-mono-tabular font-bold text-sm text-[var(--ink)] mt-0.5">
                 {Math.min(w < 30 ? 0.3 : 0.5, 0.01 * w).toFixed(2)} mg IM
               </div>
             </div>
             <div className="clinical-panel-subtle p-2.5">
               <div className="text-[var(--muted)] font-semibold text-[11px]">NS Bolus (20 mL/kg)</div>
-              <div className="font-mono-tabular font-extrabold text-sm text-[var(--good-text)] mt-0.5">
+              <div className="font-mono-tabular font-bold text-sm text-[var(--ink)] mt-0.5">
                 {Math.min(BOLUS_20_CAP_ML, Math.round(20 * w))} mL IV
               </div>
             </div>
             <div className="clinical-panel-subtle p-2.5">
               <div className="text-[var(--muted)] font-semibold text-[11px]">Maintenance Fluid</div>
-              <div className="font-mono-tabular font-extrabold text-sm text-[var(--ink)] mt-0.5">
+              <div className="font-mono-tabular font-bold text-sm text-[var(--ink)] mt-0.5">
                 {Math.min(calcMaintenanceMlPerHr(w), +(MAINTENANCE_CAP_ML_DAY / 24).toFixed(1))} mL/hr
               </div>
             </div>
@@ -706,7 +705,7 @@ export const OrderSheetModal: React.FC<OrderSheetModalProps> = ({
       >
         <div className="p-3.5 sm:p-4 border-b border-[var(--border)] flex items-start sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-sm sm:text-base font-extrabold text-[var(--ink)]">
+            <h2 className="text-sm sm:text-base font-bold text-[var(--ink)]">
               Active Patient EHR Order Sheet &amp; Bedside Resuscitation Summary
             </h2>
             <p className="text-xs text-[var(--muted)] mt-0.5">
