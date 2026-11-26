@@ -99,9 +99,15 @@
   - If $\text{K}^+ < 3.5\text{ mEq/L}$, defer insulin start and administer IV potassium replacement immediately.
 - **Sodium Bicarbonate Contraindication**:
   - Sodium bicarbonate is **strictly NOT recommended** in pediatric DKA due to risks of paradoxical CNS acidosis, intracellular hypokalemia, and cerebral edema, except in profound life-threatening acidosis ($\text{pH} < 6.90$) with hemodynamic collapse.
+- **Monitoring (ISPAD 2022)**: Hourly vital signs, neurological observations (GCS), capillary BG and fluid balance; electrolytes, venous gas and BUN/Cr every 2–4 hours; continuous cardiac monitoring.
+- **Cerebral Edema / Cerebral Injury (ISPAD 2022)**:
+  - Warning signs: headache or vomiting after therapy starts, inappropriate bradycardia, rising BP with bradycardia or neurological change (Cushing response; hypertension alone is not a warning sign), declining GCS, focal neurological signs.
+  - Treat without waiting for imaging: **Mannitol $0.5\text{–}1\text{ g/kg}$ IV over 10–15 min** or **3% NaCl $2.5\text{–}5\text{ mL/kg}$ IV over 10–15 min**; elevate head of bed 30°; adjust IV fluid rate to maintain normal blood pressure while avoiding excess fluid (hypotension compromises cerebral perfusion); PICU.
+- **Resolution Criteria**: Venous $\text{pH} \ge 7.30$, $\text{HCO}_3 \ge 18\text{ mEq/L}$, $\beta$-hydroxybutyrate $< 1\text{ mmol/L}$. Persistently low $\text{HCO}_3$ from hyperchloremic acidosis after ketones have cleared and the anion gap has closed should not delay transition.
+- **Transition Requirements** (separate from resolution): tolerating oral intake; background (basal) insulin coverage confirmed (start the basal plan if none is active, e.g. new diagnosis; if basal insulin is already active, confirm coverage instead of a duplicate dose); give SC insulin before stopping IV insulin (15–30 min for rapid-acting, 1–2 h for regular insulin).
 - **ISPAD Corrected Sodium Formula**:
   $$\text{Corrected Na} = \text{Measured Na} + 0.02 \times (\text{Blood Glucose} - 100)$$
-  *Clinical Note*: Corrected sodium should progressively rise as blood glucose declines; a falling corrected sodium is an early warning sign of free water excess and impending cerebral edema.
+  *Clinical Note*: Measured sodium usually rises as blood glucose declines. A slow fall in corrected sodium during otherwise normal recovery is acceptable (ISPAD 2022) and is not by itself a cerebral-injury warning sign; keep hourly neurological observations and treat suspected cerebral injury immediately.
 
 ---
 
@@ -125,7 +131,7 @@
 3. **High-Flow Nasal Cannula (HFNC)**:
    - Flow Rate: $1\text{–}2\text{ L/kg/min}$ (max $60\text{ L/min}$).
    - $\text{FiO}_2$: Start at $40\%$ and titrate to maintain $\text{SpO}_2 \ge 92\%$. Temperature: $37^\circ\text{C}$.
-   - Nebulization during HFNC: Reduce base HFNC flow by $\le 0.25\text{ L/kg/min}$ (max reduction $10\text{ L/min}$) during in-line mesh nebulization to prevent pulmonary overdistension.
+   - Nebulization during HFNC: Reduce HFNC flow **to** $\le 0.25\text{ L/kg/min}$ (max $10\text{ L/min}$) during in-line mesh nebulization; higher flows reduce aerosol deposition.
 4. **Second-Line IV Bronchodilators (IV Magnesium Sulfate)**:
    - **IV Magnesium Sulfate**: $40\text{–}50\text{ mg/kg}$ (max $2000\text{ mg} = 2\text{ g}$) infused intravenously over 20–30 minutes.
    - *Evidence Note (GINA 2026)*: **Nebulized Magnesium Sulfate is explicitly NOT recommended** due to lack of demonstrated clinical efficacy in multi-center RCTs; IV route is the validated standard.
@@ -194,6 +200,7 @@
   - **Safe Correction Cap**: Total sodium increase must not exceed **$\le 8\text{–}10\text{ mEq/L/day}$** ($\le 0.5\text{ mEq/L/hr}$) to avoid Osmotic Demyelination Syndrome (ODS).
 - **Hypernatremic Dehydration (Free Water Deficit)**:
   $$\text{Free Water Deficit (L)} = \text{TBW} \times \text{Weight (kg)} \times \left( \frac{\text{Serum Na}}{140} - 1 \right)$$
+  - **Severe hypernatremia ($\text{Na} \ge 170\text{ mEq/L}$)**: emergency; involve PICU / nephrology for an individualized, slower correction plan rather than a routine 48-hour rate.
   - Rehydrate slowly over **48 hours**. Serum sodium reduction must not exceed **$\le 0.5\text{ mEq/L/hr}$** ($\le 10\text{–}12\text{ mEq/L/day}$) to prevent fatal cerebral edema and seizures.
 - **Hyperkalemia Resuscitation (3-Step Cocktail)**:
   1. **Membrane Stabilization**: 10% Calcium Gluconate $0.5\text{–}1.0\text{ mL/kg}$ ($50\text{–}100\text{ mg/kg}$, max $10\text{ mL} / 1000\text{ mg}$) IV slow over 5–10 min under ECG monitoring.
@@ -224,10 +231,18 @@
 
 ### 8.2 Antidote Formulary
 - **Acetaminophen (APAP) Overdose — N-acetylcysteine (NAC) 21-Hour IV Regimen**:
-  - **Bag 1 (Loading)**: $150\text{ mg/kg}$ in D5W $200\text{ mL}$ over 60 min ($3\text{ mL/kg}$ D5W if $< 20\text{ kg}$).
-  - **Bag 2**: $50\text{ mg/kg}$ in D5W $500\text{ mL}$ over 4 hr ($7\text{ mL/kg}$ D5W if $< 20\text{ kg}$).
-  - **Bag 3**: $100\text{ mg/kg}$ in D5W $1000\text{ mL}$ over 16 hr ($14\text{ mL/kg}$ D5W if $< 20\text{ kg}$).
-  - *Total Dose*: $300\text{ mg/kg}$ over 21 hours. Fluid volume scaling in $< 20\text{ kg}$ is critical to prevent iatrogenic hyponatremia.
+  - **Bag 1 (Loading)**: $150\text{ mg/kg}$ over 60 min.
+  - **Bag 2**: $50\text{ mg/kg}$ over 4 hr.
+  - **Bag 3**: $100\text{ mg/kg}$ over 16 hr.
+  - **D5W diluent by weight** (Acetadote prescribing information, pediatric table):
+
+    | Weight | Bag 1 | Bag 2 | Bag 3 |
+    | :--- | :--- | :--- | :--- |
+    | $\le 20\text{ kg}$ | $3\text{ mL/kg}$ | $7\text{ mL/kg}$ | $14\text{ mL/kg}$ |
+    | > 20–40 kg | $100\text{ mL}$ | $250\text{ mL}$ | $500\text{ mL}$ |
+    | $> 40\text{ kg}$ | $200\text{ mL}$ | $500\text{ mL}$ | $1000\text{ mL}$ |
+  - Pump rate runs the total bag volume (diluent + 200 mg/mL concentrate) over the stated time.
+  - *Total Dose*: $300\text{ mg/kg}$ over 21 hours (dosing weight capped at 100 kg). Weight-tiered diluent volumes are critical to prevent iatrogenic hyponatremia.
 - **Opioid Toxicity — Naloxone**:
   - Dose: $0.1\text{ mg/kg}$ IV/IO/IM/SC/IN (max $2\text{ mg/dose}$). May repeat q2–3min.
 - **Benzodiazepine Toxicity — Flumazenil**:
@@ -257,6 +272,8 @@
   - IV: $0.05\text{–}0.1\text{ mg/kg}$ (max $5\text{ mg}$).
   - IN: $0.2\text{–}0.3\text{ mg/kg}$ (max $10\text{ mg}$).
   - PO: $0.5\text{–}0.75\text{ mg/kg}$ (max $15\text{–}20\text{ mg}$).
+- **Adverse Event Rescue**: Hypoventilation (stimulate, jaw thrust, BVM, reversal agents); ketamine laryngospasm (jaw thrust + CPAP with 100% O₂, then Succinylcholine $0.1\text{–}0.5\text{ mg/kg}$ IV or full RSI dose if refractory); emergence reaction (Midazolam $0.05\text{–}0.1\text{ mg/kg}$ IV); vomiting (Ondansetron $0.15\text{ mg/kg}$, max $4\text{ mg}$).
+- **Discharge Criteria**: Baseline mental status, stable vital signs and room-air SpO₂, tolerating oral fluids, responsible adult escort.
 - **Mandatory Safety Equipment**: Suction, bag-valve-mask with appropriately sized masks, oxygen source, continuous pulse oximetry, capnography, and immediate access to Naloxone and Flumazenil.
 
 ---
@@ -380,6 +397,18 @@
   - **Plus Maintenance**: D5 0.25% NS or D5 0.45% NS added for children (not included in Parkland calculation).
 - **Urine Output Target**: $1.0\text{ mL/kg/hr}$ in pediatric patients (ATLS 11th Ed 2025).
 - **Fluid Creep Prevention**: Minimize crystalloid use; favor early blood products when indicated (ATLS 2025).
+
+
+## 15. Croup (Acute Laryngotracheobronchitis)
+
+### 15.1 Guidelines & Evidence
+- **American Academy of Pediatrics (AAP) / Cochrane Database of Systematic Reviews**: Glucocorticoids for croup (Gates A, et al. Cochrane 2018;CD001955) and nebulized epinephrine for croup (Bjornson C, et al. Cochrane 2013;CD006619).
+
+### 15.2 Westley Severity & Management
+- **Westley Croup Score (0–17)**: Mild $\le 2$, Moderate 3–7, Severe 8–11, Impending respiratory failure $\ge 12$.
+- **Dexamethasone**: $0.6\text{ mg/kg}$ PO/IM/IV single dose (max $16\text{ mg}$); $0.15\text{ mg/kg}$ equally effective in mild croup.
+- **Nebulized Epinephrine**: L-Epinephrine 1:1,000 $0.5\text{ mL/kg}$ (max $5\text{ mL}$) or Racemic 2.25% $0.05\text{ mL/kg}$ (max $0.5\text{ mL}$); observe 2–4 hours after the last dose for rebound stridor.
+- **Discharge**: No stridor at rest, normal SpO₂ and air entry, at least 2–4 hours since last epinephrine.
 
 ---
 

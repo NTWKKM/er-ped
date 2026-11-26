@@ -30,6 +30,11 @@ import {
   calcParklandBurn,
   calcTransfusion,
   parseStrength,
+  calcWeightDoseRange,
+  calcNacRegimen,
+  classifyWestleyScore,
+  calcHypotensionSbp,
+  calcDkaPlan,
 } from './clinicalCalculations';
 import { DATASET } from '../data/dataset';
 
@@ -885,4 +890,106 @@ test('calcFluidRegimen: weight-based urine output target', () => {
   const teen = calcFluidRegimen({ weightKg: 60, deficitPct: 5, durationHr: 24 })!;
   assert.equal(teen.uoTargetMlKgHr, 0.5);
   assert.equal(teen.uoTargetMlHr, 30);
+});
+
+test('calcWeightDoseRange: per-kg range, ceiling and floor', () => {
+  // Prednisolone 1–2 mg/kg max 40 mg at 30 kg -> 30–40 mg, capped
+  assert.deepEqual(calcWeightDoseRange(30, 1, 2, 40), { min: 30, max: 40, isCapped: true });
+  // Atropine 0.02–0.05 mg/kg, min 0.1 mg, max 2 mg at 3 kg -> 0.1–0.15 mg
+  const atropine = calcWeightDoseRange(3, 0.02, 0.05, 2, 0.1)!;
+  assert.equal(atropine.min, 0.1);
+  assert.ok(Math.abs(atropine.max - 0.15) < 1e-9);
+  assert.equal(atropine.isCapped, false);
+  assert.equal(calcWeightDoseRange(0, 1, 2, 40), null);
+  assert.equal(calcWeightDoseRange(null, 1), null);
+});
+
+test('calcNacRegimen: 3-bag 21-h regimen with weight-tiered D5W volumes', () => {
+  const small = calcNacRegimen(10)!;
+  // Rate runs the total prepared volume (D5W + 200 mg/mL concentrate) over the duration
+  assert.deepEqual(
+    small.map((b) => [b.doseMg, b.nacMl, b.diluentMl, b.totalMl, b.durationHr, b.rateMlPerHr]),
+    [
+      [1500, 7.5, 30, 37.5, 1, 37.5],
+      [500, 2.5, 70, 72.5, 4, 18.1],
+      [1000, 5, 140, 145, 16, 9.1],
+    ]
+  );
+  // The full bag delivers the full dose: rate x duration covers the prepared volume
+  for (const b of small) assert.ok(b.rateMlPerHr * b.durationHr >= b.totalMl - 0.1);
+  // 20 kg is still weight-scaled (<= 20 kg): 60 / 140 / 280 mL
+  assert.deepEqual(calcNacRegimen(20)!.map((b) => b.diluentMl), [60, 140, 280]);
+  // > 20–40 kg tier: 100 / 250 / 500 mL (25 kg bag 1: 100 + 18.75 mL NAC)
+  const mid = calcNacRegimen(25)!;
+  assert.deepEqual(mid.map((b) => b.diluentMl), [100, 250, 500]);
+  assert.equal(mid[0].totalMl, 118.75);
+  assert.equal(mid[0].rateMlPerHr, 118.8);
+  const big = calcNacRegimen(40)!;
+  assert.deepEqual(big.map((b) => b.diluentMl), [100, 250, 500]);
+  assert.deepEqual(big.map((b) => b.doseMg), [6000, 2000, 4000]);
+  // > 40 kg tier: 200 / 500 / 1000 mL
+  assert.deepEqual(calcNacRegimen(41)!.map((b) => b.diluentMl), [200, 500, 1000]);
+  // Dosing weight capped at 100 kg
+  assert.equal(calcNacRegimen(120)![0].doseMg, 15000);
+  assert.equal(calcNacRegimen(0), null);
+});
+
+test('classifyWestleyScore: severity band boundaries', () => {
+  assert.equal(classifyWestleyScore(0), 'mild');
+  assert.equal(classifyWestleyScore(2), 'mild');
+  assert.equal(classifyWestleyScore(3), 'moderate');
+  assert.equal(classifyWestleyScore(7), 'moderate');
+  assert.equal(classifyWestleyScore(8), 'severe');
+  assert.equal(classifyWestleyScore(11), 'severe');
+  assert.equal(classifyWestleyScore(12), 'failure');
+  assert.equal(classifyWestleyScore(17), 'failure');
+  assert.equal(classifyWestleyScore(-1), null);
+});
+
+test('calcHypotensionSbp: PALS age thresholds', () => {
+  assert.equal(calcHypotensionSbp(0.01), 60);
+  assert.equal(calcHypotensionSbp(0.5), 70);
+  assert.equal(calcHypotensionSbp(1), 72);
+  assert.equal(calcHypotensionSbp(4.7), 78);
+  assert.equal(calcHypotensionSbp(10), 90);
+  assert.equal(calcHypotensionSbp(14), 90);
+  assert.equal(calcHypotensionSbp(null), null);
+});
+
+test('calcDkaPlan: 48-h deficit minus prior bolus plus capped maintenance', () => {
+  // 20 kg, 7% deficit = 1400 mL, minus 200 mL given = 1200 mL / 48 h = 25 mL/hr
+  // Maintenance 20 kg = 1500 mL/day = 62.5 mL/hr -> total 87.5 mL/hr, insulin 2 U/hr
+  const p = calcDkaPlan(20, 7, 200, 0.1)!;
+  assert.equal(p.deficitMl, 1400);
+  assert.equal(p.netDeficitMl, 1200);
+  assert.equal(p.maintenanceMlPerHr, 62.5);
+  assert.equal(p.deficitMlPerHr, 25);
+  assert.equal(p.totalMlPerHr, 87.5);
+  assert.equal(p.insulinUPerHr, 2);
+  assert.equal(p.resusBolusMinMl, 200);
+  assert.equal(p.resusBolusMaxMl, 400);
+  // Prior bolus larger than the deficit never yields a negative deficit
+  assert.equal(calcDkaPlan(10, 5, 900, 0.05)!.netDeficitMl, 0);
+  // Negative prior bolus is rejected
+  assert.equal(calcDkaPlan(10, 5, -50, 0.1), null);
+  // Bolus capped at 1000 mL
+  assert.equal(calcDkaPlan(70, 10, 0, 0.1)!.resusBolusMaxMl, 1000);
+});
+
+test('calcIVKClReplacement: drawn concentrate volume drives dose and rounded-up dilution', () => {
+  // 3 kg x 0.5 mEq/kg = 1.5 mEq = 0.75 mL of 2 mEq/mL (not rounded to 0.8 mL = 1.6 mEq)
+  const k = calcIVKClReplacement(3, 0.5)!;
+  assert.equal(k.kcl2MeqPerMl, 0.75);
+  assert.equal(k.doseMeq, 1.5);
+  // Volumes round up: 1.5 mEq at <= 80 mEq/L -> 18.75 -> 19 mL; at <= 40 mEq/L -> 37.5 -> 38 mL
+  assert.equal(k.minVolCentralMl, 19);
+  assert.equal(k.minVolPeripheralMl, 38);
+  assert.ok((k.doseMeq / k.minVolCentralMl) * 1000 <= 80);
+  assert.ok((k.doseMeq / k.minVolPeripheralMl) * 1000 <= 40);
+  // Odd weight: 3.3 kg -> 1.65 mEq raw -> 0.8 mL drawn (floor to 0.05 mL) -> 1.6 mEq delivered
+  const odd = calcIVKClReplacement(3.3, 0.5)!;
+  assert.equal(odd.kcl2MeqPerMl, 0.8);
+  assert.equal(odd.doseMeq, 1.6);
+  // Cap at 20 mEq = 10 mL
+  assert.equal(calcIVKClReplacement(60, 0.5)!.kcl2MeqPerMl, 10);
 });

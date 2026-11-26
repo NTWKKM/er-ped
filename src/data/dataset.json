@@ -12095,7 +12095,7 @@
       "maxDoseMg": 2,
       "route": "IV / IO / IM / IN / ETT",
       "prep": "0.4 mg/mL ampoule",
-      "note": "If patient <5y or <20kg: 0.1 mg/kg. If >5y or >20kg: 2.0 mg. Repeat q2–3m PRN."
+      "note": "Full reversal 0.1 mg/kg (max 2 mg) for apnea. Repeat q2–3 min PRN. Observe ≥ 4–6 h (longer for long-acting opioids); consider infusion 2/3 of the effective dose per hour."
     },
     {
       "key": "flumazenil-antidote",
@@ -12105,17 +12105,31 @@
       "maxDoseMg": 0.2,
       "route": "IV over 15 seconds",
       "prep": "0.5 mg / 5 mL ampoule (0.1 mg/mL)",
-      "note": "⚠️ CONTRAINDICATED in chronic BZD users, seizure history, or TCA co-ingestion (seizure risk)."
+      "note": "May repeat q1min to max total 1 mg. ⚠️ CONTRAINDICATED in chronic BZD users, seizure history, or TCA / proconvulsant co-ingestion.",
+      "maxTotalDoseMg": 1
     },
     {
       "key": "atropine-organophosphate",
       "name": "Atropine (Organophosphate / Carbamate Poisoning)",
       "indication": "Cholinergic Crisis (SLUDGE / Killer Bs: Bronchospasm, Bronchorrhea)",
       "doseMgPerKg": 0.05,
-      "maxDoseMg": 5,
-      "route": "IV / IO q5–10m until atropinized",
+      "maxDoseMg": 2,
+      "route": "IV / IO / IM, double dose q3–5 min until atropinized",
       "prep": "0.6 mg/mL ampoule",
-      "note": "Double dose every 5 minutes until lungs clear and secretions dry. (Min dose 0.1 mg to avoid paradoxical bradycardia)."
+      "note": "Initial 0.02–0.05 mg/kg (min 0.1 mg, max 2 mg). Double each dose q3–5 min until chest clear and secretions dry. Tachycardia is not a contraindication.",
+      "doseMinMgPerKg": 0.02,
+      "minDoseMg": 0.1
+    },
+    {
+      "key": "pralidoxime-op",
+      "name": "Pralidoxime (2-PAM)",
+      "indication": "Organophosphate poisoning with nicotinic signs (weakness, fasciculation)",
+      "doseMinMgPerKg": 25,
+      "doseMgPerKg": 50,
+      "maxDoseMg": 2000,
+      "route": "IV in NSS over 30 min, then infusion 10–20 mg/kg/hr",
+      "prep": "1 g vial",
+      "note": "Give together with atropine; start early before aging of acetylcholinesterase."
     },
     {
       "key": "activated-charcoal",
@@ -12191,6 +12205,26 @@
       "route": "IN via MAD device",
       "prep": "5 mg/mL vial",
       "note": "Anxiolysis & sedation for minor non-painful or mild procedures."
+    },
+    {
+      "key": "midazolam-psa-iv",
+      "name": "Midazolam (IV)",
+      "doseMinMgPerKg": 0.05,
+      "doseMaxMgPerKg": 0.1,
+      "maxPerDoseMg": 5,
+      "route": "IV slow over 2–3 min, titrate",
+      "prep": "1 mg/mL or 5 mg/mL vial",
+      "note": "Anxiolysis. Synergistic respiratory depression with opioids: reduce dose when combined."
+    },
+    {
+      "key": "midazolam-psa-po",
+      "name": "Midazolam (PO)",
+      "doseMinMgPerKg": 0.5,
+      "doseMaxMgPerKg": 0.75,
+      "maxPerDoseMg": 15,
+      "route": "PO 20–30 min before procedure",
+      "prep": "2 mg/mL syrup or IV solution mixed with juice",
+      "note": "Pre-procedural anxiolysis only. Not adequate for painful procedures."
     }
   ],
   "vitalSignsRef": [
@@ -12207,7 +12241,7 @@
       "sysBpNormal": "70–90 mmHg",
       "diaBpNormal": "45–65 mmHg",
       "sysBpMin": 70,
-      "hypotensionSysBp": "< 70 mmHg",
+      "hypotensionSysBp": "< 60 mmHg (term neonate < 28 days); < 70 mmHg (1–12 months)",
       "spo2Normal": "95–100%"
     },
     {
@@ -12255,7 +12289,7 @@
       "sysBpNormal": "95–115 mmHg",
       "diaBpNormal": "60–80 mmHg",
       "sysBpMin": 95,
-      "hypotensionSysBp": "< 70 + (2 × Age) mmHg",
+      "hypotensionSysBp": "< 70 + (2 × Age) mmHg to age 10; < 90 mmHg after age 10",
       "spo2Normal": "95–100%"
     },
     {
@@ -12282,28 +12316,32 @@
       "rateMlPerKg": 10,
       "maxRateMl": 1000,
       "durationHr": 1,
-      "note": "Initial 10-20 mL/kg NS over 1 hr. Do not give >20 mL/kg in first 4 hours unless in hypovolemic shock."
+      "note": "Initial 10-20 mL/kg NS over 1 hr. Do not give >20 mL/kg in first 4 hours unless in hypovolemic shock.",
+      "rateMlPerKgMax": 20,
+      "shockNote": "Hypovolemic shock: 20 mL/kg isotonic bolus as fast as possible, repeat after reassessment."
     },
     "insulinDrip": {
       "drug": "Regular Insulin Continuous Infusion",
       "rateMinUnitsPerKgHr": 0.05,
       "rateMaxUnitsPerKgHr": 0.1,
       "prep": "50 Units Regular Insulin in 50 mL 0.9% NS (1 Unit/mL)",
-      "kThresholdMin": 3.3,
-      "note": "⚠️ Start Insulin 1–2 hours AFTER starting fluid replacement. DO NOT start Insulin if K+ < 3.3 mEq/L! Target BG drop: 50–75 mg/dL/hr."
+      "kThresholdMin": 3.5,
+      "note": "⚠️ Start Insulin 1–2 hours AFTER starting fluid replacement. DO NOT start Insulin if K+ < 3.5 mEq/L! Target BG drop: 50–75 mg/dL/hr.",
+      "noBolus": "NEVER give an IV insulin bolus (cerebral edema and hypokalemia risk).",
+      "titration": "Keep the insulin rate; if BG falls too fast add or increase dextrose (D5 → D10/D12.5) rather than stopping insulin. Lower to 0.05 U/kg/hr only if BG stays low despite D10."
     },
     "dextroseSwitch": {
       "bgThresholdMgDl": 250,
-      "switchFluid": "D5 0.45% NS + 20 mEq/L KCl (or D5 0.9% NS)",
+      "switchFluid": "D5 0.45% NS or D5 0.9% NS, with KCl per the potassium rules",
       "note": "When BG drops to < 250 mg/dL, add 5% Dextrose to IV fluids to maintain BG 150–250 mg/dL while continuing insulin drip."
     },
     "potassiumRules": [
       {
-        "range": "< 3.3 mEq/L",
-        "action": "HOLD Insulin. Add 40 mEq/L KCl to IV fluid. Give 0.5 mEq/kg/hr until K+ > 3.3 mEq/L."
+        "range": "< 3.5 mEq/L",
+        "action": "HOLD Insulin. Add 40 mEq/L KCl to IV fluid. Give up to 0.5 mEq/kg/hr until K+ ≥ 3.5 mEq/L."
       },
       {
-        "range": "3.3–5.5 mEq/L",
+        "range": "3.5–5.5 mEq/L",
         "action": "Add 20–40 mEq/L KCl to IV fluid once urine output is established."
       },
       {
@@ -12311,7 +12349,82 @@
         "action": "Do NOT add KCl to IV fluid. Recheck K+ in 2 hours."
       }
     ],
-    "refKey": "dka"
+    "refKey": "dka",
+    "diagnosticCriteria": [
+      "Hyperglycemia: BG > 200 mg/dL (> 11 mmol/L)",
+      "Acidosis: venous pH < 7.30 or serum HCO₃ < 18 mEq/L",
+      "Ketosis: β-hydroxybutyrate ≥ 3 mmol/L or moderate/large ketonuria"
+    ],
+    "severityBands": [
+      {
+        "key": "mild",
+        "label": "Mild",
+        "criteria": "pH < 7.30 or HCO₃ < 18",
+        "deficitPct": 5
+      },
+      {
+        "key": "moderate",
+        "label": "Moderate",
+        "criteria": "pH < 7.20 or HCO₃ < 10",
+        "deficitPct": 7
+      },
+      {
+        "key": "severe",
+        "label": "Severe",
+        "criteria": "pH < 7.10 or HCO₃ < 5",
+        "deficitPct": 10
+      }
+    ],
+    "bicarbonate": "Sodium bicarbonate is NOT recommended. Consider only for pH < 6.90 with hemodynamic compromise or life-threatening hyperkalemia.",
+    "monitoring": [
+      {
+        "interval": "q1h",
+        "items": "Vital signs, GCS / neuro observations, capillary BG, strict intake and output"
+      },
+      {
+        "interval": "q2–4h",
+        "items": "Serum electrolytes (Na, K, Cl), venous gas (pH, HCO₃, pCO₂), BUN/Cr, Ca, PO₄, Mg"
+      },
+      {
+        "interval": "q2–4h",
+        "items": "β-hydroxybutyrate (if available); calculate corrected Na and effective osmolality"
+      },
+      {
+        "interval": "Continuous",
+        "items": "Cardiac monitor for T-wave changes of hypo/hyperkalemia"
+      }
+    ],
+    "resolution": [
+      "Ketoacidosis resolved: venous pH ≥ 7.30 and serum HCO₃ ≥ 18 mEq/L, with β-hydroxybutyrate < 1 mmol/L",
+      "If HCO₃ stays low from hyperchloremic acidosis after ketones have cleared (β-hydroxybutyrate < 1 mmol/L, anion gap normalized), do not delay transition"
+    ],
+    "cerebralEdema": {
+      "warningSigns": [
+        "Headache or vomiting after treatment started",
+        "Inappropriate slowing of heart rate, or rising BP together with bradycardia or neurologic change (Cushing response); hypertension alone is not a warning sign",
+        "Decreasing GCS, irritability, incontinence",
+        "Specific neurologic signs (cranial nerve palsy, abnormal pupils, posturing)"
+      ],
+      "mannitolGPerKgMin": 0.5,
+      "mannitolGPerKgMax": 1,
+      "mannitolPrep": "20% Mannitol (200 mg/mL) IV over 10–15 min",
+      "hypertonicMlPerKgMin": 2.5,
+      "hypertonicMlPerKgMax": 5,
+      "hypertonicPrep": "3% NaCl IV over 10–15 min (alternative to mannitol)",
+      "actions": [
+        "Treat immediately, do not wait for imaging",
+        "Elevate head of bed 30°, keep head midline",
+        "Adjust IV fluid rate to maintain normal blood pressure; avoid both hypotension (cerebral perfusion) and excess fluid",
+        "Call PICU; intubate only for impending respiratory failure",
+        "CT brain after the child is stabilized"
+      ]
+    },
+    "severityPrecedence": "If pH and HCO₃ fall in different bands, classify by the more severe band.",
+    "transition": [
+      "Tolerating oral intake",
+      "Confirm background (basal) insulin coverage: start the basal-insulin plan if none is active (e.g. new diagnosis); if basal insulin is already active, confirm coverage rather than give a duplicate dose",
+      "Give SC insulin first; stop IV insulin 15–30 min (rapid-acting) or 1–2 h (regular) after the first SC dose"
+    ]
   },
   "asthmaProtocol": {
     "severityAssessment": [
@@ -12360,7 +12473,8 @@
       "targetSpO2Percent": 92,
       "temperatureC": 37,
       "nebFlowMaxLPerKgPerMin": 0.25,
-      "nebFlowMaxLPerMin": 10
+      "nebFlowMaxLPerMin": 10,
+      "nebFlowNote": "Reduce flow to ≤ 0.25 L/kg/min (max 10 L/min) during in-line nebulization"
     },
     "steps": [
       {
@@ -12419,10 +12533,11 @@
             "key": "prednisolone-po",
             "name": "Prednisolone PO",
             "doseMgPerKg": 1,
-            "maxDoseMg": 60,
+            "maxDoseMg": 40,
             "route": "PO once daily × 3–5 days",
             "prep": "5 mg tab or 15 mg/5 mL syrup",
-            "note": "Give within 1 hour. OCS stewardship — shortest effective course."
+            "note": "1–2 mg/kg/day (max 40 mg/day) within 1 hour. OCS stewardship: shortest effective course.",
+            "doseMaxMgPerKg": 2
           },
           {
             "key": "dexamethasone-alt",
@@ -12431,7 +12546,8 @@
             "maxDoseMg": 16,
             "route": "PO/IV × 1–2 doses",
             "prep": "0.5 mg tab / 4 mg/mL injection",
-            "note": "Alternative to multi-day Prednisolone. Better compliance, less vomiting."
+            "note": "Alternative to multi-day Prednisolone. Better compliance, less vomiting.",
+            "doseMinMgPerKg": 0.3
           }
         ]
       },
@@ -12467,9 +12583,10 @@
             "name": "Magnesium Sulfate IV",
             "doseMgPerKg": 50,
             "maxDoseMg": 2000,
-            "route": "IV infusion over 20 min",
+            "route": "IV infusion over 20–30 min",
             "prep": "50% MgSO₄ (500 mg/mL) dilute in NSS",
-            "note": "Monitor BP & HR during infusion. Single dose. Nebulized route removed per GINA 2026."
+            "note": "Monitor BP & HR during infusion. Single dose. Nebulized route removed per GINA 2026.",
+            "doseMinMgPerKg": 40
           }
         ]
       },
@@ -12492,9 +12609,10 @@
             "name": "Terbutaline IV Load (PICU)",
             "doseMcgPerKg": 10,
             "maxDoseMcg": 250,
-            "route": "IV slow push over 5 min",
+            "route": "IV slow push over 5–10 min",
             "prep": "0.5 mg/mL ampoule",
-            "note": "PICU-level only. Follow with continuous infusion 0.1–10 mcg/kg/min."
+            "note": "PICU-level only. Follow with continuous infusion 0.1–10 mcg/kg/min.",
+            "doseMinMcgPerKg": 2
           }
         ]
       }
@@ -12523,7 +12641,21 @@
         "Impending respiratory failure / need for intubation"
       ]
     },
-    "refKey": "asthma"
+    "refKey": "asthma",
+    "methylprednisolone": {
+      "name": "Methylprednisolone IV (if unable to take PO)",
+      "doseMgPerKgPerDayMin": 1,
+      "doseMgPerKgPerDayMax": 2,
+      "maxPerDoseMg": 60,
+      "route": "IV divided q6–12h"
+    },
+    "redFlags": [
+      "Silent chest, cyanosis or poor respiratory effort",
+      "Drowsiness, confusion or exhaustion",
+      "SpO₂ < 90% despite O₂",
+      "Rising or normal PaCO₂ / pCO₂ in a tachypneic child (impending failure)",
+      "Hypotension or arrhythmia"
+    ]
   },
   "electrolyteRef": [
     {
@@ -12633,7 +12765,8 @@
         "maxMg": 1000,
         "route": "IV slow over 5–10 min",
         "prep": "10% solution (100 mg/mL = 0.465 mEq Ca/mL)",
-        "note": "Cardioprotection (30–60 min duration). Does not lower K+. Monitor ECG during infusion."
+        "note": "Cardioprotection (30–60 min duration). Does not lower K+. Monitor ECG during infusion.",
+        "indication": "Give for ECG changes or arrhythmia (not for an isolated K⁺ value with a normal ECG)"
       },
       {
         "step": 2,
@@ -12690,7 +12823,9 @@
       "maxMl": 150,
       "route": "IV infusion over 10–20 min",
       "prep": "3% NaCl (0.513 mEq Na/mL)",
-      "note": "Expected to raise serum Na by +2 to 3 mEq/L, reversing brain herniation and stopping seizures. May repeat once if seizing."
+      "note": "Expected to raise serum Na by +2 to 3 mEq/L, reversing brain herniation and stopping seizures. May repeat once if seizing.",
+      "correctionCap": "Total rise ≤ 8–10 mEq/L in 24 h (≤ 0.5 mEq/L/hr after symptoms resolve) to avoid osmotic demyelination.",
+      "recheck": "Recheck serum Na after each bolus and q2–4h thereafter."
     },
     "hypocalcemia": {
       "name": "10% Calcium Gluconate (Acute Symptomatic)",
@@ -12732,7 +12867,22 @@
         "Continuous ECG monitor is mandatory if infusion rate > 0.5 mEq/kg/hr or K+ < 2.5 mEq/L."
       ]
     },
-    "refKey": "electrolytes"
+    "refKey": "electrolytes",
+    "hypernatremia": {
+      "name": "Hypernatremic Dehydration (Free Water Deficit)",
+      "formula": "Free water deficit (L) = TBW × BW × (Serum Na / 140 − 1)",
+      "duration": "Replace over 48 hours",
+      "correctionCap": "Serum Na fall ≤ 0.5 mEq/L/hr (≤ 10–12 mEq/L/day) to avoid cerebral edema.",
+      "note": "Restore circulation first with isotonic bolus if in shock. Recheck Na q2–4h.",
+      "severeThresholdMeqL": 170,
+      "severeNote": "Na ≥ 170 mEq/L is an emergency: involve PICU / nephrology for an individualized, slower correction plan. Do not use a routine 48-h rate."
+    },
+    "hyperkalemiaEcg": [
+      "Peaked T waves",
+      "Prolonged PR, flattened P",
+      "Widened QRS",
+      "Sine wave, VF or asystole"
+    ]
   },
   "evidenceReferences": {
     "pals": {
@@ -13605,7 +13755,76 @@
       "min": 2,
       "standard": 4
     },
-    "refKey": "croup"
+    "refKey": "croup",
+    "severityBands": [
+      {
+        "key": "mild",
+        "label": "Mild",
+        "min": 0,
+        "max": 2,
+        "description": "Barking cough, no stridor at rest, no or mild retractions"
+      },
+      {
+        "key": "moderate",
+        "label": "Moderate",
+        "min": 3,
+        "max": 7,
+        "description": "Stridor at rest, mild-to-moderate retractions, no agitation"
+      },
+      {
+        "key": "severe",
+        "label": "Severe",
+        "min": 8,
+        "max": 11,
+        "description": "Stridor at rest with marked retractions, agitation or distress"
+      },
+      {
+        "key": "failure",
+        "label": "Impending respiratory failure",
+        "min": 12,
+        "max": 17,
+        "description": "Decreased consciousness, cyanosis, poor air entry"
+      }
+    ],
+    "management": {
+      "mild": [
+        "Dexamethasone 0.15–0.6 mg/kg PO single dose",
+        "Keep the child calm on the caregiver's lap; avoid distressing procedures",
+        "Discharge with return precautions if no stridor at rest"
+      ],
+      "moderate": [
+        "Dexamethasone 0.6 mg/kg PO/IM/IV single dose",
+        "Nebulized epinephrine if stridor at rest or significant work of breathing",
+        "Observe ≥ 2–4 h after the last epinephrine dose for rebound stridor"
+      ],
+      "severe": [
+        "Nebulized epinephrine immediately with O₂, may repeat q15–20 min",
+        "Dexamethasone 0.6 mg/kg (IM/IV if unable to take PO)",
+        "Humidified O₂ if SpO₂ < 92%; admit, consider PICU if ≥ 2–3 epinephrine doses needed"
+      ],
+      "failure": [
+        "Call senior / anesthesia / ENT: prepare for difficult airway",
+        "Nebulized epinephrine and O₂ while preparing",
+        "ETT 0.5–1.0 mm smaller than age-predicted size",
+        "PICU admission"
+      ]
+    },
+    "differentialRedFlags": [
+      "Drooling, toxic appearance, tripod position (epiglottitis, bacterial tracheitis)",
+      "Sudden onset without prodrome (foreign body aspiration)",
+      "Urticaria, angioedema, hypotension (anaphylaxis: give IM epinephrine)",
+      "Age < 6 months or recurrent croup (consider structural airway lesion)"
+    ],
+    "discharge": [
+      "No stridor at rest",
+      "Normal SpO₂ and air entry, normal color and level of consciousness",
+      "≥ 2–4 h since last nebulized epinephrine",
+      "Dexamethasone given; caregiver understands return precautions"
+    ],
+    "dangerSignOverride": {
+      "title": "Danger signs override the score",
+      "text": "Cyanosis or decreased level of consciousness means impending respiratory failure regardless of the total score: follow the impending-failure plan (senior airway assessment, nebulized epinephrine and O₂, PICU)."
+    }
   },
   "transfusion": {
     "prbc": {
@@ -13965,5 +14184,129 @@
         ]
       ]
     }
-  }
+  },
+  "psaSafety": {
+    "preSedation": [
+      "Indication and consent documented; responsible caregiver present",
+      "ASA physical status I–II suitable for ED sedation; ASA III–IV or anticipated difficult airway: senior / anesthesia",
+      "Airway assessment (Mallampati, OSA, craniofacial anomaly, recent URI)",
+      "Last oral intake recorded; recent intake is not an absolute contraindication but informs depth and timing",
+      "Baseline vital signs, SpO₂, weight confirmed"
+    ],
+    "equipment": [
+      "Suction: Yankauer and size-appropriate catheters",
+      "Oxygen source with flow meter",
+      "Airway: age-sized face mask, BVM, OPA / NPA, LMA and ETT available",
+      "Pharmacy: reversal agents and resuscitation drugs drawn up or immediately available",
+      "Monitoring: continuous SpO₂, cardiac monitor, BP, end-tidal capnography",
+      "Dedicated sedation monitor (not the proceduralist)"
+    ],
+    "monitoring": [
+      "Continuous SpO₂ and ETCO₂ waveform throughout",
+      "HR, RR, BP, sedation level q5min during and q15min after the procedure",
+      "Continue until return to baseline mental status"
+    ],
+    "adverseEvents": [
+      {
+        "event": "Hypoventilation / apnea",
+        "action": "Always: stimulate, jaw thrust, O₂, BVM ventilation. Reversal is agent-specific: Naloxone if an opioid was given; Flumazenil only if a benzodiazepine was given AND no exclusion (chronic benzodiazepine use, seizure disorder, TCA or proconvulsant co-ingestion)."
+      },
+      {
+        "event": "Laryngospasm (ketamine)",
+        "action": "Jaw thrust (Larson point) + CPAP via BVM with 100% O₂; if persists, Succinylcholine 0.1–0.5 mg/kg IV (or full RSI dose) and BVM"
+      },
+      {
+        "event": "Emergence reaction (ketamine)",
+        "action": "Quiet environment; Midazolam 0.05–0.1 mg/kg IV if severe"
+      },
+      {
+        "event": "Vomiting",
+        "action": "Turn to side, suction; Ondansetron 0.15 mg/kg IV (max 4 mg) may be given prophylactically"
+      },
+      {
+        "event": "Chest wall rigidity (fentanyl)",
+        "action": "BVM ventilation, Naloxone; neuromuscular blockade if refractory"
+      }
+    ],
+    "discharge": [
+      "Return to baseline mental status and age-appropriate ambulation",
+      "Stable vital signs and SpO₂ on room air",
+      "Tolerating oral fluids, pain and nausea controlled",
+      "Responsible adult escort with written instructions"
+    ],
+    "ketamineAbsoluteContraindications": [
+      "Age < 3 months (airway complications)",
+      "Known or suspected schizophrenia or psychosis"
+    ],
+    "ketamineRelativeContraindications": [
+      "Active pulmonary infection or airway disease, or procedures stimulating the posterior pharynx",
+      "Cardiovascular disease, CNS mass or hydrocephalus, glaucoma or acute globe injury",
+      "Porphyria, thyroid disorder or thyroid medication"
+    ]
+  },
+  "toxicologyApproach": {
+    "initial": [
+      "Airway, breathing, circulation; continuous monitoring and 12-lead ECG (QRS, QTc)",
+      "Point-of-care glucose in every altered child (\"DON'T EVER FORGET GLUCOSE\")",
+      "Identify toxidrome, substance, dose (mg/kg), time of ingestion, co-ingestants",
+      "Paracetamol level at 4 h post-ingestion in every intentional ingestion",
+      "Consult the poison center early"
+    ],
+    "toxidromes": [
+      {
+        "name": "Opioid",
+        "features": "Miosis, CNS and respiratory depression, bradycardia",
+        "antidote": "Naloxone"
+      },
+      {
+        "name": "Cholinergic",
+        "features": "SLUDGE / DUMBELS, bronchorrhea, bradycardia, miosis, fasciculation",
+        "antidote": "Atropine + Pralidoxime"
+      },
+      {
+        "name": "Anticholinergic",
+        "features": "Hyperthermia, dry flushed skin, mydriasis, delirium, urinary retention",
+        "antidote": "Supportive; Benzodiazepine for agitation"
+      },
+      {
+        "name": "Sympathomimetic",
+        "features": "Tachycardia, hypertension, hyperthermia, mydriasis, diaphoresis",
+        "antidote": "Benzodiazepine, cooling"
+      },
+      {
+        "name": "Sedative-hypnotic",
+        "features": "CNS depression with normal pupils and vital signs",
+        "antidote": "Supportive (Flumazenil rarely)"
+      },
+      {
+        "name": "Sodium channel blocker (TCA)",
+        "features": "QRS > 100 ms, terminal R in aVR, seizures, hypotension",
+        "antidote": "NaHCO₃ 1–2 mEq/kg IV bolus"
+      }
+    ],
+    "charcoalContraindications": [
+      "Unprotected airway or decreased consciousness",
+      "Corrosives, hydrocarbons, alcohols, metals (iron, lithium)",
+      "Bowel obstruction or perforation risk"
+    ],
+    "nacTreatmentLine": "Known-time acute ingestion: draw the level ≥ 4 h after ingestion and plot it at its sample time on the Rumack-Matthew nomogram (treatment line 150 mcg/mL at 4 h, falling with time); treat if on or above the line. Start NAC without waiting if the ingestion time is unknown and paracetamol is detectable, or if ≥ 150–200 mg/kg was ingested and the level will not be available within 8 h."
+  },
+  "vitalSignsHypotension": [
+    {
+      "ageBand": "Term neonate (0–28 days)",
+      "threshold": "SBP < 60 mmHg"
+    },
+    {
+      "ageBand": "Infant (1–12 months)",
+      "threshold": "SBP < 70 mmHg"
+    },
+    {
+      "ageBand": "Child 1–10 years",
+      "threshold": "SBP < 70 + (2 × age in years) mmHg"
+    },
+    {
+      "ageBand": "> 10 years",
+      "threshold": "SBP < 90 mmHg"
+    }
+  ]
 }

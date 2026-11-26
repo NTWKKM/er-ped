@@ -324,6 +324,16 @@ export default function App() {
     return Math.min(15, yrs);
   }, [bio.rawAge, bio.ageUnit]);
 
+  // Reference-only age for Protocols (vital-sign bands, PALS hypotension): an
+  // entered 0 (newborn) is valid here, unlike dosing, which requires age > 0.
+  const referenceAgeYears = useMemo(() => {
+    if (bio.rawAge.trim() === '') return null;
+    const a = parseFloat(bio.rawAge);
+    if (!Number.isFinite(a) || a < 0) return null;
+    const yrs = bio.ageUnit === 'mo' ? a / 12 : a;
+    return Math.min(15, yrs);
+  }, [bio.rawAge, bio.ageUnit]);
+
   const activeWeight = useMemo(() => {
     if (bio.useIBW) {
       return ibwWeight && ibwWeight > 0 && ibwWeight <= 150 ? ibwWeight : null;
@@ -656,7 +666,7 @@ export default function App() {
           <ProtocolsAndCDSView
             activeSubTab={protocolTopic}
             activeWeight={activeWeight}
-            ageYears={ageYears}
+            ageYears={referenceAgeYears}
             onChangeTopic={setProtocolTopic}
             onAddOrder={handleAddOrder}
             onInvalidateOrders={invalidateCalculatedOrders}
